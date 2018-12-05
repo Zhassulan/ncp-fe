@@ -1,0 +1,29 @@
+<!--Header-->
+<mat-grid-list cols="14" rows="1">
+    <mat-grid-tile colspan="14" [rowspan]="1" style="background: azure">
+        <h2 class="mat-h2">Меню</h2>
+        <app-navigator></app-navigator>
+    </mat-grid-tile>
+</mat-grid-list>
+
+<!--Content-->
+<mat-grid-list cols="14" rows="1">
+
+    <mat-grid-tile colspan="3" [rowspan]="4" style="background: beige">
+    </mat-grid-tile>
+
+    <mat-grid-tile colspan="8" [rowspan]="4">
+        <app-content></app-content>
+    </mat-grid-tile>
+
+    <mat-grid-tile colspan="3" [rowspan]="4" style="background: beige">
+    </mat-grid-tile>
+
+</mat-grid-list>
+
+<!--Footer-->
+<mat-grid-list cols="14" rows="1">
+    <mat-grid-tile colspan="14" [rowspan]="1" style="background: aliceblue">
+        <h2 class="mat-h2">Подвал</h2>
+    </mat-grid-tile>
+</mat-grid-list>

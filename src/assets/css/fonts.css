@@ -1,0 +1,41 @@
+@font-face {
+    font-family: 'ApercuRegularPro';
+    src: url("/assets/fonts/apercu_regular_pro.eot");
+    src: local("тШ║"), url("/assets/fonts/apercu_regular_pro.woff") format("woff"), url("/assets/fonts/apercu_regular_pro.ttf") format("truetype"), url("/assets/fonts/apercu_regular_pro.svg#ApercuRegularPro") format("svg");
+    font-weight: normal;
+    font-style: normal; }
+@font-face {
+    font-family: 'BrushUp';
+    src: url("/assets/fonts/BrushUp.eot");
+    /* IE9 Compat Modes */
+    src: url("/assets/fonts/BrushUp.eot?#iefix") format("embedded-opentype"), url("/assets/fonts/BrushUp.woff") format("woff"), url("/assets/fonts/BrushUp.ttf") format("truetype"), url("/assets/fonts/BrushUp.svg#BrushUp") format("svg");
+    /* Legacy iOS */
+    font-style: normal;
+    font-weight: normal;
+    text-rendering: optimizeLegibility; }
+@font-face {
+    font-family: 'Tele2SlabWeb-Regular';
+    src: url("/assets/fonts/Tele2SlabWeb-Regular.eot");
+    src: url("/assets/fonts/Tele2SlabWeb-Regular.eot?#iefix") format("embedded-opentype"), url("/assets/fonts/Tele2SlabWeb-Regular.woff") format("woff"), url("/assets/fonts/Tele2SlabWeb-Regular.ttf") format("truetype"), url("/assets/fonts/Tele2SlabWeb-Regular.svg#Tele2SlabWeb-Regular") format("svg");
+    font-weight: normal;
+    font-style: normal; }
+@font-face {
+    font-family: 'Tele2SlabWeb-Bold';
+    src: url("/assets/fonts/Tele2SlabWeb-Bold.eot");
+    src: url("/assets/fonts/Tele2SlabWeb-Bold.eot?#iefix") format("embedded-opentype"), url("/assets/fonts/Tele2SlabWeb-Bold.woff") format("woff"), url("/assets/fonts/Tele2SlabWeb-Bold.ttf") format("truetype"), url("/assets/fonts/Tele2SlabWeb-Bold.svg#Tele2SlabWeb-Bold") format("svg");
+    font-weight: normal;
+    font-style: normal; }
+@font-face {
+    font-family: 'Tele2SlabWeb-Heavy';
+    src: url("/assets/fonts/Tele2SlabWeb-Heavy.eot");
+    src: url("/assets/fonts/Tele2SlabWeb-Heavy.eot?#iefix") format("embedded-opentype"), url("/assets/fonts/Tele2SlabWeb-Heavy.woff") format("woff"), url("/assets/fonts/Tele2SlabWeb-Heavy.ttf") format("truetype"), url("/assets/fonts/Tele2SlabWeb-Heavy.svg#Tele2SlabWeb-Heavy") format("svg");
+    font-weight: normal;
+    font-style: normal; }
+.slab-bold {
+    font-family: 'Tele2SlabWeb-Bold', Georgia, serif; }
+
+.slab-regular {
+    font-family: 'Tele2SlabWeb-Regular', Georgia, serif; }
+
+.slab-heavy {
+    font-family: 'Tele2SlabWeb-Heavy', Georgia, serif; }
