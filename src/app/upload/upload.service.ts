@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http';
+import {HttpClient, HttpRequest, HttpEventType, HttpResponse, HttpHeaders} from '@angular/common/http';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 
 // const url = 'http://localhost:3000/upload';
-const url = 'http://localhost:8080/clients/dataservice/data/upload/';
+const uploadUrl = 'http://localhost:8080/clients/dataservice/data/upload/';
+
+const httpOptions = {
+    headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Accept' : 'application/json, text/plain, */*'
+    })
+};
 
 @Injectable()
 export class UploadService {
@@ -21,9 +28,7 @@ export class UploadService {
 
             // create a http-post request and pass the form
             // tell it to report the upload progress
-            const req = new HttpRequest('POST', url, formData, {
-                reportProgress: true
-            });
+            const req = new HttpRequest('POST', uploadUrl, formData, {headers:httpOptions.headers, reportProgress: true});
 
             // create a new progress-subject for every file
             const progress = new Subject<number>();

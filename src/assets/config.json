@@ -1,0 +1,3 @@
+{
+  "getNcpPaymentsUrl":"http://localhost:8080/onlinebank/dataservice/exdata/ncpPayments"
+}
