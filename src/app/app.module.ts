@@ -20,6 +20,8 @@ import {MenuToolbarComponent} from './menu-toolbar/menu-toolbar.component';
 import {MaterialsModule} from './materials/materials.module';
 import {RoutesModule} from './routes/routes.module';
 import {MAT_DATE_LOCALE} from '@angular/material';
+import {PaymentStatusRuPipe} from './payment-status-ru-pipe';
+import {HighlightDistributed} from './highlight-distributed';
 
 @NgModule({
     declarations: [
@@ -31,6 +33,8 @@ import {MAT_DATE_LOCALE} from '@angular/material';
         TopNavComponent,
         MenuListItemComponent,
         MenuToolbarComponent,
+        PaymentStatusRuPipe,
+        HighlightDistributed
     ],
     imports: [
         MaterialsModule,

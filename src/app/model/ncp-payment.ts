@@ -23,5 +23,14 @@ export class NcpPayment {
      actions: string [];
      managers: string;
      mobipay: boolean;
+     isChecked? : boolean = false;
+
+     public getId(): number   {
+        return this.id;
+     }
+
+    public getStatus(): number   {
+        return this.status;
+    }
 
 }

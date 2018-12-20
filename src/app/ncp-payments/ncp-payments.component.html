@@ -1,4 +1,4 @@
-<mat-grid-list cols="2" rowHeight="70px">
+<mat-grid-list cols="4" rowHeight="70px">
     <mat-grid-tile>
         <mat-form-field>
             <input matInput [matDatepicker]="startDate" placeholder="Дата начала">
@@ -13,55 +13,67 @@
         </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile>
+        <button mat-raised-button color="primary" (click)="toTransit()">На транзит</button>
+    </mat-grid-tile>
+    <mat-grid-tile>
         <mat-form-field>
             <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Поиск">
         </mat-form-field>
     </mat-grid-tile>
 </mat-grid-list>
-<!--
-<div class="spinner-container" *ngIf="dataSource.loading$ | async">
-    <mat-spinner></mat-spinner>
-</div>
--->
+
 <div class="mat-elevation-z8">
 
     <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+
+            </th>
+            <td mat-cell *matCellDef="let paymentRow">
+                <mat-checkbox
+                              (change)="$event ? processForSelect(paymentRow) : null"
+                              [checked]="selection.isSelected(paymentRow)"
+                              >
+                </mat-checkbox>
+            </td>
+        </ng-container>
         <ng-container matColumnDef="ID">
             <th mat-header-cell *matHeaderCellDef  mat-sort-header>ID</th>
-            <td mat-cell *matCellDef="let payment"> {{payment.id}}</td>
+            <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.id}}</td>
         </ng-container>
         <ng-container matColumnDef="nameSender">
             <th mat-header-cell *matHeaderCellDef  mat-sort-header>Отправитель</th>
-            <td mat-cell *matCellDef="let payment"> {{payment.nameSender}}</td>
+            <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.nameSender}}</td>
         </ng-container>
         <ng-container matColumnDef="sum">
             <th mat-header-cell *matHeaderCellDef  mat-sort-header>Сумма</th>
-            <td mat-cell *matCellDef="let payment"> {{payment.sum}}</td>
+            <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.sum}}</td>
         </ng-container>
         <ng-container matColumnDef="rnnSender">
             <th mat-header-cell *matHeaderCellDef  mat-sort-header>ИИН</th>
-            <td mat-cell *matCellDef="let payment"> {{payment.rnnSender}}</td>
+            <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.rnnSender}}</td>
         </ng-container>
         <ng-container matColumnDef="accountSender">
             <th mat-header-cell *matHeaderCellDef  mat-sort-header>Банковский счет</th>
-            <td mat-cell *matCellDef="let payment"> {{payment.accountSender}}</td>
+            <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.accountSender}}</td>
         </ng-container>
         <ng-container matColumnDef="knp">
             <th mat-header-cell *matHeaderCellDef  mat-sort-header>КНП</th>
-            <td mat-cell *matCellDef="let payment"> {{payment.knp}}</td>
+            <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.knp}}</td>
         </ng-container>
-        <ng-container matColumnDef="details">
+        <ng-container matColumnDef="paymentDetails">
             <th mat-header-cell *matHeaderCellDef  mat-sort-header>Назначение платежа</th>
-            <td mat-cell *matCellDef="let payment"> {{payment.details}}</td>
+            <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.paymentDetails}}</td>
         </ng-container>
         <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef  mat-sort-header>Статус</th>
-            <td mat-cell *matCellDef="let payment"> {{payment.status}}</td>
+            <td mat-cell *matCellDef="let paymentRow"> {{ paymentRow.status | paymentStatusRu: paymentRow.status }}</td>
         </ng-container>
         <ng-container matColumnDef="managers">
             <th mat-header-cell *matHeaderCellDef  mat-sort-header>Менеджер</th>
-            <td mat-cell *matCellDef="let payment"> {{payment.managers}}</td>
+            <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.managers}}</td>
         </ng-container>
+        <!--
         <ng-container matColumnDef="Mobipay">
             <th mat-header-cell *matHeaderCellDef>Mobipay</th>
             <td mat-cell>
@@ -74,16 +86,23 @@
                 <button mat-raised-button color="primary">Разнести</button>
             </td>
         </ng-container>
+        -->
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)"></mat-row>
+        <!-- you can add to signature of mat-row for catch click on hole row: (click)="onRowClicked(paymentRow)"-->
+        <!-- for Highlight: paymentRowHighlight [paymentStatus]="paymentRow.getStatus()"-->
+        <mat-row
+                *matRowDef="let paymentRow; columns: displayedColumns;"
+
+        ></mat-row>
     </table>
+
     <mat-card *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
         <mat-progress-spinner
                 color="primary"
                 mode="indeterminate">
         </mat-progress-spinner>
     </mat-card>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
 
 </div>
