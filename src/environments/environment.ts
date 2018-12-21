@@ -5,7 +5,10 @@
 export const environment = {
     production: false,
     baseUrl: 'http://localhost:8080/',
-    baseEndpoint: 'http://localhost:8080/onlinebank/dataservice/exdata/'
+    baseEndpoint: 'http://localhost:8080/onlinebank/dataservice/exdata/',
+    urlGetNcpPaymentsRange: 'http://localhost:8080/onlinebank/dataservice/exdata/ncpPayments',
+    //urlPaymentsToTransit: 'http://localhost:8080/onlinebank/dataservice/exdata/paymentsToTransit',
+    urlPaymentToTransit: 'http://localhost:8080/onlinebank/dataservice/exdata/distributeTransitPayment',
 };
 
 /*

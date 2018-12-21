@@ -22,6 +22,9 @@ import {RoutesModule} from './routes/routes.module';
 import {MAT_DATE_LOCALE} from '@angular/material';
 import {PaymentStatusRuPipe} from './payment-status-ru-pipe';
 import {HighlightDistributed} from './highlight-distributed';
+import {DialogReportComponent} from './dialog/dialog-report/dialog-report.component';
+import {DialogService} from './dialog/dialog.service';
+import {DataService} from './data/data.service';
 
 @NgModule({
     declarations: [
@@ -34,7 +37,11 @@ import {HighlightDistributed} from './highlight-distributed';
         MenuListItemComponent,
         MenuToolbarComponent,
         PaymentStatusRuPipe,
-        HighlightDistributed
+        HighlightDistributed,
+        DialogReportComponent
+    ],
+    entryComponents: [
+        DialogReportComponent
     ],
     imports: [
         MaterialsModule,
@@ -57,7 +64,9 @@ import {HighlightDistributed} from './highlight-distributed';
         AUTH_PROVIDERS,
         LoggedInGuard,
         CookieService,
-        {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'}
+        {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
+        DialogService,
+        DataService
     ],
     bootstrap: [AppComponent]
 })

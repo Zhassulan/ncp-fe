@@ -1,9 +1,12 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {DataService} from '../data/data.service';
 import {NcpPayment} from '../model/ncp-payment';
-import {DateRange} from '../date-range';
+import {DateRange} from '../data/date-range';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
+import {RestResponse} from '../data/rest-response';
+import {Id} from '../data/id';
+import {DialogService} from '../dialog/dialog.service';
 
 @Component({
     selector: 'app-ncp-payments',
@@ -21,13 +24,17 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     isLoading = true;
     resultsLength = 0;
     selection = new SelectionModel<NcpPayment>(true, []);
-    checked: boolean = false;
+    restResponse = new RestResponse();
 
-    constructor(private dataService: DataService) {
+    constructor(private dataService: DataService, private dialogService: DialogService) {
         this.dataSource = new MatTableDataSource(this.ncpPayments);
     }
 
     ngOnInit() {
+    }
+
+    openDialog() {
+        this.dialogService.openDialog();
     }
 
     onRowClicked(paymentRow) {
@@ -49,6 +56,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     getData() {
+        this.isLoading = true;
         let dr = new DateRange('2018-08-01T09:00:00.000Z', '2018-08-01T10:00:00.000Z');
         this.dataService.getNcpPayments(dr).subscribe(data => {
                 this.ncpPayments = data;
@@ -60,6 +68,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     getSampleData() {
+        this.isLoading = true;
         this.dataService.getNcpPaymentsJson().subscribe(data => {
                 this.ncpPayments = data;
                 this.dataSource.data = data;
@@ -70,19 +79,29 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
             error2 => this.isLoading = false);
     }
 
-    processForSelect(paymentRow)  {
+    processForSelect(paymentRow) {
         if (!paymentRow.isChecked)
             paymentRow.isChecked = true;
         else
             paymentRow.isChecked = false;
     }
 
-    toTransit()    {
-        this.dataSource.data.forEach(row => {
-            if (row.isChecked) {
-                console.log('selected: ' + row.id);
+    toTransit() {
+        this.dialogService.clear();
+        this.dialogService.title = 'Отчёт по разноске на транзитный счёт';
+        this.isLoading = true;
+        this.dataSource.data.forEach(payment => {
+            if (payment.isChecked) {
+                this.dataService.paymentToTransit(new Id(payment.id)).subscribe(data => {
+                        this.restResponse = data;
+                        this.isLoading = false;
+                        this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: ' + data.data + '(' + data.result + ')');
+                        //console.log(data);
+                    },
+                    error2 => this.isLoading = false);
             }
         });
+        this.openDialog();
     }
 
 }

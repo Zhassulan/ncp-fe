@@ -1,26 +1,18 @@
-<mat-grid-list cols="4" rowHeight="70px">
-    <mat-grid-tile>
         <mat-form-field>
             <input matInput [matDatepicker]="startDate" placeholder="Дата начала">
             <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
             <mat-datepicker #startDate></mat-datepicker>
         </mat-form-field>
-
+        <span class="example-spacer"></span>
         <mat-form-field>
             <input matInput [matDatepicker]="endDate" placeholder="Дата окончания">
             <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
             <mat-datepicker #endDate></mat-datepicker>
         </mat-form-field>
-    </mat-grid-tile>
-    <mat-grid-tile>
         <button mat-raised-button color="primary" (click)="toTransit()">На транзит</button>
-    </mat-grid-tile>
-    <mat-grid-tile>
         <mat-form-field>
             <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Поиск">
         </mat-form-field>
-    </mat-grid-tile>
-</mat-grid-list>
 
 <div class="mat-elevation-z8">
 
