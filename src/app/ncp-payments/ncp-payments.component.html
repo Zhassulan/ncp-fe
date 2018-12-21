@@ -1,18 +1,21 @@
-        <mat-form-field>
-            <input matInput [matDatepicker]="startDate" placeholder="Дата начала">
-            <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
-            <mat-datepicker #startDate></mat-datepicker>
-        </mat-form-field>
-        <span class="example-spacer"></span>
-        <mat-form-field>
-            <input matInput [matDatepicker]="endDate" placeholder="Дата окончания">
-            <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
-            <mat-datepicker #endDate></mat-datepicker>
-        </mat-form-field>
-        <button mat-raised-button color="primary" (click)="toTransit()">На транзит</button>
-        <mat-form-field>
-            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Поиск">
-        </mat-form-field>
+<mat-form-field>
+    <input matInput [matDatepicker]="startDate" placeholder="Дата начала" [formControl]="pickerStartDate"
+           (dateInput)="catchStartDatePickerEvent('input', $event)" (dateChange)="catchStartDatePickerEvent('change', $event)">
+    <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+    <mat-datepicker #startDate></mat-datepicker>
+</mat-form-field>
+<span class="example-spacer"></span>
+<mat-form-field>
+    <input matInput [matDatepicker]="endDate" placeholder="Дата окончания" [formControl]="pickerEndDate"
+           (dateInput)="catchEndDatePickerEvent('input', $event)" (dateChange)="catchEndDatePickerEvent('change', $event)">
+    <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+    <mat-datepicker #endDate></mat-datepicker>
+</mat-form-field>
+<button mat-raised-button color="primary" (click)="getData()">Загрузить данные</button>
+<button mat-raised-button color="primary" (click)="toTransit()">На транзит</button>
+<mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Поиск">
+</mat-form-field>
 
 <div class="mat-elevation-z8">
 
@@ -23,46 +26,46 @@
             </th>
             <td mat-cell *matCellDef="let paymentRow">
                 <mat-checkbox
-                              (change)="$event ? processForSelect(paymentRow) : null"
-                              [checked]="selection.isSelected(paymentRow)"
-                              >
+                        (change)="$event ? processForSelect(paymentRow) : null"
+                        [checked]="selection.isSelected(paymentRow)"
+                >
                 </mat-checkbox>
             </td>
         </ng-container>
         <ng-container matColumnDef="ID">
-            <th mat-header-cell *matHeaderCellDef  mat-sort-header>ID</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
             <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.id}}</td>
         </ng-container>
         <ng-container matColumnDef="nameSender">
-            <th mat-header-cell *matHeaderCellDef  mat-sort-header>Отправитель</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Отправитель</th>
             <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.nameSender}}</td>
         </ng-container>
         <ng-container matColumnDef="sum">
-            <th mat-header-cell *matHeaderCellDef  mat-sort-header>Сумма</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Сумма</th>
             <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.sum}}</td>
         </ng-container>
         <ng-container matColumnDef="rnnSender">
-            <th mat-header-cell *matHeaderCellDef  mat-sort-header>ИИН</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ИИН</th>
             <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.rnnSender}}</td>
         </ng-container>
         <ng-container matColumnDef="accountSender">
-            <th mat-header-cell *matHeaderCellDef  mat-sort-header>Банковский счет</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Банковский счет</th>
             <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.accountSender}}</td>
         </ng-container>
         <ng-container matColumnDef="knp">
-            <th mat-header-cell *matHeaderCellDef  mat-sort-header>КНП</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>КНП</th>
             <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.knp}}</td>
         </ng-container>
         <ng-container matColumnDef="paymentDetails">
-            <th mat-header-cell *matHeaderCellDef  mat-sort-header>Назначение платежа</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Назначение платежа</th>
             <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.paymentDetails}}</td>
         </ng-container>
         <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef  mat-sort-header>Статус</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Статус</th>
             <td mat-cell *matCellDef="let paymentRow"> {{ paymentRow.status | paymentStatusRu: paymentRow.status }}</td>
         </ng-container>
         <ng-container matColumnDef="managers">
-            <th mat-header-cell *matHeaderCellDef  mat-sort-header>Менеджер</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Менеджер</th>
             <td mat-cell *matCellDef="let paymentRow"> {{paymentRow.managers}}</td>
         </ng-container>
         <!--

@@ -2,11 +2,12 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {DataService} from '../data/data.service';
 import {NcpPayment} from '../model/ncp-payment';
 import {DateRange} from '../data/date-range';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
 import {RestResponse} from '../data/rest-response';
 import {Id} from '../data/id';
 import {DialogService} from '../dialog/dialog.service';
+import {FormControl} from '@angular/forms';
 
 @Component({
     selector: 'app-ncp-payments',
@@ -26,11 +27,32 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     selection = new SelectionModel<NcpPayment>(true, []);
     restResponse = new RestResponse();
 
+    pickerStartDate = new FormControl(new Date());
+    pickerEndDate = new FormControl(new Date());
+
     constructor(private dataService: DataService, private dialogService: DialogService) {
         this.dataSource = new MatTableDataSource(this.ncpPayments);
+        let nowStartDay;
+        let nowEndDay;
+        nowStartDay = new Date();
+        nowStartDay.setHours(0, 0, 0, 0);
+        nowEndDay = new Date();
+        nowEndDay.setHours(23, 59, 59, 999);
+        this.pickerStartDate.setValue(nowStartDay);
+        this.pickerEndDate.setValue(nowEndDay);
     }
 
     ngOnInit() {
+    }
+
+    ngAfterViewInit() {
+        //this.getData();
+        this.getSampleData();
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+        //console.log(this.pickerStartDate.value);
+        //console.log(this.pickerEndDate.value);
     }
 
     openDialog() {
@@ -48,16 +70,10 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    ngAfterViewInit() {
-        this.getSampleData();
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-    }
-
     getData() {
+        this.dataSource.data = [];
         this.isLoading = true;
-        let dr = new DateRange('2018-08-01T09:00:00.000Z', '2018-08-01T10:00:00.000Z');
+        let dr = new DateRange(this.pickerStartDate.value, this.pickerEndDate.value);
         this.dataService.getNcpPayments(dr).subscribe(data => {
                 this.ncpPayments = data;
                 this.dataSource.data = data;
@@ -94,14 +110,37 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
             if (payment.isChecked) {
                 this.dataService.paymentToTransit(new Id(payment.id)).subscribe(data => {
                         this.restResponse = data;
-                        this.isLoading = false;
                         this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: ' + data.data + '(' + data.result + ')');
-                        //console.log(data);
+                        if (data.result == 'ok') {
+                            console.log('updated payment status:\n' + data.data.status);
+                            payment.status = data.data.status;
+                        };
                     },
-                    error2 => this.isLoading = false);
+                    error2 => this.isLoading = false,
+                    () => {
+                        this.isLoading = false;
+                        //this.getData();
+                    });
             }
         });
         this.openDialog();
+    }
+
+    catchStartDatePickerEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+        if (type == 'input') {
+            //console.log(event.value);
+        }
+    }
+
+    catchEndDatePickerEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+        if (type == 'input') {
+            let end = new Date(this.pickerEndDate.value);
+            end.setHours(23, 59, 59, 999);
+            this.pickerEndDate.setValue(end);
+            //console.log(event.value);
+            //console.log(this.pickerStartDate.value);
+            //console.log(this.pickerEndDate.value);
+        }
     }
 
 }

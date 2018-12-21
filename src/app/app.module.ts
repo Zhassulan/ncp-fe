@@ -25,6 +25,7 @@ import {HighlightDistributed} from './highlight-distributed';
 import {DialogReportComponent} from './dialog/dialog-report/dialog-report.component';
 import {DialogService} from './dialog/dialog.service';
 import {DataService} from './data/data.service';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
     declarations: [
@@ -38,7 +39,8 @@ import {DataService} from './data/data.service';
         MenuToolbarComponent,
         PaymentStatusRuPipe,
         HighlightDistributed,
-        DialogReportComponent
+        DialogReportComponent,
+        SpinnerComponent
     ],
     entryComponents: [
         DialogReportComponent
