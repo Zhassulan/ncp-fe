@@ -18,7 +18,7 @@ import {FormControl} from '@angular/forms';
 export class NcpPaymentsComponent implements OnInit, AfterViewInit {
 
     ncpPayments = [];
-    displayedColumns = ['ID', 'nameSender', 'sum', 'rnnSender', 'accountSender', 'knp', 'paymentDetails', 'status', 'managers', 'select']; //, 'Mobipay', 'distribution'];
+    displayedColumns = ['ID', 'nameSender', 'sum', 'rnnSender', 'accountSender', 'knp', 'paymentDetails', 'managers', 'status', 'select']; //, 'Mobipay', 'distribution'];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     dataSource = new MatTableDataSource<NcpPayment>();
@@ -46,8 +46,8 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        //this.getData();
-        this.getSampleData();
+        this.getData();
+        //this.getSampleData();
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
