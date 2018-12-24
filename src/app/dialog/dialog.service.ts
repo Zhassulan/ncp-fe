@@ -42,4 +42,5 @@ export class DialogService {
         this.title = null;
         this.dialogData = [];
     }
+
 }

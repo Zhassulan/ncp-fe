@@ -22,11 +22,11 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     dataSource = new MatTableDataSource<NcpPayment>();
-    isLoading = true;
+    //isLoading = true;
+    isWait = true;
     resultsLength = 0;
     selection = new SelectionModel<NcpPayment>(true, []);
     restResponse = new RestResponse();
-
     pickerStartDate = new FormControl(new Date());
     pickerEndDate = new FormControl(new Date());
 
@@ -71,28 +71,36 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     getData() {
+        this.isWait = true;
         this.dataSource.data = [];
-        this.isLoading = true;
+        //this.isLoading = true;
         let dr = new DateRange(this.pickerStartDate.value, this.pickerEndDate.value);
         this.dataService.getNcpPayments(dr).subscribe(data => {
                 this.ncpPayments = data;
                 this.dataSource.data = data;
                 this.resultsLength = data.length;
-                this.isLoading = false;
             },
-            error2 => this.isLoading = false);
+            error2 => {
+                this.dialogService.clear();
+                this.dialogService.title = 'Загрузка данных';
+                this.dialogService.addItem('Результат', 'Системная ошибка');
+                this.openDialog();
+            },
+            () => {
+                this.isWait = false;
+            });
     }
 
     getSampleData() {
-        this.isLoading = true;
         this.dataService.getNcpPaymentsJson().subscribe(data => {
-                this.ncpPayments = data;
-                this.dataSource.data = data;
-                this.resultsLength = data.length;
-                this.isLoading = false;
-                //console.log(this.dataSource.data);
-            },
-            error2 => this.isLoading = false);
+            this.ncpPayments = data;
+            this.dataSource.data = data;
+            this.resultsLength = data.length;
+            //console.log(this.dataSource.data);
+        }, () => {
+        }, () => {
+            this.isWait = false;
+        });
     }
 
     processForSelect(paymentRow) {
@@ -103,28 +111,33 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     toTransit() {
+        this.isWait = true;
         this.dialogService.clear();
         this.dialogService.title = 'Отчёт по разноске на транзитный счёт';
-        this.isLoading = true;
         this.dataSource.data.forEach(payment => {
             if (payment.isChecked) {
                 this.dataService.paymentToTransit(new Id(payment.id)).subscribe(data => {
                         this.restResponse = data;
-                        this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: ' + data.data + '(' + data.result + ')');
                         if (data.result == 'ok') {
-                            console.log('updated payment status:\n' + data.data.status);
+                            this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Успешно, (transitPaymentDocNumId = ' + data.data.transitPaymentDocNumId + ')');
                             payment.status = data.data.status;
-                        };
+                        } else {
+                            this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Неудача, ' + data.data + '(' + data.result + ')');
+                        }
+                        ;
                     },
-                    error2 => this.isLoading = false,
+                    error2 => {
+                        this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Системная ошибка');
+                    },
                     () => {
-                        this.isLoading = false;
-                        //this.getData();
+
                     });
             }
         });
+        this.isWait = false;
         this.openDialog();
     }
+
 
     catchStartDatePickerEvent(type: string, event: MatDatepickerInputEvent<Date>) {
         if (type == 'input') {
@@ -153,8 +166,21 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     /** Selects all rows if they are not all selected; otherwise clear selection. */
     masterToggle() {
         this.isAllSelected() ?
-            this.selection.clear() :
-            this.dataSource.data.forEach(row => this.selection.select(row));
+            this.clearSelection() :
+            this.dataSource.data.forEach(row => {
+                this.selection.select(row);
+                if (!row.isChecked)
+                    row.isChecked = true;
+                else
+                    row.isChecked = false;
+            });
+    }
+
+    clearSelection() {
+        this.selection.clear();
+        this.dataSource.data.forEach(row => {
+            row.isChecked = false;
+        });
     }
 
 }

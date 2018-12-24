@@ -30,7 +30,7 @@ export class DataService {
         return this._http.get("./assets/payments.json")
     }
 
-    paymentToTransit(paymentId: Id): Observable <NcpPayment> {
+    paymentToTransit(paymentId: Id): Observable <RestResponse> {
         return this._http.post <RestResponse> (environment.urlPaymentToTransit, paymentId.id, httpOptions);
     }
 
