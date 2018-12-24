@@ -53,6 +53,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
         //console.log(this.pickerStartDate.value);
         //console.log(this.pickerEndDate.value);
+
     }
 
     openDialog() {
@@ -73,8 +74,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     getData() {
         this.isWait = true;
         this.dataSource.data = [];
-        //this.isLoading = true;
-        let dr = new DateRange(this.pickerStartDate.value, this.pickerEndDate.value);
+        let dr = new DateRange(this.pickerStartDate.value.getTime(), this.pickerEndDate.value.getTime());
         this.dataService.getNcpPayments(dr).subscribe(data => {
                 this.ncpPayments = data;
                 this.dataSource.data = data;
@@ -85,6 +85,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
                 this.dialogService.title = 'Загрузка данных';
                 this.dialogService.addItem('Результат', 'Системная ошибка');
                 this.openDialog();
+                this.isWait = false;
             },
             () => {
                 this.isWait = false;
@@ -138,21 +139,11 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.openDialog();
     }
 
-
-    catchStartDatePickerEvent(type: string, event: MatDatepickerInputEvent<Date>) {
-        if (type == 'input') {
-            //console.log(event.value);
-        }
-    }
-
     catchEndDatePickerEvent(type: string, event: MatDatepickerInputEvent<Date>) {
         if (type == 'input') {
             let end = new Date(this.pickerEndDate.value);
             end.setHours(23, 59, 59, 999);
             this.pickerEndDate.setValue(end);
-            //console.log(event.value);
-            //console.log(this.pickerStartDate.value);
-            //console.log(this.pickerEndDate.value);
         }
     }
 
