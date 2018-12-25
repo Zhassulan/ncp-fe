@@ -24,6 +24,8 @@ export enum PaymentStatusRu {
     'Ошибка разнесения с тразитного счёта'
 }
 
+export const shrinkDetailsColumnSize = 200;
+
 /*
 const PaymentStatus = {
     STATUS_NEW: 0,

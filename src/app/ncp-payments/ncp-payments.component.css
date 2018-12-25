@@ -17,7 +17,7 @@ td, th {
 }
 
 .mat-column-status {
-     flex: 0 0 5% !important;
+     flex: 0 0 7% !important;
      white-space: unset !important;
  }
 
@@ -39,4 +39,8 @@ td, th {
 .mat-column-paymentDetails{
     flex: 0 0 20% !important;
     white-space: unset !important;
+}
+
+.row_highlight{
+    background: lightgreen; /* green */
 }

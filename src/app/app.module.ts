@@ -20,12 +20,13 @@ import {MenuToolbarComponent} from './menu-toolbar/menu-toolbar.component';
 import {MaterialsModule} from './materials/materials.module';
 import {RoutesModule} from './routes/routes.module';
 import {MAT_DATE_LOCALE} from '@angular/material';
-import {PaymentStatusRuPipe} from './payment-status-ru-pipe';
+import {PaymentStatusRuPipe} from './ncp-payments/payment-status-ru-pipe';
 import {HighlightDistributed} from './highlight-distributed';
 import {DialogReportComponent} from './dialog/dialog-report/dialog-report.component';
 import {DialogService} from './dialog/dialog.service';
 import {DataService} from './data/data.service';
 import { SpinnerComponent } from './spinner/spinner.component';
+import {PaymentDetailsPipe} from './ncp-payments/payment-details-pipe';
 
 @NgModule({
     declarations: [
@@ -41,6 +42,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
         HighlightDistributed,
         DialogReportComponent,
         SpinnerComponent,
+        PaymentDetailsPipe
     ],
     entryComponents: [
         DialogReportComponent
