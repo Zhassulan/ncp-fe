@@ -29,6 +29,8 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     restResponse = new RestResponse();
     pickerStartDate = new FormControl(new Date());
     pickerEndDate = new FormControl(new Date());
+    isBadgeVisible = false;
+    selectedItems: number = 0;
 
     constructor(private dataService: DataService, private dialogService: DialogService) {
         this.dataSource = new MatTableDataSource(this.ncpPayments);
@@ -43,11 +45,12 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+
     }
 
     ngAfterViewInit() {
-        this.getData();
-        //this.getSampleData();
+        //this.getData();
+        this.getSampleData();
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -105,10 +108,19 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     processForSelect(paymentRow) {
-        if (!paymentRow.isChecked)
+
+        if (!paymentRow.isChecked)  {
+            this.selectedItems++;
             paymentRow.isChecked = true;
-        else
+        } else  {
             paymentRow.isChecked = false;
+            this.selectedItems--;
+        }
+        if (this.selectedItems > 0) {
+            this.isBadgeVisible = true;
+        }   else {
+            this.isBadgeVisible = false;
+        }
     }
 
     toTransit() {

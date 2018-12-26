@@ -27,7 +27,7 @@ td, th {
 }
 
 .mat-column-iin {
-    flex: 0 0 10% !important;
+    flex: 0 0 7% !important;
     white-space: unset !important;
 }
 
@@ -42,5 +42,5 @@ td, th {
 }
 
 .row_highlight{
-    background: lightgreen; /* green */
+    background: #ccffe6;
 }

@@ -38,7 +38,8 @@ import {
     MatTooltipModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatBadgeModule
 } from '@angular/material';
 
 @NgModule({
@@ -86,7 +87,8 @@ import {
         MatNativeDateModule,
         MatTableModule,
         MatPaginatorModule,
-        MatSortModule
+        MatSortModule,
+        MatBadgeModule
     ]
 })
 export class MaterialsModule {
