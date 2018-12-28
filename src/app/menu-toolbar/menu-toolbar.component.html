@@ -3,15 +3,21 @@
         <button mat-icon-button id="menu">
             <mat-icon>menu</mat-icon>
         </button>
-        <span>Onlinebank</span>
+        <span>NCP</span>
 
+        <!--
         <span>
-             <a routerLink="/onlinebank/payment/ncp" routerLinkActive="router-link-active"><button mat-button>Платежи NCP</button></a>
+             <a routerLink="/home" routerLinkActive="router-link-active"><button mat-button>Платежи NCP</button></a>
         </span>
-
+        -->
         <span class="example-spacer"></span>
         <!--<mat-icon class="example-icon">favorite</mat-icon>-->
-        <mat-icon class="example-icon">exit_to_app</mat-icon>
+        <div class="well" *ngIf="getUser()" style="font-size: small;">
+            {{ getUser() }}
+        </div>
+        <button mat-icon-button (click)="logout()">
+            <mat-icon class="example-icon">exit_to_app</mat-icon>
+        </button>
 
     </mat-toolbar-row>
 </mat-toolbar>

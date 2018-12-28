@@ -49,8 +49,8 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        //this.getData();
-        this.getSampleData();
+        this.getData();
+        //this.getSampleData();
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -108,17 +108,16 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     processForSelect(paymentRow) {
-
-        if (!paymentRow.isChecked)  {
+        if (!paymentRow.isChecked) {
             this.selectedItems++;
             paymentRow.isChecked = true;
-        } else  {
+        } else {
             paymentRow.isChecked = false;
             this.selectedItems--;
         }
         if (this.selectedItems > 0) {
             this.isBadgeVisible = true;
-        }   else {
+        } else {
             this.isBadgeVisible = false;
         }
     }
@@ -168,15 +167,20 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
 
     /** Selects all rows if they are not all selected; otherwise clear selection. */
     masterToggle() {
-        this.isAllSelected() ?
-            this.clearSelection() :
-            this.dataSource.data.forEach(row => {
-                this.selection.select(row);
-                if (!row.isChecked)
-                    row.isChecked = true;
-                else
-                    row.isChecked = false;
-            });
+        this.isAllSelected() ? this.clearSelection() : this.selectAll();
+    }
+
+    selectAll() {
+        this.selectedItems = 0;
+        this.dataSource.data.forEach(row => {
+            this.selection.select(row);
+            this.selectedItems++;
+            if (!row.isChecked)
+                row.isChecked = true;
+            else
+                row.isChecked = false;
+        });
+        this.isBadgeVisible = true;
     }
 
     clearSelection() {
@@ -184,6 +188,8 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.dataSource.data.forEach(row => {
             row.isChecked = false;
         });
+        this.isBadgeVisible = false;
+        this.selectedItems = 0;
     }
 
 }

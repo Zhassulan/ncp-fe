@@ -9,6 +9,8 @@ export const environment = {
     urlGetNcpPaymentsRange: 'http://localhost:8080/onlinebank/dataservice/exdata/ncpPayments',
     //urlPaymentsToTransit: 'http://localhost:8080/onlinebank/dataservice/exdata/paymentsToTransit',
     urlPaymentToTransit: 'http://localhost:8080/onlinebank/dataservice/exdata/distributeTransitPayment',
+    urlValidateLogin: 'http://localhost:8080/onlinebank/dataservice/auth/validateLogin',
+    urlValidateAuthorization : 'http://localhost:8080/onlinebank/dataservice/auth/validateAuthorization'
 };
 
 /*

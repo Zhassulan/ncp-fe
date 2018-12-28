@@ -7,12 +7,7 @@ import {catchError, retry} from 'rxjs/internal/operators';
 import {DateRange} from './date-range';
 import {RestResponse} from './rest-response';
 import {Id} from './id';
-
-const httpOptions = {
-    headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-    })
-};
+import {httpOptions} from '../settings';
 
 @Injectable({
     providedIn: 'root',

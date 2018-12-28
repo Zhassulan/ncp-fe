@@ -17,11 +17,11 @@
             <mat-datepicker #endDate></mat-datepicker>
         </mat-form-field>
 
-        <button mat-raised-button color="primary" (click)="getData()" matTooltip="Загрузка данных за указанную дату">Загрузить данные</button>
+        <button mat-raised-button color="primary" (click)="getData()" matTooltip="Загрузка данных за указанную дату">Загрузка</button>
         <button mat-raised-button color="primary" (click)="toTransit()" matBadge="{{selectedItems}}"
                 matBadgePosition="before" matBadgeColor="accent" [matBadgeHidden]="!isBadgeVisible"
                 matTooltip="Выделенные на транзитный счёт"
-                >На транзит</button>
+                >Транзит</button>
     </div>
 
     <div fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px">

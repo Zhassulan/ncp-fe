@@ -1,3 +1,5 @@
+import {HttpHeaders} from '@angular/common/http';
+
 export enum PaymentStatus {
     STATUS_NEW = 0,
     STATUS_DISTRIBUTED = 1,
@@ -25,6 +27,16 @@ export enum PaymentStatusRu {
 }
 
 export const shrinkDetailsColumnSize = 200;
+
+export const httpOptions = {
+    headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+    })
+};
+
+export const ldapGroups = {
+    tele2users: 'itdev-ncp-user-tele2'
+};
 
 /*
 const PaymentStatus = {

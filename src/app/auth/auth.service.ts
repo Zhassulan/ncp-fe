@@ -1,61 +1,28 @@
 import {Injectable} from '@angular/core';
-import {
-    HttpClient,
-    HttpEventType,
-    HttpRequest,
-    HttpResponse,
-    HttpHeaders
-} from '@angular/common/http';
-import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/internal/operators';
-// import * as ldapjs from 'ldapjs';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../environments/environment';
+import {httpOptions} from '../settings';
+import {RestResponse} from '../data/rest-response';
+import {Observable} from 'rxjs';
+import {User} from '../model/user';
 
-const endpoint = 'http://localhost:8080/ncp-resteasy/rest/user/auth';
-const httpOptions = {
-    headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-    })
-};
-
-//const ldapClient = ldapjs.createClient(3268, '192.168.101.70');
-
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class AuthService {
-
-    example;
 
     constructor(private http: HttpClient) {
     }
 
-    private extractData(res: Response) {
-        let body = res;
-        return body || {};
+    login(userObj: User): Observable <RestResponse> {
+        return this.http.post <RestResponse>(environment.urlValidateLogin, userObj, httpOptions);
     }
 
-    login(username: string, password: string) {
-        let headers = new HttpHeaders();
-        headers.append('Authorization', 'Basic ' + window.btoa(username + ':' + password));
-        headers.append('Content-Type', 'application/x-www-form-urlencoded');
-        this.http.get(endpoint, {
-            headers: headers
-        }).subscribe(
-            data => this.example = data.toString(),
-            err => this.logError(err.toString()),
-            () => console.log('Request Complete')
-        );
-        console.log(this.example);
-        // to keep user logged in between page refreshes
-        //user.authdata = window.btoa(username + ':' + password);
-        localStorage.setItem('username', JSON.stringify(username));
-    }
-
-    logError(msg)   {
-        console.log(msg);
+    isAuthorized(userObj: User): Observable <RestResponse>  {
+        return this.http.post <RestResponse>(environment.urlValidateAuthorization, userObj, httpOptions);
     }
 
     logout() {
-        // remove user from local storage to log user out
         localStorage.removeItem('username');
     }
 
@@ -63,20 +30,13 @@ export class AuthService {
         return localStorage.getItem('username');
     }
 
-    isLoggedIn(): boolean {
+    isLogged(): boolean {
         return this.getUser() !== null;
-    }
-
-    private handleError<T>(operation = 'operation', result?: T) {
-        return (error: any): Observable<T> => {
-            console.error(error);
-            console.log(`${operation} failed: ${error.message}`);
-            return; //of(result as T);
-        };
     }
 
 }
 
-export const AUTH_PROVIDERS: Array<any> = [
-    {provide: AuthService, useClass: AuthService}
+export const AUTH_PROVIDERS: Array<any> = [{
+    provide: AuthService, useClass: AuthService
+}
 ];
