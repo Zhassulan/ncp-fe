@@ -15,7 +15,7 @@
         <div class="well" *ngIf="getUser()" style="font-size: small;">
             {{ getUser() }}
         </div>
-        <button mat-icon-button (click)="logout()">
+        <button mat-icon-button (click)="logout()" matTooltip="Выход">
             <mat-icon class="example-icon">exit_to_app</mat-icon>
         </button>
 

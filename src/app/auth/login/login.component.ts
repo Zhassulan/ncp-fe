@@ -2,10 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {Router} from '@angular/router';
 import {MatDialogRef, MatSnackBar} from '@angular/material';
-import {LoginObject} from '../../model/login-object';
 import {User} from '../../model/user';
-import {settings} from 'cluster';
-import {ldapGroups} from '../../settings';
+import {ldapGroups, timeouts, rests, msgs, localStorageTokenName} from '../../settings';
+import {NGXLogger} from 'ngx-logger';
 
 @Component({
     selector: 'app-login',
@@ -23,47 +22,55 @@ export class LoginComponent implements OnInit {
         this.isWait = false;
     }
 
-    constructor(public authService: AuthService, private router: Router, public snackBar: MatSnackBar, private dialogRef:MatDialogRef<LoginComponent>) {
+    constructor(public authService: AuthService,
+                private router: Router,
+                public snackBar: MatSnackBar,
+                private dialogRef:MatDialogRef<LoginComponent>,
+                private logger: NGXLogger) {
     }
 
     login() {
         let userObj = new User (this.userName, this.userPassword, ldapGroups.tele2users);
         //проверка логина и пароля
         this.authService.login(userObj).subscribe(data => {
-                if (data.result == 'ok') {
+                if (data.result == rests.restResultOk) {
                     //проверка нахождения в группе
                     this.authService.isAuthorized(userObj).subscribe(data => {
-                            if (data.result == 'ok') {
-                                localStorage.setItem('username', data.data.userName);
+                            if (data.result == rests.restResultOk) {
+                                localStorage.setItem(localStorageTokenName, data.data.userName);
                                 this.router.navigate(['/home']);
                                 this.dialogRef.close();
                             }
-                            if (data.result == 'error') {
-                                this.showError('Извините, у Вас нет разрешений на использование приложения.');
+                            if (data.result == rests.restResultErr) {
+                                this.showMsg(msgs.msgNoRights);
+                                this.logger.warn(msgs.msgNoRights + ' ' + userObj.userName);
                             }
                         },
                         error2 => {
-                            this.showError('Системная ошибка проверки разрешений.');
+                            this.showMsg(msgs.msgSysErrRights + ' ' + error2);
+                            this.logger.error(msgs.msgSysErrRights + ' ' + userObj.userName);
                         });
                 }
-                if (data.result == 'error') {
-                    this.showError('Не верный пользователь или пароль.');
+                if (data.result == rests.restResultErr) {
+                    this.showMsg(msgs.msgWrongCreds);
+                    this.logger.warn(msgs.msgWrongCreds + ' ' + userObj.userName);
                 }
             },
             error2 => {
-                this.showError('Системная ошибка проверки логина и пароля.');
+                this.showMsg(msgs.msgSysErrCreds + ' ' + error2);
+                this.logger.error(msgs.msgSysErrCreds + ' ' + userObj.userName);
             });
     }
 
-    showError(text) {
+    showMsg(text) {
         this.openSnackBar(text, '');
         setTimeout(function () {
-        }.bind(this), 3000);
+        }.bind(this), timeouts.timeoutAfterLoginInput);
     }
 
     openSnackBar(message: string, action: string) {
         this.snackBar.open(message, action, {
-            duration: 3000,
+            duration: timeouts.showMsgDelay,
         });
     }
 

@@ -49,8 +49,8 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.getData();
-        //this.getSampleData();
+        //this.getData();
+        this.getSampleData();
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);

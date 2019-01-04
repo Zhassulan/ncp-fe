@@ -23,6 +23,8 @@ import {DialogService} from './dialog/dialog.service';
 import {DataService} from './data/data.service';
 import {PaymentDetailsPipe} from './ncp-payments/payment-details-pipe';
 import { LoginPageComponent } from './auth/login-page/login-page.component';
+import {LoggerModule} from 'ngx-logger';
+import {environment} from '../environments/environment';
 
 @NgModule({
     declarations: [
@@ -51,6 +53,7 @@ import { LoginPageComponent } from './auth/login-page/login-page.component';
         BrowserAnimationsModule,
         RoutesModule,
         FlexLayoutModule,
+        LoggerModule.forRoot(environment.logging),
         /*
         HttpClientXsrfModule.withOptions({
             cookieName: 'My-Xsrf-Cookie',
