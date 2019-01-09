@@ -42,17 +42,16 @@ export const enum rests {
     restResultErr = 'error'
 }
 export const enum msgs {
+    msgLoggedSuccess = 'Успешно выполнен логин.',
     msgNoRights = 'Извините, нет разрешений на использование приложения.',
     msgSysErrRights = 'Системная ошибка проверки разрешений.',
     msgWrongCreds = 'Не верный пользователь или пароль.',
-    msgSysErrCreds = 'Системная ошибка проверки логина/пароля.'
+    msgSysErrCreds = 'Системная ошибка проверки логина/пароля.',
+    msgErrLoadData = 'Ошибка загрузки данных.',
+    msgErrToTransit = 'Ошибка переноса на транзитный счёт.',
+    msgSuccessToTransit = 'Платёж успешно перенесён на тразнитный счёт.'
 }
 export const localStorageTokenName = 'token';
-export const enum logLevel {
-    info = 1,
-    warn = 3,
-    error = 4
-}
 
 export class Settings {
 }

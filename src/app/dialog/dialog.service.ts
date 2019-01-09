@@ -10,12 +10,13 @@ export class DialogService {
 
     title: string = null;
     dialogData: DialogData[] = [];
+    dialogRef;
 
     constructor(public dialog: MatDialog) {
     }
 
     openDialog(): void {
-        const dialogRef = this.dialog.open(DialogReportComponent, {
+        this.dialogRef = this.dialog.open(DialogReportComponent, {
             width: '50%',
             data: {
                 title: this.title,
@@ -41,6 +42,14 @@ export class DialogService {
     clear() {
         this.title = null;
         this.dialogData = [];
+    }
+
+    setWait()    {
+        this.dialogRef.componentInstance.isWait = true;
+    }
+
+    setWaitNot()  {
+        this.dialogRef.componentInstance.isWait = false;
     }
 
 }

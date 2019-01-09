@@ -2,12 +2,14 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {DataService} from '../data/data.service';
 import {NcpPayment} from '../model/ncp-payment';
 import {DateRange} from '../data/date-range';
-import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTableDataSource, MatSnackBar} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
 import {RestResponse} from '../data/rest-response';
 import {Id} from '../data/id';
 import {DialogService} from '../dialog/dialog.service';
 import {FormControl} from '@angular/forms';
+import {NGXLogger} from 'ngx-logger';
+import {timeouts, msgs} from '../settings';
 
 @Component({
     selector: 'app-ncp-payments',
@@ -18,11 +20,21 @@ import {FormControl} from '@angular/forms';
 export class NcpPaymentsComponent implements OnInit, AfterViewInit {
 
     ncpPayments = [];
-    displayedColumns = ['ID', 'nameSender', 'sum', 'rnnSender', 'accountSender', 'knp', 'paymentDetails', 'managers', 'status', 'select']; //, 'Mobipay', 'distribution'];
+    displayedColumns = [
+        'ID',
+        'nameSender',
+        'sum',
+        'rnnSender',
+        'accountSender',
+        'knp',
+        'paymentDetails',
+        'managers',
+        'status',
+        'select',
+        'rowMenu']; //, 'Mobipay', 'distribution'];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     dataSource = new MatTableDataSource<NcpPayment>();
-    //isLoading = true;
     isWait = true;
     resultsLength = 0;
     selection = new SelectionModel<NcpPayment>(true, []);
@@ -32,7 +44,10 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     isBadgeVisible = false;
     selectedItems: number = 0;
 
-    constructor(private dataService: DataService, private dialogService: DialogService) {
+    constructor(private dataService: DataService,
+                private dialogService: DialogService,
+                private logger: NGXLogger,
+                public snackBar: MatSnackBar) {
         this.dataSource = new MatTableDataSource(this.ncpPayments);
         let nowStartDay;
         let nowEndDay;
@@ -44,27 +59,18 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.pickerEndDate.setValue(nowEndDay);
     }
 
-    ngOnInit() {
-
-    }
+    ngOnInit() { }
 
     ngAfterViewInit() {
-        //this.getData();
-        this.getSampleData();
+        this.getData();
+        //this.getSampleData();
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-        //console.log(this.pickerStartDate.value);
-        //console.log(this.pickerEndDate.value);
-
-    }
-
-    openDialog() {
-        this.dialogService.openDialog();
     }
 
     onRowClicked(paymentRow) {
-        //console.log('Row clicked: ', row);
+        console.log('Row clicked: ', paymentRow);
     }
 
     applyFilter(filterValue: string) {
@@ -84,10 +90,8 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
                 this.resultsLength = data.length;
             },
             error2 => {
-                this.dialogService.clear();
-                this.dialogService.title = 'Загрузка данных';
-                this.dialogService.addItem('Результат', 'Системная ошибка');
-                this.openDialog();
+                this.showMsg(msgs.msgErrLoadData);
+                this.logger.error(msgs.msgErrLoadData);
                 this.isWait = false;
             },
             () => {
@@ -122,32 +126,42 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    toTransit() {
-        this.isWait = true;
-        this.dialogService.clear();
-        this.dialogService.title = 'Отчёт по разноске на транзитный счёт';
-        this.dataSource.data.forEach(payment => {
-            if (payment.isChecked) {
-                this.dataService.paymentToTransit(new Id(payment.id)).subscribe(data => {
-                        this.restResponse = data;
-                        if (data.result == 'ok') {
-                            this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Успешно, (transitPaymentDocNumId = ' + data.data.transitPaymentDocNumId + ')');
-                            payment.status = data.data.status;
-                        } else {
-                            this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Неудача, ' + data.data + '(' + data.result + ')');
-                        }
-                        ;
-                    },
-                    error2 => {
-                        this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Системная ошибка');
-                    },
-                    () => {
+    toTransit(payment)  {
+        this.dialogService.setWait();
+        this.dataService.paymentToTransit(payment.id).subscribe(data => {
+                this.restResponse = data;
+                if (data.result == 'ok') {
+                    this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Успешно, (transitPaymentDocNumId = ' + data.data.transitPaymentDocNumId + ')');
+                    this.logger.info(msgs.msgSuccessToTransit + ' ID платежа ' + payment.id);
+                    payment.status = data.data.status;
+                } else {
+                    this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Неудача, ' + data.data + '(' + data.result + ')');
+                    this.logger.warn(msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + data.data + '(' + data.result + ')');
+                }
+            },
+            error2 => {
+                this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: ' + msgs.msgErrToTransit);
+                this.logger.error(msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + error2);
+                this.dialogService.setWaitNot();
+            },
+            () => {
+                this.dialogService.setWaitNot();
+            });
+    }
 
-                    });
-            }
-        });
-        this.isWait = false;
-        this.openDialog();
+    toTransitSelected() {
+        if (this.selectedItems > 0) {
+            this.dialogService.clear();
+            this.dialogService.title = 'Перевод на транзитный счёт';
+            this.dialogService.openDialog();
+            this.dataSource.data.forEach(payment => {
+                if (payment.isChecked) {
+                    this.toTransit(payment);
+                }
+            });
+        }   else    {
+            this.showMsg('Не выбрано ни одного платежа');
+        }
     }
 
     catchEndDatePickerEvent(type: string, event: MatDatepickerInputEvent<Date>) {
@@ -190,6 +204,25 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         });
         this.isBadgeVisible = false;
         this.selectedItems = 0;
+    }
+
+    showMsg(text) {
+        this.openSnackBar(text, '');
+        setTimeout(function () {
+        }.bind(this), timeouts.timeoutAfterLoginInput);
+    }
+
+    openSnackBar(message: string, action: string) {
+        this.snackBar.open(message, action, {
+            duration: timeouts.showMsgDelay,
+        });
+    }
+
+    rowMenuToTransit(paymentRow) {
+        this.dialogService.clear();
+        this.dialogService.title = 'Перевод на транзитный счёт';
+        this.dialogService.openDialog();
+        this.toTransit(paymentRow);
     }
 
 }

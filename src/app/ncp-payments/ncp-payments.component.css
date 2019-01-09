@@ -1,46 +1,18 @@
-table {
+.mat-table {
+    display: table;
     width: 100%;
 }
-
-td, th {
-     width: 15%;
- }
-
-.mat-column-sum {
-    flex: 0 0 5% !important;
-    white-space: unset !important;
+.mat-header-row, .mat-row {
+    display: table-row;
 }
 
-.mat-column-knp {
-    flex: 0 0 5% !important;
-    white-space: unset !important;
+.mat-header-cell, .mat-cell {
+    display: table-cell;
+    vertical-align: middle;
+    padding-right: 1%;
+    /* word-wrap: break-word; */
 }
 
-.mat-column-status {
-     flex: 0 0 7% !important;
-     white-space: unset !important;
- }
-
-.mat-column-id {
-    flex: 0 0 4% !important;
-    white-space: unset !important;
-}
-
-.mat-column-iin {
-    flex: 0 0 7% !important;
-    white-space: unset !important;
-}
-
-.mat-column-accountSender {
-    flex: 0 0 10% !important;
-    white-space: unset !important;
-}
-
-.mat-column-paymentDetails{
-    flex: 0 0 20% !important;
-    white-space: unset !important;
-}
-
-.row_highlight{
+.row_highlight {
     background: #ccffe6;
 }

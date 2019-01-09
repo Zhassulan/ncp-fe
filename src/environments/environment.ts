@@ -5,15 +5,16 @@ import {NgxLoggerLevel} from 'ngx-logger';
 
 export const environment = {
     production: false,
-    urlGetNcpPaymentsRange: 'http://localhost:8080/onlinebank/dataservice/exdata/ncpPayments',
-    urlPaymentToTransit: 'http://localhost:8080/onlinebank/dataservice/exdata/distributeTransitPayment',
-    urlValidateLogin: 'http://localhost:8080/onlinebank/dataservice/auth/validateLogin',
-    urlValidateAuthorization : 'http://localhost:8080/onlinebank/dataservice/auth/validateAuthorization',
     logging: {
         level: NgxLoggerLevel.DEBUG,
         serverLogLevel: NgxLoggerLevel.DEBUG,
         serverLoggingUrl: 'http://localhost:8080/onlinebank/dataservice/logging/log'
-    }
+    },
+    urlGetNcpPaymentsRange: 'http://localhost:8080/onlinebank/dataservice/exdata/ncpPayments',
+    urlPaymentToTransit: 'http://localhost:8080/onlinebank/dataservice/exdata/paymentToTransit',
+    urlValidateLogin: 'http://localhost:8080/onlinebank/dataservice/auth/validateLogin',
+    urlValidateAuthorization : 'http://localhost:8080/onlinebank/dataservice/auth/validateAuthorization',
+    urlDeleteTransitPayment: 'http://localhost:8080/onlinebank/dataservice/exdata/deleteTransitPayment'
 };
 
 /*

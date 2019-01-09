@@ -9,6 +9,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 export class DialogReportComponent implements  OnInit, AfterViewInit {
 
     listHeight: number;
+    isWait = true;
 
     ngOnInit(): void {
     }

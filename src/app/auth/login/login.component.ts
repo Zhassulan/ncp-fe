@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
                     //проверка нахождения в группе
                     this.authService.isAuthorized(userObj).subscribe(data => {
                             if (data.result == rests.restResultOk) {
+                                this.logger.info(msgs.msgLoggedSuccess + ' ' + userObj.userName);
                                 localStorage.setItem(localStorageTokenName, data.data.userName);
                                 this.router.navigate(['/home']);
                                 this.dialogRef.close();
@@ -48,7 +49,7 @@ export class LoginComponent implements OnInit {
                         },
                         error2 => {
                             this.showMsg(msgs.msgSysErrRights + ' ' + error2);
-                            this.logger.error(msgs.msgSysErrRights + ' ' + userObj.userName);
+                            this.logger.error(msgs.msgSysErrRights + ' ' + userObj.userName + ' ' + error2);
                         });
                 }
                 if (data.result == rests.restResultErr) {
@@ -58,7 +59,7 @@ export class LoginComponent implements OnInit {
             },
             error2 => {
                 this.showMsg(msgs.msgSysErrCreds + ' ' + error2);
-                this.logger.error(msgs.msgSysErrCreds + ' ' + userObj.userName);
+                this.logger.error(msgs.msgSysErrCreds + ' ' + userObj.userName + ' ' + error2);
             });
     }
 

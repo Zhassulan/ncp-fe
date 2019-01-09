@@ -2,6 +2,8 @@
     <h1 mat-dialog-title>{{data.title}}</h1>
 </div>
 
+<mat-progress-bar mode="indeterminate" *ngIf="isWait"></mat-progress-bar>
+
 <div mat-dialog-content>
     <mat-list>
         <ul>
