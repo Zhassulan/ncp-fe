@@ -12,6 +12,9 @@
     padding-right: 1%;
     /* word-wrap: break-word; */
 }
+.mat-row:hover {
+    background-color: #eeeeee;
+}
 
 .row_highlight {
     background: #ccffe6;

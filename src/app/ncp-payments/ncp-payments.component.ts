@@ -5,11 +5,10 @@ import {DateRange} from '../data/date-range';
 import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTableDataSource, MatSnackBar} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
 import {RestResponse} from '../data/rest-response';
-import {Id} from '../data/id';
 import {DialogService} from '../dialog/dialog.service';
 import {FormControl} from '@angular/forms';
 import {NGXLogger} from 'ngx-logger';
-import {timeouts, msgs} from '../settings';
+import {timeouts, msgs, localStorageTokenName, PaymentStatusRu} from '../settings';
 
 @Component({
     selector: 'app-ncp-payments',
@@ -29,7 +28,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         'knp',
         'paymentDetails',
         'managers',
-        'status',
+        'statusRu',
         'select',
         'rowMenu']; //, 'Mobipay', 'distribution'];
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -59,7 +58,8 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.pickerEndDate.setValue(nowEndDay);
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+    }
 
     ngAfterViewInit() {
         this.getData();
@@ -86,6 +86,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         let dr = new DateRange(this.pickerStartDate.value.getTime(), this.pickerEndDate.value.getTime());
         this.dataService.getNcpPayments(dr).subscribe(data => {
                 this.ncpPayments = data;
+                this.updateStatusRu();
                 this.dataSource.data = data;
                 this.resultsLength = data.length;
             },
@@ -102,6 +103,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     getSampleData() {
         this.dataService.getNcpPaymentsJson().subscribe(data => {
             this.ncpPayments = data;
+            this.updateStatusRu();
             this.dataSource.data = data;
             this.resultsLength = data.length;
             //console.log(this.dataSource.data);
@@ -126,17 +128,18 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    toTransit(payment)  {
+    toTransit(payment) {
         this.dialogService.setWait();
         this.dataService.paymentToTransit(payment.id).subscribe(data => {
                 this.restResponse = data;
                 if (data.result == 'ok') {
                     this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Успешно, (transitPaymentDocNumId = ' + data.data.transitPaymentDocNumId + ')');
-                    this.logger.info(msgs.msgSuccessToTransit + ' ID платежа ' + payment.id);
+                    this.logger.info(msgs.msgSuccessToTransit + ' ID платежа ' + payment.id + ' TRANSIT_PDOC_ID ' + payment.transitPaymentDocNumId);
                     payment.status = data.data.status;
+                    this.setStatusRu(payment);
                 } else {
-                    this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Неудача, ' + data.data + '(' + data.result + ')');
-                    this.logger.warn(msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + data.data + '(' + data.result + ')');
+                    this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Неудача, ' + data.data + ' (' + data.result + ')');
+                    this.logger.warn(msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')');
                 }
             },
             error2 => {
@@ -159,7 +162,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
                     this.toTransit(payment);
                 }
             });
-        }   else    {
+        } else {
             this.showMsg('Не выбрано ни одного платежа');
         }
     }
@@ -225,5 +228,45 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.toTransit(paymentRow);
     }
 
+    deleteTransit(payment) {
+        this.dialogService.setWait();
+        this.dataService.deleteTransitPayment(payment.id, localStorage.getItem(localStorageTokenName)).subscribe(data => {
+                this.restResponse = data;
+                if (data.result == 'ok') {
+                    this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Успешно');
+                    this.logger.info(msgs.msgSuccessDelTransit + ' ID платежа ' + payment.id);
+                    payment.status = data.data.status;
+                    this.setStatusRu(payment);
+                } else {
+                    this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Неудача, ' + data.data + ' (' + data.result + ')');
+                    this.logger.warn(msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')');
+                }
+            },
+            error2 => {
+                this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: ' + msgs.msgErrDelTransit + ' (' + error2 + ')');
+                this.logger.error(msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + error2);
+                this.dialogService.setWaitNot();
+            },
+            () => {
+                this.dialogService.setWaitNot();
+            });
+    }
+
+    rowMenuDeleteTransit(paymentRow) {
+        this.dialogService.clear();
+        this.dialogService.title = 'Удалнение с тразитного счёта';
+        this.dialogService.openDialog();
+        this.deleteTransit(paymentRow);
+    }
+
+    setStatusRu(payment) {
+        payment.statusRu = PaymentStatusRu[payment.status];
+    }
+
+    updateStatusRu()    {
+        this.ncpPayments.forEach(payment => {
+            this.setStatusRu(payment);
+        })
+    }
 }
 

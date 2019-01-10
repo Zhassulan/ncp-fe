@@ -6,7 +6,6 @@ import {Observable, throwError} from 'rxjs';
 import {catchError, retry} from 'rxjs/internal/operators';
 import {DateRange} from './date-range';
 import {RestResponse} from './rest-response';
-import {Id} from './id';
 import {httpOptions} from '../settings';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';

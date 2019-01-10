@@ -49,7 +49,9 @@ export const enum msgs {
     msgSysErrCreds = 'Системная ошибка проверки логина/пароля.',
     msgErrLoadData = 'Ошибка загрузки данных.',
     msgErrToTransit = 'Ошибка переноса на транзитный счёт.',
-    msgSuccessToTransit = 'Платёж успешно перенесён на тразнитный счёт.'
+    msgSuccessToTransit = 'Платёж успешно перенесён на тразнитный счёт.',
+    msgSuccessDelTransit = 'Успешно удалён с транзитного счёта',
+    msgErrDelTransit = 'Ошибка удаления с транзитного счёта'
 }
 export const localStorageTokenName = 'token';
 

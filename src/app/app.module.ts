@@ -25,6 +25,7 @@ import {PaymentDetailsPipe} from './ncp-payments/payment-details-pipe';
 import { LoginPageComponent } from './auth/login-page/login-page.component';
 import {LoggerModule} from 'ngx-logger';
 import {environment} from '../environments/environment';
+import { ViewPaymentComponent } from './ncp-payments/view-payment/view-payment.component';
 
 @NgModule({
     declarations: [
@@ -36,7 +37,8 @@ import {environment} from '../environments/environment';
         HighlightDistributed,
         DialogReportComponent,
         PaymentDetailsPipe,
-        LoginPageComponent
+        LoginPageComponent,
+        ViewPaymentComponent
     ],
     entryComponents: [
         DialogReportComponent,
