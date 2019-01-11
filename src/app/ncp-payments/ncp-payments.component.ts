@@ -8,7 +8,7 @@ import {RestResponse} from '../data/rest-response';
 import {DialogService} from '../dialog/dialog.service';
 import {FormControl} from '@angular/forms';
 import {NGXLogger} from 'ngx-logger';
-import {timeouts, msgs, localStorageTokenName, PaymentStatusRu} from '../settings';
+import {timeouts, msgs, PaymentStatusRu, locStorItems} from '../settings';
 
 @Component({
     selector: 'app-ncp-payments',
@@ -62,8 +62,8 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.getData();
-        //this.getSampleData();
+        //this.getData();
+        this.getSampleData();
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -133,23 +133,31 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.dataService.paymentToTransit(payment.id).subscribe(data => {
                 this.restResponse = data;
                 if (data.result == 'ok') {
-                    this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Успешно, (transitPaymentDocNumId = ' + data.data.transitPaymentDocNumId + ')');
-                    this.logger.info(msgs.msgSuccessToTransit + ' ID платежа ' + payment.id + ' TRANSIT_PDOC_ID ' + payment.transitPaymentDocNumId);
+                    let msg = msgs.msgSuccessToTransit  + ' ID платежа ' + payment.id +  ' TRANSIT_PDOC_ID ' +
+                        data.data.transitPaymentDocNumId + this.logUser();
+                    this.dialogService.addItem(null, msg);
+                    this.logger.info(msg);
                     payment.status = data.data.status;
                     this.setStatusRu(payment);
                 } else {
-                    this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Неудача, ' + data.data + ' (' + data.result + ')');
-                    this.logger.warn(msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')');
+                    let msg = msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')' + this.logUser();
+                    this.dialogService.addItem(null, msg);
+                    this.logger.warn(msg);
                 }
             },
             error2 => {
-                this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: ' + msgs.msgErrToTransit);
-                this.logger.error(msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + error2);
+                let msg = msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + error2 + this.logUser();
+                this.dialogService.addItem(null, msg);
+                this.logger.error(msg);
                 this.dialogService.setWaitNot();
             },
             () => {
                 this.dialogService.setWaitNot();
             });
+    }
+
+    logUser(): string   {
+        return ' user ' + localStorage.getItem(locStorItems.userName);
     }
 
     toTransitSelected() {
@@ -230,21 +238,24 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
 
     deleteTransit(payment) {
         this.dialogService.setWait();
-        this.dataService.deleteTransitPayment(payment.id, localStorage.getItem(localStorageTokenName)).subscribe(data => {
+        this.dataService.deleteTransitPayment(payment.id, localStorage.getItem(locStorItems.userName)).subscribe(data => {
                 this.restResponse = data;
                 if (data.result == 'ok') {
-                    this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Успешно');
-                    this.logger.info(msgs.msgSuccessDelTransit + ' ID платежа ' + payment.id);
+                    let msg = msgs.msgSuccessDelTransit + ' ID платежа ' + payment.id + this.logUser();
+                    this.dialogService.addItem(null, msg);
+                    this.logger.info(msg);
                     payment.status = data.data.status;
                     this.setStatusRu(payment);
                 } else {
-                    this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: Неудача, ' + data.data + ' (' + data.result + ')');
-                    this.logger.warn(msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')');
+                    let msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')' + this.logUser();
+                    this.dialogService.addItem(null, msg);
+                    this.logger.warn(msg);
                 }
             },
             error2 => {
-                this.dialogService.addItem('Платёж ID:' + payment.id, ', результат: ' + msgs.msgErrDelTransit + ' (' + error2 + ')');
-                this.logger.error(msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + error2);
+                let msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + error2 + this.logUser();
+                this.dialogService.addItem(null, msg);
+                this.logger.error(msg);
                 this.dialogService.setWaitNot();
             },
             () => {
@@ -268,5 +279,6 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
             this.setStatusRu(payment);
         })
     }
+
 }
 

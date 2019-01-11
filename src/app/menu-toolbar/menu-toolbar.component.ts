@@ -1,6 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
+import {locStorItems} from '../settings';
+
+interface ROUTE {
+    icon?: string;
+    route?: string;
+    title?: string;
+}
 
 @Component({
     selector: 'app-menu-toolbar',
@@ -9,14 +16,57 @@ import {Router} from '@angular/router';
 })
 export class MenuToolbarComponent implements OnInit {
 
-    constructor(private authService: AuthService, private router: Router) {
+    paymentRoutes: ROUTE[] = [
+        {
+            icon: 'credit_card',
+            route: 'home',
+            title: 'Платежи',
+        }, {
+            icon: 'dashboard',
+            route: 'sales/dashboards',
+            title: 'Dashboards',
+        }
+    ];
+
+    accountRoutes: ROUTE[] = [
+        {
+            icon: 'contacts',
+            route: 'sales/accounts',
+            title: 'Accounts',
+        }, {
+            icon: 'people',
+            route: 'sales/contacts',
+            title: 'Contacts',
+        }, {
+            icon: 'settings_phone',
+            route: 'sales/leads',
+            title: 'Leads',
+        }, {
+            icon: 'account_box',
+            route: 'sales/opportunities',
+            title: 'Opportunities',
+        }
+    ];
+
+    equipmentRoutes: ROUTE[] = [
+        {
+            icon: 'router',
+            route: 'equipment',
+            title: 'Оборудование',
+        }
+    ];
+
+    @Output() toggleSidenav = new EventEmitter<void>();
+
+    constructor(private authService: AuthService,
+                private router: Router) {
     }
 
-    ngOnInit() {
-    }
+    ngOnInit() { }
 
     logout()    {
         this.authService.logout();
+        localStorage.removeItem(locStorItems.userName);
         this.router.navigate(['/login']);
     }
 

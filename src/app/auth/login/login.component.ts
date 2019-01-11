@@ -3,7 +3,7 @@ import {AuthService} from '../auth.service';
 import {Router} from '@angular/router';
 import {MatDialogRef, MatSnackBar} from '@angular/material';
 import {User} from '../../model/user';
-import {ldapGroups, timeouts, rests, msgs, localStorageTokenName} from '../../settings';
+import {ldapGroups, timeouts, rests, msgs, locStorItems} from '../../settings';
 import {NGXLogger} from 'ngx-logger';
 
 @Component({
@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
                     this.authService.isAuthorized(userObj).subscribe(data => {
                             if (data.result == rests.restResultOk) {
                                 this.logger.info(msgs.msgLoggedSuccess + ' ' + userObj.userName);
-                                localStorage.setItem(localStorageTokenName, data.data.userName);
+                                localStorage.setItem(locStorItems.userName, data.data.userName);
                                 this.router.navigate(['/home']);
                                 this.dialogRef.close();
                             }

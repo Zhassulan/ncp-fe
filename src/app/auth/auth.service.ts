@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {httpOptions, localStorageTokenName} from '../settings';
+import {httpOptions, locStorItems} from '../settings';
 import {RestResponse} from '../data/rest-response';
 import {Observable} from 'rxjs';
 import {User} from '../model/user';
@@ -25,11 +25,11 @@ export class AuthService {
     }
 
     logout() {
-        localStorage.removeItem(localStorageTokenName);
+        localStorage.removeItem(locStorItems.userName);
     }
 
     getUser(): any {
-        return localStorage.getItem(localStorageTokenName);
+        return localStorage.getItem(locStorItems.userName);
     }
 
     isLogged(): boolean {

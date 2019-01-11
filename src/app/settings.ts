@@ -53,7 +53,13 @@ export const enum msgs {
     msgSuccessDelTransit = 'Успешно удалён с транзитного счёта',
     msgErrDelTransit = 'Ошибка удаления с транзитного счёта'
 }
-export const localStorageTokenName = 'token';
+export enum locStorItems {
+    tokenName = 'token',
+    userName = 'username',
+    version = 'version'
+};
+
+export const appVer: number = 1;
 
 export class Settings {
 }

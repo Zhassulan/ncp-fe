@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
     Routes,
-    RouterModule
+    RouterModule, ROUTES
 } from '@angular/router';
 import {NcpPaymentsComponent} from '../ncp-payments/ncp-payments.component';
 import {LoginComponent} from '../auth/login/login.component';
@@ -11,8 +11,9 @@ import {LoggedInGuard} from '../auth/logged-in.guard';
 
 const routes: Routes = [
     {path: '', redirectTo: 'home', pathMatch: 'full'},
-    {path: 'home', component: NcpPaymentsComponent, canActivate: [ LoggedInGuard ]},
-    {path: 'login', component: LoginPageComponent}
+    {path: 'home', component: NcpPaymentsComponent, canActivate: [LoggedInGuard]},
+    {path: 'login', component: LoginPageComponent},
+    {path: 'equipment', component: NcpPaymentsComponent, canActivate: [LoggedInGuard]},
 ];
 
 @NgModule({
@@ -25,3 +26,4 @@ const routes: Routes = [
 })
 export class RoutesModule {
 }
+
