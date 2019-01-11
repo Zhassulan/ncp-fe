@@ -10,9 +10,7 @@ import {httpOptions} from '../settings';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class DataService {
 
     constructor(private _http: HttpClient) {

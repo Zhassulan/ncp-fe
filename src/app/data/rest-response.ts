@@ -1,4 +1,4 @@
 export class RestResponse {
-    result: string
-    data: any
+    result: string;
+    data: any;
 }

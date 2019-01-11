@@ -9,13 +9,14 @@ import {forkJoin} from 'rxjs/observable/forkJoin';
     styleUrls: ['./dialog.component.css']
 })
 export class DialogComponent implements OnInit {
+
     @ViewChild('file') file;
 
     public files: Set<File> = new Set();
 
     progress;
     canBeClosed = true;
-    primaryButtonText = 'Upload';
+    primaryButtonText = 'Открыть';
     showCancelButton = true;
     uploading = false;
     uploadSuccessful = false;
@@ -25,7 +26,6 @@ export class DialogComponent implements OnInit {
 
     ngOnInit() {
     }
-
 
     onFilesAdded() {
         const files: { [key: string]: File } = this.file.nativeElement.files;

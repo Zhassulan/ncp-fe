@@ -8,9 +8,7 @@ import {User} from '../model/user';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class AuthService {
 
     constructor(private http: HttpClient) {

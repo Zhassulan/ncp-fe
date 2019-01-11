@@ -3,9 +3,7 @@ import {MatDialog} from '@angular/material';
 import {DialogReportComponent} from './dialog-report/dialog-report.component';
 import {DialogData} from './dialog-data';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class DialogService {
 
     title: string = null;

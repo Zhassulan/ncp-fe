@@ -26,6 +26,8 @@ import { LoginPageComponent } from './auth/login-page/login-page.component';
 import {LoggerModule} from 'ngx-logger';
 import {environment} from '../environments/environment';
 import { ViewPaymentComponent } from './ncp-payments/view-payment/view-payment.component';
+import { EquipmentComponent } from './equipment/equipment.component';
+import {ExcelService} from './equipment/excel.service';
 
 @NgModule({
     declarations: [
@@ -38,7 +40,8 @@ import { ViewPaymentComponent } from './ncp-payments/view-payment/view-payment.c
         DialogReportComponent,
         PaymentDetailsPipe,
         LoginPageComponent,
-        ViewPaymentComponent
+        ViewPaymentComponent,
+        EquipmentComponent
     ],
     entryComponents: [
         DialogReportComponent,
@@ -69,7 +72,8 @@ import { ViewPaymentComponent } from './ncp-payments/view-payment/view-payment.c
         {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
         DialogService,
         DataService,
-        AuthService
+        AuthService,
+        ExcelService
     ],
     bootstrap: [AppComponent]
 })

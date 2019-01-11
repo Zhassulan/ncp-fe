@@ -57,7 +57,7 @@ export enum locStorItems {
     tokenName = 'token',
     userName = 'username',
     version = 'version'
-};
+}
 
 export const appVer: number = 1;
 

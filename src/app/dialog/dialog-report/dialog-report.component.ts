@@ -11,29 +11,12 @@ export class DialogReportComponent implements  OnInit, AfterViewInit {
     listHeight: number;
     isWait = true;
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {    }
 
-    ngAfterViewInit(): void {
-
-    }
+    ngAfterViewInit(): void {    }
 
     constructor(public dialogRef: MatDialogRef<DialogReportComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-    }
-
-    setStyles() {
-        console.log(this.data);
-        if (this.data.items.length > 20) {
-            this.listHeight = 600;
-        }   else    {
-            this.listHeight = this.data.items.length * 20;
-        }
-        this.listHeight = 500;
-        let styles = {
-            'height': this.listHeight.toString() + 'px'
-        };
-        return styles;
     }
 
     onNoClick(): void {

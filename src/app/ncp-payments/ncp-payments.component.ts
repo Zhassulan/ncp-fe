@@ -121,11 +121,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
             paymentRow.isChecked = false;
             this.selectedItems--;
         }
-        if (this.selectedItems > 0) {
-            this.isBadgeVisible = true;
-        } else {
-            this.isBadgeVisible = false;
-        }
+        this.selectedItems > 0 ? this.isBadgeVisible = true : this.isBadgeVisible = false;
     }
 
     toTransit(payment) {
@@ -200,10 +196,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.dataSource.data.forEach(row => {
             this.selection.select(row);
             this.selectedItems++;
-            if (!row.isChecked)
-                row.isChecked = true;
-            else
-                row.isChecked = false;
+            !row.isChecked ? row.isChecked = true : row.isChecked = false;
         });
         this.isBadgeVisible = true;
     }
