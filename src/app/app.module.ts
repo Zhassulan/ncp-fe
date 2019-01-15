@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {NgModule, LOCALE_ID} from '@angular/core';
 import {AppComponent} from './app.component';
 import {AUTH_PROVIDERS, AuthService} from './auth/auth.service';
 import {LoggedInGuard} from './auth/logged-in.guard';
@@ -29,7 +29,11 @@ import {LayoutModule} from '@angular/cdk/layout';
 import {BreadcrumbModule} from 'angular-crumbs';
 import {DialogComponent} from './equipment/dialog/dialog.component';
 import {UploadFilePaymentService} from './equipment/upload-file-payment.service';
-import { FilePaymentViewComponent } from './equipment/file-payment-view/file-payment-view.component';
+import {FilePaymentViewComponent} from './equipment/file-payment-view/file-payment-view.component';
+import { registerLocaleData } from '@angular/common';
+import localeRu from '@angular/common/locales/ru';
+
+registerLocaleData(localeRu, 'ru');
 
 @NgModule({
     declarations: [
@@ -80,6 +84,7 @@ import { FilePaymentViewComponent } from './equipment/file-payment-view/file-pay
         LoggedInGuard,
         CookieService,
         {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
+        {provide: LOCALE_ID, useValue: 'ru-RU'},
         DialogService,
         DataService,
         AuthService,
