@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ExcelService } from './excel.service';
+import { PaymentsService } from './payments.service';
 
-describe('ExcelService', () => {
+describe('PaymentsService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ExcelService = TestBed.get(ExcelService);
+    const service: PaymentsService = TestBed.get(PaymentsService);
     expect(service).toBeTruthy();
   });
 });

@@ -4,8 +4,6 @@ import {shrinkDetailsColumnSize} from '../settings';
 @Pipe({name: 'paymentDetailsPipe'})
 export class PaymentDetailsPipe implements PipeTransform {
     transform(paymentDetails: string): string {
-        let str = paymentDetails.replace(/.,/g, ', ');
-        str = str.substr(0, shrinkDetailsColumnSize);
-        return str;
+        return paymentDetails.replace(/.,/g, ', ');
     }
 }

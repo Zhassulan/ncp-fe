@@ -1,5 +1,5 @@
 import {Title} from '@angular/platform-browser';
-import {Component, ViewChild, ElementRef, ViewEncapsulation, AfterViewInit} from '@angular/core';
+import {Component, ViewEncapsulation, AfterViewInit} from '@angular/core';
 import {appVer, locStorItems, timeouts} from './settings';
 import {MatSnackBar} from '@angular/material';
 import {Observable} from 'rxjs';
@@ -14,7 +14,7 @@ export class AppComponent implements AfterViewInit {
 
     title = 'NCP';
 
-    constructor(private titleService: Title, public snackBar: MatSnackBar) { //, private navService: NavService
+    constructor(private titleService: Title, public snackBar: MatSnackBar) {
         this.titleService.setTitle(this.title);
     }
 

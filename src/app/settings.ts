@@ -12,6 +12,7 @@ export enum PaymentStatus {
     STATUS_TRANSIT_CANCELLED = 8,
     STATUS_TRANSIT_ERROR = 9
 }
+
 export enum PaymentStatusRu {
     'Новый',
     'Разнесён',
@@ -24,23 +25,34 @@ export enum PaymentStatusRu {
     'Удалён с транзитного счёта',
     'Ошибка разнесения с тразитного счёта'
 }
-export const shrinkDetailsColumnSize = 200;
+
+export const shrinkDetailsColumnSize: number = 200;
+
 export const httpOptions = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json'
     })
 };
+
 export const ldapGroups = {
     tele2users: 'itdev-ncp-user-tele2'
 };
+
+export const roles = {
+    cc: ldapGroups.tele2users,
+    finance: ldapGroups.tele2users
+};
+
 export const enum timeouts {
     timeoutAfterLoginInput = 3000,
     showMsgDelay = 6000
 }
+
 export const enum rests {
     restResultOk = 'ok',
     restResultErr = 'error'
 }
+
 export const enum msgs {
     msgLoggedSuccess = 'Успешно выполнен логин.',
     msgNoRights = 'Извините, нет разрешений на использование приложения.',
@@ -51,8 +63,10 @@ export const enum msgs {
     msgErrToTransit = 'Ошибка переноса на транзитный счёт.',
     msgSuccessToTransit = 'Платёж успешно перенесён на тразнитный счёт.',
     msgSuccessDelTransit = 'Успешно удалён с транзитного счёта',
-    msgErrDelTransit = 'Ошибка удаления с транзитного счёта'
+    msgErrDelTransit = 'Ошибка удаления с транзитного счёта',
+    msgErrUploadFilePayment = 'Ошибка загрузки файлового платежа'
 }
+
 export enum locStorItems {
     tokenName = 'token',
     userName = 'username',

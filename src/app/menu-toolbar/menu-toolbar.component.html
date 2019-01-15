@@ -57,13 +57,15 @@
                 <button mat-icon-button id="menu"  matTooltip="Меню" (click)="sidenav.toggle()">
                     <mat-icon>menu</mat-icon>
                 </button>
-                <span>NCP</span>
+                <span></span>
 
                 <!--
                 <span>
                      <a routerLink="/home" routerLinkActive="router-link-active"><button mat-button>Платежи NCP</button></a>
                 </span>
                 -->
+                <breadcrumb></breadcrumb>
+
                 <span class="example-spacer"></span>
                 <!--<mat-icon class="example-icon">favorite</mat-icon>-->
                 <div class="well" *ngIf="getUser()" style="font-size: small;">

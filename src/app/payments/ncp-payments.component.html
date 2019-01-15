@@ -77,13 +77,13 @@
             платежа
         </th>
         <td mat-cell *matCellDef="let paymentRow">
-            {{paymentRow.paymentDetails | paymentDetailsPipe: paymentRow.paymentDetails }}
+            {{paymentRow.paymentDetails | paymentDetailsPipe: paymentRow.paymentDetails | slice : 0 : shrinkDetailsColumnSize }}
         </td>
     </ng-container>
 
     <ng-container matColumnDef="statusRu">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Статус</th>
-        <!--<td mat-cell *matCellDef="let paymentRow"> {{ paymentRow.status | paymentStatusRu: paymentRow.status }} -->
+        <!--<td mat-cell *matCellDef="let paymentRow"> {{ paymentRow.status | paymentStatusRuPipe: paymentRow.status }} -->
         <td mat-cell *matCellDef="let paymentRow"> {{ paymentRow.statusRu}}
         </td>
     </ng-container>

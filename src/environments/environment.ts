@@ -14,7 +14,8 @@ export const environment = {
     urlPaymentToTransit: 'http://localhost:8080/onlinebank/dataservice/exdata/paymentToTransit',
     urlValidateLogin: 'http://localhost:8080/onlinebank/dataservice/auth/validateLogin',
     urlValidateAuthorization : 'http://localhost:8080/onlinebank/dataservice/auth/validateAuthorization',
-    urlDeleteTransitPayment: 'http://localhost:8080/onlinebank/dataservice/exdata/deleteTransitPayment'
+    urlDeleteTransitPayment: 'http://localhost:8080/onlinebank/dataservice/exdata/deleteTransitPayment',
+    urlUploadEquipment: 'http://localhost:8080/onlinebank/dataservice/exdata/uploadEquipment'
 };
 
 /*

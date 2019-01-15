@@ -11,5 +11,6 @@ export const environment = {
     urlPaymentToTransit: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/paymentToTransit',
     urlValidateLogin: 'https://b2b.tele2.kz/onlinebank/dataservice/auth/validateLogin',
     urlValidateAuthorization : 'https://b2b.tele2.kz/onlinebank/dataservice/auth/validateAuthorization',
-    urlDeleteTransitPayment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/deleteTransitPayment'
+    urlDeleteTransitPayment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/deleteTransitPayment',
+    urlUploadEquipment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/uploadEquipment'
 };

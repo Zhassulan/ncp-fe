@@ -8,7 +8,7 @@ import {RestResponse} from '../data/rest-response';
 import {DialogService} from '../dialog/dialog.service';
 import {FormControl} from '@angular/forms';
 import {NGXLogger} from 'ngx-logger';
-import {timeouts, msgs, PaymentStatusRu, locStorItems} from '../settings';
+import {timeouts, msgs, PaymentStatusRu, locStorItems, shrinkDetailsColumnSize} from '../settings';
 
 @Component({
     selector: 'app-ncp-payments',
@@ -42,6 +42,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     pickerEndDate = new FormControl(new Date());
     isBadgeVisible = false;
     selectedItems: number = 0;
+    shrinkDetailsColumnSize = shrinkDetailsColumnSize;
 
     constructor(private dataService: DataService,
                 private dialogService: DialogService,

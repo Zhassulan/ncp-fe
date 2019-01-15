@@ -9,6 +9,7 @@ import {RestResponse} from './rest-response';
 import {httpOptions} from '../settings';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import {FilePayment} from '../equipment/model/file-payment';
 
 @Injectable()
 export class DataService {
@@ -34,6 +35,10 @@ export class DataService {
 
     deleteTransitPayment(id: number, user: string) : Observable <RestResponse> {
         return this._http.post <RestResponse> (environment.urlDeleteTransitPayment + '?id=' + id + '&user=' + user, httpOptions).catch(this.errorHandler);
+    }
+
+    postFilePayment(formData: FormData): Observable<FilePayment> {
+        return this._http.post<FilePayment>(environment.urlUploadEquipment, formData, {reportProgress: true}).catch(this.errorHandler);
     }
 
 }

@@ -4,16 +4,16 @@ import {
     Routes,
     RouterModule, ROUTES
 } from '@angular/router';
-import {NcpPaymentsComponent} from '../ncp-payments/ncp-payments.component';
+import {NcpPaymentsComponent} from '../payments/ncp-payments.component';
 import {LoginPageComponent} from '../auth/login-page/login-page.component';
 import {LoggedInGuard} from '../auth/logged-in.guard';
-import {EquipmentComponent} from '../equipment/equipment.component';
+import {UploadComponent} from '../equipment/upload.component';
 
 const routes: Routes = [
     {path: '', redirectTo: 'home', pathMatch: 'full'},
-    {path: 'home', component: NcpPaymentsComponent, canActivate: [LoggedInGuard]},
+    {path: 'home', component: NcpPaymentsComponent, canActivate: [LoggedInGuard], data: { breadcrumb: 'Платежи'}},
     {path: 'login', component: LoginPageComponent},
-    {path: 'equipment', component: EquipmentComponent, canActivate: [LoggedInGuard]},
+    {path: 'equipment', component: UploadComponent, canActivate: [LoggedInGuard], data: { breadcrumb: 'Оборудование'}},
 ];
 
 @NgModule({
