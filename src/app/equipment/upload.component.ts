@@ -21,7 +21,7 @@ export class UploadComponent  {
         this.dialogRef = this.dialog.open(DialogComponent, { width: '50%', height: '30%'});
         this.dialogRef.afterClosed().subscribe(result => {
             if (this.uploadService.filePayment) {
-                this.router.navigate(['/filePayment']);
+                this.router.navigate(['filePayment']);
             }
         });
     }

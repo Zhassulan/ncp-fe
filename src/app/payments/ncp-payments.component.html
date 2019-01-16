@@ -1,3 +1,6 @@
+<div ngClass="container">
+
+
 <mat-divider></mat-divider>
 
 <div fxLayout="row" fxLayoutAlign="space-between start">
@@ -117,11 +120,11 @@
             <mat-menu #menu="matMenu">
                 <button mat-menu-item
                         [disabled]="(paymentRow.status == 6 || paymentRow.status == 7 || paymentRow.status == 1)"
-                        (click)="rowMenuToTransit(paymentRow)">
+                        (click)="menuOnRowToTransit(paymentRow)">
                     <!--<mat-icon>dialpad</mat-icon>-->
                     <span>На транзит</span>
                 </button>
-                <button mat-menu-item [disabled]="!(paymentRow.status == 6)" (click)="rowMenuDeleteTransit(paymentRow)">
+                <button mat-menu-item [disabled]="!(paymentRow.status == 6)" (click)="menuOnRowDeleteTransit(paymentRow)">
                     <span>Удалить с транзита</span>
                 </button>
                 <button mat-menu-item
@@ -156,4 +159,6 @@
     </mat-card>
     -->
 
-<mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
+<mat-paginator [length]="!paginatorResultsLength" [pageSize]="30"></mat-paginator>
+
+</div>

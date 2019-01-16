@@ -1,3 +1,7 @@
+.container {
+    height: 90vh;
+}
+
 .mat-table {
     display: table;
     width: 100%;
@@ -23,4 +27,5 @@
 .mat-column-managers {
     width: 10%;
 }
+
 

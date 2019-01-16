@@ -32,6 +32,8 @@ import {UploadFilePaymentService} from './equipment/upload-file-payment.service'
 import {FilePaymentViewComponent} from './equipment/file-payment-view/file-payment-view.component';
 import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
+import {UserService} from './user/user.service';
+import {PaymentsService} from './payments/payments.service';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -88,7 +90,9 @@ registerLocaleData(localeRu, 'ru');
         DialogService,
         DataService,
         AuthService,
-        UploadFilePaymentService
+        UploadFilePaymentService,
+        UserService,
+        PaymentsService
     ],
     bootstrap: [AppComponent]
 })

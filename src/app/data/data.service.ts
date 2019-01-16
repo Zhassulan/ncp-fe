@@ -37,7 +37,7 @@ export class DataService {
         return this._http.post <RestResponse> (environment.urlDeleteTransitPayment + '?id=' + id + '&user=' + user, httpOptions).catch(this.errorHandler);
     }
 
-    postFilePayment(formData: FormData): Observable<FilePayment> {
+    postFilePayment(formData: FormData): Observable<any> {
         return this._http.post<FilePayment>(environment.urlUploadEquipment, formData, {reportProgress: true}).catch(this.errorHandler);
     }
 

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {DataService} from '../data/data.service';
 import {NcpPayment} from '../model/ncp-payment';
 import {DateRange} from '../data/date-range';
@@ -9,6 +9,8 @@ import {DialogService} from '../dialog/dialog.service';
 import {FormControl} from '@angular/forms';
 import {NGXLogger} from 'ngx-logger';
 import {timeouts, msgs, PaymentStatusRu, locStorItems, shrinkDetailsColumnSize} from '../settings';
+import {PaymentsService} from './payments.service';
+import {UserService} from '../user/user.service';
 
 @Component({
     selector: 'app-ncp-payments',
@@ -17,8 +19,9 @@ import {timeouts, msgs, PaymentStatusRu, locStorItems, shrinkDetailsColumnSize} 
 })
 
 export class NcpPaymentsComponent implements OnInit, AfterViewInit {
-
-    ncpPayments = [];
+    //локальная коллекия платежей - синхронизируется  с сервисной коллекцией
+    payments = [];
+    //отображаемые в таблице колонки
     displayedColumns = [
         'ID',
         'nameSender',
@@ -33,47 +36,85 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         'rowMenu']; //, 'Mobipay', 'distribution'];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+    //источник данных для таблицы
     dataSource = new MatTableDataSource<NcpPayment>();
+    //индикатор полосы прогресса\загрузки
     isWait = true;
-    resultsLength = 0;
+    //общее количество для пагинации
+    paginatorResultsLength: number;
+    //выбранные в таблице модели
     selection = new SelectionModel<NcpPayment>(true, []);
-    restResponse = new RestResponse();
+    //объекты выбора даты на странице
     pickerStartDate = new FormControl(new Date());
     pickerEndDate = new FormControl(new Date());
+    //индикатор для отображения\скрытия количества выделенных
     isBadgeVisible = false;
+    //подсчёт выбранных элементов
     selectedItems: number = 0;
+    //обрезка больших текстов в деталях\назначение платежа
     shrinkDetailsColumnSize = shrinkDetailsColumnSize;
+    //объект диапазон дат
+    lastDateRange: DateRange;
+    //даты начала и конца дня
+    dtStartDay: Date;
+    dtEndDay: Date;
 
     constructor(private dataService: DataService,
                 private dialogService: DialogService,
                 private logger: NGXLogger,
-                public snackBar: MatSnackBar) {
-        this.dataSource = new MatTableDataSource(this.ncpPayments);
-        let nowStartDay;
-        let nowEndDay;
-        nowStartDay = new Date();
-        nowStartDay.setHours(0, 0, 0, 0);
-        nowEndDay = new Date();
-        nowEndDay.setHours(23, 59, 59, 999);
-        this.pickerStartDate.setValue(nowStartDay);
-        this.pickerEndDate.setValue(nowEndDay);
+                public snackBar: MatSnackBar,
+                private paymentsService: PaymentsService,
+                private userService: UserService) {
+        this.dataSource = new MatTableDataSource(this.payments);
+        this.dtStartDay = new Date();
+        this.dtEndDay = new Date();
+        this.paginatorResultsLength = 0;
     }
 
     ngOnInit() {
+        //если нет данных в сервисе, загружаем согласно текущей дате
+        if (this.paymentsService.payments.length == 0) {
+            //обработка установленной даты с начала и до конца
+            this.dtStartDay.setHours(0, 0, 0, 0);
+            this.dtEndDay.setHours(23, 59, 59, 999);
+            this.pickerStartDate.setValue(this.dtStartDay);
+            this.pickerEndDate.setValue(this.dtEndDay);
+            //загрузка платежей онлайн
+            //this.getData();
+            //загрузка фейковых платежей
+            this.getSampleData();
+            this.dataSource.data = this.payments;
+        } else {
+            //в противном случае загружаем данные из сервиса, исключение повторного обращения к серверу
+            if (this.paymentsService.lastDateRange) {
+                this.lastDateRange = this.paymentsService.lastDateRange;
+                this.dtStartDay.setTime(this.lastDateRange.startDate);
+                this.dtEndDay.setTime(this.lastDateRange.endDate);
+                this.pickerStartDate.setValue(this.dtStartDay);
+                this.pickerEndDate.setValue(this.dtEndDay);
+            }
+            this.payments = this.paymentsService.payments;
+            this.dataSource.data = [];
+            this.dataSource.data = this.payments;
+            this.isWait = false;
+        }
     }
 
     ngAfterViewInit() {
-        //this.getData();
-        this.getSampleData();
+        this.paginatorResultsLength = this.paymentsService.paginatorResultsLength;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
     }
 
     onRowClicked(paymentRow) {
-        console.log('Row clicked: ', paymentRow);
+        //console.log('Row clicked: ', paymentRow);
     }
 
+    /**
+     * фильтр для поля быстрого поиска
+     * @param {string} filterValue
+     */
     applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue.trim().toLowerCase();
         if (this.dataSource.paginator) {
@@ -81,19 +122,21 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         }
     }
 
+    /**
+     * загрузка платежей
+     */
     getData() {
         this.isWait = true;
         this.dataSource.data = [];
         let dr = new DateRange(this.pickerStartDate.value.getTime(), this.pickerEndDate.value.getTime());
-        this.dataService.getNcpPayments(dr).subscribe(data => {
-                this.ncpPayments = data;
-                this.updateStatusRu();
-                this.dataSource.data = data;
-                this.resultsLength = data.length;
+        this.paymentsService.lastDateRange = dr;
+        this.paymentsService.getData(dr).subscribe(data => {
+                this.payments = data;
+                this.dataSource.data = this.payments;
+                this.paymentsService.paginatorResultsLength = this.paginatorResultsLength;
             },
             error2 => {
-                this.showMsg(msgs.msgErrLoadData);
-                this.logger.error(msgs.msgErrLoadData);
+                this.showMsg(error2);
                 this.isWait = false;
             },
             () => {
@@ -101,19 +144,28 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
             });
     }
 
+    /**
+     * загрузка платежей (фейковые данные) из json файла в папке assets (режим разработки/отладки, чтобы быстро загрузить данные)
+     */
     getSampleData() {
-        this.dataService.getNcpPaymentsJson().subscribe(data => {
-            this.ncpPayments = data;
-            this.updateStatusRu();
-            this.dataSource.data = data;
-            this.resultsLength = data.length;
-            //console.log(this.dataSource.data);
-        }, () => {
+        this.isWait = true;
+        this.dataSource.data = [];
+        this.paymentsService.getSampleData().subscribe(data => {
+            this.payments = data;
+            this.dataSource.data = this.payments;
+            this.paymentsService.paginatorResultsLength = this.paginatorResultsLength;
+        }, error2 => {
+            this.showMsg(error2);
+            this.isWait = false;
         }, () => {
             this.isWait = false;
         });
     }
 
+    /**
+     * фиксирование количества выделенных в таблице платежей и установка атрибута класса платёж в статус отмеченный
+     * @param paymentRow
+     */
     processForSelect(paymentRow) {
         if (!paymentRow.isChecked) {
             this.selectedItems++;
@@ -122,39 +174,38 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
             paymentRow.isChecked = false;
             this.selectedItems--;
         }
+        //скрытие\показ кружочка с количеством выделенные в кнопке ТРАНЗИТ
         this.selectedItems > 0 ? this.isBadgeVisible = true : this.isBadgeVisible = false;
     }
 
+    /**
+     * перенос платежа на транзитный счёт NCP (TRANSIT_ACCOUNT = 163761406L)
+     * @param payment
+     */
     toTransit(payment) {
+        let msg;
         this.dialogService.setWait();
-        this.dataService.paymentToTransit(payment.id).subscribe(data => {
-                this.restResponse = data;
+        this.paymentsService.toTransit(payment.id).subscribe(data => {
                 if (data.result == 'ok') {
-                    let msg = msgs.msgSuccessToTransit  + ' ID платежа ' + payment.id +  ' TRANSIT_PDOC_ID ' +
-                        data.data.transitPaymentDocNumId + this.logUser();
-                    this.dialogService.addItem(null, msg);
+                    payment = data.data;
+                    msg = msgs.msgSuccessToTransit + ' ID платежа ' + payment.id + ' TRANSIT_PDOC_ID ' + data.data.transitPaymentDocNumId + this.userService.logUser();
                     this.logger.info(msg);
-                    payment.status = data.data.status;
-                    this.setStatusRu(payment);
-                } else {
-                    let msg = msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')' + this.logUser();
                     this.dialogService.addItem(null, msg);
+                } else {
+                    msg = msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')' + this.userService.logUser();
                     this.logger.warn(msg);
+                    this.dialogService.addItem(null, msg);
                 }
             },
             error2 => {
-                let msg = msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + error2 + this.logUser();
-                this.dialogService.addItem(null, msg);
+                msg = msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + error2 + this.userService.logUser();
                 this.logger.error(msg);
+                this.dialogService.addItem(null, msg);
                 this.dialogService.setWaitNot();
             },
             () => {
                 this.dialogService.setWaitNot();
             });
-    }
-
-    logUser(): string   {
-        return ' user ' + localStorage.getItem(locStorItems.userName);
     }
 
     toTransitSelected() {
@@ -223,7 +274,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         });
     }
 
-    rowMenuToTransit(paymentRow) {
+    menuOnRowToTransit(paymentRow) {
         this.dialogService.clear();
         this.dialogService.title = 'Перевод на транзитный счёт';
         this.dialogService.openDialog();
@@ -231,25 +282,24 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     deleteTransit(payment) {
+        let msg;
         this.dialogService.setWait();
-        this.dataService.deleteTransitPayment(payment.id, localStorage.getItem(locStorItems.userName)).subscribe(data => {
-                this.restResponse = data;
+        this.paymentsService.deleteTransit(payment.id).subscribe(data => {
                 if (data.result == 'ok') {
-                    let msg = msgs.msgSuccessDelTransit + ' ID платежа ' + payment.id + this.logUser();
-                    this.dialogService.addItem(null, msg);
+                    payment = data.data;
+                    msg = msgs.msgSuccessDelTransit + ' ID платежа ' + payment.id + this.userService.logUser();
                     this.logger.info(msg);
-                    payment.status = data.data.status;
-                    this.setStatusRu(payment);
-                } else {
-                    let msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')' + this.logUser();
                     this.dialogService.addItem(null, msg);
+                } else {
+                    msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')' + this.userService.logUser();
                     this.logger.warn(msg);
+                    this.dialogService.addItem(null, msg);
                 }
             },
             error2 => {
-                let msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + error2 + this.logUser();
-                this.dialogService.addItem(null, msg);
+                msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + error2 + this.userService.logUser();
                 this.logger.error(msg);
+                this.dialogService.addItem(null, msg);
                 this.dialogService.setWaitNot();
             },
             () => {
@@ -257,22 +307,11 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
             });
     }
 
-    rowMenuDeleteTransit(paymentRow) {
+    menuOnRowDeleteTransit(paymentRow) {
         this.dialogService.clear();
         this.dialogService.title = 'Удалнение с тразитного счёта';
         this.dialogService.openDialog();
         this.deleteTransit(paymentRow);
     }
 
-    setStatusRu(payment) {
-        payment.statusRu = PaymentStatusRu[payment.status];
-    }
-
-    updateStatusRu()    {
-        this.ncpPayments.forEach(payment => {
-            this.setStatusRu(payment);
-        })
-    }
-
 }
-

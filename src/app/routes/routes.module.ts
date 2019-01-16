@@ -12,10 +12,10 @@ import {FilePaymentViewComponent} from '../equipment/file-payment-view/file-paym
 
 const routes: Routes = [
     {path: '', redirectTo: 'home', pathMatch: 'full'},
-    {path: 'home', component: NcpPaymentsComponent, canActivate: [LoggedInGuard], data: { breadcrumb: 'Платежи'}},
+    {path: 'home', component: NcpPaymentsComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Платежи'}},
     {path: 'login', component: LoginPageComponent},
-    {path: 'equipment', component: UploadComponent, canActivate: [LoggedInGuard], data: { breadcrumb: 'Оборудование'}},
-    {path: 'filePayment', component: FilePaymentViewComponent, canActivate: [LoggedInGuard], data: { breadcrumb: 'Платёж'}},
+    {path: 'equipment', component: UploadComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Оборудование'}},
+    {path: 'filePayment', component: FilePaymentViewComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Оборудование - Платёж'}}
 ];
 
 @NgModule({
