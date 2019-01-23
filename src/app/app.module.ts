@@ -23,7 +23,7 @@ import {PaymentDetailsPipe} from './payments/payment-details-pipe';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
 import {LoggerModule} from 'ngx-logger';
 import {environment} from '../environments/environment';
-import {ViewPaymentComponent} from './payments/view-payment/view-payment.component';
+import {ViewPaymentComponent} from './payments/payment/view-payment/view-payment.component';
 import {UploadComponent} from './equipment/upload.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {BreadcrumbModule} from 'angular-crumbs';
@@ -34,6 +34,7 @@ import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
 import {UserService} from './user/user.service';
 import {PaymentsService} from './payments/payments.service';
+import { NewPaymentProgressComponent } from './equipment/new-payment-progress/new-payment-progress.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -50,7 +51,8 @@ registerLocaleData(localeRu, 'ru');
         ViewPaymentComponent,
         UploadComponent,
         DialogComponent,
-        FilePaymentViewComponent
+        FilePaymentViewComponent,
+        NewPaymentProgressComponent,
     ],
     entryComponents: [
         DialogReportComponent,

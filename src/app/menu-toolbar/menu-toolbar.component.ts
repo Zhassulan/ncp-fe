@@ -19,7 +19,7 @@ export class MenuToolbarComponent implements OnInit {
     paymentRoutes: ROUTE[] = [
         {
             icon: 'credit_card',
-            route: 'home',
+            route: 'payments',
             title: 'Платежи',
         }, {
             icon: 'dashboard',

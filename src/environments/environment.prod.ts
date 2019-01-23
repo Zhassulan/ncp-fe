@@ -12,5 +12,7 @@ export const environment = {
     urlValidateLogin: 'https://b2b.tele2.kz/onlinebank/dataservice/auth/validateLogin',
     urlValidateAuthorization : 'https://b2b.tele2.kz/onlinebank/dataservice/auth/validateAuthorization',
     urlDeleteTransitPayment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/deleteTransitPayment',
-    urlUploadEquipment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/uploadEquipment'
+    urlUploadEquipment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/uploadEquipment',
+    urlNewRawPayment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/newRawPayment',
+    urlGetNcpPaymentByRawId: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/getNcpPaymentByRawId',
 };

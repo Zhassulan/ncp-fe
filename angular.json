@@ -106,7 +106,7 @@
             ],
             "scripts": [],
             "assets": [
-              "src/favicon.ico",
+              "src/favicon_ncp.ico",
               "src/assets"
             ]
           }

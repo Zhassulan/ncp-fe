@@ -8,9 +8,10 @@ import {RestResponse} from '../data/rest-response';
 import {DialogService} from '../dialog/dialog.service';
 import {FormControl} from '@angular/forms';
 import {NGXLogger} from 'ngx-logger';
-import {timeouts, msgs, PaymentStatusRu, locStorItems, shrinkDetailsColumnSize} from '../settings';
+import {timeouts, msgs, PaymentStatusRu, locStorItems, shrinkDetailsColumnSize, rests} from '../settings';
 import {PaymentsService} from './payments.service';
 import {UserService} from '../user/user.service';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-ncp-payments',
@@ -64,7 +65,8 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
                 private logger: NGXLogger,
                 public snackBar: MatSnackBar,
                 private paymentsService: PaymentsService,
-                private userService: UserService) {
+                private userService: UserService,
+                private router: Router) {
         this.dataSource = new MatTableDataSource(this.payments);
         this.dtStartDay = new Date();
         this.dtEndDay = new Date();
@@ -186,7 +188,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         let msg;
         this.dialogService.setWait();
         this.paymentsService.toTransit(payment.id).subscribe(data => {
-                if (data.result == 'ok') {
+                if (data.result == rests.restResultOk) {
                     payment = data.data;
                     msg = msgs.msgSuccessToTransit + ' ID платежа ' + payment.id + ' TRANSIT_PDOC_ID ' + data.data.transitPaymentDocNumId + this.userService.logUser();
                     this.logger.info(msg);
@@ -285,7 +287,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         let msg;
         this.dialogService.setWait();
         this.paymentsService.deleteTransit(payment.id).subscribe(data => {
-                if (data.result == 'ok') {
+                if (data.result == rests.restResultOk) {
                     payment = data.data;
                     msg = msgs.msgSuccessDelTransit + ' ID платежа ' + payment.id + this.userService.logUser();
                     this.logger.info(msg);
@@ -312,6 +314,12 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.dialogService.title = 'Удалнение с тразитного счёта';
         this.dialogService.openDialog();
         this.deleteTransit(paymentRow);
+    }
+
+    menuOnRowDistributeEquipment(paymentRow)  {
+        console.log('Chosen payment ID ' + paymentRow.id);
+        this.paymentsService.paymentId = paymentRow.id;
+        this.router.navigate(['payment'])
     }
 
 }

@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
                             if (data.result == rests.restResultOk) {
                                 this.logger.info(msgs.msgLoggedSuccess + ' ' + userObj.userName);
                                 localStorage.setItem(locStorItems.userName, data.data.userName);
-                                this.router.navigate(['/home']);
+                                this.router.navigate(['payments']);
                                 this.dialogRef.close();
                             }
                             if (data.result == rests.restResultErr) {

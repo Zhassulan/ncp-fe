@@ -12,5 +12,7 @@ export const environment = {
     urlValidateLogin: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/auth/validateLogin',
     urlValidateAuthorization : 'http://b2b.tele2.kz:8130/onlinebank/dataservice/auth/validateAuthorization',
     urlDeleteTransitPayment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/deleteTransitPayment',
-    urlUploadEquipment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/uploadEquipment'
+    urlUploadEquipment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/uploadEquipment',
+    urlNewRawPayment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/newRawPayment',
+    urlGetNcpPaymentByRawId: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/getNcpPaymentByRawId',
 };

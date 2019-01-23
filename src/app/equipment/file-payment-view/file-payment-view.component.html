@@ -1,10 +1,11 @@
 <div fxLayout="column" fxLayoutAlign="center center">
+
     <mat-card class="example-card">
 
-            <mat-card-header>
-                <mat-card-title>Платёж</mat-card-title>
-                <mat-card-subtitle>(импортированный из файла)</mat-card-subtitle>
-            </mat-card-header>
+        <mat-card-header>
+            <mat-card-title>Платёж</mat-card-title>
+            <mat-card-subtitle>(импортированный из файла)</mat-card-subtitle>
+        </mat-card-header>
 
         <mat-card-content>
             <div fxLayout="column" fxLayoutAlign="space-between start">
@@ -69,10 +70,13 @@
 
         <div fxLayout="row" fxLayoutAlign="end center">
             <mat-card-actions>
-                <button mat-raised-button color="primary">Разнести</button>
+                <button mat-raised-button color="primary" *ngIf="!isWait">Разнести</button>
                 <button mat-raised-button color="primary" (click)="goBack()">Отмена</button>
             </mat-card-actions>
         </div>
+
+        <app-new-payment-progress mode="indeterminate" *ngIf="isWait"></app-new-payment-progress>
+
     </mat-card>
 </div>
 

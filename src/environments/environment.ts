@@ -15,7 +15,9 @@ export const environment = {
     urlValidateLogin: 'http://localhost:8080/onlinebank/dataservice/auth/validateLogin',
     urlValidateAuthorization : 'http://localhost:8080/onlinebank/dataservice/auth/validateAuthorization',
     urlDeleteTransitPayment: 'http://localhost:8080/onlinebank/dataservice/exdata/deleteTransitPayment',
-    urlUploadEquipment: 'http://localhost:8080/onlinebank/dataservice/exdata/uploadEquipment'
+    urlUploadEquipment: 'http://localhost:8080/onlinebank/dataservice/exdata/uploadEquipment',
+    urlNewRawPayment: 'http://localhost:8080/onlinebank/dataservice/exdata/newRawPayment',
+    urlGetNcpPaymentByRawId: 'http://localhost:8080/onlinebank/dataservice/exdata/getNcpPaymentByRawId',
 };
 
 /*

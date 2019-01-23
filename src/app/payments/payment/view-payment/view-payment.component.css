@@ -1,22 +1,11 @@
-.example-card {
-    width: 60%;
-    height: 100%;
-}
-
-.example-card {
-    width: 60%;
-    height: 100%;
-}
-
-.example-full-width {
-    width: 100%;
+.container {
+    height: 90vh;
 }
 
 .mat-table {
     display: table;
-    width: 100%;
+    width: 500px;
 }
-
 .mat-header-row, .mat-row {
     display: table-row;
 }
@@ -27,7 +16,29 @@
     padding-right: 1%;
     /* word-wrap: break-word; */
 }
-
 .mat-row:hover {
     background-color: #eeeeee;
 }
+
+.mat-column-num {
+    width: 15%;
+}
+
+.mat-column-phone {
+    width: 25%;
+}
+
+.mat-column-account {
+    width: 25%;
+}
+
+.mat-column-sum {
+    width: 25%;
+}
+
+
+.row_highlight {
+    background: #ccffe6;
+}
+
+

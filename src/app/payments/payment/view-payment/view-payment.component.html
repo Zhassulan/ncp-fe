@@ -1,0 +1,105 @@
+<div class="container">
+
+    <mat-progress-bar mode="indeterminate" *ngIf="isWait"></mat-progress-bar>
+
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="30px">
+
+        <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between start">
+            <h1 class="mat-h1"><b># {{ 324721099 }} от {{ '21.12.2018 16:10' }} </b></h1>
+        </div>
+
+        <div fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="space-between start">
+
+            <div fxLayout="column" fxLayoutGap="10px"> <!--Первая половина-->
+
+                <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start">
+                    <div fxLayout="column" fxLayoutGap="10px">
+                        <p class="mat-h3"><b>Клиент:</b></p>
+                        <p class="mat-h3"><b>Статус:</b></p>
+                        <p class="mat-h3"><b>ИИН/БИН:</b></p>
+                        <p class="mat-h3"><b>Менеджер:</b></p>
+                        <p class="mat-h3"><b>Номер платежа:</b></p>
+                        <p class="mat-h3"><b>Сумма платежа:</b></p>
+                    </div>
+                    <div fxLayout="column" fxLayoutGap="10px">
+                        <p class="mat-h3">{{'Филиал АО Нурбанк в г. Кокшетау'}}</p>
+                        <p class="mat-h3">{{'Разнесен'}}</p>
+                        <p class="mat-h3">{{'060541004511'}}</p>
+                        <p class="mat-h3">{{'B2B_ASTANA_5'}}</p>
+                        <p class="mat-h3">{{'324721099'}}</p>
+                        <p class="mat-h3">{{ 5208 | currency : ' тг.'}}</p>
+                    </div>
+                </div>
+
+                <mat-divider></mat-divider>
+
+                <p class="mat-h3"><b>Абонент</b></p>
+                <form [formGroup]="operationForm">
+
+                    <div fxLayout="row">
+                        <mat-form-field class="example-full-width">
+                            <input matInput placeholder="Номер телефона" formControlName="phoneNumber">
+                        </mat-form-field>
+                        <mat-form-field class="example-full-width">
+                            <input matInput placeholder="Лицевой счёт" formControlName="account">
+                        </mat-form-field>
+                    </div>
+                    <mat-form-field class="example-full-width">
+                        <input matInput placeholder="Сумма" formControlName="sum" required>
+                        <span matSuffix> тг.</span>
+                    </mat-form-field>
+                </form>
+
+                <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+                    <button mat-raised-button color="primary" (click)="addOperation()">Добавить</button>
+                </div>
+
+            </div> <!--Конец первой половины-->
+
+
+            <div fxLayout="column" fxLayoutGap="10px"><!--Вторая половина -->
+
+                <table mat-table [dataSource]="dataSource">
+
+                    <ng-container matColumnDef="num">
+                        <th mat-header-cell *matHeaderCellDef ngClass="mat-column-num"> #</th>
+                        <td mat-cell *matCellDef="let element; let i = index;" ngClass="mat-column-num"> {{ i + 1}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="phone">
+                        <th mat-header-cell *matHeaderCellDef ngClass="mat-column-phone"> Номер</th>
+                        <td mat-cell *matCellDef="let element" ngClass="mat-column-phone"> {{element.phone}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="account">
+                        <th mat-header-cell *matHeaderCellDef ngClass="mat-column-account"> Лицевой счёт</th>
+                        <td mat-cell *matCellDef="let element" ngClass="mat-column-account"> {{element.account}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sum">
+                        <th mat-header-cell *matHeaderCellDef ngClass="mat-column-sum"> Сумма</th>
+                        <td mat-cell *matCellDef="let element" ngClass="mat-column-sum"> {{element.sum | currency : '
+                            тг.'}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="del">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element">
+                            <button mat-button (click)="delOperation(element)">
+                                <mat-icon>clear</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+
+            </div> <!--Конец второй половины -->
+
+        </div>
+
+
+    </div>
+</div>

@@ -2,9 +2,12 @@ import {Injectable} from '@angular/core';
 import {DataService} from '../data/data.service';
 import {NGXLogger} from 'ngx-logger';
 import {DateRange} from '../data/date-range';
-import {locStorItems, msgs, PaymentStatusRu} from '../settings';
+import {locStorItems, msgs, PaymentStatusRu, rests} from '../settings';
 import {Observable} from 'rxjs';
 import {UserService} from '../user/user.service';
+import {NcpPayment} from '../model/ncp-payment';
+import {RawPayment} from '../model/raw-payment';
+import {RestResponse} from '../data/rest-response';
 
 @Injectable()
 export class PaymentsService {
@@ -12,6 +15,10 @@ export class PaymentsService {
     payments = [];
     lastDateRange: DateRange;
     paginatorResultsLength: number;
+    newRawPayment: RawPayment = new RawPayment();
+    newNcpPayment: NcpPayment = new NcpPayment();
+    payment: NcpPayment = new NcpPayment();
+    paymentId: number = 0;
 
     constructor(private dataService: DataService,
                 private logger: NGXLogger,
@@ -69,7 +76,7 @@ export class PaymentsService {
         return new Observable(
             observer => {
                 this.dataService.paymentToTransit(paymentId).subscribe(data => {
-                        if (data.result == 'ok') {
+                        if (data.result == rests.restResultOk) {
                             let payment = this.payments.find(x => x.id == paymentId);
                             payment.status = data.data.status;
                             this.setStatusRu(payment);
@@ -92,10 +99,10 @@ export class PaymentsService {
      */
     deleteTransit(paymentId): Observable<any> {
         let msg;
-        return new Observable<any> (
+        return new Observable<any>(
             observer => {
                 this.dataService.deleteTransitPayment(paymentId, localStorage.getItem(locStorItems.userName)).subscribe(data => {
-                        if (data.result == 'ok') {
+                        if (data.result == rests.restResultOk) {
                             let payment = this.payments.find(x => x.id == paymentId);
                             payment.status = data.data.status;
                             this.setStatusRu(payment);
@@ -103,12 +110,51 @@ export class PaymentsService {
                         observer.next(data);
                     },
                     error2 => {
-                        observer.error(msg);
+                        observer.error(error2);
                     },
                     () => {
                         observer.complete();
                     });
-            })
+            });
+    }
+
+    createRawPayment(payment: RawPayment): Observable<RestResponse> {
+        return new Observable<any>(
+            observer => {
+                this.dataService.createRawPayment(payment).subscribe(data => {
+                        if (data.result == rests.restResultOk) {
+                            this.newRawPayment = data.data;
+                        }
+                        observer.next(data);
+                    },
+                    error2 => {
+                        observer.error(error2);
+                    },
+                    () => {
+                        observer.complete();
+                    });
+            });
+    }
+
+    getNcpPaymentByRawId(): Observable<RestResponse> {
+        return new Observable<any>(
+            observer => {
+                this.dataService.getNcpPaymentByRawId(this.newRawPayment.id).subscribe(data => {
+                        if (data.result == rests.restResultOk)  {
+                            this.newNcpPayment = data.data;
+                            observer.next(data);
+                        }
+                        if (data.result == rests.restResultErrDb)  {
+                            observer.error();
+                        }
+                    },
+                    error2 => {
+                        observer.error(error2);
+                    },
+                    () => {
+                        observer.complete();
+                    });
+            });
     }
 
 }

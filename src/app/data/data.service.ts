@@ -10,6 +10,7 @@ import {httpOptions} from '../settings';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import {FilePayment} from '../equipment/model/file-payment';
+import {RawPayment} from '../model/raw-payment';
 
 @Injectable()
 export class DataService {
@@ -38,7 +39,15 @@ export class DataService {
     }
 
     postFilePayment(formData: FormData): Observable<any> {
-        return this._http.post<FilePayment>(environment.urlUploadEquipment, formData, {reportProgress: true}).catch(this.errorHandler);
+        return this._http.post<FilePayment>(environment.urlUploadEquipment, formData).catch(this.errorHandler);
+    }
+
+    createRawPayment(payment: RawPayment): Observable<RestResponse> {
+        return this._http.post<RestResponse>(environment.urlNewRawPayment, payment, httpOptions).catch(this.errorHandler);
+    }
+
+    getNcpPaymentByRawId(id: number): Observable<RestResponse>   {
+        return this._http.post<RestResponse>(environment.urlGetNcpPaymentByRawId + '?id=' + id, httpOptions).catch(this.errorHandler);
     }
 
 }

@@ -1,3 +1,6 @@
+/**
+ * Модель NCP платёж, таблица ncp_payment
+ */
 export class NcpPayment {
 
     id: number;
@@ -23,7 +26,7 @@ export class NcpPayment {
     actions: string [];
     managers: string;
     mobipay: boolean;
-    isChecked?: boolean = false;
+    isChecked?: boolean;
     statusRu: string;
 
     public getId(): number {

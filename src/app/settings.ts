@@ -50,7 +50,8 @@ export const enum timeouts {
 
 export const enum rests {
     restResultOk = 'ok',
-    restResultErr = 'error'
+    restResultErr = 'error',
+    restResultErrDb = 'error_database'
 }
 
 export const enum msgs {
@@ -62,9 +63,13 @@ export const enum msgs {
     msgErrLoadData = 'Ошибка загрузки данных.',
     msgErrToTransit = 'Ошибка переноса на транзитный счёт.',
     msgSuccessToTransit = 'Платёж успешно перенесён на тразнитный счёт.',
-    msgSuccessDelTransit = 'Успешно удалён с транзитного счёта',
-    msgErrDelTransit = 'Ошибка удаления с транзитного счёта',
-    msgErrUploadFilePayment = 'Ошибка загрузки файлового платежа'
+    msgSuccessDelTransit = 'Успешно удалён с транзитного счёта.',
+    msgErrDelTransit = 'Ошибка удаления с транзитного счёта.',
+    msgErrUploadFilePayment = 'Ошибка загрузки файлового платежа.',
+    msgSuccessNewRawPayment = 'Успешно создан грязный платёж.',
+    msgErrNewRawPayment = 'Ошибка при создании грязного платежа.',
+    msgErrGetNcpPaymentByRawId = 'Ошибка получения NCP платежа по грязному платежу.',
+    msgSuccessGetNcpPaymentByRawId = 'Успешно получен NCP платёж по грязному платежу.'
 }
 
 export enum locStorItems {
