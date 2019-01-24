@@ -39,8 +39,12 @@ export const ldapGroups = {
 };
 
 export const roles = {
-    cc: ldapGroups.tele2users,
-    finance: ldapGroups.tele2users
+    cc: [
+        ldapGroups.tele2users,
+    ],
+    finance: [
+        ldapGroups.tele2users
+    ]
 };
 
 export const enum timeouts {
@@ -79,6 +83,7 @@ export enum locStorItems {
 }
 
 export const appVer: number = 1;
+export const msisdnLength = 10;
 
 export class Settings {
 }

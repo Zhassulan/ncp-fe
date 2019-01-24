@@ -80,8 +80,7 @@
                 платежа
             </th>
             <td mat-cell *matCellDef="let paymentRow">
-                {{paymentRow.paymentDetails | paymentDetailsPipe: paymentRow.paymentDetails | slice : 0 :
-                shrinkDetailsColumnSize }}
+                {{paymentRow.paymentDetails | paymentDetailsPipe: paymentRow.paymentDetails | slice : 0 : shrinkDetailsColumnSize }}
             </td>
         </ng-container>
 

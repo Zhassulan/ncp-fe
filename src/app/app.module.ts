@@ -35,6 +35,7 @@ import localeRu from '@angular/common/locales/ru';
 import {UserService} from './user/user.service';
 import {PaymentsService} from './payments/payments.service';
 import { NewPaymentProgressComponent } from './equipment/new-payment-progress/new-payment-progress.component';
+import {PhonePipe} from './payments/payment/view-payment/phone-pipe';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -53,6 +54,7 @@ registerLocaleData(localeRu, 'ru');
         DialogComponent,
         FilePaymentViewComponent,
         NewPaymentProgressComponent,
+        PhonePipe
     ],
     entryComponents: [
         DialogReportComponent,
