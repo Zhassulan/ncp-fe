@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import {DataService} from '../data/data.service';
 import {NGXLogger} from 'ngx-logger';
 import {DateRange} from '../data/date-range';
@@ -12,13 +12,12 @@ import {RestResponse} from '../data/rest-response';
 @Injectable()
 export class PaymentsService {
 
+
     payments = [];
     lastDateRange: DateRange;
     paginatorResultsLength: number;
     newRawPayment: RawPayment = new RawPayment();
     newNcpPayment: NcpPayment = new NcpPayment();
-    payment: NcpPayment = new NcpPayment();
-    paymentId: number = 0;
 
     constructor(private dataService: DataService,
                 private logger: NGXLogger,

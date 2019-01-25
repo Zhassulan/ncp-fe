@@ -23,7 +23,7 @@ import {PaymentDetailsPipe} from './payments/payment-details-pipe';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
 import {LoggerModule} from 'ngx-logger';
 import {environment} from '../environments/environment';
-import {ViewPaymentComponent} from './payments/payment/view-payment/view-payment.component';
+import {ViewPaymentComponent} from './payments/payment/view-payment.component';
 import {UploadComponent} from './equipment/upload.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {BreadcrumbModule} from 'angular-crumbs';
@@ -35,7 +35,12 @@ import localeRu from '@angular/common/locales/ru';
 import {UserService} from './user/user.service';
 import {PaymentsService} from './payments/payments.service';
 import { NewPaymentProgressComponent } from './equipment/new-payment-progress/new-payment-progress.component';
-import {PhonePipe} from './payments/payment/view-payment/phone-pipe';
+import {PhonePipe} from './payments/payment/phone-pipe';
+import { PaymentMenuComponent } from './payments/payment/menu/payment-menu.component';
+import { OperationsComponent } from './payments/payment/operations/operations.component';
+import {PaymentService} from './payments/payment/payment.service';
+import { InfoComponent } from './payments/payment/info/info.component';
+import { AddOperationComponent } from './payments/payment/add-operation/add-operation.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -54,7 +59,11 @@ registerLocaleData(localeRu, 'ru');
         DialogComponent,
         FilePaymentViewComponent,
         NewPaymentProgressComponent,
-        PhonePipe
+        PhonePipe,
+        PaymentMenuComponent,
+        OperationsComponent,
+        InfoComponent,
+        AddOperationComponent,
     ],
     entryComponents: [
         DialogReportComponent,
@@ -96,7 +105,8 @@ registerLocaleData(localeRu, 'ru');
         AuthService,
         UploadFilePaymentService,
         UserService,
-        PaymentsService
+        PaymentsService,
+        PaymentService
     ],
     bootstrap: [AppComponent]
 })

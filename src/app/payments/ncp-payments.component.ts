@@ -12,6 +12,7 @@ import {timeouts, msgs, PaymentStatusRu, locStorItems, shrinkDetailsColumnSize, 
 import {PaymentsService} from './payments.service';
 import {UserService} from '../user/user.service';
 import {Router} from '@angular/router';
+import {PaymentService} from './payment/payment.service';
 
 @Component({
     selector: 'app-ncp-payments',
@@ -66,7 +67,8 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
                 public snackBar: MatSnackBar,
                 private paymentsService: PaymentsService,
                 private userService: UserService,
-                private router: Router) {
+                private router: Router,
+                private paymentService: PaymentService) {
         this.dataSource = new MatTableDataSource(this.payments);
         this.dtStartDay = new Date();
         this.dtEndDay = new Date();
@@ -317,8 +319,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     menuOnRowDistributeEquipment(paymentRow)  {
-        console.log('Chosen payment ID ' + paymentRow.id);
-        this.paymentsService.paymentId = paymentRow.id;
+        this.paymentService.setPayment(paymentRow.id);
         this.router.navigate(['payment'])
     }
 

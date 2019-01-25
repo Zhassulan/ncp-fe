@@ -1,0 +1,31 @@
+<p class="mat-h3"><b>Абонент</b></p>
+<form [formGroup]="operationForm">
+  <div fxLayout="row">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Номер телефона" formControlName="phone">
+      <button mat-button *ngIf="phone.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearPhone()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-error *ngIf="phone.errors">
+        количество цифр 10
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Лицевой счёт" formControlName="account">
+      <button mat-button *ngIf="this.operationForm.get('account').value" matSuffix mat-icon-button aria-label="Clear" (click)="clearAccount()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Сумма" formControlName="sum" required>
+    <span matSuffix> тг.</span>
+    <button mat-button *ngIf="this.operationForm.get('sum').value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSum()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</form>
+
+<div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+  <button mat-raised-button color="primary" (click)="addOperation()">Добавить</button>
+</div>

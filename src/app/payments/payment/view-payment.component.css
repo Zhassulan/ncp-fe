@@ -1,0 +1,12 @@
+.container {
+    height: 90vh;
+    width: 100%;
+}
+
+.leftColumn {
+    width: 400px;
+}
+
+.rightColumn {
+    width: 500px;
+}

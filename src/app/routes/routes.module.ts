@@ -9,7 +9,7 @@ import {LoginPageComponent} from '../auth/login-page/login-page.component';
 import {LoggedInGuard} from '../auth/logged-in.guard';
 import {UploadComponent} from '../equipment/upload.component';
 import {FilePaymentViewComponent} from '../equipment/file-payment-view/file-payment-view.component';
-import {ViewPaymentComponent} from '../payments/payment/view-payment/view-payment.component';
+import {ViewPaymentComponent} from '../payments/payment/view-payment.component';
 
 const routes: Routes = [
     {path: '', redirectTo: 'payments', pathMatch: 'full'},

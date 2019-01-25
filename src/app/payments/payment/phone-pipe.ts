@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform } from '@angular/core';
-import {msisdnLength} from '../../../settings';
+import {msisdnLength} from '../../settings';
 
 @Pipe({name: 'phonePipe'})
 export class PhonePipe implements PipeTransform {

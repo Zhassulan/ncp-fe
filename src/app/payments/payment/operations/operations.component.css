@@ -1,10 +1,7 @@
-.container {
-    height: 90vh;
-}
-
+/* стили таблицы -> */
 .mat-table {
     display: table;
-    width: 500px;
+    width: 100%;
 }
 .mat-header-row, .mat-row {
     display: table-row;
@@ -29,16 +26,11 @@
 }
 
 .mat-column-account {
-    width: 25%;
+    width: 20%;
 }
 
 .mat-column-sum {
-    width: 25%;
+    width: 20%;
 }
 
-
-.row_highlight {
-    background: #ccffe6;
-}
-
-
+/* <- стили таблицы */

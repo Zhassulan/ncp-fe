@@ -1,0 +1,31 @@
+<div class="container">
+
+    <mat-progress-bar mode="indeterminate" *ngIf="isWait"></mat-progress-bar>
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+        <mat-card>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <button mat-raised-button color="primary" (click)="goBack()"> Назад </button>
+                <h1 class="mat-h1"><b># {{ payment.paymentId }} от {{ payment.creationDate }}</b></h1>
+                <app-payment-menu></app-payment-menu>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-evenly start">
+
+                <div fxLayout="column" ngClass="leftColumn"> <!--Первая половина-->
+                    <app-payment-info></app-payment-info>
+                    <mat-divider></mat-divider>
+                    <app-payment-add-operation></app-payment-add-operation>
+                </div> <!--Конец первой половины-->
+
+                <div fxLayout="column" ngClass="rightColumn"><!--Вторая половина operations -->
+                    <app-payment-operations></app-payment-operations>
+                </div> <!--Конец второй половины -->
+
+            </div>
+        </mat-card>
+    </div>
+
+
+
+</div>
