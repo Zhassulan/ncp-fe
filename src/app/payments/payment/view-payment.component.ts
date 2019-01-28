@@ -20,8 +20,10 @@ export class ViewPaymentComponent implements OnInit {
     }
 
     ngOnInit() {
+        //todo убрать
         this.paymentsService.getSampleData().subscribe( () => {
-            this.paymentService.setPayment(230631);
+            if (!this.paymentService.payment)
+                this.paymentService.setPayment(230631);
         });
         this.isWait = false;
     }

@@ -43,7 +43,7 @@ export class DialogComponent implements OnInit {
         this.uploadService.upload(this.fileObj).subscribe(
             data => {
                 this.isWait = false;
-                this.router.navigate(['filePayment']);
+                //this.router.navigate(['filePayment']);
                 this.dialogRef.close();
             },
             error2 => {

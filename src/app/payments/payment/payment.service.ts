@@ -3,17 +3,19 @@ import {NcpPayment} from '../../model/ncp-payment';
 import {PaymentsService} from '../payments.service';
 import {Observable, Subject} from 'rxjs';
 import {Operation} from './operations/model/operation';
+import {UploadFilePaymentService} from '../../equipment/upload-file-payment.service';
+import {forEach} from '@angular/router/src/utils/collection';
 
 @Injectable()
 export class PaymentService {
 
     payment: NcpPayment;
     operations = [];
-    total: number = 0;
-    private operationsObs = new Subject< Operation [] >();
+    private operationsObs = new Subject<Operation[]>();
     operationsAnnounced$ = this.operationsObs.asObservable();
 
-    constructor(private paymentsService: PaymentsService) {
+    constructor(private paymentsService: PaymentsService,
+                private uploadFilePaymentService: UploadFilePaymentService) {
     }
 
     setPayment(id)    {
@@ -26,25 +28,30 @@ export class PaymentService {
             account: account,
             sum: sum,
         });
-        this.refreshTotal();
-        this.getOperations();
+        this.announceOperations();
     }
 
 
     delOperation(row) {
         this.operations.splice(this.operations.indexOf(row), 1);
-        this.refreshTotal();
     }
 
-    refreshTotal() {
-        this.total = 0;
-        this.operations.forEach(operation => {
-            this.total += operation.sum;
-        });
-    }
-
-    getOperations() {
+    announceOperations() {
         this.operationsObs.next(this.operations);
+    }
+
+    getOperationsFromUploadService()   {
+        for (let item of this.uploadFilePaymentService.filePayment.filePaymentItems)    {
+            if (item.msisdn != '' || item.account != '')
+                this.addOperation(item.msisdn, item.account, item.sum);
+        }
+        console.log(this.operations);
+        /*
+        this.uploadFilePaymentService.filePayment.filePaymentItems.forEach(item => {
+            this.addOperation(item.msisdn, item.account, item.sum);
+        }, () => {});
+        this.delOperationByIndex(this.operations.length);
+        */
     }
 
 }

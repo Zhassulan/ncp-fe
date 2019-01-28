@@ -33,42 +33,11 @@ export class AddOperationComponent implements OnInit {
             sum: new FormControl('',
                 [
                     Validators.min(1),
-                    Validators.max(7)
+                    Validators.max(1000000)
                 ]),
         });
         this.onChangesPhone();
         this.onChangesAccount();
-    }
-
-    addOperation() {
-        this.paymentService.addOperation('7072110987', '111111111', 500000);
-        //this.childOperationsComponent.refreshOperations();
-    }
-
-    clearPhone() {
-        if (this.operationForm.get('phone').value)
-            this.operationForm.get('phone').setValue('');
-    }
-
-    clearAccount() {
-        if (this.operationForm.get('account').value)
-            this.operationForm.get('account').setValue('');
-    }
-
-    clearSum() {
-        this.operationForm.get('sum').setValue('');
-    }
-
-    onChangesAccount() {
-        this.operationForm.get('account').valueChanges.subscribe(val => {
-            this.clearPhone();
-        });
-    }
-
-    onChangesPhone() {
-        this.operationForm.get('phone').valueChanges.subscribe(val => {
-            this.clearAccount();
-        });
     }
 
     get phone() {
@@ -77,6 +46,45 @@ export class AddOperationComponent implements OnInit {
 
     get account() {
         return this.operationForm.get('account');
+    }
+
+    get sum()   {
+        return this.operationForm.get('sum');
+    }
+
+    addOperation() {
+        this.paymentService.addOperation(this.phone.value, this.account.value, this.sum.value);
+        this.clearFields();
+    }
+
+    clearFields()   {
+        this.clearAccount();
+        this.clearPhone();
+        this.clearSum();
+    }
+
+    clearPhone() {
+        this.phone.setValue('');
+    }
+
+    clearAccount() {
+        this.account.setValue('');
+    }
+
+    clearSum() {
+        this.sum.setValue('');
+    }
+
+    onChangesAccount() {
+        this.account.valueChanges.subscribe(val => {
+            this.clearPhone();
+        });
+    }
+
+    onChangesPhone() {
+        this.phone.valueChanges.subscribe(val => {
+            this.clearAccount();
+        });
     }
 
 }

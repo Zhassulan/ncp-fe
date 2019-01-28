@@ -38,5 +38,5 @@
 <mat-paginator [length]="paginatorResultsLength" [pageSize]="10"></mat-paginator>
 
 <div fxLayout="row" fxLayoutAlign="end center">
-    <p class="mat-h3">Итого: <b>{{ operations.total | currency : ' тг.' }}</b></p>
+    <p class="mat-h3">Итого: <b>{{ getTotal() | currency : ' тг.' }}</b></p>
 </div>

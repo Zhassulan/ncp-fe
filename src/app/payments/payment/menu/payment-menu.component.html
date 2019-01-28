@@ -1,26 +1,28 @@
 <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Действия над платежом">
-  <mat-icon>more_vert</mat-icon>
+    <mat-icon>more_vert</mat-icon>
 </button>
 <mat-menu #menu="matMenu">
-  <!--
-  <button mat-menu-item
-          [disabled]="(status == 6 || status == 7 || status == 1)"
-          (click)="menuOnRowToTransit(paymentRow)">
-    <span>На транзит</span>
-  </button>
-  <button mat-menu-item [disabled]="!(paymentRow.status == 6)"
-          (click)="menuOnRowDeleteTransit(paymentRow)">
-    <span>Удалить с транзита</span>
-  </button>
-  <button mat-menu-item (click)="menuOnRowDistributeEquipment(paymentRow)"
-          [disabled]="!(paymentRow.status == 0 || paymentRow.status == 2 || paymentRow.status == 9 || paymentRow.status == 8)">
-    <span>Разнести</span>
-  </button>
-  <button mat-menu-item [disabled]="!(paymentRow.status == 6)">
-    <span>Разнести с транзитного счёта</span>
-  </button>
-  -->
-  <button mat-menu-item [disabled]>
-    <span>Отменить</span>
-  </button>
+    <button mat-menu-item [disabled]="(payment.status == paymentStatuses.STATUS_DISTRIBUTED ||
+                                       payment.status == paymentStatuses.STATUS_EXPIRED ||
+                                       payment.status == paymentStatuses.STATUS_DELETED)" (click)="openFileDialog()">
+        <span>Разнести - оборудование</span>
+    </button>
+    <!--
+    <button mat-menu-item
+            [disabled]="(status == 6 || status == 7 || status == 1)"
+            (click)="menuOnRowToTransit(paymentRow)">
+      <span>На транзит</span>
+    </button>
+    <button mat-menu-item [disabled]="!(paymentRow.status == 6)"
+            (click)="menuOnRowDeleteTransit(paymentRow)">
+      <span>Удалить с транзита</span>
+    </button>
+    <button mat-menu-item (click)="menuOnRowDistributeEquipment(paymentRow)"
+            [disabled]="!(paymentRow.status == 0 || paymentRow.status == 2 || paymentRow.status == 9 || paymentRow.status == 8)">
+      <span>Разнести</span>
+    </button>
+    <button mat-menu-item [disabled]="!(paymentRow.status == 6)">
+      <span>Разнести с транзитного счёта</span>
+    </button>
+    -->
 </mat-menu>

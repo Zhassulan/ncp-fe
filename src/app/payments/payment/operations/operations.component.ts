@@ -17,7 +17,6 @@ export class OperationsComponent implements OnInit, OnDestroy {
     dataSource = new MatTableDataSource<Operation>();
     displayedColumns: string[] = ['num', 'phone', 'account', 'sum', 'del'];
     i: number = 0;
-    total: number = 0;
     paginatorResultsLength: number = 0;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     subscription: Subscription;
@@ -50,6 +49,14 @@ export class OperationsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+    }
+
+    getTotal(): number  {
+        let total: number = 0;
+        this.operations.forEach(operation => {
+            total += Number(operation.sum);
+        });
+        return total;
     }
 
 }

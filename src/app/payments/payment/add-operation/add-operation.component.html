@@ -27,5 +27,5 @@
 </form>
 
 <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
-  <button mat-raised-button color="primary" (click)="addOperation()">Добавить</button>
+  <button mat-raised-button color="primary" [disabled]="!operationForm.valid" (click)="addOperation()" matTooltip="Добавить разноску">Добавить</button>
 </div>
