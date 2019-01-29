@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {Router} from '@angular/router';
-import {MatDialogRef, MatSnackBar} from '@angular/material';
-import {User} from '../../model/user';
-import {ldapGroups, timeouts, rests, msgs, locStorItems} from '../../settings';
+import {MatDialogRef} from '@angular/material';
+import {User} from '../model/user';
+import {ldapGroups, rests, msgs, locStorItems} from '../../settings';
 import {NGXLogger} from 'ngx-logger';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
     selector: 'app-login',
@@ -24,9 +25,9 @@ export class LoginComponent implements OnInit {
 
     constructor(public authService: AuthService,
                 private router: Router,
-                public snackBar: MatSnackBar,
                 private dialogRef:MatDialogRef<LoginComponent>,
-                private logger: NGXLogger) {
+                private logger: NGXLogger,
+                private notifService: NotificationsService) {
     }
 
     login() {
@@ -43,36 +44,24 @@ export class LoginComponent implements OnInit {
                                 this.dialogRef.close();
                             }
                             if (data.result == rests.restResultErr) {
-                                this.showMsg(msgs.msgNoRights);
+                                this.notifService.warn(msgs.msgNoRights);
                                 this.logger.warn(msgs.msgNoRights + ' ' + userObj.userName);
                             }
                         },
                         error2 => {
-                            this.showMsg(msgs.msgSysErrRights + ' ' + error2);
+                            this.notifService.error(msgs.msgSysErrRights + ' ' + error2);
                             this.logger.error(msgs.msgSysErrRights + ' ' + userObj.userName + ' ' + error2);
                         });
                 }
                 if (data.result == rests.restResultErr) {
-                    this.showMsg(msgs.msgWrongCreds);
+                    this.notifService.warn(msgs.msgWrongCreds);
                     this.logger.warn(msgs.msgWrongCreds + ' ' + userObj.userName);
                 }
             },
             error2 => {
-                this.showMsg(msgs.msgSysErrCreds + ' ' + error2);
+                this.notifService.error(msgs.msgSysErrCreds + ' ' + error2);
                 this.logger.error(msgs.msgSysErrCreds + ' ' + userObj.userName + ' ' + error2);
             });
-    }
-
-    showMsg(text) {
-        this.openSnackBar(text, '');
-        setTimeout(function () {
-        }.bind(this), timeouts.timeoutAfterLoginInput);
-    }
-
-    openSnackBar(message: string, action: string) {
-        this.snackBar.open(message, action, {
-            duration: timeouts.showMsgDelay,
-        });
     }
 
 }

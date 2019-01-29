@@ -4,8 +4,10 @@
 
     <div fxLayout="row" fxLayoutAlign="center center">
         <mat-card>
+
             <div fxLayout="row" fxLayoutAlign="space-between center">
-                <button mat-raised-button color="primary" (click)="goBack()" matTooltip="Вернуться к списку платежей"> Назад </button>
+                <!--<button mat-raised-button color="primary" (click)="goBack()" matTooltip="Вернуться к списку платежей"> Назад </button> -->
+                <mat-icon>description</mat-icon>
                 <h1 class="mat-h1"><b># {{ payment.paymentId }} от {{ payment.creationDate | date }}</b></h1>
                 <app-payment-menu [payment]="payment"></app-payment-menu>
             </div>
@@ -23,7 +25,11 @@
                 </div> <!--Конец второй половины -->
 
             </div>
+
+
+
         </mat-card>
     </div>
-
+    <simple-notifications></simple-notifications>
 </div>
+

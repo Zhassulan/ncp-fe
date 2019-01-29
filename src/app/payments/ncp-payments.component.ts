@@ -1,18 +1,18 @@
-import {AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {DataService} from '../data/data.service';
-import {NcpPayment} from '../model/ncp-payment';
+import {NcpPayment} from './payment/model/ncp-payment';
 import {DateRange} from '../data/date-range';
-import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTableDataSource, MatSnackBar} from '@angular/material';
+import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
-import {RestResponse} from '../data/rest-response';
 import {DialogService} from '../dialog/dialog.service';
 import {FormControl} from '@angular/forms';
 import {NGXLogger} from 'ngx-logger';
-import {timeouts, msgs, PaymentStatusRu, locStorItems, shrinkDetailsColumnSize, rests} from '../settings';
+import {msgs, shrinkDetailsColumnSize, rests} from '../settings';
 import {PaymentsService} from './payments.service';
 import {UserService} from '../user/user.service';
 import {Router} from '@angular/router';
 import {PaymentService} from './payment/payment.service';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
     selector: 'app-ncp-payments',
@@ -64,11 +64,11 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     constructor(private dataService: DataService,
                 private dialogService: DialogService,
                 private logger: NGXLogger,
-                public snackBar: MatSnackBar,
                 private paymentsService: PaymentsService,
                 private userService: UserService,
                 private router: Router,
-                private paymentService: PaymentService) {
+                private paymentService: PaymentService,
+                private notifService: NotificationsService) {
         this.dataSource = new MatTableDataSource(this.payments);
         this.dtStartDay = new Date();
         this.dtEndDay = new Date();
@@ -140,7 +140,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
                 this.paymentsService.paginatorResultsLength = this.paginatorResultsLength;
             },
             error2 => {
-                this.showMsg(error2);
+                this.notifService.error(msgs.msgErrLoadData + ' ' + error2);
                 this.isWait = false;
             },
             () => {
@@ -159,7 +159,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
             this.dataSource.data = this.payments;
             this.paymentsService.paginatorResultsLength = this.paginatorResultsLength;
         }, error2 => {
-            this.showMsg(error2);
+            this.notifService.error(msgs.msgErrLoadData + ' ' + error2);
             this.isWait = false;
         }, () => {
             this.isWait = false;
@@ -223,7 +223,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
                 }
             });
         } else {
-            this.showMsg('Не выбрано ни одного платежа');
+            this.notifService.warn('Не выбрано ни одного платежа');
         }
     }
 
@@ -264,18 +264,6 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         });
         this.isBadgeVisible = false;
         this.selectedItems = 0;
-    }
-
-    showMsg(text) {
-        this.openSnackBar(text, '');
-        setTimeout(function () {
-        }.bind(this), timeouts.timeoutAfterLoginInput);
-    }
-
-    openSnackBar(message: string, action: string) {
-        this.snackBar.open(message, action, {
-            duration: timeouts.showMsgDelay,
-        });
     }
 
     menuOnRowToTransit(paymentRow) {

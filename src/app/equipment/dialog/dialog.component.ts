@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef} from '@angular/material';
 import {UploadFilePaymentService} from '../upload-file-payment.service';
-import {Router} from '@angular/router';
+import {PaymentService} from '../../payments/payment/payment.service';
 
 @Component({
     selector: 'app-dialog',
@@ -17,7 +17,7 @@ export class DialogComponent implements OnInit {
 
     constructor(public dialogRef: MatDialogRef<DialogComponent>,
                 private uploadService: UploadFilePaymentService,
-                private router: Router) {
+                private paymentService: PaymentService) {
     }
 
     ngOnInit() {
@@ -44,6 +44,8 @@ export class DialogComponent implements OnInit {
             data => {
                 this.isWait = false;
                 //this.router.navigate(['filePayment']);
+                if (this.paymentService.payment)
+                    this.paymentService.getOperationsFromUploadService();
                 this.dialogRef.close();
             },
             error2 => {

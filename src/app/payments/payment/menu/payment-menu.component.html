@@ -5,24 +5,11 @@
     <button mat-menu-item [disabled]="(payment.status == paymentStatuses.STATUS_DISTRIBUTED ||
                                        payment.status == paymentStatuses.STATUS_EXPIRED ||
                                        payment.status == paymentStatuses.STATUS_DELETED)" (click)="openFileDialog()">
-        <span>Разнести - оборудование</span>
+        <span>Загрузить разноски - оборудование</span>
     </button>
-    <!--
-    <button mat-menu-item
-            [disabled]="(status == 6 || status == 7 || status == 1)"
-            (click)="menuOnRowToTransit(paymentRow)">
-      <span>На транзит</span>
+    <button mat-menu-item [disabled]="(operations.length == 0 || (payment.status == paymentStatuses.STATUS_DISTRIBUTED ||
+                                       payment.status == paymentStatuses.STATUS_EXPIRED ||
+                                       payment.status == paymentStatuses.STATUS_DELETED))" (click)="distribute()">
+        <span>Разнести</span>
     </button>
-    <button mat-menu-item [disabled]="!(paymentRow.status == 6)"
-            (click)="menuOnRowDeleteTransit(paymentRow)">
-      <span>Удалить с транзита</span>
-    </button>
-    <button mat-menu-item (click)="menuOnRowDistributeEquipment(paymentRow)"
-            [disabled]="!(paymentRow.status == 0 || paymentRow.status == 2 || paymentRow.status == 9 || paymentRow.status == 8)">
-      <span>Разнести</span>
-    </button>
-    <button mat-menu-item [disabled]="!(paymentRow.status == 6)">
-      <span>Разнести с транзитного счёта</span>
-    </button>
-    -->
 </mat-menu>

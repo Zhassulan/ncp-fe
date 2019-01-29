@@ -12,8 +12,7 @@ export class UploadComponent {
 
     dialogRef;
 
-    constructor(public dialog: MatDialog,
-                private router: Router) {
+    constructor(public dialog: MatDialog) {
     }
 
     public openUploadDialog() {

@@ -13,6 +13,7 @@ export class ViewPaymentComponent implements OnInit {
 
     isWait: boolean = true;
     @ViewChild(OperationsComponent) childOperationsComponent: OperationsComponent;
+    backHidden: boolean = true;
 
     constructor(private router: Router,
                 private paymentService: PaymentService,

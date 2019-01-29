@@ -6,7 +6,7 @@ import {Router} from '@angular/router';
 import {PaymentsService} from '../../payments/payments.service';
 import {UserService} from '../../user/user.service';
 import {NGXLogger} from 'ngx-logger';
-import {RawPayment} from '../../model/raw-payment';
+import {RawPayment} from '../../payments/payment/model/raw-payment';
 import {mergeMap, tap} from 'rxjs/operators';
 import {retryBackoff} from 'backoff-rxjs';
 

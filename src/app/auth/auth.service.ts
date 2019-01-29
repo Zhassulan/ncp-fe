@@ -4,7 +4,7 @@ import {environment} from '../../environments/environment';
 import {httpOptions, locStorItems} from '../settings';
 import {RestResponse} from '../data/rest-response';
 import {Observable} from 'rxjs';
-import {User} from '../model/user';
+import {User} from './model/user';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 

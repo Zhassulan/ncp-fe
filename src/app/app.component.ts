@@ -1,8 +1,7 @@
 import {Title} from '@angular/platform-browser';
 import {Component, ViewEncapsulation, AfterViewInit} from '@angular/core';
 import {appVer, locStorItems, timeouts} from './settings';
-import {MatSnackBar} from '@angular/material';
-import {Observable} from 'rxjs';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
     selector: 'app-root',
@@ -14,7 +13,8 @@ export class AppComponent implements AfterViewInit {
 
     title = 'NCP';
 
-    constructor(private titleService: Title, public snackBar: MatSnackBar) {
+    constructor(private titleService: Title,
+                private notifService: NotificationsService) {
         this.titleService.setTitle(this.title);
     }
 
@@ -24,21 +24,11 @@ export class AppComponent implements AfterViewInit {
             localStorage.setItem(locStorItems.version, '0');
         }
         if (parseInt(localStorage.getItem(locStorItems.version)) != appVer) {
-            this.showMsg('Внимание! Обновите приложение при помощи комбинации клавиш [Ctrl]+[F5]. Спасибо.');
+            this.notifService.warn('Внимание! Обновите приложение при помощи комбинации клавиш [Ctrl]+[F5]. Спасибо.');
             localStorage.setItem(locStorItems.version, appVer.toString());
         }
     }
 
-    showMsg(text) {
-        this.openSnackBar(text, '');
-        setTimeout(function () {
-        }.bind(this), timeouts.timeoutAfterLoginInput);
-    }
 
-    openSnackBar(message: string, action: string) {
-        this.snackBar.open(message, action, {
-            duration: timeouts.showMsgDelay,
-        });
-    }
 
 }

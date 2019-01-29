@@ -48,8 +48,7 @@ export const roles = {
 };
 
 export const enum timeouts {
-    timeoutAfterLoginInput = 3000,
-    showMsgDelay = 6000
+    timeoutAfterLoginInput = 3000
 }
 
 export const enum rests {
@@ -73,7 +72,10 @@ export const enum msgs {
     msgSuccessNewRawPayment = 'Успешно создан грязный платёж.',
     msgErrNewRawPayment = 'Ошибка при создании грязного платежа.',
     msgErrGetNcpPaymentByRawId = 'Ошибка получения NCP платежа по грязному платежу.',
-    msgSuccessGetNcpPaymentByRawId = 'Успешно получен NCP платёж по грязному платежу.'
+    msgSuccessGetNcpPaymentByRawId = 'Успешно получен NCP платёж по грязному платежу.',
+    msgErrTotalSum = 'Сумма платежа и сумма файла не совпадают.',
+    msgErrDocNum = 'Номер платежа не совпадает с номером в файле.',
+    msgErrRnn = 'ИИН платежа не совпадает с ИИН в файле.'
 }
 
 export enum locStorItems {
@@ -84,6 +86,14 @@ export enum locStorItems {
 
 export const appVer: number = 1;
 export const msisdnLength = 10;
+
+export enum PaymentDistrStrategy {
+    byAccount = 0,
+    byMsisdn = 1
+}
+
+export const prepaid = 'Аванс';
+
 
 export class Settings {
 }

@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {DataService} from '../data/data.service';
 import {FilePayment} from './model/file-payment';
 import {HttpErrorResponse} from '@angular/common/http';
-import {msgs, timeouts} from '../settings';
-import {MatSnackBar} from '@angular/material';
+import {msgs} from '../settings';
 import {NGXLogger} from 'ngx-logger';
+import {NotificationsService} from 'angular2-notifications';
 
 @Injectable()
 export class UploadFilePaymentService {
@@ -14,8 +14,8 @@ export class UploadFilePaymentService {
     formData;
 
     constructor(private dataService: DataService,
-                public snackBar: MatSnackBar,
-                private logger: NGXLogger) {
+                private logger: NGXLogger,
+                private notifService: NotificationsService) {
     }
 
     upload(file: File): Observable<any> {
@@ -30,8 +30,8 @@ export class UploadFilePaymentService {
                         observer.next(true);
                     },
                     error2 => {
-                        this.showMsg(msgs.msgErrUploadFilePayment);
-                        this.logger.error(msgs.msgErrUploadFilePayment);
+                        this.notifService.error(msgs.msgErrUploadFilePayment + ' (' + error2 + ')');
+                        this.logger.error(msgs.msgErrUploadFilePayment + ' (' + error2 + ')');
                         observer.error(false);
                     },
                     () => {
@@ -45,16 +45,8 @@ export class UploadFilePaymentService {
         return Observable.throwError(error.message || 'Ошибка сервера.');
     }
 
-    showMsg(text) {
-        this.openSnackBar(text, '');
-        setTimeout(function () {
-        }.bind(this), timeouts.timeoutAfterLoginInput);
-    }
-
-    openSnackBar(message: string, action: string) {
-        this.snackBar.open(message, action, {
-            duration: timeouts.showMsgDelay,
-        });
+    resetFilePayment()  {
+        this.filePayment = null;
     }
 
 }

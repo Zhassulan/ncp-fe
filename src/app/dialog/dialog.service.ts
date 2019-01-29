@@ -10,8 +10,7 @@ export class DialogService {
     dialogData: DialogData[] = [];
     dialogRef;
 
-    constructor(public dialog: MatDialog) {
-    }
+    constructor(public dialog: MatDialog) { }
 
     openDialog(): void {
         this.dialogRef = this.dialog.open(DialogReportComponent, {

@@ -6,6 +6,7 @@ import {Operation} from './model/operation';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {PaymentService} from '../payment.service';
 import {Subscription} from 'rxjs';
+import {PaymentDistrStrategy} from '../../../settings';
 
 @Component({
     selector: 'app-payment-operations',
@@ -15,11 +16,12 @@ import {Subscription} from 'rxjs';
 export class OperationsComponent implements OnInit, OnDestroy {
 
     dataSource = new MatTableDataSource<Operation>();
-    displayedColumns: string[] = ['num', 'phone', 'account', 'sum', 'del'];
+    displayedColumns: string[] = ['num', 'nomenclature', 'phone', 'icc', 'account', 'sum', 'del'];
     i: number = 0;
     paginatorResultsLength: number = 0;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     subscription: Subscription;
+    paymentDistrStrategies = PaymentDistrStrategy;
 
     constructor(private paymentService: PaymentService) {
         this.subscription = paymentService.operationsAnnounced$.subscribe(

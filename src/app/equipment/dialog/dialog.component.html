@@ -18,6 +18,6 @@
     </mat-dialog-content>
     <mat-dialog-actions class="actions">
         <button mat-raised-button color="primary" (click)="upload()" *ngIf="showUploadButton">Обработка</button>
-        <button mat-raised-button color="primary" [mat-dialog-close]>Отмена</button>
+        <button mat-raised-button color="primary" [mat-dialog-close]="'cancel'">Отмена</button>
     </mat-dialog-actions>
 </div>

@@ -41,6 +41,7 @@ import { OperationsComponent } from './payments/payment/operations/operations.co
 import {PaymentService} from './payments/payment/payment.service';
 import { InfoComponent } from './payments/payment/info/info.component';
 import { AddOperationComponent } from './payments/payment/add-operation/add-operation.component';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -92,7 +93,8 @@ registerLocaleData(localeRu, 'ru');
             cookieName: 'My-Xsrf-Cookie',
             headerName: 'My-Xsrf-Header',
         }),*/
-        BreadcrumbModule
+        BreadcrumbModule,
+        SimpleNotificationsModule.forRoot()
     ],
     providers: [
         AUTH_PROVIDERS,
@@ -113,5 +115,3 @@ registerLocaleData(localeRu, 'ru');
 
 export class AppModule {
 }
-
-

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import {NcpPayment} from '../model/ncp-payment';
+import {NcpPayment} from '../payments/payment/model/ncp-payment';
 import {Observable, throwError} from 'rxjs';
 import {catchError, retry} from 'rxjs/internal/operators';
 import {DateRange} from './date-range';
@@ -10,7 +10,7 @@ import {httpOptions} from '../settings';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import {FilePayment} from '../equipment/model/file-payment';
-import {RawPayment} from '../model/raw-payment';
+import {RawPayment} from '../payments/payment/model/raw-payment';
 
 @Injectable()
 export class DataService {

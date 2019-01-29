@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
-import {NcpPayment} from '../../model/ncp-payment';
+import {NcpPayment} from './model/ncp-payment';
 import {PaymentsService} from '../payments.service';
-import {Observable, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {Operation} from './operations/model/operation';
 import {UploadFilePaymentService} from '../../equipment/upload-file-payment.service';
-import {forEach} from '@angular/router/src/utils/collection';
+import {msgs, PaymentDistrStrategy, prepaid} from '../../settings';
+import {FilePaymentItem} from '../../equipment/model/file-payment-item';
+import {NotificationsService} from 'angular2-notifications';
 
 @Injectable()
 export class PaymentService {
@@ -18,10 +20,23 @@ export class PaymentService {
                 private uploadFilePaymentService: UploadFilePaymentService) {
     }
 
-    setPayment(id)    {
+    setPayment(id) {
         this.payment = this.paymentsService.payments.find(x => x.id == id);
     }
 
+    addOperation(nomenclature, phone, icc, account, sum, distrStrategy) {
+        this.operations.push({
+            nomenclature: nomenclature,
+            phone: phone,
+            icc: icc,
+            account: account,
+            sum: sum,
+            distrStrategy: distrStrategy
+        });
+        this.announceOperations();
+    }
+
+    /*
     addOperation(phone, account, sum) {
         this.operations.push({
             phone: phone,
@@ -30,7 +45,7 @@ export class PaymentService {
         });
         this.announceOperations();
     }
-
+    */
 
     delOperation(row) {
         this.operations.splice(this.operations.indexOf(row), 1);
@@ -40,18 +55,40 @@ export class PaymentService {
         this.operationsObs.next(this.operations);
     }
 
-    getOperationsFromUploadService()   {
-        for (let item of this.uploadFilePaymentService.filePayment.filePaymentItems)    {
-            if (item.msisdn != '' || item.account != '')
-                this.addOperation(item.msisdn, item.account, item.sum);
+    get items() {
+        return this.uploadFilePaymentService.filePayment.filePaymentItems;
+    }
+
+    checkTotalSum(): boolean {
+        if (this.items.slice(this.items.length - 1)[0].sum != this.payment.sum) return false; else return true;
+    }
+
+    checkDocNum(): boolean {
+        if (this.uploadFilePaymentService.filePayment.filePaymentHeader.payment_docnum != this.payment.paymentDocnum)
+            return false; else return true;
+    }
+
+    checkRnn(): boolean {
+        if (this.uploadFilePaymentService.filePayment.filePaymentHeader.iin_bin_sender != this.payment.rnnSender)
+            return false; else return true;
+    }
+
+    getOperationsFromUploadService() {
+        for (let item of this.items.slice(0, this.items.length - 1)) {
+            this.addOperation(item.nomenclature, item.msisdn, item.icc, item.account, item.sum, this.determineDistrStrategy(item));
         }
-        console.log(this.operations);
-        /*
-        this.uploadFilePaymentService.filePayment.filePaymentItems.forEach(item => {
-            this.addOperation(item.msisdn, item.account, item.sum);
-        }, () => {});
-        this.delOperationByIndex(this.operations.length);
-        */
+    }
+
+    determineDistrStrategy(item: FilePaymentItem)    {
+        if (item.nomenclature.trim().toLowerCase().includes(prepaid.toLowerCase()) && (item.account == '' || item.account == null))   {
+            return PaymentDistrStrategy.byMsisdn;
+        }   else
+            return PaymentDistrStrategy.byAccount;
+
+    }
+
+    distribute()    {
+
     }
 
 }

@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {LoginComponent} from '../login/login.component';
+import {timeouts} from '../../settings';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
                 width: '20%',
                 height: '30%'
             });
-        });
+        }, timeouts.timeoutAfterLoginInput);
     }
 
     constructor(public dialog: MatDialog) {
