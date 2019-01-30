@@ -1,4 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {DataService} from '../data/data.service';
 import {NGXLogger} from 'ngx-logger';
 import {DateRange} from '../data/date-range';
@@ -71,7 +71,6 @@ export class PaymentsService {
     }
 
     toTransit(paymentId): Observable<any> {
-        let msg;
         return new Observable(
             observer => {
                 this.dataService.paymentToTransit(paymentId).subscribe(data => {
@@ -93,11 +92,10 @@ export class PaymentsService {
 
     /**
      *  Удаление платежа на транзитном счёте
-     * @param in_payment
+     * @param paymentId id платежа
      * @returns {Observable<any>}
      */
     deleteTransit(paymentId): Observable<any> {
-        let msg;
         return new Observable<any>(
             observer => {
                 this.dataService.deleteTransitPayment(paymentId, localStorage.getItem(locStorItems.userName)).subscribe(data => {

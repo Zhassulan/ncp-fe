@@ -1,21 +1,21 @@
-<form [formGroup]="operationForm">
+<form [formGroup]="frmOperation">
 
     <p class="mat-h3"><b>Абонент:</b></p>
 
     <div fxLayout="row">
 
         <mat-form-field class="example-full-width">
-            <input matInput placeholder="Номер телефона" formControlName="phone">
-            <button mat-button *ngIf="phone.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearPhone()">
+            <input matInput placeholder="Номер телефона" formControlName="msisdn" (input)="msisdnChanged()">
+            <button mat-button *ngIf="msisdn.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearMsisdn()">
                 <mat-icon>close</mat-icon>
             </button>
-            <mat-error *ngIf="phone.errors">
+            <mat-error *ngIf="msisdn.errors">
                 количество цифр 10
             </mat-error>
         </mat-form-field>
         <mat-form-field class="example-full-width">
-            <input matInput placeholder="Лицевой счёт" formControlName="account">
-            <button mat-button *ngIf="this.operationForm.get('account').value" matSuffix mat-icon-button aria-label="Clear" (click)="clearAccount()">
+            <input matInput placeholder="Лицевой счёт" formControlName="account" (input)="accountChanged()">
+            <button mat-button *ngIf="account.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearAccount()">
                 <mat-icon>close</mat-icon>
             </button>
         </mat-form-field>
@@ -27,13 +27,13 @@
             <mat-form-field class="example-full-width">
                 <input matInput placeholder="Сумма" formControlName="sum" required>
                 <span matSuffix> тг.</span>
-                <button mat-button *ngIf="this.operationForm.get('sum').value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSum()">
+                <button mat-button *ngIf="sum.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSum()">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
         </div>
         <div fxLayout="column" fxLayoutAlign="center end">
-            <button mat-raised-button color="primary" [disabled]="!operationForm.valid" (click)="addOperation()" matTooltip="Добавить разноску">Добавить</button>
+            <button mat-raised-button color="primary" [disabled]="!frmOperation.valid" (click)="addOperation()" matTooltip="Добавить разноску">Добавить</button>
         </div>
     </div>
 

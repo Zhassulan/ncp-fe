@@ -1,7 +1,7 @@
 export class Operation {
 
     nomenclature: string;
-    phone: string;
+    msisdn: string;
     icc: string;
     account: string;
     sum: number;

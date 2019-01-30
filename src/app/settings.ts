@@ -58,24 +58,26 @@ export const enum rests {
 }
 
 export const enum msgs {
-    msgLoggedSuccess = 'Успешно выполнен логин.',
-    msgNoRights = 'Извините, нет разрешений на использование приложения.',
-    msgSysErrRights = 'Системная ошибка проверки разрешений.',
-    msgWrongCreds = 'Не верный пользователь или пароль.',
-    msgSysErrCreds = 'Системная ошибка проверки логина/пароля.',
-    msgErrLoadData = 'Ошибка загрузки данных.',
-    msgErrToTransit = 'Ошибка переноса на транзитный счёт.',
-    msgSuccessToTransit = 'Платёж успешно перенесён на тразнитный счёт.',
-    msgSuccessDelTransit = 'Успешно удалён с транзитного счёта.',
-    msgErrDelTransit = 'Ошибка удаления с транзитного счёта.',
-    msgErrUploadFilePayment = 'Ошибка загрузки файлового платежа.',
-    msgSuccessNewRawPayment = 'Успешно создан грязный платёж.',
-    msgErrNewRawPayment = 'Ошибка при создании грязного платежа.',
-    msgErrGetNcpPaymentByRawId = 'Ошибка получения NCP платежа по грязному платежу.',
-    msgSuccessGetNcpPaymentByRawId = 'Успешно получен NCP платёж по грязному платежу.',
-    msgErrTotalSum = 'Сумма платежа и сумма файла не совпадают.',
-    msgErrDocNum = 'Номер платежа не совпадает с номером в файле.',
-    msgErrRnn = 'ИИН платежа не совпадает с ИИН в файле.'
+    msgLoggedSuccess = 'Успешно выполнен логин. ',
+    msgNoRights = 'Извините, нет разрешений на использование приложения. ',
+    msgSysErrRights = 'Системная ошибка проверки разрешений. ',
+    msgWrongCreds = 'Не верный пользователь или пароль. ',
+    msgSysErrCreds = 'Системная ошибка проверки логина/пароля. ',
+    msgErrLoadData = 'Ошибка загрузки данных. ',
+    msgErrToTransit = 'Ошибка переноса на транзитный счёт. ',
+    msgSuccessToTransit = 'Платёж успешно перенесён на тразнитный счёт. ',
+    msgSuccessDelTransit = 'Успешно удалён с транзитного счёта. ',
+    msgErrDelTransit = 'Ошибка удаления с транзитного счёта. ',
+    msgErrUploadFilePayment = 'Ошибка загрузки файлового платежа. ',
+    msgSuccessNewRawPayment = 'Успешно создан грязный платёж. ',
+    msgErrNewRawPayment = 'Ошибка при создании грязного платежа. ',
+    msgErrGetNcpPaymentByRawId = 'Ошибка получения NCP платежа по грязному платежу. ',
+    msgSuccessGetNcpPaymentByRawId = 'Успешно получен NCP платёж по грязному платежу. ',
+    msgErrTotalSum = 'Сумма платежа и сумма файла не совпадают. ',
+    msgErrDocNum = 'Номер платежа не совпадает с номером в файле. ',
+    msgErrRnn = 'ИИН платежа не совпадает с ИИН в файле. ',
+    msgErrGetDetails = 'Ошибка получения деталей платежа. ',
+    msgSuccessGotDetails = 'Успешно получены детали платежа. '
 }
 
 export enum locStorItems {
@@ -89,7 +91,8 @@ export const msisdnLength = 10;
 
 export enum PaymentDistrStrategy {
     byAccount = 0,
-    byMsisdn = 1
+    byMsisdn = 1,
+    None = 2
 }
 
 export const prepaid = 'Аванс';

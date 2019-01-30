@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {msisdnLength} from '../../../settings';
 import {PaymentService} from '../payment.service';
@@ -10,25 +10,23 @@ import {PaymentService} from '../payment.service';
 })
 export class AddOperationComponent implements OnInit {
 
-    operationForm: FormGroup;
+    frmOperation: FormGroup;
 
     constructor(private paymentService: PaymentService) {
     }
 
     ngOnInit() {
-        this.operationForm = new FormGroup({
-            phone: new FormControl(
+        this.frmOperation = new FormGroup({
+            msisdn: new FormControl(
                 '',
                 [
                     Validators.minLength(msisdnLength),
                     Validators.maxLength(msisdnLength),
-                    //this.excludeValidator('phone')
                 ]
             ),
             account: new FormControl('',
                 [
-                    Validators.min(1),
-                    //this.excludeValidator('account')
+                    Validators.minLength(1),
                 ]),
             sum: new FormControl('',
                 [
@@ -36,35 +34,33 @@ export class AddOperationComponent implements OnInit {
                     Validators.max(1000000)
                 ]),
         });
-        this.onChangesPhone();
-        this.onChangesAccount();
     }
 
-    get phone() {
-        return this.operationForm.get('phone');
+    get msisdn() {
+        return this.frmOperation.get('msisdn');
     }
 
     get account() {
-        return this.operationForm.get('account');
+        return this.frmOperation.get('account');
     }
 
     get sum()   {
-        return this.operationForm.get('sum');
+        return this.frmOperation.get('sum');
     }
 
     addOperation() {
-        this.paymentService.addOperation(this.phone.value, this.account.value, this.sum.value);
+        this.paymentService.addOperation(null, this.msisdn.value, null, this.account.value, this.sum.value, null);
         this.clearFields();
     }
 
     clearFields()   {
         this.clearAccount();
-        this.clearPhone();
+        this.clearMsisdn();
         this.clearSum();
     }
 
-    clearPhone() {
-        this.phone.setValue('');
+    clearMsisdn() {
+        this.msisdn.setValue('');
     }
 
     clearAccount() {
@@ -75,16 +71,12 @@ export class AddOperationComponent implements OnInit {
         this.sum.setValue('');
     }
 
-    onChangesAccount() {
-        this.account.valueChanges.subscribe(val => {
-            this.clearPhone();
-        });
+    msisdnChanged() {
+        this.clearAccount();
     }
 
-    onChangesPhone() {
-        this.phone.valueChanges.subscribe(val => {
-            this.clearAccount();
-        });
+    accountChanged()    {
+        this.clearMsisdn();
     }
 
 }

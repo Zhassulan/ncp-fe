@@ -7,7 +7,7 @@ import {PaymentsService} from '../../payments/payments.service';
 import {UserService} from '../../user/user.service';
 import {NGXLogger} from 'ngx-logger';
 import {RawPayment} from '../../payments/payment/model/raw-payment';
-import {mergeMap, tap} from 'rxjs/operators';
+import {mergeMap} from 'rxjs/operators';
 import {retryBackoff} from 'backoff-rxjs';
 
 
@@ -66,7 +66,7 @@ export class FilePaymentViewComponent implements OnInit, AfterViewInit {
                 retryBackoff({
                     initialInterval: 3000,
                     maxInterval: 5000,
-                    shouldRetry: (error) => {return true;}
+                    shouldRetry: () => {return true;}
                 })
             ))
         );

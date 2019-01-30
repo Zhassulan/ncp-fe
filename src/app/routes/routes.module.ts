@@ -2,8 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
     Routes,
-    RouterModule, ROUTES
-} from '@angular/router';
+    RouterModule} from '@angular/router';
 import {NcpPaymentsComponent} from '../payments/ncp-payments.component';
 import {LoginPageComponent} from '../auth/login-page/login-page.component';
 import {LoggedInGuard} from '../auth/logged-in.guard';

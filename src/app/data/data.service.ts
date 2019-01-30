@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {NcpPayment} from '../payments/payment/model/ncp-payment';
-import {Observable, throwError} from 'rxjs';
-import {catchError, retry} from 'rxjs/internal/operators';
+import {Observable} from 'rxjs';
 import {DateRange} from './date-range';
 import {RestResponse} from './rest-response';
 import {httpOptions} from '../settings';
@@ -50,6 +49,8 @@ export class DataService {
         return this._http.post<RestResponse>(environment.urlGetNcpPaymentByRawId + '?id=' + id, httpOptions).catch(this.errorHandler);
     }
 
+    getPaymentDetails(paymentId: number): Observable<RestResponse>   {
+        return this._http.post<RestResponse>(environment.urlGetPaymentDetails + '?id=' + paymentId, httpOptions).catch(this.errorHandler);
+    }
+
 }
-
-

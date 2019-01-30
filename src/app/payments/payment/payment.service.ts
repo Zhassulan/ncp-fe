@@ -1,33 +1,41 @@
 import {Injectable} from '@angular/core';
 import {NcpPayment} from './model/ncp-payment';
 import {PaymentsService} from '../payments.service';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {Operation} from './operations/model/operation';
 import {UploadFilePaymentService} from '../../equipment/upload-file-payment.service';
-import {msgs, PaymentDistrStrategy, prepaid} from '../../settings';
+import {msgs, PaymentDistrStrategy, prepaid, rests} from '../../settings';
 import {FilePaymentItem} from '../../equipment/model/file-payment-item';
-import {NotificationsService} from 'angular2-notifications';
+import {DataService} from '../../data/data.service';
+import {NGXLogger} from 'ngx-logger';
+import {UserService} from '../../user/user.service';
+import {PaymentDetail} from './model/payment-detail';
+import {RestResponse} from '../../data/rest-response';
 
 @Injectable()
 export class PaymentService {
 
     payment: NcpPayment;
+    details = [];
     operations = [];
     private operationsObs = new Subject<Operation[]>();
     operationsAnnounced$ = this.operationsObs.asObservable();
 
     constructor(private paymentsService: PaymentsService,
-                private uploadFilePaymentService: UploadFilePaymentService) {
+                private uploadFilePaymentService: UploadFilePaymentService,
+                private dataService: DataService,
+                private logger: NGXLogger,
+                private userService: UserService) {
     }
 
     setPayment(id) {
         this.payment = this.paymentsService.payments.find(x => x.id == id);
     }
 
-    addOperation(nomenclature, phone, icc, account, sum, distrStrategy) {
+    addOperation(nomenclature, msisdn, icc, account, sum, distrStrategy) {
         this.operations.push({
             nomenclature: nomenclature,
-            phone: phone,
+            msisdn: msisdn,
             icc: icc,
             account: account,
             sum: sum,
@@ -60,17 +68,15 @@ export class PaymentService {
     }
 
     checkTotalSum(): boolean {
-        if (this.items.slice(this.items.length - 1)[0].sum != this.payment.sum) return false; else return true;
+        return Number(this.items.slice(this.items.length - 1)[0].sum) == Number(this.payment.sum);
     }
 
     checkDocNum(): boolean {
-        if (this.uploadFilePaymentService.filePayment.filePaymentHeader.payment_docnum != this.payment.paymentDocnum)
-            return false; else return true;
+        return this.uploadFilePaymentService.filePayment.filePaymentHeader.payment_docnum == this.payment.paymentDocnum;
     }
 
     checkRnn(): boolean {
-        if (this.uploadFilePaymentService.filePayment.filePaymentHeader.iin_bin_sender != this.payment.rnnSender)
-            return false; else return true;
+        return this.uploadFilePaymentService.filePayment.filePaymentHeader.iin_bin_sender == this.payment.rnnSender;
     }
 
     getOperationsFromUploadService() {
@@ -84,7 +90,37 @@ export class PaymentService {
             return PaymentDistrStrategy.byMsisdn;
         }   else
             return PaymentDistrStrategy.byAccount;
+    }
 
+    getDetails(paymentId): Observable<any> {
+        return new Observable(
+            observer => {
+                this.dataService.getPaymentDetails(paymentId).subscribe(data => {
+                    if (data.result == rests.restResultOk)  {
+                        this.details = data.data;
+                        this.addDetailsToOperations();
+                        observer.next(this.details);
+                    }
+                    if (data.result == rests.restResultErrDb)   {
+                        this.logger.error(data.data);
+                        observer.error(msgs.msgErrGetDetails);
+                    }
+                    },
+                    error2 => {
+                        let msg = msgs.msgErrGetDetails + error2 + this.userService.logUser();
+                        this.logger.error(msg);
+                        observer.error(msg);
+                    },
+                    () => {
+                        observer.complete();
+                    });
+            });
+    }
+
+    addDetailsToOperations()    {
+        this.details.forEach(item => {
+            this.addOperation(null, item.msisdn, null, item.account, item.sum, PaymentDistrStrategy.None);
+        });
     }
 
     distribute()    {

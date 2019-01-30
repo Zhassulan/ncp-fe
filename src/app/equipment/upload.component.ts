@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {DialogComponent} from './dialog/dialog.component';
-import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-upload',

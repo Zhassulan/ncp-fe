@@ -4,7 +4,6 @@ import {MatDialog} from '@angular/material';
 import {DialogComponent} from '../../../equipment/dialog/dialog.component';
 import {PaymentService} from '../payment.service';
 import {NotificationsService} from 'angular2-notifications';
-import {UploadFilePaymentService} from '../../../equipment/upload-file-payment.service';
 
 @Component({
     selector: 'app-payment-menu',

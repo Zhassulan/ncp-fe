@@ -18,6 +18,7 @@ export const environment = {
     urlUploadEquipment: 'http://localhost:8080/onlinebank/dataservice/exdata/uploadEquipment',
     urlNewRawPayment: 'http://localhost:8080/onlinebank/dataservice/exdata/newRawPayment',
     urlGetNcpPaymentByRawId: 'http://localhost:8080/onlinebank/dataservice/exdata/getNcpPaymentByRawId',
+    urlGetPaymentDetails: 'http://localhost:8080/onlinebank/dataservice/exdata/getPaymentDetails',
 };
 
 /*

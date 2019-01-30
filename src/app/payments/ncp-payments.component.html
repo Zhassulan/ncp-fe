@@ -128,9 +128,8 @@
                             (click)="menuOnRowDeleteTransit(paymentRow)">
                         <span>Удалить с транзита</span>
                     </button>
-                    <button mat-menu-item (click)="menuOnRowDistributeEquipment(paymentRow)"
-                            [disabled]="!(paymentRow.status == 0 || paymentRow.status == 2 || paymentRow.status == 9 || paymentRow.status == 8)">
-                        <span>Разнести</span>
+                    <button mat-menu-item (click)="menuOnRowDistributeEquipment(paymentRow)">
+                        <span>Открыть</span>
                     </button>
                     <button mat-menu-item [disabled]="!(paymentRow.status == 6)">
                         <span>Разнести с транзитного счёта</span>

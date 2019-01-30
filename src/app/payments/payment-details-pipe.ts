@@ -1,5 +1,4 @@
 import {Pipe, PipeTransform } from '@angular/core';
-import {shrinkDetailsColumnSize} from '../settings';
 
 @Pipe({name: 'paymentDetailsPipe'})
 export class PaymentDetailsPipe implements PipeTransform {

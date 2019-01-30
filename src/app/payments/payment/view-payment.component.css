@@ -1,13 +1,12 @@
 .container {
-    height: 90vh;
     width: 100%;
 }
 
 .leftColumn {
-    width: 500px;
+    width: 40%;
 }
 
 .rightColumn {
-    width: 100%;
+    width: 60%;
 }
 
