@@ -16,4 +16,5 @@ export const environment = {
     urlNewRawPayment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/newRawPayment',
     urlGetNcpPaymentByRawId: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/getNcpPaymentByRawId',
     urlGetPaymentDetails: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/getPaymentDetails',
+    urlDistributePayment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/distributePayment',
 };

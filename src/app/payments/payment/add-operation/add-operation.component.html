@@ -4,8 +4,8 @@
 
     <div fxLayout="row">
 
-        <mat-form-field class="example-full-width">
-            <input matInput placeholder="Номер телефона" formControlName="msisdn" (input)="msisdnChanged()">
+        <mat-form-field>
+            <input matInput placeholder="Номер телефона" formControlName="msisdn" (input)="msisdnChanged()" ngClass="inputWidth">
             <button mat-button *ngIf="msisdn.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearMsisdn()">
                 <mat-icon>close</mat-icon>
             </button>
@@ -13,8 +13,8 @@
                 количество цифр 10
             </mat-error>
         </mat-form-field>
-        <mat-form-field class="example-full-width">
-            <input matInput placeholder="Лицевой счёт" formControlName="account" (input)="accountChanged()">
+        <mat-form-field>
+            <input matInput placeholder="Лицевой счёт" formControlName="account" (input)="accountChanged()" ngClass="inputWidth">
             <button mat-button *ngIf="account.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearAccount()">
                 <mat-icon>close</mat-icon>
             </button>

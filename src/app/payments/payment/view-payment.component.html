@@ -1,33 +1,35 @@
-<div class="container">
+<mat-progress-bar mode="indeterminate" *ngIf="isWait"></mat-progress-bar>
+<div class="payment">
+    <div class="topGap"></div>
 
-    <mat-progress-bar mode="indeterminate" *ngIf="isWait"></mat-progress-bar>
-
-    <div fxLayout="row" fxLayoutAlign="center center">
+    <div class="paymentItem">
         <mat-card>
+        <div class="container">
 
-            <div fxLayout="row" fxLayoutAlign="space-between center" >
-                <mat-icon>payment</mat-icon>
-                <h1 class="mat-h1"><b># {{ payment.paymentId }} от {{ payment.creationDate | date }}</b></h1>
-                <app-payment-menu [payment]="payment"></app-payment-menu>
-                <!--<button mat-raised-button color="primary" (click)="goBack()" matTooltip="Вернуться к списку платежей"> Назад </button> -->
+            <div class="item-header">
+                <div class="top">
+                    <div class="item-top1">
+                        <h1 class="mat-h1"><b># {{ payment.paymentId }} от {{ payment.creationDate | date }}</b></h1>
+                    </div>
+                    <div class="item-top2">
+                        <app-payment-menu [payment]="payment"></app-payment-menu>
+                    </div>
+                </div>
+            </div>
+            <div class="item-c">
+                <app-payment-info></app-payment-info>
+                <app-payment-add-operation></app-payment-add-operation>
+            </div>
+            <div class="item-d">
+                <app-payment-operations></app-payment-operations>
             </div>
 
-            <div fxLayout="row" fxLayoutAlign="space-evenly start">
+            <!--<div class="item-e">footer</div>
+            <div class="item-footer1">footer1</div>
+            -->
 
-                <div fxLayout="column" ngClass="leftColumn"> <!--Первая половина-->
-                    <app-payment-info></app-payment-info>
-                    <mat-divider></mat-divider>
-                    <app-payment-add-operation></app-payment-add-operation>
-                </div> <!--Конец первой половины-->
-
-                <div fxLayout="column" ngClass="rightColumn"><!--Вторая половина operations -->
-                    <app-payment-operations></app-payment-operations>
-                </div> <!--Конец второй половины -->
-
-            </div>
-
+        </div>
         </mat-card>
     </div>
-    <simple-notifications></simple-notifications>
-</div>
 
+</div>

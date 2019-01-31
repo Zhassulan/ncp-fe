@@ -1,12 +1,75 @@
+.payment {
+    display: grid;
+    grid-template-areas:
+            "topGap"
+            "paymentItem";
+    grid-template-rows: 10px auto;
+    grid-template-columns: 100%;
+    justify-items: center;
+    grid-gap: 10px;
+}
+
+.topGap {
+    grid-area: topGap;
+}
+
+.paymentItem {
+    grid-area: paymentItem;
+    width: 70%;
+}
+
 .container {
-    width: 100%;
+    display: grid;
+    grid-template-columns: 17% 17% 30% 35%;
+    grid-template-rows: 70px auto;
+    grid-template-areas:
+            "header header header header"
+            "leftSide leftSide rightSide rightSide"
+            "footer footer footer1 footer1";
+    justify-items: stretch;
+    align-self: start;
+    justify-self: center;
+    border-bottom: #bdbdbd;
 }
 
-.leftColumn {
-    width: 40%;
+.item-header {
+    grid-area: header;
 }
 
-.rightColumn {
-    width: 60%;
+.item-b {
+    grid-area: main;
+}
+
+.item-c {
+    grid-area: leftSide;
+}
+
+.item-d {
+    grid-area: rightSide;
+}
+
+.item-e {
+    grid-area: footer;
+}
+
+.item-footer1 {
+    grid-area: footer1;
+}
+
+.top {
+    display: grid;
+    grid-template-columns: 97% 3%;
+    grid-template-areas: "top1 top2"
+}
+
+.item-top1 {
+    grid-area: top1;
+    align-self: center;
+    justify-self: center;
+
+}
+
+.item-top2 {
+    grid-area: top2;
 }
 

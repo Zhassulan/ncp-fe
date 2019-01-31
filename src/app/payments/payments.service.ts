@@ -5,8 +5,8 @@ import {DateRange} from '../data/date-range';
 import {locStorItems, msgs, PaymentStatusRu, rests} from '../settings';
 import {Observable} from 'rxjs';
 import {UserService} from '../user/user.service';
-import {NcpPayment} from './payment/model/ncp-payment';
-import {RawPayment} from './payment/model/raw-payment';
+import {NcpPayment} from './model/ncp-payment';
+import {RawPayment} from './model/raw-payment';
 import {RestResponse} from '../data/rest-response';
 
 @Injectable()

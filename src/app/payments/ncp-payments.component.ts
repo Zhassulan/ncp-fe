@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {DataService} from '../data/data.service';
-import {NcpPayment} from './payment/model/ncp-payment';
+import {NcpPayment} from './model/ncp-payment';
 import {DateRange} from '../data/date-range';
 import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';

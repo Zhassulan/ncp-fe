@@ -1,5 +1,5 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {msisdnLength} from '../../../settings';
 import {PaymentService} from '../payment.service';
 
@@ -33,7 +33,7 @@ export class AddOperationComponent implements OnInit {
                     Validators.min(1),
                     Validators.max(1000000)
                 ]),
-        });
+        }, { validator: this.isAddValidator});
     }
 
     get msisdn() {
@@ -77,6 +77,11 @@ export class AddOperationComponent implements OnInit {
 
     accountChanged()    {
         this.clearMsisdn();
+    }
+
+    isAddValidator: ValidatorFn = () =>    {
+        return ((this.msisdn.value != '' ||  this.msisdn != null) && (this.sum.value != '' || this.sum.value != null) ||
+            (this.account.value != '' ||  this.account != null) && (this.sum.value != '' || this.sum.value != null));
     }
 
 }

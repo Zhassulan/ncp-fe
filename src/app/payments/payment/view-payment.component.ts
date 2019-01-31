@@ -29,9 +29,13 @@ export class ViewPaymentComponent implements OnInit {
         }
         */
         //todo заблокировать
-        this.loadPaymentById(230634);
+        //230633 - new, 230630 - distributed
+        this.loadPaymentById(230633);
         //todo разблокировать
         //this.loadDetails();
+        for (let i = 0; i <= 15; i++)   {
+            this.paymentService.addOperation('СП MBB CPE Huawei 525', '7072110987', '899977760012111000000', '1111111110', 15000, 0);
+        }
     }
 
     loadPaymentById(payment)   {

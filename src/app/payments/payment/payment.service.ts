@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {NcpPayment} from './model/ncp-payment';
+import {NcpPayment} from '../model/ncp-payment';
 import {PaymentsService} from '../payments.service';
 import {Observable, Subject} from 'rxjs';
 import {Operation} from './operations/model/operation';
@@ -9,15 +9,15 @@ import {FilePaymentItem} from '../../equipment/model/file-payment-item';
 import {DataService} from '../../data/data.service';
 import {NGXLogger} from 'ngx-logger';
 import {UserService} from '../../user/user.service';
-import {PaymentDetail} from './model/payment-detail';
-import {RestResponse} from '../../data/rest-response';
+import {PaymentParam} from '../model/payment-param';
+import {PaymentDetail} from '../model/payment-detail';
 
 @Injectable()
 export class PaymentService {
 
     payment: NcpPayment;
     details = [];
-    operations = [];
+    operations: Operation [] = [];
     private operationsObs = new Subject<Operation[]>();
     operationsAnnounced$ = this.operationsObs.asObservable();
 
@@ -125,6 +125,28 @@ export class PaymentService {
 
     distribute()    {
 
+    }
+
+    preparePaymentParams()  {
+        let params: PaymentParam = new PaymentParam();
+        params.id = this.payment.id;
+        params.profileId = this.payment.profileId;
+        this.operations.forEach(operation => {
+            let detail: PaymentDetail = new PaymentDetail();
+            switch (operation.distrStrategy)    {
+                case PaymentDistrStrategy.byMsisdn:
+                    detail.account = null;
+                    detail.msisdn = operation.msisdn;
+                    detail.sum = operation.sum;
+                    break;
+                case PaymentDistrStrategy.byAccount:
+                    detail.msisdn = null;
+                    detail.account = operation.account;
+                    detail.sum = operation.sum;
+                    break;
+            }
+            params.items.push(detail);
+        })
     }
 
 }

@@ -4,6 +4,8 @@ import {MatDialog} from '@angular/material';
 import {DialogComponent} from '../../../equipment/dialog/dialog.component';
 import {PaymentService} from '../payment.service';
 import {NotificationsService} from 'angular2-notifications';
+import {PaymentParam} from '../../model/payment-param';
+import {NcpPayment} from '../../model/ncp-payment';
 
 @Component({
     selector: 'app-payment-menu',
@@ -12,7 +14,7 @@ import {NotificationsService} from 'angular2-notifications';
 })
 export class PaymentMenuComponent implements OnInit {
 
-    @Input() payment;
+    @Input() payment : NcpPayment;
     paymentStatuses = PaymentStatus;
     dialogRef;
 
@@ -44,6 +46,7 @@ export class PaymentMenuComponent implements OnInit {
             }
         });
     }
+
 
     distribute()    {
 
