@@ -1,14 +1,10 @@
 export class Operation {
 
-    id: number;
-    status: number;
-    nomenclature: string;
     msisdn: string;
-    icc: string;
     account: number;
     sum: number;
+    nomenclature: string;
+    icc: string;
     distrStrategy: number;
-    err_message: string;
-    distribute_date: Date;
 
 }

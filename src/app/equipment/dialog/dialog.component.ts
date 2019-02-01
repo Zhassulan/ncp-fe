@@ -45,7 +45,7 @@ export class DialogComponent implements OnInit {
                 this.isWait = false;
                 //this.router.navigate(['filePayment']);
                 if (this.paymentService.payment)
-                    this.paymentService.getOperationsFromUploadService();
+                    this.paymentService.addDetailsFromFilePayment();
                 this.dialogRef.close();
             },
             error2 => {

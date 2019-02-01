@@ -47,7 +47,6 @@ export class PaymentMenuComponent implements OnInit {
         });
     }
 
-
     distribute()    {
 
     }

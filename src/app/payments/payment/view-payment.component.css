@@ -15,7 +15,7 @@
 
 .paymentItem {
     grid-area: paymentItem;
-    width: 70%;
+    width: 75%;
 }
 
 .container {
@@ -29,7 +29,6 @@
     justify-items: stretch;
     align-self: start;
     justify-self: center;
-    border-bottom: #bdbdbd;
 }
 
 .item-header {

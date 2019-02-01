@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {msisdnLength} from '../../../settings';
 import {PaymentService} from '../payment.service';
+import {PaymentDetail} from '../../model/payment-detail';
 
 @Component({
     selector: 'app-payment-add-operation',
@@ -53,6 +54,15 @@ export class AddOperationComponent implements OnInit {
         this.clearFields();
     }
 
+    addDetail() {
+        let detail = new PaymentDetail();
+        detail.msisdn = this.msisdn.value;
+        detail.account = this.account.value;
+        detail.sum = Number(this.sum.value);
+        this.paymentService.addNewDetail(detail);
+        this.clearFields();
+    }
+
     clearFields()   {
         this.clearAccount();
         this.clearMsisdn();
@@ -80,8 +90,8 @@ export class AddOperationComponent implements OnInit {
     }
 
     isAddValidator: ValidatorFn = () =>    {
-        return ((this.msisdn.value != '' ||  this.msisdn != null) && (this.sum.value != '' || this.sum.value != null) ||
-            (this.account.value != '' ||  this.account != null) && (this.sum.value != '' || this.sum.value != null));
+        return ((this.msisdn.value != '' &&  this.msisdn != null) && (this.sum.value != '' && this.sum.value != null) ||
+            (this.account.value != '' &&  this.account != null) && (this.sum.value != '' && this.sum.value != null));
     }
 
 }

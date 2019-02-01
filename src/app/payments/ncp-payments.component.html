@@ -118,6 +118,9 @@
                     <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="menuOnRowDistributeEquipment(paymentRow)">
+                        <span>Открыть</span>
+                    </button>
                     <button mat-menu-item
                             [disabled]="(paymentRow.status == 6 || paymentRow.status == 7 || paymentRow.status == 1)"
                             (click)="menuOnRowToTransit(paymentRow)">
@@ -127,9 +130,6 @@
                     <button mat-menu-item [disabled]="!(paymentRow.status == 6)"
                             (click)="menuOnRowDeleteTransit(paymentRow)">
                         <span>Удалить с транзита</span>
-                    </button>
-                    <button mat-menu-item (click)="menuOnRowDistributeEquipment(paymentRow)">
-                        <span>Открыть</span>
                     </button>
                     <button mat-menu-item [disabled]="!(paymentRow.status == 6)">
                         <span>Разнести с транзитного счёта</span>

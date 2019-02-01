@@ -5,17 +5,20 @@ import {Operation} from './model/operation';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {PaymentService} from '../payment.service';
 import {Subscription} from 'rxjs';
-import {PaymentDistrStrategy} from '../../../settings';
+import {detailsTableColumns, PaymentDistrStrategy, detailTableColumnsDisplay} from '../../../settings';
+import {PaymentDetail} from '../../model/payment-detail';
 
 @Component({
     selector: 'app-payment-operations',
     templateUrl: './operations.component.html',
     styleUrls: ['./operations.component.css'],
 })
+
 export class OperationsComponent implements OnInit, OnDestroy {
 
-    dataSource = new MatTableDataSource<Operation>();
-    displayedColumns: string[] = ['num', 'msisdn', 'account', 'sum', 'del'];
+    dataSource = new MatTableDataSource<PaymentDetail>();
+    displayedColumns: string[] = detailsTableColumns;
+    detailTableColumnsDisplay = detailTableColumnsDisplay;
     i: number = 0;
     paginatorResultsLength: number = 0;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -29,20 +32,35 @@ export class OperationsComponent implements OnInit, OnDestroy {
         return this.paymentService.operations;
     }
 
+    get details() {
+        //return this.paymentService.operations;
+        return this.paymentService.details;
+    }
+
     ngOnInit() {
-        console.log('init');
+        /*
         this.subscription = this.paymentService.operationsAnnounced$.subscribe(
             operations => {
                 console.log('subscribe');
                 this.dataSource.data = operations;
+            }); */
+        this.subscription = this.paymentService.detailsAnnounced$.subscribe(
+            details => {
+                this.dataSource.data = details;
             });
-        this.paginatorResultsLength = this.operations.length;
+        this.paginatorResultsLength = this.details.length;
         this.dataSource.paginator = this.paginator;
     }
 
-    delOperation(row) {
-        this.paymentService.delOperation(row);
-        this.dataSource.data = this.operations;
+    delOperation_(row) {
+        //this.paymentService.delOperation(row);
+        //this.dataSource.data = this.operations;
+        //this.paginatorResultsLength -= 1;
+    }
+
+    delDetail(row) {
+        this.paymentService.delDetail(row);
+        this.dataSource.data = this.details;
         this.paginatorResultsLength -= 1;
     }
 
@@ -51,10 +69,18 @@ export class OperationsComponent implements OnInit, OnDestroy {
             this.subscription.unsubscribe();
     }
 
-    getTotal(): number {
+    getTotal_(): number {
         let total: number = 0;
         this.operations.forEach(operation => {
             total += Number(operation.sum);
+        });
+        return total;
+    }
+
+    getTotal(): number {
+        let total: number = 0;
+        this.details.forEach(detail => {
+            total += detail.sum;
         });
         return total;
     }

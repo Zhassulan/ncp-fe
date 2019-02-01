@@ -4,7 +4,7 @@ export class FilePaymentItem {
     nomenclature: string;
     msisdn: string;
     icc: string;
-    account: string;
-    sum: string;
+    account: number;
+    sum: number;
     
 }

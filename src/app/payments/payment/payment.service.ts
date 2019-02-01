@@ -4,7 +4,7 @@ import {PaymentsService} from '../payments.service';
 import {Observable, Subject} from 'rxjs';
 import {Operation} from './operations/model/operation';
 import {UploadFilePaymentService} from '../../equipment/upload-file-payment.service';
-import {msgs, PaymentDistrStrategy, prepaid, rests} from '../../settings';
+import {msgs, PaymentDistrStrategy, PaymentStatus, prepaid, rests} from '../../settings';
 import {FilePaymentItem} from '../../equipment/model/file-payment-item';
 import {DataService} from '../../data/data.service';
 import {NGXLogger} from 'ngx-logger';
@@ -16,10 +16,13 @@ import {PaymentDetail} from '../model/payment-detail';
 export class PaymentService {
 
     payment: NcpPayment;
-    details = [];
+    details: PaymentDetail [] = [];
     operations: Operation [] = [];
     private operationsObs = new Subject<Operation[]>();
+    private detailsObs = new Subject<PaymentDetail[]>();
     operationsAnnounced$ = this.operationsObs.asObservable();
+    detailsAnnounced$ = this.detailsObs.asObservable();
+    paymentParam: PaymentParam;
 
     constructor(private paymentsService: PaymentsService,
                 private uploadFilePaymentService: UploadFilePaymentService,
@@ -39,21 +42,19 @@ export class PaymentService {
             icc: icc,
             account: account,
             sum: sum,
-            distrStrategy: distrStrategy
+            distrStrategy: distrStrategy,
         });
         this.announceOperations();
     }
 
-    /*
-    addOperation(phone, account, sum) {
-        this.operations.push({
-            phone: phone,
-            account: account,
-            sum: sum,
-        });
-        this.announceOperations();
+    addNewDetail(detail: PaymentDetail) {
+        this.details.push(detail);
+        this.announceDetails();
     }
-    */
+
+    delDetail(row) {
+        this.details.splice(this.details.indexOf(row), 1);
+    }
 
     delOperation(row) {
         this.operations.splice(this.operations.indexOf(row), 1);
@@ -61,6 +62,10 @@ export class PaymentService {
 
     announceOperations() {
         this.operationsObs.next(this.operations);
+    }
+
+    announceDetails() {
+        this.detailsObs.next(this.details);
     }
 
     get items() {
@@ -85,6 +90,19 @@ export class PaymentService {
         }
     }
 
+    addDetailsFromFilePayment() {
+        for (let item of this.items.slice(0, this.items.length - 1)) {
+            let detail = new PaymentDetail();
+            detail.nomenclature = item.nomenclature;
+            detail.msisdn = item.msisdn;
+            detail.icc = item.icc;
+            detail.account = item.account;
+            detail.sum = item.sum;
+            detail.distrStrategy = this.determineDistrStrategy(item);
+            this.addNewDetail(detail);
+        }
+    }
+
     determineDistrStrategy(item: FilePaymentItem)    {
         if (item.nomenclature.trim().toLowerCase().includes(prepaid.toLowerCase()) && (item.account == '' || item.account == null))   {
             return PaymentDistrStrategy.byMsisdn;
@@ -92,19 +110,35 @@ export class PaymentService {
             return PaymentDistrStrategy.byAccount;
     }
 
-    getDetails(paymentId): Observable<any> {
+    determineDistrStrategyByDetail(detail: PaymentDetail)    {
+        return (detail.account == null && detail.msisdn != null) ? PaymentDistrStrategy.byMsisdn : PaymentDistrStrategy.byAccount;
+    }
+
+    getPaymentDetails(paymentId): Observable<any> {
         return new Observable(
             observer => {
                 this.dataService.getPaymentDetails(paymentId).subscribe(data => {
-                    if (data.result == rests.restResultOk)  {
-                        this.details = data.data;
-                        this.addDetailsToOperations();
-                        observer.next(this.details);
-                    }
-                    if (data.result == rests.restResultErrDb)   {
-                        this.logger.error(data.data);
-                        observer.error(msgs.msgErrGetDetails);
-                    }
+                        if (data.result == rests.restResultOk)  {
+                            this.details = [];
+                            data.data.forEach(item => {
+                                let detail = new PaymentDetail();
+                                detail.id = item.id;
+                                detail.msisdn = item.msisdn;
+                                detail.account = item.account;
+                                detail.sum = item.sum;
+                                detail.status = item.status;
+                                detail.err_message = item.err_message;
+                                detail.distribute_date = item.distribute_date;
+                                detail.distrStrategy = PaymentDistrStrategy.None;
+                                this.details.push(detail);
+                            });
+                            this.announceDetails();
+                            observer.next();
+                        }
+                        if (data.result == rests.restResultErrDb)   {
+                            this.logger.error(data.data);
+                            observer.error(msgs.msgErrGetDetails);
+                        }
                     },
                     error2 => {
                         let msg = msgs.msgErrGetDetails + error2 + this.userService.logUser();
@@ -123,30 +157,18 @@ export class PaymentService {
         });
     }
 
-    distribute()    {
-
+    distribute(): Observable<any>    {
+        this.preparePaymentParams();
+        
+        return null;
     }
 
     preparePaymentParams()  {
         let params: PaymentParam = new PaymentParam();
         params.id = this.payment.id;
         params.profileId = this.payment.profileId;
-        this.operations.forEach(operation => {
-            let detail: PaymentDetail = new PaymentDetail();
-            switch (operation.distrStrategy)    {
-                case PaymentDistrStrategy.byMsisdn:
-                    detail.account = null;
-                    detail.msisdn = operation.msisdn;
-                    detail.sum = operation.sum;
-                    break;
-                case PaymentDistrStrategy.byAccount:
-                    detail.msisdn = null;
-                    detail.account = operation.account;
-                    detail.sum = operation.sum;
-                    break;
-            }
-            params.items.push(detail);
-        })
+        params.items = this.details;
+        this.paymentParam = params;
     }
 
 }

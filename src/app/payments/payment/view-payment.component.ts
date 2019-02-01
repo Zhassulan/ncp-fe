@@ -28,14 +28,9 @@ export class ViewPaymentComponent implements OnInit {
           this.router.navigate(['payments']);
         }
         */
-        //todo заблокировать
-        //230633 - new, 230630 - distributed
-        this.loadPaymentById(230633);
-        //todo разблокировать
-        //this.loadDetails();
-        for (let i = 0; i <= 15; i++)   {
-            this.paymentService.addOperation('СП MBB CPE Huawei 525', '7072110987', '899977760012111000000', '1111111110', 15000, 0);
-        }
+        this.loadPaymentById(230630); //todo заблокировать 230633 - new, 230630 - distributed
+        // todo разблокировать
+        // this.loadDetails();
     }
 
     loadPaymentById(payment)   {
@@ -57,9 +52,8 @@ export class ViewPaymentComponent implements OnInit {
 
     loadDetails() {
         this.isWait = true;
-        this.paymentService.getDetails(this.paymentService.payment.id).subscribe(
-            () => {
-            },
+        this.paymentService.getPaymentDetails(this.paymentService.payment.id).subscribe(
+            () => {},
             error2 => {
                 this.isWait = false;
                 this.notifService.error(error2);

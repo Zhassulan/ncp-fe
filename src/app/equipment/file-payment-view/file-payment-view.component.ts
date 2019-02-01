@@ -42,9 +42,11 @@ export class FilePaymentViewComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        /*
         if (this.filePayment) {
             this.getPayments();
         }
+         */
     }
 
     goBack() {
