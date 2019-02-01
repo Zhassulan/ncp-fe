@@ -11,6 +11,7 @@ import {NGXLogger} from 'ngx-logger';
 import {UserService} from '../../user/user.service';
 import {PaymentParam} from '../model/payment-param';
 import {PaymentDetail} from '../model/payment-detail';
+import {logger} from 'codelyzer/util/logger';
 
 @Injectable()
 export class PaymentService {
@@ -143,7 +144,7 @@ export class PaymentService {
                     error2 => {
                         let msg = msgs.msgErrGetDetails + error2 + this.userService.logUser();
                         this.logger.error(msg);
-                        observer.error(msg);
+                        observer.error(msgs.msgErrGetDetails);
                     },
                     () => {
                         observer.complete();
@@ -159,8 +160,17 @@ export class PaymentService {
 
     distribute(): Observable<any>    {
         this.preparePaymentParams();
-        
-        return null;
+        return new Observable<any>( observer => {
+            this.dataService.distributePayment(this.paymentParam).subscribe(data => {
+                observer.next(data);
+            }, error2 => {
+                let msg = msgs.msgErrDistributePayment + error2 + this.userService.logUser();
+                this.logger.error(msg);
+                observer.error(msgs.msgErrDistributePayment);
+            }, () => {
+                observer.complete();
+            })
+        });
     }
 
     preparePaymentParams()  {

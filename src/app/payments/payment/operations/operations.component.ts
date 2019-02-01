@@ -69,18 +69,10 @@ export class OperationsComponent implements OnInit, OnDestroy {
             this.subscription.unsubscribe();
     }
 
-    getTotal_(): number {
-        let total: number = 0;
-        this.operations.forEach(operation => {
-            total += Number(operation.sum);
-        });
-        return total;
-    }
-
     getTotal(): number {
         let total: number = 0;
         this.details.forEach(detail => {
-            total += detail.sum;
+            total += Number(detail.sum);
         });
         return total;
     }

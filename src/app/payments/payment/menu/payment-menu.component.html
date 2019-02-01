@@ -10,7 +10,7 @@
     <button mat-menu-item (click)="openFileDialog()">
         <span>Загрузить разноски - оборудование</span>
     </button>
-    <button mat-menu-item [disabled]="(operations.length == 0 || (payment.status == paymentStatuses.STATUS_DISTRIBUTED ||
+    <button mat-menu-item [disabled]="(details.length == 0 || (payment.status == paymentStatuses.STATUS_DISTRIBUTED ||
                                        payment.status == paymentStatuses.STATUS_EXPIRED ||
                                        payment.status == paymentStatuses.STATUS_DELETED))" (click)="distribute()">
         <span>Разнести</span>

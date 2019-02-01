@@ -77,7 +77,9 @@ export const enum msgs {
     msgErrDocNum = 'Номер платежа не совпадает с номером в файле. ',
     msgErrRnn = 'ИИН платежа не совпадает с ИИН в файле. ',
     msgErrGetDetails = 'Ошибка получения деталей платежа. ',
-    msgSuccessGotDetails = 'Успешно получены детали платежа. '
+    msgSuccessGotDetails = 'Успешно получены детали платежа. ',
+    msgErrDistributePayment = 'Ошибка разноски. ',
+    msgSuccessDistributed = 'Платёж успешно разнесён. ',
 }
 
 export enum locStorItems {

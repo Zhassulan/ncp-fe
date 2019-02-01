@@ -10,6 +10,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import {FilePayment} from '../equipment/model/file-payment';
 import {RawPayment} from '../payments/model/raw-payment';
+import {PaymentParam} from '../payments/model/payment-param';
 
 @Injectable()
 export class DataService {
@@ -51,6 +52,10 @@ export class DataService {
 
     getPaymentDetails(paymentId: number): Observable<RestResponse>   {
         return this._http.post<RestResponse>(environment.urlGetPaymentDetails + '?id=' + paymentId, httpOptions).catch(this.errorHandler);
+    }
+
+    distributePayment(params: PaymentParam) {
+        return this._http.post<RestResponse>(environment.urlDistributePayment, params, httpOptions).catch(this.errorHandler);
     }
 
 }

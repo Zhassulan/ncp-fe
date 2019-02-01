@@ -28,7 +28,7 @@ export class ViewPaymentComponent implements OnInit {
           this.router.navigate(['payments']);
         }
         */
-        this.loadPaymentById(230630); //todo заблокировать 230633 - new, 230630 - distributed
+        this.loadPaymentById(230631); //todo заблокировать 230633 - new, 230630 - distributed
         // todo разблокировать
         // this.loadDetails();
     }
