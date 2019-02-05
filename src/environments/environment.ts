@@ -20,6 +20,9 @@ export const environment = {
     urlGetNcpPaymentByRawId: 'http://localhost:8080/onlinebank/dataservice/exdata/getNcpPaymentByRawId',
     urlGetPaymentDetails: 'http://localhost:8080/onlinebank/dataservice/exdata/getPaymentDetails',
     urlDistributePayment: 'http://localhost:8080/onlinebank/dataservice/exdata/distributePayment',
+    urlNewPaymentDetail: 'http://localhost:8080/onlinebank/dataservice/exdata/newPaymentDetail',
+    urlNewEquipment: 'http://localhost:8080/onlinebank/dataservice/exdata/newEquipment',
+    urlGetPayment: 'http://localhost:8080/onlinebank/dataservice/exdata/getPayment',
 };
 
 /*

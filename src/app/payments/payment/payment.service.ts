@@ -4,14 +4,16 @@ import {PaymentsService} from '../payments.service';
 import {Observable, Subject} from 'rxjs';
 import {Operation} from './operations/model/operation';
 import {UploadFilePaymentService} from '../../equipment/upload-file-payment.service';
-import {msgs, PaymentDistrStrategy, PaymentStatus, prepaid, rests} from '../../settings';
+import {msgs, msgType, PaymentDistrStrategy, PaymentStatus, prepaid, rests} from '../../settings';
 import {FilePaymentItem} from '../../equipment/model/file-payment-item';
 import {DataService} from '../../data/data.service';
 import {NGXLogger} from 'ngx-logger';
 import {UserService} from '../../user/user.service';
 import {PaymentParam} from '../model/payment-param';
 import {PaymentDetail} from '../model/payment-detail';
-import {logger} from 'codelyzer/util/logger';
+import {NcpPaymentDetails} from '../model/ncp-payment-details';
+import {Equipment} from '../model/equipment';
+import {NotifService} from '../../notif/notif-service.service';
 
 @Injectable()
 export class PaymentService {
@@ -29,7 +31,8 @@ export class PaymentService {
                 private uploadFilePaymentService: UploadFilePaymentService,
                 private dataService: DataService,
                 private logger: NGXLogger,
-                private userService: UserService) {
+                private userService: UserService,
+                private myNotifService: NotifService) {
     }
 
     setPayment(id) {
@@ -100,26 +103,50 @@ export class PaymentService {
             detail.account = item.account;
             detail.sum = item.sum;
             detail.distrStrategy = this.determineDistrStrategy(item);
+            detail.status = 0;
             this.addNewDetail(detail);
+        }
+        //this.printDetails();
+        this.checkFilePayment();
+    }
+
+    checkFilePayment()  {
+        if (!this.checkTotalSum()) {
+            this.myNotifService.add(msgType.warn, msgs.msgErrTotalSum);
+        }
+        if (!this.checkDocNum()) {
+            this.myNotifService.add(msgType.warn, msgs.msgErrDocNum);
+        }
+        if (!this.checkRnn()) {
+            this.myNotifService.add(msgType.warn, msgs.msgErrRnn);
         }
     }
 
-    determineDistrStrategy(item: FilePaymentItem)    {
-        if (item.nomenclature.trim().toLowerCase().includes(prepaid.toLowerCase()) && (item.account == '' || item.account == null))   {
+    printDetails()  {
+        console.log('Details after adding from file payment:\n');
+        console.log('------------------------');
+        this.details.forEach(item => {
+           console.log(item);
+        });
+        console.log('------------------------');
+    }
+
+    determineDistrStrategy(item: FilePaymentItem) {
+        if (item.nomenclature.trim().toLowerCase().includes(prepaid.toLowerCase()) && (item.account == null || item.account == '')) {
             return PaymentDistrStrategy.byMsisdn;
-        }   else
+        } else
             return PaymentDistrStrategy.byAccount;
     }
 
-    determineDistrStrategyByDetail(detail: PaymentDetail)    {
-        return (detail.account == null && detail.msisdn != null) ? PaymentDistrStrategy.byMsisdn : PaymentDistrStrategy.byAccount;
+    determineDistrStrategyByDetail(detail: PaymentDetail) {
+        return (detail.account == null && (detail.msisdn != null || detail.msisdn != '')) ? PaymentDistrStrategy.byMsisdn : PaymentDistrStrategy.byAccount;
     }
 
     getPaymentDetails(paymentId): Observable<any> {
         return new Observable(
             observer => {
                 this.dataService.getPaymentDetails(paymentId).subscribe(data => {
-                        if (data.result == rests.restResultOk)  {
+                        if (data.result == rests.restResultOk) {
                             this.details = [];
                             data.data.forEach(item => {
                                 let detail = new PaymentDetail();
@@ -136,7 +163,7 @@ export class PaymentService {
                             this.announceDetails();
                             observer.next();
                         }
-                        if (data.result == rests.restResultErrDb)   {
+                        if (data.result == rests.restResultErrDb) {
                             this.logger.error(data.data);
                             observer.error(msgs.msgErrGetDetails);
                         }
@@ -152,33 +179,72 @@ export class PaymentService {
             });
     }
 
-    addDetailsToOperations()    {
+    addDetailsToOperations() {
         this.details.forEach(item => {
             this.addOperation(null, item.msisdn, null, item.account, item.sum, PaymentDistrStrategy.None);
         });
     }
 
-    distribute(): Observable<any>    {
+    distribute(): Observable<any> {
         this.preparePaymentParams();
-        return new Observable<any>( observer => {
-            this.dataService.distributePayment(this.paymentParam).subscribe(data => {
-                observer.next(data);
-            }, error2 => {
-                let msg = msgs.msgErrDistributePayment + error2 + this.userService.logUser();
-                this.logger.error(msg);
-                observer.error(msgs.msgErrDistributePayment);
-            }, () => {
-                observer.complete();
-            })
-        });
+        return this.dataService.distributePayment(this.paymentParam);
     }
 
-    preparePaymentParams()  {
+
+    preparePaymentParams() {
         let params: PaymentParam = new PaymentParam();
         params.id = this.payment.id;
         params.profileId = this.payment.profileId;
-        params.items = this.details;
+        params.items = [];
+        this.details.forEach(detail => {
+            let ncpDetail = new NcpPaymentDetails();
+            ncpDetail.id = detail.id;
+            ncpDetail.msisdn = detail.msisdn;
+            ncpDetail.account = detail.account;
+            ncpDetail.sum = detail.sum;
+            if (detail.distrStrategy == PaymentDistrStrategy.byAccount) {
+                ncpDetail.msisdn = null;
+            }
+            if (detail.distrStrategy == PaymentDistrStrategy.byMsisdn) {
+                ncpDetail.account = null;
+            }
+            ncpDetail.status = detail.status;
+            ncpDetail.err_message = detail.err_message;
+            ncpDetail.distribute_date = detail.distribute_date;
+            params.items.push(ncpDetail);
+        })
         this.paymentParam = params;
+    }
+
+    getPaymentData(id): Observable<any> {
+        return new Observable(
+            observer => {
+                this.dataService.getPayment(id).subscribe(
+                    data => {
+                        if (data.result == rests.restResultOk)  {
+                            this.payment = data.data;
+                        }
+                        if (data.result == rests.restResultErrDb)  {
+                            observer.error(data);
+                        }
+                    },
+                    error2 => {},
+                ()=> {}
+                )
+            });
+    }
+
+    newEquipment(paymentId: number, equipment: Equipment)  {
+        return this.dataService.newEquipment(paymentId, equipment);
+    }
+
+    createEquipmentByDetail(paymentId: number, detail: PaymentDetail):Equipment   {
+        let eq: Equipment = new Equipment();
+        eq.icc = detail.icc;
+        eq.msisdn = detail.msisdn;
+        eq.nomenclature = detail.nomenclature;
+        eq.paymentDetailId = paymentId;
+        return eq;
     }
 
 }

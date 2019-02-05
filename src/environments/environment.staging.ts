@@ -17,4 +17,7 @@ export const environment = {
     urlGetNcpPaymentByRawId: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/getNcpPaymentByRawId',
     urlGetPaymentDetails: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/getPaymentDetails',
     urlDistributePayment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/distributePayment',
+    urlNewPaymentDetail: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/newPaymentDetail',
+    urlNewEquipment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/newEquipment',
+    urlGetPayment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/getPayment',
 };

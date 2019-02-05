@@ -42,6 +42,7 @@ import {PaymentService} from './payments/payment/payment.service';
 import {InfoComponent} from './payments/payment/info/info.component';
 import {AddOperationComponent} from './payments/payment/add-operation/add-operation.component';
 import {SimpleNotificationsModule} from 'angular2-notifications';
+import {NotifService} from './notif/notif-service.service';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -108,7 +109,8 @@ registerLocaleData(localeRu, 'ru');
         UploadFilePaymentService,
         UserService,
         PaymentsService,
-        PaymentService
+        PaymentService,
+        NotifService
     ],
     bootstrap: [AppComponent]
 })

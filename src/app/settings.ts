@@ -102,5 +102,11 @@ export const prepaid = 'Аванс';
 export const detailsTableColumns = [ 'num', 'nomenclature', 'msisdn', 'icc', 'account', 'sum', 'del'];
 export enum detailTableColumnsDisplay {num = '#', nomenclature = 'Номенклатура', msisdn = 'Номер', icc = 'ICC', account = 'Лицевой счёт', sum = 'Сумма', del = 'Удалить'};
 
+export enum msgType {
+    info =  0,
+    warn =  1,
+    error = 2,
+}
+
 export class Settings {
 }

@@ -11,6 +11,9 @@ import 'rxjs/add/observable/throw';
 import {FilePayment} from '../equipment/model/file-payment';
 import {RawPayment} from '../payments/model/raw-payment';
 import {PaymentParam} from '../payments/model/payment-param';
+import {PaymentDetail} from '../payments/model/payment-detail';
+import {NcpPaymentDetails} from '../payments/model/ncp-payment-details';
+import {Equipment} from '../payments/model/equipment';
 
 @Injectable()
 export class DataService {
@@ -42,7 +45,7 @@ export class DataService {
         return this._http.post<FilePayment>(environment.urlUploadEquipment, formData).catch(this.errorHandler);
     }
 
-    createRawPayment(payment: RawPayment): Observable<RestResponse> {
+    newRawPayment(payment: RawPayment): Observable<RestResponse> {
         return this._http.post<RestResponse>(environment.urlNewRawPayment, payment, httpOptions).catch(this.errorHandler);
     }
 
@@ -54,8 +57,26 @@ export class DataService {
         return this._http.post<RestResponse>(environment.urlGetPaymentDetails + '?id=' + paymentId, httpOptions).catch(this.errorHandler);
     }
 
-    distributePayment(params: PaymentParam) {
+    distributePayment(params: PaymentParam): Observable<RestResponse>  {
         return this._http.post<RestResponse>(environment.urlDistributePayment, params, httpOptions).catch(this.errorHandler);
+    }
+
+    newPaymentDetail(detail: NcpPaymentDetails): Observable<RestResponse>   {
+        return this._http.post<RestResponse>(environment.urlNewPaymentDetail, detail, httpOptions).catch(this.errorHandler);
+    }
+
+    /**
+     * Добавить новую запись хранения доп полей для оборудования
+     * @param {number} paymentDetailId
+     * @param {Equipment} equipment
+     * @returns {Observable<RestResponse>}
+     */
+    newEquipment(paymentDetailId: number, equipment: Equipment): Observable<RestResponse>   {
+        return this._http.post<RestResponse>(environment.urlNewPaymentDetail + '?id=' + paymentDetailId, equipment, httpOptions).catch(this.errorHandler);
+    }
+
+    getPayment(id: number): Observable<RestResponse>   {
+        return this._http.post<RestResponse>(environment.urlNewPaymentDetail + '?id=' + id, httpOptions).catch(this.errorHandler);
     }
 
 }

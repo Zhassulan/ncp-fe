@@ -3,7 +3,9 @@ import {Router} from '@angular/router';
 import {PaymentService} from './payment.service';
 import {OperationsComponent} from './operations/operations.component';
 import {PaymentsService} from '../payments.service';
-import {NotificationsService} from 'angular2-notifications';
+import {msgType} from '../../settings';
+import {Subscription} from 'rxjs';
+import {NotifService} from '../../notif/notif-service.service';
 
 @Component({
     selector: 'app-payment-view',
@@ -12,17 +14,18 @@ import {NotificationsService} from 'angular2-notifications';
 })
 export class ViewPaymentComponent implements OnInit {
 
-    isWait: boolean = true;
+    isWait: boolean = true; //полоса прогресса
     @ViewChild(OperationsComponent) childOperationsComponent: OperationsComponent;
-
+    subscription: Subscription; //для экранных уведомлений
 
     constructor(private router: Router,
                 private paymentService: PaymentService,
                 private paymentsService: PaymentsService,
-                private notifService: NotificationsService) {
+                private myNotifService: NotifService) {
     }
 
     ngOnInit() {
+        this.subscription = this.myNotifService.subscribe();
         /*
         if (!this.paymentService.payment) {
           this.router.navigate(['payments']);
@@ -56,7 +59,7 @@ export class ViewPaymentComponent implements OnInit {
             () => {},
             error2 => {
                 this.isWait = false;
-                this.notifService.error(error2);
+                this.myNotifService.add(msgType.error, error2);
             },
             () => {
                 this.isWait = false;

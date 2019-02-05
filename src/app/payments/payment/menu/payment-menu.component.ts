@@ -11,6 +11,7 @@ import {NGXLogger} from 'ngx-logger';
 import {UserService} from '../../../user/user.service';
 import {DatePipe, formatDate} from '@angular/common';
 import {Utils} from '../../../utils';
+import {Observable} from 'rxjs';
 
 @Component({
     selector: 'app-payment-menu',
@@ -25,7 +26,6 @@ export class PaymentMenuComponent implements OnInit {
 
     constructor(public dialog: MatDialog,
                 private paymentService: PaymentService,
-                private notifService: NotificationsService,
                 private dialogService: DialogService,
                 private logger: NGXLogger,
                 private userService: UserService) {
@@ -46,15 +46,7 @@ export class PaymentMenuComponent implements OnInit {
         this.dialogRef = this.dialog.open(DialogComponent, {width: '50%', height: '30%'});
         this.dialogRef.afterClosed().subscribe(result => {
             if (result != 'cancel') {
-                if (!this.paymentService.checkTotalSum()) {
-                    this.notifService.warn(msgs.msgErrTotalSum);
-                }
-                if (!this.paymentService.checkDocNum()) {
-                    this.notifService.warn(msgs.msgErrDocNum);
-                }
-                if (!this.paymentService.checkRnn()) {
-                    this.notifService.warn(msgs.msgErrRnn);
-                }
+                this.paymentService.checkFilePayment();
             }
         });
     }
@@ -67,19 +59,34 @@ export class PaymentMenuComponent implements OnInit {
         this.dialogService.setWait();
         this.paymentService.distribute().subscribe(data => {
                 if (data.result == rests.restResultOk) {
-                    console.log(data.data);
-                    msg = msgs.msgSuccessDistributed + 'ID платежа ' + data.data[0].paymentId + this.userService.logUser();
-                    this.logger.info(msg);
-                    this.dialogService.addItem(null, msg);
+                    let batch = []; //observables array
+                    //create equipment
+                    this.details.forEach(detail => {
+                        batch.push(this.paymentService.newEquipment(this.paymentService.paymentParam.id, this.paymentService.createEquipmentByDetail(this.paymentService.paymentParam.id, detail)));
+                    });
+                    const getDetails$ = this.paymentService.getPaymentDetails(this.paymentService.paymentParam.id);
+                    const getPaymentData$ = this.paymentService.getPaymentData(this.paymentService.paymentParam.id);
+                    batch.push(getDetails$, getPaymentData$);
+                    let combined$ = Observable.concat(batch);
+                    combined$.subscribe(
+                        ()=> {
+                            msg = msgs.msgSuccessDistributed + 'ID платежа ' + this.paymentService.paymentParam.id + this.userService.logUser();
+                            this.dialogService.addItem(null, msg);
+                        },
+                        error2 => {
+                            msg = msgs.msgErrDistributePayment + 'ID платежа ' + this.paymentService.paymentParam.id + this.userService.logUser();
+                            this.logger.error(msg + error2);
+                            this.dialogService.addItem(null, msg);
+                        });
                 } else {
-                    msg = msgs.msgErrDelTransit + ' ID платежа ' + data.data[0].paymentId + '. ' + data.data + ' (' + data.result + ')' + this.userService.logUser();
-                    this.logger.warn(msg);
+                    msg = msgs.msgErrDistributePayment + ' ID платежа ' + this.paymentService.paymentParam.id + '. ' + data.data + ' (' + data.result + ')' + this.userService.logUser();
+                    this.logger.warn(msg + data.data);
                     this.dialogService.addItem(null, msg);
                 }
             },
             error2 => {
-                msg = msgs.msgErrDelTransit + ' ID платежа ' + this.paymentService.paymentParam.id+ '. ' + error2 + this.userService.logUser();
-                this.logger.error(msg);
+                msg = msgs.msgErrDistributePayment + ' ID платежа ' + this.paymentService.paymentParam.id + '. ' + error2 + this.userService.logUser();
+                this.logger.error(msg + error2);
                 this.dialogService.addItem(null, msg);
                 this.dialogService.setWaitNot();
             },
