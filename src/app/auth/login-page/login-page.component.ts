@@ -14,10 +14,10 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         setTimeout(() => {
             const dialogRef = this.dialog.open(LoginComponent, {
-                width: '20%',
+                width: '22%',
                 height: '30%'
             });
-        }, timeouts.timeoutAfterLoginInput);
+        }, 0);
     }
 
     constructor(public dialog: MatDialog) {

@@ -1,5 +1,42 @@
 .container {
-    height: 100%;
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+            "header"
+            "payments";
+    justify-self: center;
+    align-self: center;
+}
+
+.item {
+    justify-self: center;
+    align-self: center;
+}
+
+.search {
+    grid-area: search;
+    justify-self: end;
+}
+
+.header {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns:
+            minmax(max-content, max-content)
+            minmax(max-content, max-content)
+            minmax(max-content, max-content)
+            minmax(max-content, max-content)
+            minmax(max-content, auto);
+    grid-template-areas:
+            "item item item item search"
+            "payments payments payments payments payments";
+    gap: 5px;
+    grid-gap: 5px;
+}
+
+.payments {
+    grid-area: payments;
 }
 
 .mat-table {
@@ -27,5 +64,4 @@
 .mat-column-managers {
     width: 10%;
 }
-
 

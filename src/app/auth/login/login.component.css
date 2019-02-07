@@ -1,6 +1,41 @@
-.login-form {
-        width: 95%;
+.container {
+    display: grid;
+    grid-template-rows: auto auto auto auto;
+    grid-template-columns: 2fr 2fr 1fr;
+    grid-template-areas:
+            ". title ."
+            ". login ."
+            ". pwd   ."
+            ". btnLogin btnCancel";
+    justify-self: center;
+    align-self: center;
+    gap: 5px;
+    grid-gap: 5px;
 }
-.login-full-width {
-    width: 95%;
+
+.title {
+    grid-area: title;
+    justify-self: center;
+}
+
+.login {
+    grid-area: login;
+    justify-self: start;
+}
+
+.pwd {
+    grid-area: pwd;
+    justify-self: start;
+}
+
+.btnLogin {
+    grid-area: btnLogin;
+    justify-self: end;
+    align-self: end;
+}
+
+.btnCancel {
+    grid-area: btnCancel;
+    justify-self: start;
+    align-self: end;
 }

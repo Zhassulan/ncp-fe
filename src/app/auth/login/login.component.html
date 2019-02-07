@@ -1,20 +1,22 @@
-<form class="login-form">
-    <div fxLayout="row" fxLayoutAlign="center center">
-        <h1 mat-dialog-title>Вход в NCP</h1>
-    </div>
-
-    <div mat-dialog-content>
-        <mat-form-field class="login-full-width">
-            <input matInput placeholder="Логин" required [(ngModel)]="userName" name="userName">
-        </mat-form-field>
-        <mat-form-field class="login-full-width">
-            <input matInput placeholder="Пароль" type="password" required [(ngModel)]="userPassword" name="userPassword">
-        </mat-form-field>
-    </div>
-
-    <div fxLayout="row" fxLayoutAlign="end center">
-        <div mat-dialog-actions>
+<form>
+    <div ngClass="container">
+        <div ngClass="title">
+            <h1 mat-dialog-title>Вход в NCP</h1>
+        </div>
+        <div ngClass="login">
+            <mat-form-field>
+                <input matInput placeholder="Логин" required [(ngModel)]="userName" name="userName">
+            </mat-form-field>
+        </div>
+        <div ngClass="pwd">
+            <mat-form-field>
+                <input matInput placeholder="Пароль" type="password" required [(ngModel)]="userPassword" name="userPassword">
+            </mat-form-field>
+        </div>
+        <div ngClass="btnLogin">
             <button mat-raised-button color="primary" (click)="login()">Войти</button>
+        </div>
+        <div ngClass="btnCancel">
             <button mat-raised-button color="primary" [mat-dialog-close] cdkFocusInitial>Отмена</button>
         </div>
     </div>
