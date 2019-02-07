@@ -2,17 +2,10 @@
     <mat-icon>more_vert</mat-icon>
 </button>
 <mat-menu #menu="matMenu">
-    <!--<button mat-menu-item [disabled]="(payment.status == paymentStatuses.STATUS_DISTRIBUTED ||
-                                       payment.status == paymentStatuses.STATUS_EXPIRED ||
-                                       payment.status == paymentStatuses.STATUS_DELETED)" (click)="openFileDialog()">
-        <span>Загрузить разноски - оборудование</span>
-    </button>-->
-    <button mat-menu-item (click)="openFileDialog()">
+    <button mat-menu-item [disabled]="isBlocked()" (click)="openFileDialog()">
         <span>Загрузить разноски - оборудование</span>
     </button>
-    <button mat-menu-item [disabled]="(details.length == 0 || (payment.status == paymentStatuses.STATUS_DISTRIBUTED ||
-                                       payment.status == paymentStatuses.STATUS_EXPIRED ||
-                                       payment.status == paymentStatuses.STATUS_DELETED))" (click)="distribute()">
+    <button mat-menu-item [disabled]="(details.length == 0 || isBlocked())" (click)="distributeMenu()">
         <span>Разнести</span>
     </button>
 </mat-menu>

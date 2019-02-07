@@ -2,29 +2,28 @@
 
     <p class="mat-h3"><b>Абонент:</b></p>
 
-    <div fxLayout="row">
-
-        <mat-form-field>
-            <input matInput placeholder="Номер телефона" formControlName="msisdn" (input)="msisdnChanged()" ngClass="inputWidth">
-            <button mat-button *ngIf="msisdn.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearMsisdn()">
-                <mat-icon>close</mat-icon>
-            </button>
-            <mat-error *ngIf="msisdn.errors">
-                количество цифр 10
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput placeholder="Лицевой счёт" formControlName="account" (input)="accountChanged()" ngClass="inputWidth">
-            <button mat-button *ngIf="account.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearAccount()">
-                <mat-icon>close</mat-icon>
-            </button>
-        </mat-form-field>
-    </div>
-
-    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-
-        <div fxLayout="column" fxLayoutAlign="center start">
-            <mat-form-field class="example-full-width">
+    <div class="container">
+        <div class="item1">
+            <mat-form-field>
+                <input matInput placeholder="Номер телефона" formControlName="msisdn" (input)="msisdnChanged()" ngClass="inputWidth">
+                <button mat-button *ngIf="msisdn.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearMsisdn()">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="msisdn.errors">
+                    количество цифр 10
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="item2">
+            <mat-form-field>
+                <input matInput placeholder="Лицевой счёт" formControlName="account" (input)="accountChanged()" ngClass="inputWidth">
+                <button mat-button *ngIf="account.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearAccount()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+        <div class="item3">
+            <mat-form-field>
                 <input matInput placeholder="Сумма" formControlName="sum" required>
                 <span matSuffix> тг.</span>
                 <button mat-button *ngIf="sum.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSum()">
@@ -32,8 +31,9 @@
                 </button>
             </mat-form-field>
         </div>
-        <div fxLayout="column" fxLayoutAlign="center end">
-            <button mat-raised-button color="primary" [disabled]="!frmOperation.valid" (click)="addDetail()" matTooltip="Добавить разноску">Добавить</button>
+        <div class="item4">
+            <button mat-raised-button color="primary" [disabled]="!frmOperation.valid || (isBlocked())" (click)="addDetail()" matTooltip="Добавить разноску">Добавить
+            </button>
         </div>
     </div>
 

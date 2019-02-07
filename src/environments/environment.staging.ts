@@ -19,5 +19,6 @@ export const environment = {
     urlDistributePayment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/distributePayment',
     urlNewPaymentDetail: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/newPaymentDetail',
     urlNewEquipment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/newEquipment',
-    urlGetPayment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/getPayment',
+    urlGetPayment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/payment',
+    urlGetPaymentEquipments: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/equipments',
 };

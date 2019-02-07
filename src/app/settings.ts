@@ -80,6 +80,10 @@ export const enum msgs {
     msgSuccessGotDetails = 'Успешно получены детали платежа. ',
     msgErrDistributePayment = 'Ошибка разноски. ',
     msgSuccessDistributed = 'Платёж успешно разнесён. ',
+    msgErrCreateEquipment = 'Ошибка создания записи по оборудованию. ',
+    msgSuccessCreateEquipment = 'Успешно создана запись по оборудованию. ',
+    msgErrGetPaymentDetails = 'Ошибка получения деталей платежа. ',
+    msgErrGetPaymentData = 'Ошибка получения данных платежа. ',
 }
 
 export enum locStorItems {

@@ -19,5 +19,6 @@ export const environment = {
     urlDistributePayment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/distributePayment',
     urlNewPaymentDetail: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/newPaymentDetail',
     urlNewEquipment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/newEquipment',
-    urlGetPayment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/getPayment',
+    urlGetPayment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/payment',
+    urlGetPaymentEquipments: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/equipments',
 };

@@ -84,9 +84,9 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
             this.pickerStartDate.setValue(this.dtStartDay);
             this.pickerEndDate.setValue(this.dtEndDay);
             //загрузка платежей онлайн
-            //this.getData();
+            this.getData();
             //загрузка фейковых платежей
-            this.getSampleData();
+            //this.getSampleData();
             this.dataSource.data = this.payments;
         } else {
             //в противном случае загружаем данные из сервиса, исключение повторного обращения к серверу

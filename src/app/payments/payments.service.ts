@@ -115,6 +115,7 @@ export class PaymentsService {
             });
     }
 
+    /*
     createRawPayment(payment: RawPayment): Observable<RestResponse> {
         return new Observable<any>(
             observer => {
@@ -132,6 +133,8 @@ export class PaymentsService {
                     });
             });
     }
+    */
+
 
     getNcpPaymentByRawId(): Observable<RestResponse> {
         return new Observable<any>(

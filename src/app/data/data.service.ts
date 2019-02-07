@@ -14,6 +14,7 @@ import {PaymentParam} from '../payments/model/payment-param';
 import {PaymentDetail} from '../payments/model/payment-detail';
 import {NcpPaymentDetails} from '../payments/model/ncp-payment-details';
 import {Equipment} from '../payments/model/equipment';
+import {PaymentParamEq} from '../payments/model/payment-param-eq';
 
 @Injectable()
 export class DataService {
@@ -57,7 +58,7 @@ export class DataService {
         return this._http.post<RestResponse>(environment.urlGetPaymentDetails + '?id=' + paymentId, httpOptions).catch(this.errorHandler);
     }
 
-    distributePayment(params: PaymentParam): Observable<RestResponse>  {
+    distributePayment(params: PaymentParamEq): Observable<RestResponse>  {
         return this._http.post<RestResponse>(environment.urlDistributePayment, params, httpOptions).catch(this.errorHandler);
     }
 
@@ -72,11 +73,15 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     newEquipment(paymentDetailId: number, equipment: Equipment): Observable<RestResponse>   {
-        return this._http.post<RestResponse>(environment.urlNewPaymentDetail + '?id=' + paymentDetailId, equipment, httpOptions).catch(this.errorHandler);
+        return this._http.post<RestResponse>(environment.urlNewEquipment + '?id=' + paymentDetailId, equipment, httpOptions).catch(this.errorHandler);
     }
 
     getPayment(id: number): Observable<RestResponse>   {
-        return this._http.post<RestResponse>(environment.urlNewPaymentDetail + '?id=' + id, httpOptions).catch(this.errorHandler);
+        return this._http.post<RestResponse>(environment.urlGetPayment + '?id=' + id, httpOptions).catch(this.errorHandler);
+    }
+
+    getPaymentEquipments(id: number): Observable<RestResponse>   {
+        return this._http.post<RestResponse>(environment.urlGetPaymentEquipments + '?id=' + id, httpOptions).catch(this.errorHandler);
     }
 
 }

@@ -11,6 +11,7 @@ export class PaymentDetail {
     nomenclature: string;
     icc: string;
     distrStrategy: number;
+    num: number;
 
     constructor() {
         this.id = null;

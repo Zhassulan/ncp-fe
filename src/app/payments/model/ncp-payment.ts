@@ -1,6 +1,8 @@
 /**
  * Модель NCP платёж, таблица ncp_payment
  */
+import {NcpPaymentDetails} from './ncp-payment-details';
+
 export class NcpPayment {
 
     id: number;

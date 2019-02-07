@@ -1,6 +1,6 @@
 export class FilePaymentItem {
 
-    num: string;
+    num: number;
     nomenclature: string;
     msisdn: string;
     icc: string;

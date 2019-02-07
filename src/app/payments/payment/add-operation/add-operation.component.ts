@@ -3,6 +3,7 @@ import {FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {msisdnLength} from '../../../settings';
 import {PaymentService} from '../payment.service';
 import {PaymentDetail} from '../../model/payment-detail';
+import {PaymentStatus} from '../../../settings';
 
 @Component({
     selector: 'app-payment-add-operation',
@@ -12,6 +13,7 @@ import {PaymentDetail} from '../../model/payment-detail';
 export class AddOperationComponent implements OnInit {
 
     frmOperation: FormGroup;
+    paymentStatuses = PaymentStatus;
 
     constructor(private paymentService: PaymentService) {
     }
@@ -49,9 +51,12 @@ export class AddOperationComponent implements OnInit {
         return this.frmOperation.get('sum');
     }
 
-    addOperation() {
-        this.paymentService.addOperation(null, this.msisdn.value, null, this.account.value, this.sum.value, null);
-        this.clearFields();
+    get details()   {
+        return this.paymentService.details;
+    }
+
+    get payment()   {
+        return this.paymentService.payment;
     }
 
     addDetail() {
@@ -92,6 +97,10 @@ export class AddOperationComponent implements OnInit {
     isAddValidator: ValidatorFn = () =>    {
         return ((this.msisdn.value != '' &&  this.msisdn != null) && (this.sum.value != '' && this.sum.value != null) ||
             (this.account.value != '' &&  this.account != null) && (this.sum.value != '' && this.sum.value != null));
+    }
+
+    isBlocked():boolean  {
+        return this.paymentService.isBlocked();
     }
 
 }

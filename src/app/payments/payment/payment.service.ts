@@ -14,6 +14,8 @@ import {PaymentDetail} from '../model/payment-detail';
 import {NcpPaymentDetails} from '../model/ncp-payment-details';
 import {Equipment} from '../model/equipment';
 import {NotifService} from '../../notif/notif-service.service';
+import {PaymentParamEq} from '../model/payment-param-eq';
+import {DetailEquipment} from '../model/detail-equipment';
 
 @Injectable()
 export class PaymentService {
@@ -21,11 +23,13 @@ export class PaymentService {
     payment: NcpPayment;
     details: PaymentDetail [] = [];
     operations: Operation [] = [];
-    private operationsObs = new Subject<Operation[]>();
+    equipments: Equipment [] = [];
     private detailsObs = new Subject<PaymentDetail[]>();
-    operationsAnnounced$ = this.operationsObs.asObservable();
+    private paymentObs = new Subject<NcpPayment>();
     detailsAnnounced$ = this.detailsObs.asObservable();
+    paymentAnnounced$ = this.paymentObs.asObservable();
     paymentParam: PaymentParam;
+    paymentParamEq: PaymentParamEq;
 
     constructor(private paymentsService: PaymentsService,
                 private uploadFilePaymentService: UploadFilePaymentService,
@@ -37,18 +41,22 @@ export class PaymentService {
 
     setPayment(id) {
         this.payment = this.paymentsService.payments.find(x => x.id == id);
+        console.log('Выбран платёж ID ' + this.payment.id);
+        this.announcePayment();
     }
 
-    addOperation(nomenclature, msisdn, icc, account, sum, distrStrategy) {
-        this.operations.push({
-            nomenclature: nomenclature,
-            msisdn: msisdn,
-            icc: icc,
-            account: account,
-            sum: sum,
-            distrStrategy: distrStrategy,
-        });
-        this.announceOperations();
+    print(obj)  {
+        console.log(JSON.stringify(obj));
+    }
+
+    setPaymentByPayment(payment: NcpPayment)   {
+        this.payment = payment;
+        this.announcePayment();
+    }
+
+    setPaymentStatus(status: number)  {
+        this.payment.status = status;
+        this.announcePayment();
     }
 
     addNewDetail(detail: PaymentDetail) {
@@ -58,18 +66,19 @@ export class PaymentService {
 
     delDetail(row) {
         this.details.splice(this.details.indexOf(row), 1);
+        this.announceDetails();
     }
 
     delOperation(row) {
         this.operations.splice(this.operations.indexOf(row), 1);
     }
 
-    announceOperations() {
-        this.operationsObs.next(this.operations);
-    }
-
     announceDetails() {
         this.detailsObs.next(this.details);
+    }
+
+    announcePayment() {
+        this.paymentObs.next(this.payment);
     }
 
     get items() {
@@ -88,12 +97,6 @@ export class PaymentService {
         return this.uploadFilePaymentService.filePayment.filePaymentHeader.iin_bin_sender == this.payment.rnnSender;
     }
 
-    getOperationsFromUploadService() {
-        for (let item of this.items.slice(0, this.items.length - 1)) {
-            this.addOperation(item.nomenclature, item.msisdn, item.icc, item.account, item.sum, this.determineDistrStrategy(item));
-        }
-    }
-
     addDetailsFromFilePayment() {
         for (let item of this.items.slice(0, this.items.length - 1)) {
             let detail = new PaymentDetail();
@@ -104,10 +107,12 @@ export class PaymentService {
             detail.sum = item.sum;
             detail.distrStrategy = this.determineDistrStrategy(item);
             detail.status = 0;
+            detail.num = item.num;
             this.addNewDetail(detail);
         }
-        //this.printDetails();
+        this.announceDetails();
         this.checkFilePayment();
+        this.setEquipments();
     }
 
     checkFilePayment()  {
@@ -122,10 +127,10 @@ export class PaymentService {
         }
     }
 
-    printDetails()  {
+    printDetails(details)  {
         console.log('Details after adding from file payment:\n');
         console.log('------------------------');
-        this.details.forEach(item => {
+        details.forEach(item => {
            console.log(item);
         });
         console.log('------------------------');
@@ -142,6 +147,28 @@ export class PaymentService {
         return (detail.account == null && (detail.msisdn != null || detail.msisdn != '')) ? PaymentDistrStrategy.byMsisdn : PaymentDistrStrategy.byAccount;
     }
 
+    convertDbDetailToAppDetail(item: NcpPaymentDetails):PaymentDetail {
+        let detail = new PaymentDetail();
+        detail.id = item.id;
+        detail.msisdn = item.msisdn;
+        detail.account = item.account;
+        detail.sum = item.sum;
+        detail.status = item.status;
+        detail.err_message = item.err_message;
+        detail.distribute_date = item.distribute_date;
+        detail.nomenclature = null;
+        detail.icc = null;
+        detail.distrStrategy = PaymentDistrStrategy.None;
+        return detail;
+    }
+
+    setDetailsFromDbDetails(details: NcpPaymentDetails [])   {
+        this.details = [];
+        details.forEach(item => {
+            this.details.push(this.convertDbDetailToAppDetail(item));
+        })
+    }
+
     getPaymentDetails(paymentId): Observable<any> {
         return new Observable(
             observer => {
@@ -149,17 +176,15 @@ export class PaymentService {
                         if (data.result == rests.restResultOk) {
                             this.details = [];
                             data.data.forEach(item => {
-                                let detail = new PaymentDetail();
-                                detail.id = item.id;
-                                detail.msisdn = item.msisdn;
-                                detail.account = item.account;
-                                detail.sum = item.sum;
-                                detail.status = item.status;
-                                detail.err_message = item.err_message;
-                                detail.distribute_date = item.distribute_date;
-                                detail.distrStrategy = PaymentDistrStrategy.None;
-                                this.details.push(detail);
+                                this.details.push(this.convertDbDetailToAppDetail(item));
                             });
+                            this.getPaymentEquipments(this.payment.id).subscribe(
+                                data => {
+                                observer.next()
+                                },
+                                error2 => {
+                                observer.error(error2);
+                                });
                             this.announceDetails();
                             observer.next();
                         }
@@ -179,19 +204,13 @@ export class PaymentService {
             });
     }
 
-    addDetailsToOperations() {
-        this.details.forEach(item => {
-            this.addOperation(null, item.msisdn, null, item.account, item.sum, PaymentDistrStrategy.None);
-        });
-    }
-
     distribute(): Observable<any> {
         this.preparePaymentParams();
-        return this.dataService.distributePayment(this.paymentParam);
+        return this.dataService.distributePayment(this.paymentParamEq);
     }
 
 
-    preparePaymentParams() {
+    preparePaymentParamsOld() {
         let params: PaymentParam = new PaymentParam();
         params.id = this.payment.id;
         params.profileId = this.payment.profileId;
@@ -216,6 +235,32 @@ export class PaymentService {
         this.paymentParam = params;
     }
 
+    preparePaymentParams() {
+        let params: PaymentParamEq = new PaymentParamEq();
+        params.id = this.payment.id;
+        params.profileId = this.payment.profileId;
+        params.items = [];
+        this.details.forEach(detail => {
+            let ncpDetail = new NcpPaymentDetails();
+            ncpDetail.id = detail.id;
+            ncpDetail.msisdn = detail.msisdn;
+            ncpDetail.account = detail.account;
+            ncpDetail.sum = detail.sum;
+            if (detail.distrStrategy == PaymentDistrStrategy.byAccount) {
+                ncpDetail.msisdn = null;
+            }
+            if (detail.distrStrategy == PaymentDistrStrategy.byMsisdn) {
+                ncpDetail.account = null;
+            }
+            ncpDetail.status = detail.status;
+            ncpDetail.err_message = detail.err_message;
+            ncpDetail.distribute_date = detail.distribute_date;
+            let equipment: Equipment = this.createEquipmentByDetail(this.payment.id, detail);
+            params.items.push(new DetailEquipment(ncpDetail, equipment));
+        })
+        this.paymentParamEq = params;
+    }
+
     getPaymentData(id): Observable<any> {
         return new Observable(
             observer => {
@@ -223,6 +268,7 @@ export class PaymentService {
                     data => {
                         if (data.result == rests.restResultOk)  {
                             this.payment = data.data;
+                            this.announcePayment();
                         }
                         if (data.result == rests.restResultErrDb)  {
                             observer.error(data);
@@ -246,5 +292,62 @@ export class PaymentService {
         eq.paymentDetailId = paymentId;
         return eq;
     }
+
+    setEquipments() {
+        this.equipments = [];
+        this.details.forEach(item => {
+           this.equipments.push(this.createEquipmentByDetail(this.payment.id, item));
+        });
+    }
+
+    setEquipmentsInDetails(equipments: Equipment [])    {
+        equipments.forEach(equipment => {
+            let detail = this.details.find(x => x.id == equipment.paymentDetailId);
+            detail.id = equipment.id;
+            detail.nomenclature = equipment.nomenclature;
+            detail.msisdn = equipment.msisdn;
+            detail.icc = equipment.icc;
+        });
+    }
+
+    getPaymentEquipments(id: number): Observable<any> {
+        return new Observable(
+            observer => {
+                this.dataService.getPaymentEquipments(id).subscribe(
+                    data => {
+                        if (data.result == rests.restResultOk)  {
+                            this.setEquipmentsInDetails(data.data);
+                        }
+                        if (data.result == rests.restResultErrDb)  {
+                            observer.error(data);
+                        }
+                    },
+                    error2 => {},
+                    ()=> {}
+                )
+            });
+    }
+
+    isBlocked():boolean  {
+        let res: boolean =
+            this.payment.status == PaymentStatus.STATUS_DISTRIBUTED ||
+            this.payment.status == PaymentStatus.STATUS_EXPIRED ||
+            this.payment.status == PaymentStatus.STATUS_DELETED;
+        return res;
+    }
+
+    isCurrentSumValid():boolean  {
+        console.log('Сравнивается суммы ' + this.getDetailsSum() + ' == ' + this.payment.sum);
+        return this.getDetailsSum() == this.payment.sum;
+    }
+
+    getDetailsSum(): number {
+        let sum = 0;
+        this.details.forEach(detail => {
+            sum += Number(detail.sum);
+        })
+        return sum;
+    }
+
 
 }

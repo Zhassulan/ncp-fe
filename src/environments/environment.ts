@@ -22,7 +22,8 @@ export const environment = {
     urlDistributePayment: 'http://localhost:8080/onlinebank/dataservice/exdata/distributePayment',
     urlNewPaymentDetail: 'http://localhost:8080/onlinebank/dataservice/exdata/newPaymentDetail',
     urlNewEquipment: 'http://localhost:8080/onlinebank/dataservice/exdata/newEquipment',
-    urlGetPayment: 'http://localhost:8080/onlinebank/dataservice/exdata/getPayment',
+    urlGetPayment: 'http://localhost:8080/onlinebank/dataservice/exdata/payment',
+    urlGetPaymentEquipments: 'http://localhost:8080/onlinebank/dataservice/exdata/equipments',
 };
 
 /*
