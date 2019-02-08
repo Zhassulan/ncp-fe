@@ -7,4 +7,8 @@ export class Utils {
         return pipe.transform(new Date(dt)).toString()
     }
 
+    static printObj(obj)  {
+        console.log(JSON.stringify(obj));
+    }
+
 }

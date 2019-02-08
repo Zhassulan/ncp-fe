@@ -14,5 +14,16 @@
 }
 
 .container {
-  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas:
+          ". . ."
+          ". . ."
+          ". . .";
+  justify-items: stretch;
+  align-self: start;
+  justify-self: center;
 }
+
+

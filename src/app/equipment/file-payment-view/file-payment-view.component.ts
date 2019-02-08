@@ -54,6 +54,7 @@ export class FilePaymentViewComponent implements OnInit, AfterViewInit {
     }
 
     getPayments() {
+        /*
         this.isWait = true;
         let stubRawPayment: RawPayment = new RawPayment();
         let dt = new Date(this.filePayment.filePaymentHeader.payment_date);
@@ -81,6 +82,7 @@ export class FilePaymentViewComponent implements OnInit, AfterViewInit {
                 this.isWait = false;
             }
         );
+        */
     }
 
 }

@@ -16,14 +16,14 @@ const routes: Routes = [
     {path: 'login', component: LoginPageComponent},
     {path: 'equipment', component: UploadComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Оборудование'}},
     {path: 'filePayment', component: FilePaymentViewComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Оборудование - Платёж'}},
-    {path: 'payment', component: ViewPaymentComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Платёж'}},
+    {path: 'payment/:id', component: ViewPaymentComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Платёж'}},
 ];
 
 @NgModule({
     declarations: [],
     imports: [
         CommonModule,
-        RouterModule.forRoot(routes)
+        RouterModule.forRoot(routes, { useHash: true })
     ],
     exports: [RouterModule]
 })

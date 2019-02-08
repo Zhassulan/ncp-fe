@@ -24,7 +24,7 @@ export class MenuToolbarComponent implements OnInit {
         }, {
             icon: 'dashboard',
             route: 'sales/dashboards',
-            title: 'Dashboards',
+            title: '----------',
         }
     ];
 
@@ -32,27 +32,27 @@ export class MenuToolbarComponent implements OnInit {
         {
             icon: 'contacts',
             route: 'sales/accounts',
-            title: 'Accounts',
+            title: '----------',
         }, {
             icon: 'people',
             route: 'sales/contacts',
-            title: 'Contacts',
+            title: '----------',
         }, {
             icon: 'settings_phone',
             route: 'sales/leads',
-            title: 'Leads',
+            title: '----------',
         }, {
             icon: 'account_box',
             route: 'sales/opportunities',
-            title: 'Opportunities',
+            title: '----------',
         }
     ];
 
     equipmentRoutes: ROUTE[] = [
         {
             icon: 'router',
-            route: 'equipment',
-            title: 'Оборудование',
+            route: 'sales/equipment',
+            title: '----------',
         }
     ];
 

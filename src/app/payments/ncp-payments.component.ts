@@ -308,7 +308,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
 
     menuOnRowDistributeEquipment(paymentRow)  {
         this.paymentService.setPayment(paymentRow.id);
-        this.router.navigate(['payment'])
+        this.router.navigate(['payment/' + paymentRow.id]);
     }
 
 }

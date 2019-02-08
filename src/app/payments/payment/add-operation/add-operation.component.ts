@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {msisdnLength} from '../../../settings';
 import {PaymentService} from '../payment.service';
 import {PaymentDetail} from '../../model/payment-detail';
@@ -36,7 +36,7 @@ export class AddOperationComponent implements OnInit {
                     Validators.min(1),
                     Validators.max(1000000)
                 ]),
-        }, { validator: this.isAddValidator});
+        });
     }
 
     get msisdn() {
@@ -47,15 +47,15 @@ export class AddOperationComponent implements OnInit {
         return this.frmOperation.get('account');
     }
 
-    get sum()   {
+    get sum() {
         return this.frmOperation.get('sum');
     }
 
-    get details()   {
+    get details() {
         return this.paymentService.details;
     }
 
-    get payment()   {
+    get payment() {
         return this.paymentService.payment;
     }
 
@@ -68,7 +68,7 @@ export class AddOperationComponent implements OnInit {
         this.clearFields();
     }
 
-    clearFields()   {
+    clearFields() {
         this.clearAccount();
         this.clearMsisdn();
         this.clearSum();
@@ -90,16 +90,16 @@ export class AddOperationComponent implements OnInit {
         this.clearAccount();
     }
 
-    accountChanged()    {
+    accountChanged() {
         this.clearMsisdn();
     }
 
-    isAddValidator: ValidatorFn = () =>    {
-        return ((this.msisdn.value != '' &&  this.msisdn != null) && (this.sum.value != '' && this.sum.value != null) ||
-            (this.account.value != '' &&  this.account != null) && (this.sum.value != '' && this.sum.value != null));
+    isValidAddBtn() : boolean {
+        return ((this.msisdn.value != '' && this.msisdn != null) && (this.sum.value != '' && this.sum.value != null) ||
+            (this.account.value != '' && this.account != null) && (this.sum.value != '' && this.sum.value != null));
     }
 
-    isBlocked():boolean  {
+    isBlocked(): boolean {
         return this.paymentService.isBlocked();
     }
 

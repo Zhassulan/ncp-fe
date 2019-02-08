@@ -1,23 +1,29 @@
 <input type="file" #file style="display: none" (change)="onFileAdded()"/>
-<div class="container" fxLayout="column" fxLayoutAlign="space-evenly stretch">
-    <h1 mat-dialog-title>Загрузка файла</h1>
+<div class="container">
     <div>
-        <button mat-raised-button color="primary" class="add-files-btn" (click)="addFile()">
-            Открыть файл
-        </button>
+        <h1 mat-dialog-title>Загрузка файла</h1>
+        <div>
+            <button mat-raised-button color="primary" class="add-files-btn" (click)="addFile()">
+                Открыть файл
+            </button>
+        </div>
     </div>
-    <mat-dialog-content fxFlex>
-        <mat-list>
-            <mat-progress-bar mode="indeterminate" *ngIf="isWait"></mat-progress-bar>
-        </mat-list>
-        <mat-list>
-            <mat-list-item>
-                <h4 mat-line *ngIf="fileObj">{{ fileObj.name}}</h4>
-            </mat-list-item>
-        </mat-list>
-    </mat-dialog-content>
-    <mat-dialog-actions class="actions">
-        <button mat-raised-button color="primary" (click)="upload()" *ngIf="showUploadButton">Обработка</button>
-        <button mat-raised-button color="primary" [mat-dialog-close]="'cancel'">Отмена</button>
-    </mat-dialog-actions>
+    <div>
+        <mat-dialog-content fxFlex>
+            <mat-list>
+                <mat-progress-bar mode="indeterminate" *ngIf="isWait"></mat-progress-bar>
+            </mat-list>
+            <mat-list>
+                <mat-list-item>
+                    <h4 mat-line *ngIf="fileObj">{{ fileObj.name}}</h4>
+                </mat-list-item>
+            </mat-list>
+        </mat-dialog-content>
+    </div>
+    <div>
+        <mat-dialog-actions>
+            <button mat-raised-button color="primary" (click)="upload()" *ngIf="showUploadButton">Обработка</button>
+            <button mat-raised-button color="primary" [mat-dialog-close]="'cancel'">Отмена</button>
+        </mat-dialog-actions>
+    </div>
 </div>

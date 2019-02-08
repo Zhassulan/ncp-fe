@@ -4,7 +4,7 @@
             "topGap"
             "paymentItem";
     grid-template-rows: 10px auto;
-    grid-template-columns: 100%;
+    grid-template-columns: auto;
     justify-items: center;
     grid-gap: 10px;
 }
@@ -65,10 +65,8 @@
     grid-area: top1;
     align-self: center;
     justify-self: center;
-
 }
 
 .item-top2 {
     grid-area: top2;
 }
-

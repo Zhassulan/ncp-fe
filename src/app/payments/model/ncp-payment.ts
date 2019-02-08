@@ -31,6 +31,12 @@ export class NcpPayment {
     isChecked?: boolean;
     statusRu: string;
 
+
+    constructor() {
+        this.paymentId = 11;
+        this.creationDate = '11';
+    }
+
     public getId(): number {
         return this.id;
     }

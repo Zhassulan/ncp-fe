@@ -5,7 +5,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {PaymentService} from './payments/payment/payment.service';
 import {PaymentsService} from './payments/payments.service';
 import {Subscription} from 'rxjs';
-import {NotifService, NotifServiceService} from './notif/notif-service.service';
+import {NotifService} from './notif/notif-service.service';
 
 @Component({
     selector: 'app-root',

@@ -6,6 +6,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {msgs} from '../settings';
 import {NGXLogger} from 'ngx-logger';
 import {NotificationsService} from 'angular2-notifications';
+import {Utils} from '../utils';
 
 @Injectable()
 export class UploadFilePaymentService {
@@ -27,6 +28,8 @@ export class UploadFilePaymentService {
                 this.dataService.postFilePayment(formData).subscribe(
                     data => {
                         this.filePayment = data.data;
+                        console.log('Загружены данные из файла:\n');
+                        Utils.printObj(this.filePayment);
                         observer.next(true);
                     },
                     error2 => {

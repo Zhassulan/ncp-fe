@@ -1,12 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {PaymentService} from './payment.service';
 import {OperationsComponent} from './operations/operations.component';
 import {PaymentsService} from '../payments.service';
 import {msgType} from '../../settings';
 import {Subscription} from 'rxjs';
 import {NotifService} from '../../notif/notif-service.service';
-import {NcpPayment} from '../model/ncp-payment';
+import {switchMap} from 'rxjs-compat/operator/switchMap';
 
 @Component({
     selector: 'app-payment-view',
@@ -19,40 +19,38 @@ export class ViewPaymentComponent implements OnInit {
     @ViewChild(OperationsComponent) childOperationsComponent: OperationsComponent;
     subscription: Subscription; //для экранных уведомлений
 
-
-
     constructor(private router: Router,
                 private paymentService: PaymentService,
                 private paymentsService: PaymentsService,
-                private myNotifService: NotifService) {
+                private myNotifService: NotifService,
+                private route: ActivatedRoute) {
     }
 
     ngOnInit() {
         this.subscription = this.myNotifService.subscribe();
-        if (!this.paymentService.payment) {
-          this.router.navigate(['payments']);
-        }   else {
-            console.log('Открытие платежа ID ' + this.payment.id);
-            this.loadDetails();
-        }
-        //if (!this.paymentService.payment)
-          //  this.loadPaymentById(230631); //todo заблокировать 230633 - new, 230630 - distributed
+        //this.loadPaymentById(this.route.snapshot.params['id']); // todo разблокировать
+        this.loadPaymentByIdFake(this.route.snapshot.params['id']); // todo блокировать
     }
 
-    loadPaymentById(payment)   {
+    loadPaymentByIdFake(id)   {
         this.paymentsService.getSampleData().subscribe(()=>{
-            this.paymentService.setPayment(payment);
+            this.paymentService.setPayment(id);
             this.loadDetails();
-        })
+        });
     }
 
-    /*
-    goBack() {
-        this.router.navigate(['payments']);
+    loadPaymentById(id)  {
+        if (this.paymentsService.payments.length > 0)  {
+            this.paymentService.setPayment(id);
+            this.loadDetails();
+        }   else {
+            console.log('Отсутствуют платежи. Перенаправляю на загрузку.');
+            this.router.navigate(['payments']);
+        }
     }
-    */
 
     loadDetails() {
+        console.log('Загрузка деталей платежа');
         this.isWait = true;
         this.paymentService.getPaymentDetails(this.paymentService.payment.id).subscribe(
             () => {

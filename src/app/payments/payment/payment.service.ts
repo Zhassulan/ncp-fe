@@ -16,11 +16,12 @@ import {Equipment} from '../model/equipment';
 import {NotifService} from '../../notif/notif-service.service';
 import {PaymentParamEq} from '../model/payment-param-eq';
 import {DetailEquipment} from '../model/detail-equipment';
+import {Utils} from '../../utils';
 
 @Injectable()
 export class PaymentService {
 
-    payment: NcpPayment;
+    payment: NcpPayment = new NcpPayment();
     details: PaymentDetail [] = [];
     operations: Operation [] = [];
     equipments: Equipment [] = [];
@@ -40,13 +41,13 @@ export class PaymentService {
     }
 
     setPayment(id) {
+        console.log('Получение платежа ID ' + id + '..');
         this.payment = this.paymentsService.payments.find(x => x.id == id);
-        console.log('Выбран платёж ID ' + this.payment.id);
-        this.announcePayment();
-    }
-
-    print(obj)  {
-        console.log(JSON.stringify(obj));
+        if (this.payment)   {
+            this.announcePayment();
+        }   else {
+            console.log('Ошибка получения платежа.');
+        }
     }
 
     setPaymentByPayment(payment: NcpPayment)   {
@@ -98,6 +99,7 @@ export class PaymentService {
     }
 
     addDetailsFromFilePayment() {
+        console.log('Добавляются детали из файлового объекта в платёж сервиса\n');
         for (let item of this.items.slice(0, this.items.length - 1)) {
             let detail = new PaymentDetail();
             detail.nomenclature = item.nomenclature;
@@ -113,6 +115,8 @@ export class PaymentService {
         this.announceDetails();
         this.checkFilePayment();
         this.setEquipments();
+        console.log('Обновлённые детали платежа:\n');
+        Utils.printObj(this.details);
     }
 
     checkFilePayment()  {
@@ -137,7 +141,7 @@ export class PaymentService {
     }
 
     determineDistrStrategy(item: FilePaymentItem) {
-        if (item.nomenclature.trim().toLowerCase().includes(prepaid.toLowerCase()) && (item.account == null || item.account == '')) {
+        if (item.nomenclature.trim().toLowerCase().includes(prepaid.toLowerCase()) && (item.account == null || String(item.account) == '')) {
             return PaymentDistrStrategy.byMsisdn;
         } else
             return PaymentDistrStrategy.byAccount;
@@ -231,7 +235,7 @@ export class PaymentService {
             ncpDetail.err_message = detail.err_message;
             ncpDetail.distribute_date = detail.distribute_date;
             params.items.push(ncpDetail);
-        })
+        });
         this.paymentParam = params;
     }
 
@@ -257,7 +261,7 @@ export class PaymentService {
             ncpDetail.distribute_date = detail.distribute_date;
             let equipment: Equipment = this.createEquipmentByDetail(this.payment.id, detail);
             params.items.push(new DetailEquipment(ncpDetail, equipment));
-        })
+        });
         this.paymentParamEq = params;
     }
 
@@ -328,7 +332,7 @@ export class PaymentService {
             });
     }
 
-    isBlocked():boolean  {
+    isBlocked(): boolean  {
         let res: boolean =
             this.payment.status == PaymentStatus.STATUS_DISTRIBUTED ||
             this.payment.status == PaymentStatus.STATUS_EXPIRED ||
@@ -345,7 +349,7 @@ export class PaymentService {
         let sum = 0;
         this.details.forEach(detail => {
             sum += Number(detail.sum);
-        })
+        });
         return sum;
     }
 
