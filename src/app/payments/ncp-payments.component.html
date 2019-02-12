@@ -1,42 +1,44 @@
 <mat-progress-bar mode="indeterminate" *ngIf="isWait"></mat-progress-bar>
-<div ngClass="container">
-    <div ngClass="header">
-        <div ngClass="item">
-            <mat-form-field>
-                <input matInput [matDatepicker]="startDate" placeholder="Дата начала" [formControl]="pickerStartDate">
-                <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
-                <mat-datepicker #startDate></mat-datepicker>
-            </mat-form-field>
-        </div>
-        <div ngClass="item">
-            <mat-form-field>
-                <input matInput [matDatepicker]="endDate" placeholder="Дата окончания" [formControl]="pickerEndDate"
-                       (dateInput)="catchEndDatePickerEvent('input', $event)"
-                       (dateChange)="catchEndDatePickerEvent('change', $event)">
-                <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
-                <mat-datepicker #endDate></mat-datepicker>
-            </mat-form-field>
-        </div>
-        <div ngClass="item">
-            <button mat-raised-button color="primary" (click)="getData()"
-                    matTooltip="Загрузка данных за указанную дату">
-                Загрузка
-            </button>
-        </div>
-        <div ngClass="item">
-            <button mat-raised-button color="primary" (click)="toTransitSelected()" matBadge="{{selectedItems}}"
-                    matBadgePosition="before" matBadgeColor="accent" [matBadgeHidden]="!isBadgeVisible"
-                    matTooltip="Выделенные на транзитный счёт">Транзит
-            </button>
-        </div>
-        <div ngClass="search">
-            <mat-form-field>
-                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Поиск">
-                <mat-icon matSuffix>search</mat-icon>
-            </mat-form-field>
+<div class="mainContainer">
+    <div class="top">
+        <div ngClass="header">
+            <div ngClass="item">
+                <mat-form-field>
+                    <input matInput [matDatepicker]="startDate" placeholder="Дата начала" [formControl]="pickerStartDate">
+                    <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+                    <mat-datepicker #startDate></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div ngClass="item">
+                <mat-form-field>
+                    <input matInput [matDatepicker]="endDate" placeholder="Дата окончания" [formControl]="pickerEndDate"
+                           (dateInput)="catchEndDatePickerEvent('input', $event)"
+                           (dateChange)="catchEndDatePickerEvent('change', $event)">
+                    <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+                    <mat-datepicker #endDate></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div ngClass="item">
+                <button mat-raised-button color="primary" (click)="getData()"
+                        matTooltip="Загрузка данных за указанную дату">
+                    Загрузка
+                </button>
+            </div>
+            <div ngClass="item">
+                <button mat-raised-button color="primary" (click)="toTransitSelected()" matBadge="{{selectedItems}}"
+                        matBadgePosition="before" matBadgeColor="accent" [matBadgeHidden]="!isBadgeVisible"
+                        matTooltip="Выделенные на транзитный счёт">Транзит
+                </button>
+            </div>
+            <div ngClass="search">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Поиск">
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
         </div>
     </div>
-    <div ngClass="payments">
+    <div class="payments">
         <table mat-table [dataSource]="dataSource" matSort>
             <ng-container matColumnDef="ID">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>

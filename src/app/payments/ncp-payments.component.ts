@@ -13,6 +13,7 @@ import {UserService} from '../user/user.service';
 import {Router} from '@angular/router';
 import {PaymentService} from './payment/payment.service';
 import {NotificationsService} from 'angular2-notifications';
+import {environment} from '../../environments/environment';
 
 @Component({
     selector: 'app-ncp-payments',
@@ -83,10 +84,13 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
             this.dtEndDay.setHours(23, 59, 59, 999);
             this.pickerStartDate.setValue(this.dtStartDay);
             this.pickerEndDate.setValue(this.dtEndDay);
-            //загрузка платежей онлайн
-            this.getData();
-            //загрузка фейковых платежей
-            //this.getSampleData();
+            if (environment.production) {
+                //загрузка платежей с сервера - продуктивный режим
+                this.getData();
+            }   else    {
+                //загрузка платежей из JSON файла - лок режим разработки
+                this.getSampleData();
+            }
             this.dataSource.data = this.payments;
         } else {
             //в противном случае загружаем данные из сервиса, исключение повторного обращения к серверу

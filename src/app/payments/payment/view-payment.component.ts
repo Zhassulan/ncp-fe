@@ -6,7 +6,7 @@ import {PaymentsService} from '../payments.service';
 import {msgType} from '../../settings';
 import {Subscription} from 'rxjs';
 import {NotifService} from '../../notif/notif-service.service';
-import {switchMap} from 'rxjs-compat/operator/switchMap';
+import {environment} from '../../../environments/environment';
 
 @Component({
     selector: 'app-payment-view',
@@ -20,7 +20,7 @@ export class ViewPaymentComponent implements OnInit {
     subscription: Subscription; //для экранных уведомлений
 
     constructor(private router: Router,
-                private paymentService: PaymentService,
+                public paymentService: PaymentService,
                 private paymentsService: PaymentsService,
                 private myNotifService: NotifService,
                 private route: ActivatedRoute) {
@@ -28,8 +28,11 @@ export class ViewPaymentComponent implements OnInit {
 
     ngOnInit() {
         this.subscription = this.myNotifService.subscribe();
-        //this.loadPaymentById(this.route.snapshot.params['id']); // todo разблокировать
-        this.loadPaymentByIdFake(this.route.snapshot.params['id']); // todo блокировать
+        if (environment.production) {
+            this.loadPaymentById(this.route.snapshot.params['id']);
+        }   else {
+            this.loadPaymentByIdFake(this.route.snapshot.params['id']);
+        }
     }
 
     loadPaymentByIdFake(id)   {

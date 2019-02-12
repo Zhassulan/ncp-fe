@@ -4,6 +4,7 @@ export class PaymentParamEq {
 
     id: number;
     profileId: number;
+    agent: string;
     items: DetailEquipment [];
 
 }

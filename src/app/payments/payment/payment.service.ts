@@ -62,6 +62,8 @@ export class PaymentService {
 
     addNewDetail(detail: PaymentDetail) {
         this.details.push(detail);
+        console.log('Добавлена операция:\n');
+        Utils.printObj(detail);
         this.announceDetails();
     }
 
@@ -148,7 +150,10 @@ export class PaymentService {
     }
 
     determineDistrStrategyByDetail(detail: PaymentDetail) {
-        return (detail.account == null && (detail.msisdn != null || detail.msisdn != '')) ? PaymentDistrStrategy.byMsisdn : PaymentDistrStrategy.byAccount;
+        if (detail.account == null || String(detail.account) == '') {
+            return PaymentDistrStrategy.byMsisdn;
+        } else
+            return PaymentDistrStrategy.byAccount;
     }
 
     convertDbDetailToAppDetail(item: NcpPaymentDetails):PaymentDetail {
@@ -243,6 +248,7 @@ export class PaymentService {
         let params: PaymentParamEq = new PaymentParamEq();
         params.id = this.payment.id;
         params.profileId = this.payment.profileId;
+        params.agent = this.userService.getUserName();
         params.items = [];
         this.details.forEach(detail => {
             let ncpDetail = new NcpPaymentDetails();
@@ -259,8 +265,10 @@ export class PaymentService {
             ncpDetail.status = detail.status;
             ncpDetail.err_message = detail.err_message;
             ncpDetail.distribute_date = detail.distribute_date;
-            let equipment: Equipment = this.createEquipmentByDetail(this.payment.id, detail);
-            params.items.push(new DetailEquipment(ncpDetail, equipment));
+            if ((detail.nomenclature != null || detail.nomenclature != '') && (detail.icc != null || detail.icc != '')) {
+                let equipment: Equipment = this.createEquipmentByDetail(this.payment.id, detail);
+                params.items.push(new DetailEquipment(ncpDetail, equipment));
+            }
         });
         this.paymentParamEq = params;
     }
@@ -293,7 +301,7 @@ export class PaymentService {
         eq.icc = detail.icc;
         eq.msisdn = detail.msisdn;
         eq.nomenclature = detail.nomenclature;
-        eq.paymentDetailId = paymentId;
+        eq.paymentDetailId = null;
         return eq;
     }
 
@@ -352,6 +360,5 @@ export class PaymentService {
         });
         return sum;
     }
-
 
 }

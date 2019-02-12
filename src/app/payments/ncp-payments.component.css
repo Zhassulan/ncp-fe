@@ -1,14 +1,22 @@
-.container {
+.mainContainer {
     display: grid;
-    grid-template-rows: auto auto;
-    grid-template-columns: 1fr;
     grid-template-areas:
-            "header"
+            "top"
             "payments";
-    justify-self: center;
-    align-self: center;
+    grid-template-rows: 70px auto;
+    grid-template-columns: auto;
+    justify-items: stretch;
 }
 
+.top {
+    grid-area: top;
+}
+
+.payments {
+    grid-area: payments;
+}
+
+/* строка меню */
 .item {
     justify-self: center;
     align-self: center;
@@ -32,7 +40,6 @@
             "item item item item search"
             "payments payments payments payments payments";
     gap: 5px;
-    grid-gap: 5px;
 }
 
 .payments {

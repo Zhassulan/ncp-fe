@@ -64,6 +64,8 @@ export class AddOperationComponent implements OnInit {
         detail.msisdn = this.msisdn.value;
         detail.account = this.account.value;
         detail.sum = Number(this.sum.value);
+        detail.distrStrategy = this.paymentService.determineDistrStrategyByDetail(detail);
+        detail.status = PaymentStatus.STATUS_NEW;
         this.paymentService.addNewDetail(detail);
         this.clearFields();
     }

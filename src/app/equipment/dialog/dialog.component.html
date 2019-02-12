@@ -1,29 +1,23 @@
 <input type="file" #file style="display: none" (change)="onFileAdded()"/>
-<div class="container">
-    <div>
+
+<div class="mainContainer">
+    <div class="progress">
+        <mat-progress-bar mode="indeterminate" *ngIf="isWait"></mat-progress-bar>
+    </div>
+    <div class="title">
         <h1 mat-dialog-title>Загрузка файла</h1>
-        <div>
-            <button mat-raised-button color="primary" class="add-files-btn" (click)="addFile()">
-                Открыть файл
-            </button>
-        </div>
     </div>
-    <div>
-        <mat-dialog-content fxFlex>
-            <mat-list>
-                <mat-progress-bar mode="indeterminate" *ngIf="isWait"></mat-progress-bar>
-            </mat-list>
-            <mat-list>
-                <mat-list-item>
-                    <h4 mat-line *ngIf="fileObj">{{ fileObj.name}}</h4>
-                </mat-list-item>
-            </mat-list>
-        </mat-dialog-content>
+    <div class="fileName">
+        <h4 mat-dialog-title *ngIf="fileObj">{{ fileObj.name}}</h4>
     </div>
-    <div>
-        <mat-dialog-actions>
-            <button mat-raised-button color="primary" (click)="upload()" *ngIf="showUploadButton">Обработка</button>
-            <button mat-raised-button color="primary" [mat-dialog-close]="'cancel'">Отмена</button>
-        </mat-dialog-actions>
+    <div class="btnOpen">
+        <button mat-raised-button color="primary" class="add-files-btn" (click)="addFile()"> Открыть файл </button>
     </div>
+    <div class="btnProcess">
+        <button mat-raised-button color="primary" (click)="upload()" *ngIf="showUploadButton"> Обработка </button>
+    </div>
+    <div class="btnCancel">
+        <button mat-raised-button color="primary" [mat-dialog-close]="'cancel'"> Отмена </button>
+    </div>
+
 </div>

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {PaymentService} from '../payment.service';
 import {Subscription} from 'rxjs';
 import {NcpPayment} from '../../model/ncp-payment';
@@ -12,18 +12,13 @@ import {PaymentStatusRuPipe} from '../../payment-status-ru-pipe';
 export class InfoComponent implements OnInit {
 
     subscriptionPayment: Subscription;
-    payment: NcpPayment;
+    @Input() payment: NcpPayment;
     paymentStatusRuPipe: PaymentStatusRuPipe;
 
-    constructor(private paymentService: PaymentService) {
+    constructor() {
     }
 
     ngOnInit() {
-        this.payment = this.paymentService.payment;
-        this.subscriptionPayment = this.paymentService.paymentAnnounced$.subscribe(
-            payment => {
-                this.payment = payment;
-            });
     }
 
 }
