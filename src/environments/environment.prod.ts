@@ -21,4 +21,5 @@ export const environment = {
     urlNewEquipment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/newEquipment',
     urlGetPayment: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/payment',
     urlGetPaymentEquipments: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/equipments',
+    urlGetDealerInfoByIcc: 'https://b2b.tele2.kz/onlinebank/dataservice/exdata/dealerByIcc',
 };

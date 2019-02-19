@@ -13,6 +13,7 @@ export class UploadFilePaymentService {
 
     filePayment: FilePayment;
     formData;
+    utils = new Utils(this.logger);
 
     constructor(private dataService: DataService,
                 private logger: NGXLogger,
@@ -29,7 +30,7 @@ export class UploadFilePaymentService {
                     data => {
                         this.filePayment = data.data;
                         console.log('Загружены данные из файла:\n');
-                        Utils.printObj(this.filePayment);
+                        this.utils.printObj(this.filePayment);
                         observer.next(true);
                     },
                     error2 => {

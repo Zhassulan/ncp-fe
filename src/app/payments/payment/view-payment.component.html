@@ -4,31 +4,31 @@
 
     <div class="paymentItem">
         <mat-card>
-        <div class="container">
+            <div class="container">
 
-            <div class="item-header">
-                <div class="top">
-                    <div class="item-top1">
-                        <h1 class="mat-h1"><b># {{ payment.paymentId }} от {{ payment.creationDate | date }}</b></h1>
-                    </div>
-                    <div class="item-top2">
-                        <app-payment-menu [payment]="payment"></app-payment-menu>
+                <div class="item-header">
+                    <div class="top">
+                        <div class="item-top1">
+                            <h1 class="mat-h1"><b># {{ payment.paymentId }} от {{ payment.creationDate | date }}</b></h1>
+                        </div>
+                        <div class="item-top2">
+                            <app-payment-menu [payment]="payment"></app-payment-menu>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="item-c">
-                <app-payment-info [payment]="this.paymentService.payment"></app-payment-info>
-                <app-payment-add-operation></app-payment-add-operation>
-            </div>
-            <div class="item-d">
-                <app-payment-operations></app-payment-operations>
-            </div>
+                <div class="item-c">
+                    <app-payment-info [payment]="this.paymentService.payment"></app-payment-info>
+                    <app-payment-add-operation></app-payment-add-operation>
+                </div>
+                <div class="item-d">
+                    <app-payment-operations></app-payment-operations>
+                </div>
 
-            <!--<div class="item-e">footer</div>
-            <div class="item-footer1">footer1</div>
-            -->
+                <!--<div class="item-e">footer</div>
+                <div class="item-footer1">footer1</div>
+                -->
 
-        </div>
+            </div>
         </mat-card>
     </div>
 </div>

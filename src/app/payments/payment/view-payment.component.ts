@@ -27,8 +27,10 @@ export class ViewPaymentComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.paymentService.setPayment(this.route.snapshot.params['id']);
         this.subscription = this.myNotifService.subscribe();
-        if (environment.production) {
+
+        if (this.paymentsService.payments)  {
             this.loadPaymentById(this.route.snapshot.params['id']);
         }   else {
             this.loadPaymentByIdFake(this.route.snapshot.params['id']);
@@ -36,26 +38,26 @@ export class ViewPaymentComponent implements OnInit {
     }
 
     loadPaymentByIdFake(id)   {
-        this.paymentsService.getSampleData().subscribe(()=>{
-            this.paymentService.setPayment(id);
-            this.loadDetails();
+        console.log("Загрузка данных фейкового платежа.");
+        this.paymentsService.getSampleData().subscribe(()=> {
+            this.loadDetails(id);
         });
     }
 
     loadPaymentById(id)  {
+        console.log("Загрузка данных платежа.");
         if (this.paymentsService.payments.length > 0)  {
-            this.paymentService.setPayment(id);
-            this.loadDetails();
+            this.loadDetails(id);
         }   else {
             console.log('Отсутствуют платежи. Перенаправляю на загрузку.');
             this.router.navigate(['payments']);
         }
     }
 
-    loadDetails() {
+    loadDetails(id) {
         console.log('Загрузка деталей платежа');
         this.isWait = true;
-        this.paymentService.getPaymentDetails(this.paymentService.payment.id).subscribe(
+        this.paymentService.getPaymentDetails(id).subscribe(
             () => {
                 console.log('Загружены детали в количестве ' + this.paymentService.details.length);
             },

@@ -1,14 +1,18 @@
 import {DatePipe} from '@angular/common';
+import {NGXLogger} from 'ngx-logger';
 
 export class Utils {
+
+    constructor(private logger: NGXLogger) {
+    }
 
     static dateToLocalString(dt: string): string {
         let pipe = new DatePipe('ru-RU');
         return pipe.transform(new Date(dt)).toString()
     }
 
-    static printObj(obj)  {
-        console.log(JSON.stringify(obj));
+    printObj(obj)  {
+        this.logger.info(JSON.stringify(obj));
     }
 
 }

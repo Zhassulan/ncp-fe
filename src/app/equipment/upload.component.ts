@@ -15,7 +15,7 @@ export class UploadComponent {
     }
 
     public openUploadDialog() {
-        this.dialogRef = this.dialog.open(DialogComponent, {width: '50%', height: '30%'});
+        this.dialogRef = this.dialog.open(DialogComponent);
     }
 
 }

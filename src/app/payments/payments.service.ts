@@ -12,7 +12,6 @@ import {RestResponse} from '../data/rest-response';
 @Injectable()
 export class PaymentsService {
 
-
     payments = [];
     lastDateRange: DateRange;
     paginatorResultsLength: number;
@@ -155,6 +154,15 @@ export class PaymentsService {
                         observer.complete();
                     });
             });
+    }
+
+    /**
+     * Обновление платежа в списке сервиса (кеш) после разноски
+     * @param {number} paymentId
+     * @param {NcpPayment} paymentNewData
+     */
+    updatePaymentListItem(paymentId: number, paymentNewData: NcpPayment) {
+        this.payments.find(x => x.id == paymentId).status = paymentNewData.status;
     }
 
 }

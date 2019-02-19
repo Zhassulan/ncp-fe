@@ -80,20 +80,12 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         //если нет данных в сервисе, загружаем согласно текущей дате
         if (this.paymentsService.payments.length == 0) {
             //обработка установленной даты с начала и до конца
-            this.dtStartDay.setHours(0, 0, 0, 0);
-            this.dtEndDay.setHours(23, 59, 59, 999);
-            this.pickerStartDate.setValue(this.dtStartDay);
-            this.pickerEndDate.setValue(this.dtEndDay);
-            if (environment.production) {
-                //загрузка платежей с сервера - продуктивный режим
-                this.getData();
-            }   else    {
-                //загрузка платежей из JSON файла - лок режим разработки
-                this.getSampleData();
-            }
+            this.setDatePickers();
+            this.getData();
+            //this.getSampleData();
             this.dataSource.data = this.payments;
         } else {
-            //в противном случае загружаем данные из сервиса, исключение повторного обращения к серверу
+            //в противном случае загружаем данные из кеша сервиса, исключение повторного обращения к серверу
             if (this.paymentsService.lastDateRange) {
                 this.lastDateRange = this.paymentsService.lastDateRange;
                 this.dtStartDay.setTime(this.lastDateRange.startDate);
@@ -115,8 +107,17 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
     }
 
+    setDatePickers()    {
+        this.dtStartDay = new Date(this.pickerStartDate.value.getTime());
+        this.dtEndDay = new Date(this.pickerEndDate.value.getTime());
+        this.dtStartDay.setHours(0, 0, 0, 0);
+        this.dtEndDay.setHours(23, 59, 59, 999);
+        this.pickerStartDate.setValue(this.dtStartDay);
+        this.pickerEndDate.setValue(this.dtEndDay);
+    }
+
     onRowClicked(paymentRow) {
-        //console.log('Row clicked: ', paymentRow);
+        //this.menuOnRowOpenPayment(paymentRow);
     }
 
     /**
@@ -134,6 +135,8 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
      * загрузка платежей
      */
     getData() {
+        this.setDatePickers();
+        console.log("Загрузка данных за период " + this.pickerStartDate.value + " - " +  this.pickerEndDate.value);
         this.isWait = true;
         this.dataSource.data = [];
         let dr = new DateRange(this.pickerStartDate.value.getTime(), this.pickerEndDate.value.getTime());
@@ -310,7 +313,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.deleteTransit(paymentRow);
     }
 
-    menuOnRowDistributeEquipment(paymentRow)  {
+    menuOnRowOpenPayment(paymentRow)  {
         this.paymentService.setPayment(paymentRow.id);
         this.router.navigate(['payment/' + paymentRow.id]);
     }

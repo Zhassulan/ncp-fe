@@ -1,7 +1,7 @@
 import {NgxLoggerLevel} from 'ngx-logger';
 
 export const environment = {
-    production: true,
+    production: false,
     logging: {
         level: NgxLoggerLevel.DEBUG,
         serverLogLevel: NgxLoggerLevel.DEBUG,
@@ -21,4 +21,5 @@ export const environment = {
     urlNewEquipment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/newEquipment',
     urlGetPayment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/payment',
     urlGetPaymentEquipments: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/equipments',
+    urlGetDealerInfoByIcc: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/dealerByIcc',
 };

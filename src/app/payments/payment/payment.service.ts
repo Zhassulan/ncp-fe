@@ -31,6 +31,7 @@ export class PaymentService {
     paymentAnnounced$ = this.paymentObs.asObservable();
     paymentParam: PaymentParam;
     paymentParamEq: PaymentParamEq;
+    utils = new Utils(this.logger);
 
     constructor(private paymentsService: PaymentsService,
                 private uploadFilePaymentService: UploadFilePaymentService,
@@ -43,19 +44,19 @@ export class PaymentService {
     setPayment(id) {
         console.log('Получение платежа ID ' + id + '..');
         this.payment = this.paymentsService.payments.find(x => x.id == id);
-        if (this.payment)   {
+        if (this.payment) {
             this.announcePayment();
-        }   else {
+        } else {
             console.log('Ошибка получения платежа.');
         }
     }
 
-    setPaymentByPayment(payment: NcpPayment)   {
+    setPaymentByPayment(payment: NcpPayment) {
         this.payment = payment;
         this.announcePayment();
     }
 
-    setPaymentStatus(status: number)  {
+    setPaymentStatus(status: number) {
         this.payment.status = status;
         this.announcePayment();
     }
@@ -63,7 +64,7 @@ export class PaymentService {
     addNewDetail(detail: PaymentDetail) {
         this.details.push(detail);
         console.log('Добавлена операция:\n');
-        Utils.printObj(detail);
+        this.utils.printObj(detail);
         this.announceDetails();
     }
 
@@ -118,10 +119,10 @@ export class PaymentService {
         this.checkFilePayment();
         this.setEquipments();
         console.log('Обновлённые детали платежа:\n');
-        Utils.printObj(this.details);
+        this.utils.printObj(this.details);
     }
 
-    checkFilePayment()  {
+    checkFilePayment() {
         if (!this.checkTotalSum()) {
             this.myNotifService.add(msgType.warn, msgs.msgErrTotalSum);
         }
@@ -131,15 +132,6 @@ export class PaymentService {
         if (!this.checkRnn()) {
             this.myNotifService.add(msgType.warn, msgs.msgErrRnn);
         }
-    }
-
-    printDetails(details)  {
-        console.log('Details after adding from file payment:\n');
-        console.log('------------------------');
-        details.forEach(item => {
-           console.log(item);
-        });
-        console.log('------------------------');
     }
 
     determineDistrStrategy(item: FilePaymentItem) {
@@ -156,7 +148,8 @@ export class PaymentService {
             return PaymentDistrStrategy.byAccount;
     }
 
-    convertDbDetailToAppDetail(item: NcpPaymentDetails):PaymentDetail {
+    convertDbDetailToAppDetail(item: NcpPaymentDetails): PaymentDetail {
+        console.log("Конвертирование деталей платежа в расширенный формат.");
         let detail = new PaymentDetail();
         detail.id = item.id;
         detail.msisdn = item.msisdn;
@@ -171,14 +164,15 @@ export class PaymentService {
         return detail;
     }
 
-    setDetailsFromDbDetails(details: NcpPaymentDetails [])   {
+    setDetailsFromDbDetails(details: NcpPaymentDetails []) {
         this.details = [];
         details.forEach(item => {
             this.details.push(this.convertDbDetailToAppDetail(item));
-        })
+        });
     }
 
     getPaymentDetails(paymentId): Observable<any> {
+        console.log("Получаю детали платежа ID " + paymentId);
         return new Observable(
             observer => {
                 this.dataService.getPaymentDetails(paymentId).subscribe(data => {
@@ -187,12 +181,12 @@ export class PaymentService {
                             data.data.forEach(item => {
                                 this.details.push(this.convertDbDetailToAppDetail(item));
                             });
-                            this.getPaymentEquipments(this.payment.id).subscribe(
+                            this.getPaymentEquipments(paymentId).subscribe(
                                 data => {
-                                observer.next()
+                                    observer.next();
                                 },
                                 error2 => {
-                                observer.error(error2);
+                                    observer.error(error2);
                                 });
                             this.announceDetails();
                             observer.next();
@@ -218,33 +212,8 @@ export class PaymentService {
         return this.dataService.distributePayment(this.paymentParamEq);
     }
 
-
-    preparePaymentParamsOld() {
-        let params: PaymentParam = new PaymentParam();
-        params.id = this.payment.id;
-        params.profileId = this.payment.profileId;
-        params.items = [];
-        this.details.forEach(detail => {
-            let ncpDetail = new NcpPaymentDetails();
-            ncpDetail.id = detail.id;
-            ncpDetail.msisdn = detail.msisdn;
-            ncpDetail.account = detail.account;
-            ncpDetail.sum = detail.sum;
-            if (detail.distrStrategy == PaymentDistrStrategy.byAccount) {
-                ncpDetail.msisdn = null;
-            }
-            if (detail.distrStrategy == PaymentDistrStrategy.byMsisdn) {
-                ncpDetail.account = null;
-            }
-            ncpDetail.status = detail.status;
-            ncpDetail.err_message = detail.err_message;
-            ncpDetail.distribute_date = detail.distribute_date;
-            params.items.push(ncpDetail);
-        });
-        this.paymentParam = params;
-    }
-
     preparePaymentParams() {
+        this.logger.info("Подготавливаются параметры для разноски.")
         let params: PaymentParamEq = new PaymentParamEq();
         params.id = this.payment.id;
         params.profileId = this.payment.profileId;
@@ -271,6 +240,8 @@ export class PaymentService {
             }
         });
         this.paymentParamEq = params;
+        this.logger.info("Параметр для разноски:\n");
+        this.utils.printObj(this.paymentParamEq);
     }
 
     getPaymentData(id): Observable<any> {
@@ -308,11 +279,11 @@ export class PaymentService {
     setEquipments() {
         this.equipments = [];
         this.details.forEach(item => {
-           this.equipments.push(this.createEquipmentByDetail(this.payment.id, item));
+            this.equipments.push(this.createEquipmentByDetail(this.payment.id, item));
         });
     }
 
-    setEquipmentsInDetails(equipments: Equipment [])    {
+    setEquipmentsInDetails(equipments: Equipment []) {
         equipments.forEach(equipment => {
             let detail = this.details.find(x => x.id == equipment.paymentDetailId);
             detail.id = equipment.id;
@@ -327,20 +298,22 @@ export class PaymentService {
             observer => {
                 this.dataService.getPaymentEquipments(id).subscribe(
                     data => {
-                        if (data.result == rests.restResultOk)  {
+                        if (data.result == rests.restResultOk) {
                             this.setEquipmentsInDetails(data.data);
                         }
-                        if (data.result == rests.restResultErrDb)  {
+                        if (data.result == rests.restResultErrDb) {
                             observer.error(data);
                         }
                     },
-                    error2 => {},
-                    ()=> {}
-                )
+                    error2 => {
+                    },
+                    () => {
+                    }
+                );
             });
     }
 
-    isBlocked(): boolean  {
+    isBlocked(): boolean {
         let res: boolean =
             this.payment.status == PaymentStatus.STATUS_DISTRIBUTED ||
             this.payment.status == PaymentStatus.STATUS_EXPIRED ||
@@ -348,7 +321,7 @@ export class PaymentService {
         return res;
     }
 
-    isCurrentSumValid():boolean  {
+    isCurrentSumValid(): boolean {
         console.log('Сравнивается суммы ' + this.getDetailsSum() + ' == ' + this.payment.sum);
         return this.getDetailsSum() == this.payment.sum;
     }

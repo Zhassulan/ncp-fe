@@ -5,8 +5,8 @@
             "paymentItem";
     grid-template-rows: 10px auto;
     grid-template-columns: auto;
+    grid-gap: 5px;
     justify-items: center;
-    grid-gap: 10px;
 }
 
 .topGap {
@@ -28,7 +28,6 @@
             "footer footer footer1 footer1";
     justify-items: stretch;
     align-self: start;
-    justify-self: center;
 }
 
 .item-header {

@@ -13,10 +13,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         setTimeout(() => {
-            const dialogRef = this.dialog.open(LoginComponent, {
-                width: '18%',
-                height: '30%'
-            });
+            const dialogRef = this.dialog.open(LoginComponent);
         }, 0);
     }
 

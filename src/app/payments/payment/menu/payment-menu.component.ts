@@ -11,6 +11,7 @@ import {Utils} from '../../../utils';
 import {Observable, Subscription} from 'rxjs';
 import {PaymentDetail} from '../../model/payment-detail';
 import {NotifService} from '../../../notif/notif-service.service';
+import {PaymentsService} from '../../payments.service';
 
 @Component({
     selector: 'app-payment-menu',
@@ -29,7 +30,8 @@ export class PaymentMenuComponent implements OnInit {
                 private dialogService: DialogService,
                 private logger: NGXLogger,
                 private userService: UserService,
-                private myNotifService: NotifService) {
+                private myNotifService: NotifService,
+                private paymentsService: PaymentsService) {
     }
 
     ngOnInit() {
@@ -78,6 +80,8 @@ export class PaymentMenuComponent implements OnInit {
                     this.paymentService.setPaymentByPayment(distributeRes.data);
                     msg = msgs.msgSuccessDistributed + 'ID платежа ' + this.paymentId+ this.userService.logUser();
                     this.dialogService.addItem(null, msg);
+                    //обновление платежа в кеш списке сервиса
+                    this.paymentsService.updatePaymentListItem(this.paymentId, distributeRes.data);
                 }
                 if (distributeRes.result == rests.restResultErrDb) {
                     msg = msgs.msgErrDistributePayment + ' ID платежа ' + this.paymentId + '. ' + distributeRes.data + ' (' + distributeRes.result + ')' + this.userService.logUser();
