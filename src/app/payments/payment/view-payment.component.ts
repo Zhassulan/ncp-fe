@@ -4,9 +4,9 @@ import {PaymentService} from './payment.service';
 import {OperationsComponent} from './operations/operations.component';
 import {PaymentsService} from '../payments.service';
 import {msgType} from '../../settings';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {NotifService} from '../../notif/notif-service.service';
-import {environment} from '../../../environments/environment';
+import {concat} from 'rxjs/observable/concat';
 
 @Component({
     selector: 'app-payment-view',
@@ -15,9 +15,10 @@ import {environment} from '../../../environments/environment';
 })
 export class ViewPaymentComponent implements OnInit {
 
-    isWait: boolean = true; //полоса прогресса
+    isWait: boolean;
     @ViewChild(OperationsComponent) childOperationsComponent: OperationsComponent;
-    subscription: Subscription; //для экранных уведомлений
+    progressSubscription: Subscription; //для экранных уведомлений
+    paymentId: number;
 
     constructor(private router: Router,
                 public paymentService: PaymentService,
@@ -26,52 +27,32 @@ export class ViewPaymentComponent implements OnInit {
                 private route: ActivatedRoute) {
     }
 
-    ngOnInit() {
-        this.paymentService.setPayment(this.route.snapshot.params['id']);
-        this.subscription = this.myNotifService.subscribe();
-
-        if (this.paymentsService.payments)  {
-            this.loadPaymentById(this.route.snapshot.params['id']);
-        }   else {
-            this.loadPaymentByIdFake(this.route.snapshot.params['id']);
-        }
-    }
-
-    loadPaymentByIdFake(id)   {
-        console.log("Загрузка данных фейкового платежа.");
-        this.paymentsService.getSampleData().subscribe(()=> {
-            this.loadDetails(id);
-        });
-    }
-
-    loadPaymentById(id)  {
-        console.log("Загрузка данных платежа.");
-        if (this.paymentsService.payments.length > 0)  {
-            this.loadDetails(id);
-        }   else {
-            console.log('Отсутствуют платежи. Перенаправляю на загрузку.');
-            this.router.navigate(['payments']);
-        }
-    }
-
-    loadDetails(id) {
-        console.log('Загрузка деталей платежа');
-        this.isWait = true;
-        this.paymentService.getPaymentDetails(id).subscribe(
-            () => {
-                console.log('Загружены детали в количестве ' + this.paymentService.details.length);
-            },
-            error2 => {
-                this.isWait = false;
-                this.myNotifService.add(msgType.error, error2);
-            },
-            () => {
-                this.isWait = false;
-            });
-    }
-
-    get payment()   {
+    get payment() {
         return this.paymentService.payment;
+    }
+
+    ngOnInit() {
+        this.paymentId = this.route.snapshot.params['id'];
+        this.progressSubscription = this.paymentsService.progressAnnounced$.subscribe(
+            data => {
+                this.isWait = data;
+            });
+        this.loadPayment();
+    }
+
+    loadPayment() {
+        this.paymentsService.setProgress(true);
+        let first = this.paymentService.loadPayment(this.paymentId);
+        let second = this.paymentService.getPaymentDetails(this.paymentId);
+        const result = concat(first, second);
+        result.subscribe(
+            data => {
+            }, error => {
+                this.paymentsService.setProgress(false);
+                this.myNotifService.add(msgType.error, error);
+            }, () => {
+                this.paymentsService.setProgress(false);
+            });
     }
 
 }

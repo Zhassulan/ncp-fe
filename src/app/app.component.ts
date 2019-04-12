@@ -2,10 +2,6 @@ import {Title} from '@angular/platform-browser';
 import {Component, ViewEncapsulation, AfterViewInit, OnInit} from '@angular/core';
 import {appVer, locStorItems, msgType} from './settings';
 import {NotificationsService} from 'angular2-notifications';
-import {PaymentService} from './payments/payment/payment.service';
-import {PaymentsService} from './payments/payments.service';
-import {Subscription} from 'rxjs';
-import {NotifService} from './notif/notif-service.service';
 
 @Component({
     selector: 'app-root',
@@ -22,7 +18,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.titleService.setTitle(this.title);
     }
 
-    ngOnInit(): void {    }
+    ngOnInit(): void { }
 
     ngAfterViewInit() {
         //localStorage.clear();

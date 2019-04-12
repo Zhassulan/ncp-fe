@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, enableProdMode, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {Router} from '@angular/router';
 import {MatDialogRef} from '@angular/material';
@@ -6,6 +6,7 @@ import {User} from '../model/user';
 import {ldapGroups, rests, msgs, locStorItems} from '../../settings';
 import {NGXLogger} from 'ngx-logger';
 import {NotificationsService} from 'angular2-notifications';
+import {environment} from '../../../environments/environment';
 
 @Component({
     selector: 'app-login',
@@ -31,7 +32,11 @@ export class LoginComponent implements OnInit {
     }
 
     login() {
-        let userObj = new User (this.userName, this.userPassword, ldapGroups.tele2users);
+        let checkLdapGroup = ldapGroups.tele2users;
+        if (environment.production) {
+            checkLdapGroup = ldapGroups.managers;
+        }
+        let userObj = new User (this.userName, this.userPassword, checkLdapGroup);
         //проверка логина и пароля
         this.authService.login(userObj).subscribe(data => {
                 if (data.result == rests.restResultOk) {

@@ -22,4 +22,5 @@ export const environment = {
     urlGetPayment: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/payment',
     urlGetPaymentEquipments: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/equipments',
     urlGetDealerInfoByIcc: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/dealerByIcc',
+    urlPaymentsByPage: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/ncpPaymentsByPage'
 };

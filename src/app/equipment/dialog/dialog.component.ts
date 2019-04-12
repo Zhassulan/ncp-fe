@@ -2,6 +2,11 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef} from '@angular/material';
 import {UploadFilePaymentService} from '../upload-file-payment.service';
 import {PaymentService} from '../../payments/payment/payment.service';
+import {PaymentsService} from '../../payments/payments.service';
+import * as XLSX from 'xlsx';
+import {forEach} from '@angular/router/src/utils/collection';
+
+type AOA = any[][];
 
 @Component({
     selector: 'app-dialog',
@@ -10,10 +15,14 @@ import {PaymentService} from '../../payments/payment/payment.service';
 })
 export class DialogComponent implements OnInit {
 
+    data: AOA = [ [1, 2], [3, 4] ];
+    wopts: XLSX.WritingOptions = { bookType: 'xlsx', type: 'array' };
+    fileName: string = 'SheetJS.xlsx';
+
     @ViewChild('file') file;
     fileObj: File;
-    isWait: boolean = true;
     showUploadButton: boolean = false;
+    isWait = false;
 
     constructor(public dialogRef: MatDialogRef<DialogComponent>,
                 private uploadService: UploadFilePaymentService,
@@ -21,10 +30,9 @@ export class DialogComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.isWait = false;
     }
 
-    onFileAdded() {
+    onFileAdded()   {
         const files: { [key: string]: File } = this.file.nativeElement.files;
         for (let key in files) {
             if (!isNaN(parseInt(key))) {
@@ -32,6 +40,48 @@ export class DialogComponent implements OnInit {
                 this.showUploadButton = true;
             }
         }
+    }
+
+    /**
+     *  перехват обновления файла и парсинг путем SheetJS
+     * @param evt
+     */
+    onFileAddedBYEvent(evt: any) {
+        const target: DataTransfer = <DataTransfer>(evt.target);
+        if (target.files.length !== 1) throw new Error('Cannot use multiple files');
+        const reader: FileReader = new FileReader();
+        reader.onload = (e: any) => {
+            /* read workbook */
+            const bstr: string = e.target.result;
+            const wb: XLSX.WorkBook = XLSX.read(bstr, {type: 'binary'});
+
+            /* grab first sheet */
+            const wsname: string = wb.SheetNames[0];
+            const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+            /* save data */
+            this.data = <AOA>(XLSX.utils.sheet_to_json(ws, {header: 1}));
+            console.log('Excel data: ' + this.data);
+            this.parseArrayToObject(this.data)
+        };
+        reader.readAsBinaryString(target.files[0]);
+    }
+
+    parseArrayToObject(arr) {
+
+    }
+
+    to_csv(workbook) {
+        var result = [];
+        workbook.SheetNames.forEach(function(sheetName) {
+            var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+            if(csv.length){
+                result.push("SHEET: " + sheetName);
+                result.push("");
+                result.push(csv);
+            }
+        });
+        return result.join("\n");
     }
 
     addFile() {
@@ -42,14 +92,12 @@ export class DialogComponent implements OnInit {
         this.isWait = true;
         this.uploadService.upload(this.fileObj).subscribe(
             data => {
-                this.isWait = false;
-                //this.router.navigate(['filePayment']);
                 if (this.paymentService.payment)
                     this.paymentService.addDetailsFromFilePayment();
                 this.dialogRef.close();
             },
             error2 => {
-                this.isWait = false;
+                //this.paymentsService.setProgress(false);
             },
             () => {
                 this.isWait = false;

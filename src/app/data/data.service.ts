@@ -39,6 +39,15 @@ export class DataService {
     }
 
     /**
+     * Получить все платежи NCP
+     * @param {DateRange} dr
+     * @returns {Observable<NcpPayment[]>}
+     */
+    getNcpPaymentsByPart(dr: DateRange): Observable <NcpPayment []> {
+        return this._http.post<NcpPayment []>(environment.urlGetNcpPaymentsRange, dr, httpOptions).catch(this.errorHandler);
+    }
+
+    /**
      * Получить платежи из файла (быстрее для отладки), предварительно можно заготовить за какой день выгрузив из getNcpPayments
      * @returns {Observable<any>}
      */
@@ -154,6 +163,11 @@ export class DataService {
      */
     getDealerInfo(icc: string): Observable<RestResponse>   {
         return this._http.post<RestResponse>(environment.urlGetDealerInfoByIcc + '?icc=' + icc, httpOptions).catch(this.errorHandler);
+    }
+
+    getPaymentsByPage(startDate, endDate, page, offset): Observable<RestResponse>   {
+        return this._http.post<RestResponse>(environment.urlPaymentsByPage + '?start_date=' + startDate + '&end_date=' + endDate + '&page=' + page +
+            '&offset=' + offset, httpOptions).catch(this.errorHandler);
     }
 
 }

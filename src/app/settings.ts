@@ -26,6 +26,19 @@ export enum PaymentStatusRu {
     'Ошибка разнесения с тразитного счёта'
 }
 
+export enum PaymentStatusEnRu {
+    'STATUS_NEW' = 'Новый',
+    'STATUS_DISTRIBUTED' = 'Разнесён',
+    'STATUS_ERROR' = 'Ошибка',
+    'STATUS_EXPIRED' = 'Просрочен',
+    'STATUS_DELETED' = 'Удалён',
+    'STATUS_SCHEDULED' = 'Запланирован',
+    'STATUS_TRANSIT' = 'На транзитном счёте',
+    'STATUS_TRANSIT_DISTRIBUTED' = 'Разнесён с транзитного счёта',
+    'STATUS_TRANSIT_CANCELLED' = 'Удалён с транзитного счёта',
+    'STATUS_TRANSIT_ERROR' = 'Ошибка разнесения с тразитного счёта'
+}
+
 export const shrinkDetailsColumnSize: number = 200;
 
 export const httpOptions = {
@@ -35,7 +48,9 @@ export const httpOptions = {
 };
 
 export const ldapGroups = {
-    tele2users: 'itdev-ncp-user-tele2'
+    tele2users: 'itdev-ncp-user-tele2',
+    managers: 'itdev-ncp-newapp-managers',
+    testers: 'itdev-ncp-newapp-testers'
 };
 
 export const roles = {
@@ -43,7 +58,10 @@ export const roles = {
         ldapGroups.tele2users,
     ],
     finance: [
-        ldapGroups.tele2users
+        ldapGroups.managers
+    ],
+    test: [
+        ldapGroups.testers
     ]
 };
 

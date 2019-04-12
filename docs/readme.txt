@@ -1,2 +1,8 @@
 Сборка для тестовой среды на сервере
-ng build --configuration=staging --base-href /ncp-frontend/
+
+Тест
+ng build --configuration=staging --base-href /ncp-frontend/ --output-hashing=all
+
+Прод
+ng build --configuration=production --base-href /ncp-frontend/ --output-hashing=all
+

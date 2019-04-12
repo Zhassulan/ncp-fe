@@ -14,6 +14,7 @@ import {Router} from '@angular/router';
 import {PaymentService} from './payment/payment.service';
 import {NotificationsService} from 'angular2-notifications';
 import {environment} from '../../environments/environment';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-ncp-payments',
@@ -22,8 +23,6 @@ import {environment} from '../../environments/environment';
 })
 
 export class NcpPaymentsComponent implements OnInit, AfterViewInit {
-    //локальная коллекия платежей - синхронизируется  с сервисной коллекцией
-    payments = [];
     //отображаемые в таблице колонки
     displayedColumns = [
         'ID',
@@ -41,8 +40,6 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
     //источник данных для таблицы
     dataSource = new MatTableDataSource<NcpPayment>();
-    //индикатор полосы прогресса\загрузки
-    isWait = true;
     //общее количество для пагинации
     paginatorResultsLength: number;
     //выбранные в таблице модели
@@ -56,11 +53,11 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     selectedItems: number = 0;
     //обрезка больших текстов в деталях\назначение платежа
     shrinkDetailsColumnSize = shrinkDetailsColumnSize;
-    //объект диапазон дат
-    lastDateRange: DateRange;
     //даты начала и конца дня
     dtStartDay: Date;
     dtEndDay: Date;
+    progressSubscription: Subscription;
+    isWait: boolean;
 
     constructor(private dataService: DataService,
                 private dialogService: DialogService,
@@ -70,34 +67,24 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
                 private router: Router,
                 private paymentService: PaymentService,
                 private notifService: NotificationsService) {
-        this.dataSource = new MatTableDataSource(this.payments);
+
+        this.dataSource = new MatTableDataSource(this.paymentsService.payments);
         this.dtStartDay = new Date();
         this.dtEndDay = new Date();
         this.paginatorResultsLength = 0;
+        this.progressSubscription = this.paymentsService.progressAnnounced$.subscribe(
+            data => {
+                this.isWait = data;
+            });
     }
 
     ngOnInit() {
-        //если нет данных в сервисе, загружаем согласно текущей дате
-        if (this.paymentsService.payments.length == 0) {
-            //обработка установленной даты с начала и до конца
-            this.setDatePickers();
-            this.getData();
-            //this.getSampleData();
-            this.dataSource.data = this.payments;
-        } else {
-            //в противном случае загружаем данные из кеша сервиса, исключение повторного обращения к серверу
-            if (this.paymentsService.lastDateRange) {
-                this.lastDateRange = this.paymentsService.lastDateRange;
-                this.dtStartDay.setTime(this.lastDateRange.startDate);
-                this.dtEndDay.setTime(this.lastDateRange.endDate);
-                this.pickerStartDate.setValue(this.dtStartDay);
-                this.pickerEndDate.setValue(this.dtEndDay);
-            }
-            this.payments = this.paymentsService.payments;
-            this.dataSource.data = [];
-            this.dataSource.data = this.payments;
-            this.isWait = false;
-        }
+        this.setTimeBoundariesForDatePickers();
+        this.setCalendarToDate('2019-01-03T00:00:00', '2019-01-03T23:59:59');
+        this.getData();
+        //this.getSampleData();
+        this.dataSource.data = [];
+        this.dataSource.data = this.paymentsService.payments;
     }
 
     ngAfterViewInit() {
@@ -105,9 +92,13 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+
     }
 
-    setDatePickers()    {
+    /**
+     *  Установить границы времени для календарей диапазона дат
+     */
+    setTimeBoundariesForDatePickers()    {
         this.dtStartDay = new Date(this.pickerStartDate.value.getTime());
         this.dtEndDay = new Date(this.pickerEndDate.value.getTime());
         this.dtStartDay.setHours(0, 0, 0, 0);
@@ -132,44 +123,39 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * загрузка платежей
+     * загрузка платежей с сервера
      */
     getData() {
-        this.setDatePickers();
-        console.log("Загрузка данных за период " + this.pickerStartDate.value + " - " +  this.pickerEndDate.value);
-        this.isWait = true;
+        this.paymentsService.setProgress(true);
         this.dataSource.data = [];
         let dr = new DateRange(this.pickerStartDate.value.getTime(), this.pickerEndDate.value.getTime());
-        this.paymentsService.lastDateRange = dr;
         this.paymentsService.getData(dr).subscribe(data => {
-                this.payments = data;
-                this.dataSource.data = this.payments;
+                this.dataSource.data = data;
                 this.paymentsService.paginatorResultsLength = this.paginatorResultsLength;
             },
             error2 => {
                 this.notifService.error(msgs.msgErrLoadData + ' ' + error2);
-                this.isWait = false;
+                this.paymentsService.setProgress(false);
             },
             () => {
-                this.isWait = false;
+                this.paymentsService.setProgress(false);
             });
     }
 
     /**
-     * загрузка платежей (фейковые данные) из json файла в папке assets (режим разработки/отладки, чтобы быстро загрузить данные)
+     * загрузка платежей из json файла в папке assets (режим разработки/отладки, чтобы быстро загрузить данные)
      */
     getSampleData() {
-        this.isWait = true;
+        this.paymentsService.setProgress(true);
         this.dataSource.data = [];
         this.paymentsService.getSampleData().subscribe(data => {
-            this.payments = data;
-            this.dataSource.data = this.payments;
+            this.dataSource.data = data;
             this.paymentsService.paginatorResultsLength = this.paginatorResultsLength;
         }, error2 => {
             this.notifService.error(msgs.msgErrLoadData + ' ' + error2);
-            this.isWait = false;
+            this.paymentsService.setProgress(false);
         }, () => {
-            this.isWait = false;
+            this.paymentsService.setProgress(false);
         });
     }
 
@@ -316,6 +302,17 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     menuOnRowOpenPayment(paymentRow)  {
         this.paymentService.setPayment(paymentRow.id);
         this.router.navigate(['payment/' + paymentRow.id]);
+    }
+
+    setCalendarToDate(startDate, endDate) {
+        let dtStartDay = new Date(startDate);
+        let dtEndDay = new Date(endDate);
+        dtStartDay.setHours(0, 0, 0, 0);
+        dtEndDay.setHours(23, 59, 59, 999);
+        console.log(dtStartDay);
+        console.log(dtEndDay);
+        this.pickerStartDate.setValue(dtStartDay);
+        this.pickerEndDate.setValue(dtEndDay);
     }
 
 }

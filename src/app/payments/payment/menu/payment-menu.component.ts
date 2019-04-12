@@ -47,7 +47,7 @@ export class PaymentMenuComponent implements OnInit {
     }
 
     openFileDialog() {
-        this.dialogRef = this.dialog.open(DialogComponent, {width: '30%', height: '30%'});
+        this.dialogRef = this.dialog.open(DialogComponent, {width: 'auto', height: '30%'});
         this.dialogRef.afterClosed().subscribe(result => {
             if (result != 'cancel') {
 

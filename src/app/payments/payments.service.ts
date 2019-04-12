@@ -3,7 +3,7 @@ import {DataService} from '../data/data.service';
 import {NGXLogger} from 'ngx-logger';
 import {DateRange} from '../data/date-range';
 import {locStorItems, msgs, PaymentStatusRu, rests} from '../settings';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {UserService} from '../user/user.service';
 import {NcpPayment} from './model/ncp-payment';
 import {RawPayment} from './model/raw-payment';
@@ -12,15 +12,21 @@ import {RestResponse} from '../data/rest-response';
 @Injectable()
 export class PaymentsService {
 
-    payments = [];
-    lastDateRange: DateRange;
+    payments = []; // платежи
     paginatorResultsLength: number;
     newRawPayment: RawPayment = new RawPayment();
     newNcpPayment: NcpPayment = new NcpPayment();
+    isWait = false; //полоса прогресса
+    private progressObs = new Subject<boolean>();
+    progressAnnounced$ = this.progressObs.asObservable();
 
     constructor(private dataService: DataService,
                 private logger: NGXLogger,
                 private userService: UserService) {
+    }
+
+    setProgress(boolVal: boolean)   {
+        this.progressObs.next(boolVal);
     }
 
     getData(dr: DateRange): Observable<any> {
@@ -63,10 +69,21 @@ export class PaymentsService {
         payment.statusRu = PaymentStatusRu[payment.status];
     }
 
+    setStatusRuOrigin(payment) {
+        payment.status = PaymentStatusRu[payment.status];
+    }
+
     updateStatusRu() {
         this.payments.forEach(payment => {
             this.setStatusRu(payment);
         });
+    }
+
+    updateStatusRuOrigin(payments): NcpPayment [] {
+        payments.forEach(payment => {
+            this.setStatusRuOrigin(payment);
+        });
+        return payments;
     }
 
     toTransit(paymentId): Observable<any> {
@@ -144,7 +161,7 @@ export class PaymentsService {
                             observer.next(data);
                         }
                         if (data.result == rests.restResultErrDb)  {
-                            observer.error();
+                            observer.error(data.data);
                         }
                     },
                     error2 => {
@@ -163,6 +180,29 @@ export class PaymentsService {
      */
     updatePaymentListItem(paymentId: number, paymentNewData: NcpPayment) {
         this.payments.find(x => x.id == paymentId).status = paymentNewData.status;
+    }
+
+    getPaymentsByPage(dr: DateRange, page, offset): Observable<RestResponse> {
+        return new Observable(
+            observer => {
+                this.dataService.getPaymentsByPage(dr.startDate, dr.endDate, page, offset).subscribe(data => {
+                        if (data.result == rests.restResultOk)  {
+                            observer.next(data);
+                        }
+                        if (data.result == rests.restResultErrDb)  {
+                            let msg = msgs.msgErrLoadData + data.result + this.userService.logUser();
+                            observer.error(msg);
+                        }
+                    },
+                    error2 => {
+                        let msg = msgs.msgErrLoadData + error2 + this.userService.logUser();
+                        this.logger.error(msg);
+                        observer.error(msg);
+                    },
+                    () => {
+                        observer.complete();
+                    });
+            });
     }
 
 }

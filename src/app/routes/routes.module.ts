@@ -12,6 +12,7 @@ import {ViewPaymentComponent} from '../payments/payment/view-payment.component';
 
 const routes: Routes = [
     {path: '', redirectTo: 'payments', pathMatch: 'full'},
+    {path: 'payments', redirectTo: 'payment/230365'}, //для открытия конкретного платежа для отладки
     {path: 'payments', component: NcpPaymentsComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Платежи'}},
     {path: 'login', component: LoginPageComponent},
     {path: 'equipment', component: UploadComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Оборудование'}},

@@ -51,6 +51,31 @@ export class PaymentService {
         }
     }
 
+    loadPayment(id) {
+        console.log("Загрузка платежа ID " + id);
+        return new Observable(
+            observer => {
+                this.dataService.getPayment(id).subscribe(data => {
+                        if (data.result == rests.restResultOk) {
+                            this.payment = data.data;
+                            observer.next(this.payment);
+                        }
+                        if (data.result == rests.restResultErrDb) {
+                            this.logger.error(data.data);
+                            observer.error(msgs.msgErrGetPaymentData);
+                        }
+                    },
+                    error2 => {
+                        let msg = msgs.msgErrGetDetails + error2 + this.userService.logUser();
+                        this.logger.error(msg);
+                        observer.error(msgs.msgErrGetPaymentData);
+                    },
+                    () => {
+                        observer.complete();
+                    });
+            });
+    }
+
     setPaymentByPayment(payment: NcpPayment) {
         this.payment = payment;
         this.announcePayment();

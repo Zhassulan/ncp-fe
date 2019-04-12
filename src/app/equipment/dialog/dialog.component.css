@@ -1,8 +1,7 @@
 .mainContainer {
     display: grid;
     grid-template-areas:
-        "progress progress progress progress"
-        "title title title title"
+        "title title title progress"
         "file . . open"
         ". . . ."
         ". . process cancel";

@@ -1,12 +1,14 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {httpOptions, locStorItems} from '../settings';
+import {httpOptions, ldapGroups, locStorItems, msgs, rests} from '../settings';
 import {RestResponse} from '../data/rest-response';
 import {Observable} from 'rxjs';
 import {User} from './model/user';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import {NGXLogger} from 'ngx-logger';
+import {NotificationsService} from 'angular2-notifications';
 
 @Injectable()
 export class AuthService {

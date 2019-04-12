@@ -21,9 +21,6 @@ export class FilePaymentViewComponent implements OnInit, AfterViewInit {
     filePayment;
     dataSource = new MatTableDataSource<FilePaymentItem>();
     displayedColumns: string[] = ['num', 'nomenclature', 'msisdn', 'icc', 'account', 'sum'];
-    rawPayment;
-    ncpPayment;
-    isWait: boolean = true;
 
     constructor(private uploadService: UploadFilePaymentService,
                 private router: Router,
@@ -33,7 +30,6 @@ export class FilePaymentViewComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.isWait = false;
         if (this.uploadService.filePayment) {
             this.filePayment = this.uploadService.filePayment;
             this.dataSource = new MatTableDataSource(this.filePayment.filePaymentItems);
