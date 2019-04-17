@@ -24,5 +24,6 @@ export const environment = {
     urlGetDealerInfoByIcc:  'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/dealerByIcc',
     urlPaymentsByPage:  'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/ncpPaymentsByPage',
     urlGetBercutEquipmentInfoByIcc: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/getBercutEquipmentInfoByIcc',
-    urlCheckFirstPayIccList: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/checkFirstPayIccList',
+    urlCheckEquipmentParams: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/checkEquipmentParams',
+    urlGetShopDealerByAccount: 'http://b2b.tele2.kz:8130/onlinebank/dataservice/exdata/getShopDealerByAccount',
 };

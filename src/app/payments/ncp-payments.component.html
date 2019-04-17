@@ -32,10 +32,16 @@
             </div>
             <div ngClass="search">
                 <mat-form-field>
-                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Поиск">
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Быстрый поиск">
                     <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
             </div>
+
+            <!-- панели поиска -->
+            <div ngClass="item">
+                <app-search></app-search>
+            </div>
+
         </div>
     </div>
     <div class="payments">

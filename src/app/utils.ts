@@ -15,4 +15,8 @@ export class Utils {
         this.logger.info(JSON.stringify(obj));
     }
 
+    static removeRepeatedSpaces(str): string  {
+        return str.replace(/\s\s+/g, ' ');
+    }
+
 }

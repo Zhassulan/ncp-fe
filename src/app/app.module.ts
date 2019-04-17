@@ -42,6 +42,7 @@ import {InfoComponent} from './payments/payment/info/info.component';
 import {AddOperationComponent} from './payments/payment/add-operation/add-operation.component';
 import {SimpleNotificationsModule} from 'angular2-notifications';
 import {NotifService} from './notif/notif-service.service';
+import { SearchComponent } from './payments/search/search.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -64,6 +65,7 @@ registerLocaleData(localeRu, 'ru');
         OperationsComponent,
         InfoComponent,
         AddOperationComponent,
+        SearchComponent,
     ],
     entryComponents: [
         DialogReportComponent,

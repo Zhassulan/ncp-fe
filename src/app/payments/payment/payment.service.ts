@@ -17,9 +17,7 @@ import {NotifService} from '../../notif/notif-service.service';
 import {PaymentParamEq} from '../model/payment-param-eq';
 import {DetailEquipment} from '../model/detail-equipment';
 import {Utils} from '../../utils';
-import {BercutEquipment} from '../model/bercut-equipment';
-import {error} from 'util';
-import {IccSum} from '../model/icc-sum';
+import {EquipmentCheckParam} from '../model/equipment-check-param';
 
 @Injectable()
 export class PaymentService {
@@ -385,8 +383,8 @@ export class PaymentService {
             });
     }
 
-    checkFirstPayIccList(iccSumList: IccSum []): Observable <any>    {
-        return this.dataService.checkFirstPayIccList(iccSumList);
+    checkEquipmentParams(equipmentCheckParams: EquipmentCheckParam []): Observable <any>    {
+        return this.dataService.checkEquipmentParams(equipmentCheckParams);
     }
 
 }

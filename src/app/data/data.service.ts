@@ -13,7 +13,7 @@ import {RawPayment} from '../payments/model/raw-payment';
 import {NcpPaymentDetails} from '../payments/model/ncp-payment-details';
 import {Equipment} from '../payments/model/equipment';
 import {PaymentParamEq} from '../payments/model/payment-param-eq';
-import {IccSum} from '../payments/model/icc-sum';
+import {EquipmentCheckParam} from '../payments/model/equipment-check-param';
 
 @Injectable()
 export class DataService {
@@ -35,8 +35,8 @@ export class DataService {
      * @param {DateRange} dr
      * @returns {Observable<NcpPayment[]>}
      */
-    getNcpPayments(dr: DateRange): Observable <NcpPayment []> {
-        return this._http.post<NcpPayment []>(environment.urlGetNcpPaymentsRange, dr, httpOptions).catch(this.errorHandler);
+    getNcpPayments(dr: DateRange): Observable <RestResponse> {
+        return this._http.post<RestResponse>(environment.urlGetNcpPaymentsRange, dr, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -189,12 +189,12 @@ export class DataService {
     }
 
     /**
-     * Сверка суммы первоначального платежа по списку ICC и сумм (при разноске с оборудования) с биллингом
+     * Сверка названия, суммы первоначального платежа по списку (при разноске с до полями оборудования) с биллингом
      * @param {IccSum[]} iccList
      * @returns {Observable<RestResponse>}
      */
-    checkFirstPayIccList(iccList: IccSum []):  Observable<RestResponse> {
-        return this._http.post<RestResponse>(environment.urlCheckFirstPayIccList, iccList, httpOptions).catch(this.errorHandler);
+    checkEquipmentParams(iccList: EquipmentCheckParam []):  Observable<RestResponse> {
+        return this._http.post<RestResponse>(environment.urlCheckEquipmentParams, iccList, httpOptions).catch(this.errorHandler);
     }
 
 }

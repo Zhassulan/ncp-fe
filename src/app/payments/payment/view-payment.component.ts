@@ -12,10 +12,8 @@ import {NGXLogger} from 'ngx-logger';
 import {MatDialog} from '@angular/material';
 import {UserService} from '../../user/user.service';
 import {NotificationsService} from 'angular2-notifications';
-import {flatMap} from 'tslint/lib/utils';
-import {IccSum} from '../model/icc-sum';
-import {forEach} from '@angular/router/src/utils/collection';
-import {RestResponse} from '../../data/rest-response';
+import {EquipmentCheckParam} from '../model/equipment-check-param';
+import {Utils} from '../../utils';
 
 @Component({
     selector: 'app-payment-view',
@@ -106,11 +104,12 @@ export class ViewPaymentComponent implements OnInit {
     async menuDistribute() {
         let res = await this.checkConditions();
         if (res) {
-            this.distribute();
+            //this.distribute();
+            this.notifService.success('Разноска..');
         }
     }
 
-    async checkConditions(): boolean {
+    async checkConditions(): Promise <boolean> {
         this.paymentsService.setProgress(true);
         let msg;
         let result = true;
@@ -118,17 +117,17 @@ export class ViewPaymentComponent implements OnInit {
             this.notifService.warn(msgs.msgBadValue + this.paymentService.getDetailsSum());
             result = false;
         }
-        let iccSumList = [];
+        let equipmentCheckParams = [];
         if (this.paymentService.equipments.length > 0) {
             this.paymentService.equipments.forEach(equipment => {
                 if (!equipment.nomenclature.toLowerCase().includes(dic.prepaid)) {
                     let sum = this.paymentService.details.find(x => x.id === equipment.paymentDetailId).sum;
-                    iccSumList.push(new IccSum(equipment.icc, sum));
+                    equipmentCheckParams.push(new EquipmentCheckParam(equipment.icc, sum, Utils.removeRepeatedSpaces(equipment.nomenclature).trim().toLowerCase()));
                 }
             });
         }
-        if (iccSumList.length > 0) {
-            let res = await this.checkFirstPayIccList(iccSumList);
+        if (equipmentCheckParams.length > 0) {
+            let res = await this.checkEquipmentParams(equipmentCheckParams);
             res.data.forEach(item => {
                 if (item.status != STATUSES.STATUS_VALID) {
                     this.notifService.warn(item.icc + ' ' + item.info);
@@ -140,9 +139,8 @@ export class ViewPaymentComponent implements OnInit {
         return result;
     }
 
-    async checkFirstPayIccList(iccSumList) {
-        let result = true;
-        const response = await this.paymentService.checkFirstPayIccList(iccSumList).toPromise();
+    async checkEquipmentParams(iccSumList) {
+        const response = await this.paymentService.checkEquipmentParams(iccSumList).toPromise();
         return response;
     }
 
@@ -152,19 +150,19 @@ export class ViewPaymentComponent implements OnInit {
         this.paymentService.distribute().subscribe(distributeRes => {
                 if (distributeRes.result == rests.restResultOk) {
                     this.paymentService.setPaymentByData(distributeRes.data);
-                    msg = msgs.msgSuccessDistributed + 'ID платежа ' + this.paymentId + this.userService.logUser();
+                    msg = msgs.msgSuccessDistributed + 'ID ' + this.paymentId + this.userService.logUser();
                     this.logger.info(msg);
                     this.notifService.success(msg);
                     this.loadPayment();
                 }
                 if (distributeRes.result == rests.restResultErr) {
-                    msg = msgs.msgErrDistributePayment + ' ID платежа ' + this.paymentId + '. ' + distributeRes.data + ' (' + distributeRes.result + ')' + this.userService.logUser();
+                    msg = msgs.msgErrDistributePayment + ' ID ' + this.paymentId + '. ' + distributeRes.data + ' (' + distributeRes.result + ')' + this.userService.logUser();
                     this.logger.warn(msg + distributeRes.data);
                     this.notifService.warn(msg);
                 }
             },
             error2 => {
-                msg = msgs.msgErrDistributePayment + ' ID платежа ' + this.paymentId + '. ' + error2 + this.userService.logUser();
+                msg = msgs.msgErrDistributePayment + ' ID ' + this.paymentId + '. ' + error2 + this.userService.logUser();
                 this.logger.error(msg + error2);
                 this.notifService.error(msg + error2);
                 this.paymentsService.setProgress(false);

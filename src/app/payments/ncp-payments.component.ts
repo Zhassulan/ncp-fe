@@ -80,10 +80,10 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.setTimeBoundariesForDatePickers();
-        this.setCalendarToDate('2019-01-03T00:00:00', '2019-01-03T23:59:59');
+        //this.setCalendarToDate('2019-01-03T00:00:00', '2019-01-03T23:59:59');
         //this.setCalendarToDate('2019-04-16T00:00:00', '2019-04-16T23:59:59');
-        this.getData();
-        //this.getSampleData();
+        //this.getData();
+        this.getSampleData();
         this.dataSource.data = [];
         this.dataSource.data = this.paymentsService.payments;
     }
@@ -134,7 +134,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
                 this.dataSource.data = data;
             },
             error2 => {
-                this.notifService.error(error2);
+                this.notifService.error(msgs.msgErrLoadData + ' ' + error2);
                 this.paymentsService.setProgress(false);
             },
             () => {
@@ -150,7 +150,6 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.dataSource.data = [];
         this.paymentsService.getSampleData().subscribe(data => {
             this.dataSource.data = data;
-            this.paymentsService.paginatorResultsLength = this.paginatorResultsLength;
         }, error2 => {
             this.notifService.error(msgs.msgErrLoadData + ' ' + error2);
             this.paymentsService.setProgress(false);
