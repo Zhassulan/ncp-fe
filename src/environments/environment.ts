@@ -26,6 +26,8 @@ export const environment = {
     urlGetPaymentEquipments: 'http://localhost:8080/onlinebank/dataservice/exdata/equipments',
     urlGetDealerInfoByIcc: 'http://localhost:8080/onlinebank/dataservice/exdata/dealerByIcc',
     urlPaymentsByPage: 'http://localhost:8080/onlinebank/dataservice/exdata/ncpPaymentsByPage',
+    urlGetBercutEquipmentInfoByIcc: 'http://localhost:8080/onlinebank/dataservice/exdata/getBercutEquipmentInfoByIcc',
+    urlCheckFirstPayIccList: 'http://localhost:8080/onlinebank/dataservice/exdata/checkFirstPayIccList',
 };
 
 /*

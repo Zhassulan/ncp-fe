@@ -81,6 +81,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.setTimeBoundariesForDatePickers();
         this.setCalendarToDate('2019-01-03T00:00:00', '2019-01-03T23:59:59');
+        //this.setCalendarToDate('2019-04-16T00:00:00', '2019-04-16T23:59:59');
         this.getData();
         //this.getSampleData();
         this.dataSource.data = [];
@@ -98,7 +99,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     /**
      *  Установить границы времени для календарей диапазона дат
      */
-    setTimeBoundariesForDatePickers()    {
+    setTimeBoundariesForDatePickers() {
         this.dtStartDay = new Date(this.pickerStartDate.value.getTime());
         this.dtEndDay = new Date(this.pickerEndDate.value.getTime());
         this.dtStartDay.setHours(0, 0, 0, 0);
@@ -131,10 +132,9 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         let dr = new DateRange(this.pickerStartDate.value.getTime(), this.pickerEndDate.value.getTime());
         this.paymentsService.getData(dr).subscribe(data => {
                 this.dataSource.data = data;
-                this.paymentsService.paginatorResultsLength = this.paginatorResultsLength;
             },
             error2 => {
-                this.notifService.error(msgs.msgErrLoadData + ' ' + error2);
+                this.notifService.error(error2);
                 this.paymentsService.setProgress(false);
             },
             () => {
@@ -299,7 +299,7 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         this.deleteTransit(paymentRow);
     }
 
-    menuOnRowOpenPayment(paymentRow)  {
+    menuOnRowOpenPayment(paymentRow) {
         this.paymentService.setPayment(paymentRow.id);
         this.router.navigate(['payment/' + paymentRow.id]);
     }
@@ -309,8 +309,8 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
         let dtEndDay = new Date(endDate);
         dtStartDay.setHours(0, 0, 0, 0);
         dtEndDay.setHours(23, 59, 59, 999);
-        console.log(dtStartDay);
-        console.log(dtEndDay);
+        //console.log(dtStartDay);
+        //console.log(dtEndDay);
         this.pickerStartDate.setValue(dtStartDay);
         this.pickerEndDate.setValue(dtEndDay);
     }

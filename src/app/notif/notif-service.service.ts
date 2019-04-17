@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {NotificationsService} from 'angular2-notifications';
-import {Operation} from '../payments/payment/operations/model/operation';
 import {Subject, Subscription} from 'rxjs';
-import {PaymentDetail} from '../payments/model/payment-detail';
 import {Msg} from './msg';
 import {msgType} from '../settings';
 

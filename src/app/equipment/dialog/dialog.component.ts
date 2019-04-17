@@ -2,11 +2,9 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef} from '@angular/material';
 import {UploadFilePaymentService} from '../upload-file-payment.service';
 import {PaymentService} from '../../payments/payment/payment.service';
-import {PaymentsService} from '../../payments/payments.service';
-import * as XLSX from 'xlsx';
-import {forEach} from '@angular/router/src/utils/collection';
+//import * as XLSX from 'xlsx';
 
-type AOA = any[][];
+//type AOA = any[][];
 
 @Component({
     selector: 'app-dialog',
@@ -15,9 +13,9 @@ type AOA = any[][];
 })
 export class DialogComponent implements OnInit {
 
-    data: AOA = [ [1, 2], [3, 4] ];
-    wopts: XLSX.WritingOptions = { bookType: 'xlsx', type: 'array' };
-    fileName: string = 'SheetJS.xlsx';
+    //data: AOA = [ [1, 2], [3, 4] ];
+    //wopts: XLSX.WritingOptions = { bookType: 'xlsx', type: 'array' };
+    //fileName: string = 'SheetJS.xlsx';
 
     @ViewChild('file') file;
     fileObj: File;
@@ -47,24 +45,23 @@ export class DialogComponent implements OnInit {
      * @param evt
      */
     onFileAddedBYEvent(evt: any) {
+        /*
         const target: DataTransfer = <DataTransfer>(evt.target);
         if (target.files.length !== 1) throw new Error('Cannot use multiple files');
         const reader: FileReader = new FileReader();
         reader.onload = (e: any) => {
-            /* read workbook */
             const bstr: string = e.target.result;
             const wb: XLSX.WorkBook = XLSX.read(bstr, {type: 'binary'});
 
-            /* grab first sheet */
             const wsname: string = wb.SheetNames[0];
             const ws: XLSX.WorkSheet = wb.Sheets[wsname];
 
-            /* save data */
             this.data = <AOA>(XLSX.utils.sheet_to_json(ws, {header: 1}));
             console.log('Excel data: ' + this.data);
             this.parseArrayToObject(this.data)
         };
         reader.readAsBinaryString(target.files[0]);
+        */
     }
 
     parseArrayToObject(arr) {
@@ -72,6 +69,7 @@ export class DialogComponent implements OnInit {
     }
 
     to_csv(workbook) {
+        /*
         var result = [];
         workbook.SheetNames.forEach(function(sheetName) {
             var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
@@ -82,6 +80,7 @@ export class DialogComponent implements OnInit {
             }
         });
         return result.join("\n");
+        */
     }
 
     addFile() {
@@ -98,6 +97,7 @@ export class DialogComponent implements OnInit {
             },
             error2 => {
                 //this.paymentsService.setProgress(false);
+                this.isWait = false;
             },
             () => {
                 this.isWait = false;

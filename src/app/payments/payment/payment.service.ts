@@ -4,7 +4,7 @@ import {PaymentsService} from '../payments.service';
 import {Observable, Subject} from 'rxjs';
 import {Operation} from './operations/model/operation';
 import {UploadFilePaymentService} from '../../equipment/upload-file-payment.service';
-import {msgs, msgType, PaymentDistrStrategy, PaymentStatus, prepaid, rests} from '../../settings';
+import {msgs, msgType, PaymentDistrStrategy, PaymentStatus, dic, rests} from '../../settings';
 import {FilePaymentItem} from '../../equipment/model/file-payment-item';
 import {DataService} from '../../data/data.service';
 import {NGXLogger} from 'ngx-logger';
@@ -17,6 +17,9 @@ import {NotifService} from '../../notif/notif-service.service';
 import {PaymentParamEq} from '../model/payment-param-eq';
 import {DetailEquipment} from '../model/detail-equipment';
 import {Utils} from '../../utils';
+import {BercutEquipment} from '../model/bercut-equipment';
+import {error} from 'util';
+import {IccSum} from '../model/icc-sum';
 
 @Injectable()
 export class PaymentService {
@@ -60,7 +63,7 @@ export class PaymentService {
                             this.payment = data.data;
                             observer.next(this.payment);
                         }
-                        if (data.result == rests.restResultErrDb) {
+                        if (data.result == rests.restResultErr) {
                             this.logger.error(data.data);
                             observer.error(msgs.msgErrGetPaymentData);
                         }
@@ -76,7 +79,7 @@ export class PaymentService {
             });
     }
 
-    setPaymentByPayment(payment: NcpPayment) {
+    setPaymentByData(payment: NcpPayment) {
         this.payment = payment;
         this.announcePayment();
     }
@@ -88,8 +91,8 @@ export class PaymentService {
 
     addNewDetail(detail: PaymentDetail) {
         this.details.push(detail);
-        console.log('Добавлена операция:\n');
-        this.utils.printObj(detail);
+        //console.log('Добавлена операция:\n');
+        //this.utils.printObj(detail);
         this.announceDetails();
     }
 
@@ -127,7 +130,7 @@ export class PaymentService {
     }
 
     addDetailsFromFilePayment() {
-        console.log('Добавляются детали из файлового объекта в платёж сервиса\n');
+        //console.log('Добавляются детали из файлового объекта в платёж сервиса\n');
         for (let item of this.items.slice(0, this.items.length - 1)) {
             let detail = new PaymentDetail();
             detail.nomenclature = item.nomenclature;
@@ -143,8 +146,8 @@ export class PaymentService {
         this.announceDetails();
         this.checkFilePayment();
         this.setEquipments();
-        console.log('Обновлённые детали платежа:\n');
-        this.utils.printObj(this.details);
+        //console.log('Обновлённые детали платежа:\n');
+        //this.utils.printObj(this.details);
     }
 
     checkFilePayment() {
@@ -160,7 +163,7 @@ export class PaymentService {
     }
 
     determineDistrStrategy(item: FilePaymentItem) {
-        if (item.nomenclature.trim().toLowerCase().includes(prepaid.toLowerCase()) && (item.account == null || String(item.account) == '')) {
+        if (item.nomenclature.trim().toLowerCase().includes(dic.prepaid) && (item.account == null || String(item.account) == '')) {
             return PaymentDistrStrategy.byMsisdn;
         } else
             return PaymentDistrStrategy.byAccount;
@@ -216,7 +219,7 @@ export class PaymentService {
                             this.announceDetails();
                             observer.next();
                         }
-                        if (data.result == rests.restResultErrDb) {
+                        if (data.result == rests.restResultErr) {
                             this.logger.error(data.data);
                             observer.error(msgs.msgErrGetDetails);
                         }
@@ -265,8 +268,7 @@ export class PaymentService {
             }
         });
         this.paymentParamEq = params;
-        this.logger.info("Параметр для разноски:\n");
-        this.utils.printObj(this.paymentParamEq);
+        //this.logger.info("Параметр для разноски:\n" this.utils.printObj(this.paymentParamEq));
     }
 
     getPaymentData(id): Observable<any> {
@@ -278,7 +280,7 @@ export class PaymentService {
                             this.payment = data.data;
                             this.announcePayment();
                         }
-                        if (data.result == rests.restResultErrDb)  {
+                        if (data.result == rests.restResultErr)  {
                             observer.error(data);
                         }
                     },
@@ -326,7 +328,7 @@ export class PaymentService {
                         if (data.result == rests.restResultOk) {
                             this.setEquipmentsInDetails(data.data);
                         }
-                        if (data.result == rests.restResultErrDb) {
+                        if (data.result == rests.restResultErr) {
                             observer.error(data);
                         }
                     },
@@ -347,7 +349,7 @@ export class PaymentService {
     }
 
     isCurrentSumValid(): boolean {
-        console.log('Сравнивается суммы ' + this.getDetailsSum() + ' == ' + this.payment.sum);
+        console.log('Сравниваются суммы ' + this.getDetailsSum() + ' == ' + this.payment.sum);
         return this.getDetailsSum() == this.payment.sum;
     }
 
@@ -357,6 +359,34 @@ export class PaymentService {
             sum += Number(detail.sum);
         });
         return sum;
+    }
+
+    getBercutEquipmentInfo(icc): Observable <any> {
+        console.log('Получение информации оборудования по ICC ' + icc + '..');
+        return new Observable(
+            observer => {
+                this.dataService.getBercutEquipmentInfoByIcc(icc).subscribe(
+                    data => {
+                        if (data.result == rests.restResultOk) {
+                            //console.log(data.data);
+                            observer.next(data.data);
+                        }
+                        if (data.result == rests.restResultErr) {
+                            observer.error(data);
+                        }
+                    },
+                    error2 => {
+                        observer.error(error2);
+                    },
+                    () => {
+                        observer.complete();
+                    }
+                );
+            });
+    }
+
+    checkFirstPayIccList(iccSumList: IccSum []): Observable <any>    {
+        return this.dataService.checkFirstPayIccList(iccSumList);
     }
 
 }

@@ -29,8 +29,8 @@ export class UploadFilePaymentService {
                 this.dataService.postFilePayment(formData).subscribe(
                     data => {
                         this.filePayment = data.data;
-                        console.log('Загружены данные из файла:\n');
-                        this.utils.printObj(this.filePayment);
+                        //console.log('Загружены данные из файла:\n');
+                        //this.utils.printObj(this.filePayment);
                         observer.next(true);
                     },
                     error2 => {

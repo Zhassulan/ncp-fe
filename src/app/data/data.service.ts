@@ -13,6 +13,7 @@ import {RawPayment} from '../payments/model/raw-payment';
 import {NcpPaymentDetails} from '../payments/model/ncp-payment-details';
 import {Equipment} from '../payments/model/equipment';
 import {PaymentParamEq} from '../payments/model/payment-param-eq';
+import {IccSum} from '../payments/model/icc-sum';
 
 @Injectable()
 export class DataService {
@@ -165,9 +166,35 @@ export class DataService {
         return this._http.post<RestResponse>(environment.urlGetDealerInfoByIcc + '?icc=' + icc, httpOptions).catch(this.errorHandler);
     }
 
+    /**
+     * Получить платежи за период постранично
+     * @param startDate
+     * @param endDate
+     * @param page
+     * @param offset
+     * @returns {Observable<RestResponse>}
+     */
     getPaymentsByPage(startDate, endDate, page, offset): Observable<RestResponse>   {
         return this._http.post<RestResponse>(environment.urlPaymentsByPage + '?start_date=' + startDate + '&end_date=' + endDate + '&page=' + page +
             '&offset=' + offset, httpOptions).catch(this.errorHandler);
+    }
+
+    /**
+     * Получить информацию по оборудованию, а именно, inv code, название и стоимость (первый платёж)
+     * @param {String} icc
+     * @returns {Observable<any>}
+     */
+    getBercutEquipmentInfoByIcc(icc:String)   {
+        return this._http.post<RestResponse>(environment.urlGetBercutEquipmentInfoByIcc + '?icc=' + icc, httpOptions).catch(this.errorHandler);
+    }
+
+    /**
+     * Сверка суммы первоначального платежа по списку ICC и сумм (при разноске с оборудования) с биллингом
+     * @param {IccSum[]} iccList
+     * @returns {Observable<RestResponse>}
+     */
+    checkFirstPayIccList(iccList: IccSum []):  Observable<RestResponse> {
+        return this._http.post<RestResponse>(environment.urlCheckFirstPayIccList, iccList, httpOptions).catch(this.errorHandler);
     }
 
 }

@@ -2,10 +2,10 @@
     <mat-icon>more_vert</mat-icon>
 </button>
 <mat-menu #menu="matMenu">
-    <button mat-menu-item [disabled]="isBlocked()" (click)="openFileDialog()">
+    <button mat-menu-item [disabled]="isBlocked()" (click)="select(paymentMenuItems.LOAD_EQUIPMENT)">
         <span>Загрузить разноски - оборудование</span>
     </button>
-    <button mat-menu-item [disabled]="(details.length == 0 || isBlocked())" (click)="distributeMenu()">
+    <button mat-menu-item [disabled]="(details.length == 0 || isBlocked())" (click)="select(paymentMenuItems.DISTRIBUTE)">
         <span>Разнести</span>
     </button>
 </mat-menu>

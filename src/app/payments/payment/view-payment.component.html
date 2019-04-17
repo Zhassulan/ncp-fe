@@ -12,7 +12,7 @@
                             <h1 class="mat-h1"><b># {{ payment.paymentId }} от {{ payment.creationDate | date }}</b></h1>
                         </div>
                         <div class="item-top2">
-                            <app-payment-menu [payment]="payment"></app-payment-menu>
+                            <app-payment-menu (selectedItem)="onSelected($event)"></app-payment-menu>
                         </div>
                     </div>
                 </div>

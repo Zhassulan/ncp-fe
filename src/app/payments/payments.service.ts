@@ -25,7 +25,7 @@ export class PaymentsService {
                 private userService: UserService) {
     }
 
-    setProgress(boolVal: boolean)   {
+    setProgress(boolVal: boolean) {
         this.progressObs.next(boolVal);
     }
 
@@ -33,9 +33,13 @@ export class PaymentsService {
         return new Observable(
             observer => {
                 this.dataService.getNcpPayments(dr).subscribe(data => {
-                        this.payments = data;
-                        this.updateStatusRu();
-                        observer.next(this.payments);
+                        if (data.result == rests.restResultOk) {
+                            this.payments  = data.data;
+                            this.updateStatusRu();
+                            observer.next(this.payments);
+                        }   else {
+                            observer.error(msgs.msgErrNoDataFound);
+                        }
                     },
                     error2 => {
                         let msg = msgs.msgErrLoadData + error2 + this.userService.logUser();
@@ -156,11 +160,11 @@ export class PaymentsService {
         return new Observable<any>(
             observer => {
                 this.dataService.getNcpPaymentByRawId(this.newRawPayment.id).subscribe(data => {
-                        if (data.result == rests.restResultOk)  {
+                        if (data.result == rests.restResultOk) {
                             this.newNcpPayment = data.data;
                             observer.next(data);
                         }
-                        if (data.result == rests.restResultErrDb)  {
+                        if (data.result == rests.restResultErr) {
                             observer.error(data.data);
                         }
                     },
@@ -186,10 +190,10 @@ export class PaymentsService {
         return new Observable(
             observer => {
                 this.dataService.getPaymentsByPage(dr.startDate, dr.endDate, page, offset).subscribe(data => {
-                        if (data.result == rests.restResultOk)  {
+                        if (data.result == rests.restResultOk) {
                             observer.next(data);
                         }
-                        if (data.result == rests.restResultErrDb)  {
+                        if (data.result == rests.restResultErr) {
                             let msg = msgs.msgErrLoadData + data.result + this.userService.logUser();
                             observer.error(msg);
                         }

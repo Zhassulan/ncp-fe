@@ -24,9 +24,7 @@ export class FilePaymentViewComponent implements OnInit, AfterViewInit {
 
     constructor(private uploadService: UploadFilePaymentService,
                 private router: Router,
-                private paymentsService: PaymentsService,
-                private userService: UserService,
-                private logger: NGXLogger) {
+                ) {
     }
 
     ngOnInit() {

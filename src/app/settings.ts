@@ -72,7 +72,6 @@ export const enum timeouts {
 export const enum rests {
     restResultOk = 'ok',
     restResultErr = 'error',
-    restResultErrDb = 'error_database'
 }
 
 export const enum msgs {
@@ -102,6 +101,8 @@ export const enum msgs {
     msgSuccessCreateEquipment = 'Успешно создана запись по оборудованию. ',
     msgErrGetPaymentDetails = 'Ошибка получения деталей платежа. ',
     msgErrGetPaymentData = 'Ошибка получения данных платежа. ',
+    msgErrNoDataFound  = 'Данные не найдены.',
+    msgBadValue = 'Не верное значение.',
 }
 
 export enum locStorItems {
@@ -119,7 +120,9 @@ export enum PaymentDistrStrategy {
     None = 2
 }
 
-export const prepaid = 'Аванс';
+export enum dic {
+    prepaid = 'аванс',
+}
 
 export const detailsTableColumns = [ 'num', 'nomenclature', 'msisdn', 'icc', 'account', 'sum', 'del'];
 export enum detailTableColumnsDisplay {num = '#', nomenclature = 'Номенклатура', msisdn = 'Номер', icc = 'ICC', account = 'Лицевой счёт', sum = 'Сумма', del = 'Удалить'};
@@ -129,6 +132,21 @@ export enum msgType {
     warn =  1,
     error = 2,
 }
+
+export enum PaymentMenuItems {
+    LOAD_EQUIPMENT = 1,
+    DISTRIBUTE = 2
+}
+
+export enum STATUSES {
+    STATUS_UNKNOWN = 0,
+    STATUS_INVALID = 1,
+    STATUS_VALID = 2,
+    STATUS_VALIDATION_ERROR = 3,
+    STATUS_DATA_NOT_FOUND = 4,
+}
+
+
 
 export class Settings {
 }
