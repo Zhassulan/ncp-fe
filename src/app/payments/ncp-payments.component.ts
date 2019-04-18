@@ -4,7 +4,6 @@ import {NcpPayment} from './model/ncp-payment';
 import {DateRange} from '../data/date-range';
 import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
-import {DialogService} from '../dialog/dialog.service';
 import {FormControl} from '@angular/forms';
 import {NGXLogger} from 'ngx-logger';
 import {msgs, shrinkDetailsColumnSize, rests} from '../settings';
@@ -13,8 +12,8 @@ import {UserService} from '../user/user.service';
 import {Router} from '@angular/router';
 import {PaymentService} from './payment/payment.service';
 import {NotificationsService} from 'angular2-notifications';
-import {environment} from '../../environments/environment';
 import {Subscription} from 'rxjs';
+import {DialogService} from '../dialog/dialog.service';
 
 @Component({
     selector: 'app-ncp-payments',
@@ -180,27 +179,27 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
      */
     toTransit(payment) {
         let msg;
-        this.dialogService.setWait();
+        this.paymentsService.setProgress(true);
         this.paymentsService.toTransit(payment.id).subscribe(data => {
                 if (data.result == rests.restResultOk) {
                     payment = data.data;
                     msg = msgs.msgSuccessToTransit + ' ID платежа ' + payment.id + ' TRANSIT_PDOC_ID ' + data.data.transitPaymentDocNumId + this.userService.logUser();
                     this.logger.info(msg);
-                    this.dialogService.addItem(null, msg);
+                    this.dialogService.addItem(msg);
                 } else {
                     msg = msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')' + this.userService.logUser();
                     this.logger.warn(msg);
-                    this.dialogService.addItem(null, msg);
+                    this.dialogService.addItem(msg);
                 }
             },
             error2 => {
                 msg = msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + error2 + this.userService.logUser();
                 this.logger.error(msg);
-                this.dialogService.addItem(null, msg);
-                this.dialogService.setWaitNot();
+                this.dialogService.addItem(msg);
+                this.paymentsService.setProgress(false);
             },
             () => {
-                this.dialogService.setWaitNot();
+                this.paymentsService.setProgress(false);
             });
     }
 
@@ -267,27 +266,27 @@ export class NcpPaymentsComponent implements OnInit, AfterViewInit {
 
     deleteTransit(payment) {
         let msg;
-        this.dialogService.setWait();
+        this.paymentsService.setProgress(true);
         this.paymentsService.deleteTransit(payment.id).subscribe(data => {
                 if (data.result == rests.restResultOk) {
                     payment = data.data;
                     msg = msgs.msgSuccessDelTransit + ' ID платежа ' + payment.id + this.userService.logUser();
                     this.logger.info(msg);
-                    this.dialogService.addItem(null, msg);
+                    this.dialogService.addItem( msg);
                 } else {
                     msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')' + this.userService.logUser();
                     this.logger.warn(msg);
-                    this.dialogService.addItem(null, msg);
+                    this.dialogService.addItem( msg);
                 }
             },
             error2 => {
                 msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + error2 + this.userService.logUser();
                 this.logger.error(msg);
-                this.dialogService.addItem(null, msg);
-                this.dialogService.setWaitNot();
+                this.dialogService.addItem( msg);
+                this.paymentsService.setProgress(false);
             },
             () => {
-                this.dialogService.setWaitNot();
+                this.paymentsService.setProgress(false);
             });
     }
 

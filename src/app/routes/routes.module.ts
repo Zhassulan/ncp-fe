@@ -6,8 +6,8 @@ import {
 import {NcpPaymentsComponent} from '../payments/ncp-payments.component';
 import {LoginPageComponent} from '../auth/login-page/login-page.component';
 import {LoggedInGuard} from '../auth/logged-in.guard';
-import {UploadComponent} from '../equipment/upload.component';
-import {FilePaymentViewComponent} from '../equipment/file-payment-view/file-payment-view.component';
+import {UploadComponent} from '../payments/payment/equipment/upload.component';
+import {FilePaymentViewComponent} from '../payments/payment/equipment/file-payment-view/file-payment-view.component';
 import {ViewPaymentComponent} from '../payments/payment/view-payment.component';
 
 const routes: Routes = [

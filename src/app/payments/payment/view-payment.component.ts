@@ -3,17 +3,14 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {PaymentService} from './payment.service';
 import {OperationsComponent} from './operations/operations.component';
 import {PaymentsService} from '../payments.service';
-import {dic, msgs, msgType, rests, STATUSES} from '../../settings';
+import {dic, msgs, rests, STATUSES} from '../../settings';
 import {from, concat, merge, Observable, of, Subscription, Subject} from 'rxjs';
 import {PaymentMenuItems} from '../../settings';
-import {DialogComponent} from '../../equipment/dialog/dialog.component';
-import {DialogService} from '../../dialog/dialog.service';
+import {DialogComponent} from './equipment/dialog/dialog.component';
 import {NGXLogger} from 'ngx-logger';
 import {MatDialog} from '@angular/material';
 import {UserService} from '../../user/user.service';
 import {NotificationsService} from 'angular2-notifications';
-import {EquipmentCheckParam} from '../model/equipment-check-param';
-import {Utils} from '../../utils';
 
 @Component({
     selector: 'app-payment-view',
@@ -35,7 +32,6 @@ export class ViewPaymentComponent implements OnInit {
                 private paymentsService: PaymentsService,
                 private notifService: NotificationsService,
                 private route: ActivatedRoute,
-                private dialogService: DialogService,
                 private logger: NGXLogger,
                 public dialog: MatDialog,
                 private userService: UserService,) {
@@ -102,46 +98,12 @@ export class ViewPaymentComponent implements OnInit {
     }
 
     async menuDistribute() {
-        let res = await this.checkConditions();
+        let res = await this.paymentService.checkConditions();
         if (res) {
-            //this.distribute();
-            this.notifService.success('Разноска..');
+            this.distribute();
+        }   else    {
+            this.notifService.error('Разноска отменена');
         }
-    }
-
-    async checkConditions(): Promise <boolean> {
-        this.paymentsService.setProgress(true);
-        let msg;
-        let result = true;
-        if (!this.paymentService.isCurrentSumValid()) {
-            this.notifService.warn(msgs.msgBadValue + this.paymentService.getDetailsSum());
-            result = false;
-        }
-        let equipmentCheckParams = [];
-        if (this.paymentService.equipments.length > 0) {
-            this.paymentService.equipments.forEach(equipment => {
-                if (!equipment.nomenclature.toLowerCase().includes(dic.prepaid)) {
-                    let sum = this.paymentService.details.find(x => x.id === equipment.paymentDetailId).sum;
-                    equipmentCheckParams.push(new EquipmentCheckParam(equipment.icc, sum, Utils.removeRepeatedSpaces(equipment.nomenclature).trim().toLowerCase()));
-                }
-            });
-        }
-        if (equipmentCheckParams.length > 0) {
-            let res = await this.checkEquipmentParams(equipmentCheckParams);
-            res.data.forEach(item => {
-                if (item.status != STATUSES.STATUS_VALID) {
-                    this.notifService.warn(item.icc + ' ' + item.info);
-                    result = false;
-                }
-            });
-        }
-        this.paymentsService.setProgress(false);
-        return result;
-    }
-
-    async checkEquipmentParams(iccSumList) {
-        const response = await this.paymentService.checkEquipmentParams(iccSumList).toPromise();
-        return response;
     }
 
     distribute() {
@@ -171,6 +133,5 @@ export class ViewPaymentComponent implements OnInit {
                 this.paymentsService.setProgress(false);
             });
     }
-
 
 }

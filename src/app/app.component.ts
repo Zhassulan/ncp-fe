@@ -1,6 +1,6 @@
 import {Title} from '@angular/platform-browser';
 import {Component, ViewEncapsulation, AfterViewInit, OnInit} from '@angular/core';
-import {appVer, locStorItems, msgType} from './settings';
+import {locStorItems} from './settings';
 import {NotificationsService} from 'angular2-notifications';
 
 @Component({
@@ -24,10 +24,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         //localStorage.clear();
         if (localStorage.getItem(locStorItems.version) == null) {
             localStorage.setItem(locStorItems.version, '0');
-        }
-        if (parseInt(localStorage.getItem(locStorItems.version)) != appVer) {
-            this.notifService.warn('Внимание! Обновите приложение при помощи комбинации клавиш [Ctrl]+[F5]. Спасибо.');
-            localStorage.setItem(locStorItems.version, appVer.toString());
         }
     }
 

@@ -18,10 +18,10 @@
                 </div>
                 <div class="item-c">
                     <app-payment-info [payment]="this.paymentService.payment"></app-payment-info>
-                    <app-payment-add-operation></app-payment-add-operation>
+                    <app-payment-add-operation ></app-payment-add-operation>
                 </div>
                 <div class="item-d">
-                    <app-payment-operations></app-payment-operations>
+                    <app-payment-operations [status] = "this.paymentService.payment.status"></app-payment-operations>
                 </div>
 
                 <!--<div class="item-e">footer</div>

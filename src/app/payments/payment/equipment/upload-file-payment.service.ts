@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {DataService} from '../data/data.service';
+import {DataService} from '../../../data/data.service';
 import {FilePayment} from './model/file-payment';
 import {HttpErrorResponse} from '@angular/common/http';
-import {msgs} from '../settings';
+import {msgs} from '../../../settings';
 import {NGXLogger} from 'ngx-logger';
 import {NotificationsService} from 'angular2-notifications';
-import {Utils} from '../utils';
+import {Utils} from '../../../utils';
 
 @Injectable()
 export class UploadFilePaymentService {

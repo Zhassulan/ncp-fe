@@ -1,12 +1,14 @@
 import {
-    Component, OnDestroy, OnInit, ViewChild
+    Component, Input, OnDestroy, OnInit, ViewChild
 } from '@angular/core';
 import {Operation} from './model/operation';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {PaymentService} from '../payment.service';
 import {Subscription} from 'rxjs';
-import {detailsTableColumns, PaymentDistrStrategy, detailTableColumnsDisplay} from '../../../settings';
+import {PaymentDetailsTableColumns, PaymentDetailDistrStrategy, PaymentDetailTableColumnsDisplay} from '../../../settings';
 import {PaymentDetail} from '../../model/payment-detail';
+import {TOOLTIPS} from '../../../settings';
+import {PaymentStatus} from '../../../settings';
 
 @Component({
     selector: 'app-payment-operations',
@@ -16,14 +18,17 @@ import {PaymentDetail} from '../../model/payment-detail';
 
 export class OperationsComponent implements OnInit, OnDestroy {
 
+    paymentStatus = PaymentStatus;
+    tooltips = TOOLTIPS;
     dataSource = new MatTableDataSource<PaymentDetail>();
-    displayedColumns: string[] = detailsTableColumns;
-    detailTableColumnsDisplay = detailTableColumnsDisplay;
+    displayedColumns: string[] = PaymentDetailsTableColumns;
+    detailTableColumnsDisplay = PaymentDetailTableColumnsDisplay;
     i: number = 0;
     paginatorResultsLength: number = 0;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     subscription: Subscription;
-    paymentDistrStrategies = PaymentDistrStrategy;
+    paymentDistrStrategies = PaymentDetailDistrStrategy;
+    @Input() status: boolean;
 
     constructor(private paymentService: PaymentService) {
     }
@@ -62,6 +67,12 @@ export class OperationsComponent implements OnInit, OnDestroy {
         this.paymentService.delDetail(row);
         this.dataSource.data = this.details;
         this.paginatorResultsLength -= 1;
+    }
+
+    delAll() {
+        this.paymentService.delAll();
+        this.dataSource.data = this.details;
+        this.paginatorResultsLength = this.details.length;
     }
 
     ngOnDestroy(): void {

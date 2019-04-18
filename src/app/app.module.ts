@@ -24,12 +24,12 @@ import {LoginPageComponent} from './auth/login-page/login-page.component';
 import {LoggerModule} from 'ngx-logger';
 import {environment} from '../environments/environment';
 import {ViewPaymentComponent} from './payments/payment/view-payment.component';
-import {UploadComponent} from './equipment/upload.component';
+import {UploadComponent} from './payments/payment/equipment/upload.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {BreadcrumbModule} from 'angular-crumbs';
-import {DialogComponent} from './equipment/dialog/dialog.component';
-import {UploadFilePaymentService} from './equipment/upload-file-payment.service';
-import {FilePaymentViewComponent} from './equipment/file-payment-view/file-payment-view.component';
+import {DialogComponent} from './payments/payment/equipment/dialog/dialog.component';
+import {UploadFilePaymentService} from './payments/payment/equipment/upload-file-payment.service';
+import {FilePaymentViewComponent} from './payments/payment/equipment/file-payment-view/file-payment-view.component';
 import {registerLocaleData} from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
 import {UserService} from './user/user.service';
@@ -41,7 +41,6 @@ import {PaymentService} from './payments/payment/payment.service';
 import {InfoComponent} from './payments/payment/info/info.component';
 import {AddOperationComponent} from './payments/payment/add-operation/add-operation.component';
 import {SimpleNotificationsModule} from 'angular2-notifications';
-import {NotifService} from './notif/notif-service.service';
 import { SearchComponent } from './payments/search/search.component';
 
 registerLocaleData(localeRu, 'ru');
@@ -110,7 +109,6 @@ registerLocaleData(localeRu, 'ru');
         UserService,
         PaymentsService,
         PaymentService,
-        NotifService
     ],
     bootstrap: [AppComponent]
 })

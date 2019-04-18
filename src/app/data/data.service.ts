@@ -8,7 +8,7 @@ import {RestResponse} from './rest-response';
 import {httpOptions} from '../settings';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
-import {FilePayment} from '../equipment/model/file-payment';
+import {FilePayment} from '../payments/payment/equipment/model/file-payment';
 import {RawPayment} from '../payments/model/raw-payment';
 import {NcpPaymentDetails} from '../payments/model/ncp-payment-details';
 import {Equipment} from '../payments/model/equipment';

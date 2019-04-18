@@ -1,48 +1,48 @@
 <div fxLayout="row" fxLayoutAlign="space-between start">
-  <div fxLayout="column">
-    <p class="mat-h3"><b>Клиент:</b></p>
-  </div>
-  <div fxLayout="column" ngClass="longTitle">
-    <p class="mat-h3">{{ payment.nameSender }}</p>
-  </div>
+    <div fxLayout="column">
+        <p class="mat-h3"><b>Клиент:</b></p>
+    </div>
+    <div fxLayout="column" ngClass="longTitle">
+        <p class="mat-h3">{{ payment.nameSender }}</p>
+    </div>
 </div>
 <div fxLayout="row" fxLayoutAlign="space-between start">
-  <div fxLayout="column">
-    <p class="mat-h3"><b>Статус:</b></p>
-  </div>
-  <div fxLayout="column" ngClass="longTitle">
-    <p class="mat-h3">{{ payment.status | paymentStatusRuPipe: payment.status}}</p>
-  </div>
+    <div fxLayout="column">
+        <p class="mat-h3"><b>Статус:</b></p>
+    </div>
+    <div fxLayout="column" ngClass="longTitle">
+        <p class="mat-h3">{{ payment.status | paymentStatusRuPipe: payment.status}}</p>
+    </div>
 </div>
 <div fxLayout="row" fxLayoutAlign="space-between start">
-  <div fxLayout="column">
-    <p class="mat-h3"><b>ИИН/БИН:</b></p>
-  </div>
-  <div fxLayout="column" ngClass="longTitle">
-    <p class="mat-h3">{{ payment.rnnSender }}</p>
-  </div>
+    <div fxLayout="column">
+        <p class="mat-h3"><b>ИИН/БИН:</b></p>
+    </div>
+    <div fxLayout="column" ngClass="longTitle">
+        <p class="mat-h3">{{ payment.rnnSender }}</p>
+    </div>
 </div>
 <div fxLayout="row" fxLayoutAlign="space-between start">
-  <div fxLayout="column">
-    <p class="mat-h3"><b>Менеджер:</b></p>
-  </div>
-  <div fxLayout="column" ngClass="longTitle">
-    <p class="mat-h3">{{ payment.managers }}</p>
-  </div>
+    <div fxLayout="column">
+        <p class="mat-h3"><b>Менеджер:</b></p>
+    </div>
+    <div fxLayout="column" ngClass="longTitle">
+        <p class="mat-h3">{{ payment.managers }}</p>
+    </div>
 </div>
 <div fxLayout="row" fxLayoutAlign="space-between start">
-  <div fxLayout="column">
-    <p class="mat-h3"><b>Номер платежа:</b></p>
-  </div>
-  <div fxLayout="column" ngClass="longTitle">
-    <p class="mat-h3">{{ payment.paymentDocnum }}</p>
-  </div>
+    <div fxLayout="column">
+        <p class="mat-h3"><b>Номер платежа:</b></p>
+    </div>
+    <div fxLayout="column" ngClass="longTitle">
+        <p class="mat-h3">{{ payment.paymentDocnum }}</p>
+    </div>
 </div>
 <div fxLayout="row" fxLayoutAlign="space-between start">
-  <div fxLayout="column">
-    <p class="mat-h3"><b>Сумма платежа:</b></p>
-  </div>
-  <div fxLayout="column" ngClass="longTitle">
-    <p class="mat-h3">{{ payment.sum | currency : ' тг.' }}</p>
-  </div>
+    <div fxLayout="column">
+        <p class="mat-h3"><b>Сумма платежа:</b></p>
+    </div>
+    <div fxLayout="column" ngClass="longTitle">
+        <p class="mat-h3">{{ payment.sum | currency : ' тг.' }}</p>
+    </div>
 </div>

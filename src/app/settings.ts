@@ -1,5 +1,8 @@
 import {HttpHeaders} from '@angular/common/http';
 
+/**
+ * Платёж - числовые статусы
+ */
 export enum PaymentStatus {
     STATUS_NEW = 0,
     STATUS_DISTRIBUTED = 1,
@@ -13,6 +16,9 @@ export enum PaymentStatus {
     STATUS_TRANSIT_ERROR = 9
 }
 
+/**
+ * Платёж - переводы на русском статусов платежа
+ */
 export enum PaymentStatusRu {
     'Новый',
     'Разнесён',
@@ -26,6 +32,9 @@ export enum PaymentStatusRu {
     'Ошибка разнесения с тразитного счёта'
 }
 
+/**
+ * Платёж - маппинг числового статуса и перевода на русском
+ */
 export enum PaymentStatusEnRu {
     'STATUS_NEW' = 'Новый',
     'STATUS_DISTRIBUTED' = 'Разнесён',
@@ -39,20 +48,36 @@ export enum PaymentStatusEnRu {
     'STATUS_TRANSIT_ERROR' = 'Ошибка разнесения с тразитного счёта'
 }
 
+/**
+ * Ширина колонки таблицы для детали платежа
+ * @type {number}
+ */
 export const shrinkDetailsColumnSize: number = 200;
 
+/**
+ * Опции для заголовка Http
+ * @type {{headers: HttpHeaders}}
+ */
 export const httpOptions = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json'
     })
 };
 
+/**
+ * Группы доступа приложения в Active Directory
+ * @type {{tele2users: string; managers: string; testers: string}}
+ */
 export const ldapGroups = {
     tele2users: 'itdev-ncp-user-tele2',
     managers: 'itdev-ncp-newapp-managers',
     testers: 'itdev-ncp-newapp-testers'
 };
 
+/**
+ * Роли с набором групп для доступа к приложению
+ * @type {{cc: string[]; finance: string[]; test: string[]}}
+ */
 export const roles = {
     cc: [
         ldapGroups.tele2users,
@@ -65,15 +90,25 @@ export const roles = {
     ]
 };
 
+/**
+ * Временная задержка после ввода логина и пароля
+ */
 export const enum timeouts {
     timeoutAfterLoginInput = 3000
 }
 
+/**
+ * Ответ в REST сервисах от backend
+ */
 export const enum rests {
     restResultOk = 'ok',
     restResultErr = 'error',
 }
 
+/**
+ * Различные сообщения
+ *
+ * */
 export const enum msgs {
     msgLoggedSuccess = 'Успешно выполнен логин. ',
     msgNoRights = 'Извините, нет разрешений на использование приложения. ',
@@ -101,43 +136,80 @@ export const enum msgs {
     msgSuccessCreateEquipment = 'Успешно создана запись по оборудованию. ',
     msgErrGetPaymentDetails = 'Ошибка получения деталей платежа. ',
     msgErrGetPaymentData = 'Ошибка получения данных платежа. ',
-    msgErrNoDataFound  = 'Данные не найдены.',
+    msgErrNoDataFound = 'Данные не найдены.',
     msgBadValue = 'Не верное значение.',
 }
 
+/**
+ * Данные локального storage (не куки)
+ */
 export enum locStorItems {
     tokenName = 'token',
     userName = 'username',
     version = 'version'
 }
 
-export const appVer: number = 1;
+
+/**
+ * длина номера абонента
+ * @type {number}
+ */
 export const msisdnLength = 10;
 
-export enum PaymentDistrStrategy {
+/**
+ * Стратегия разноска детали платежа
+ */
+export enum PaymentDetailDistrStrategy {
     byAccount = 0,
     byMsisdn = 1,
     None = 2
 }
 
+/**
+ * Словарь терминов
+ */
 export enum dic {
     prepaid = 'аванс',
 }
 
-export const detailsTableColumns = [ 'num', 'nomenclature', 'msisdn', 'icc', 'account', 'sum', 'del'];
-export enum detailTableColumnsDisplay {num = '#', nomenclature = 'Номенклатура', msisdn = 'Номер', icc = 'ICC', account = 'Лицевой счёт', sum = 'Сумма', del = 'Удалить'};
+/**
+ * Колонки таблицы детали платежа
+ * @type {string[]}
+ */
+export const PaymentDetailsTableColumns = [
+    'num',
+    'nomenclature',
+    'msisdn',
+    'icc',
+    'account',
+    'sum',
+    'del'
+];
 
-export enum msgType {
-    info =  0,
-    warn =  1,
-    error = 2,
-}
+/**
+ * Заголовки колонок таблицы деталей платежа
+ */
+export enum PaymentDetailTableColumnsDisplay {
+    num = '#',
+    nomenclature = 'Номенклатура',
+    msisdn = 'Номер',
+    icc = 'ICC',
+    account = 'Лицевой счёт',
+    sum = 'Сумма',
+    del = 'Удалить'
+};
 
+/**
+ * Меню платежа
+ */
 export enum PaymentMenuItems {
     LOAD_EQUIPMENT = 1,
     DISTRIBUTE = 2
 }
 
+/**
+ * Различные статусы
+ */
 export enum STATUSES {
     STATUS_UNKNOWN = 0,
     STATUS_INVALID = 1,
@@ -146,7 +218,15 @@ export enum STATUSES {
     STATUS_DATA_NOT_FOUND = 4,
 }
 
+/**
+ * Всплывающие подсказки
+ */
+export enum TOOLTIPS {
+    delAll = 'Удалить все',
+}
 
-
+/**
+ * Константы и настройки приложения
+ */
 export class Settings {
 }

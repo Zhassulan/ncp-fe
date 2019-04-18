@@ -1,22 +1,18 @@
-<div fxLayout="row" fxLayoutAlign="center center">
-    <h1 mat-dialog-title>{{data.title}}</h1>
-</div>
-
-<mat-progress-bar mode="indeterminate" *ngIf="isWait" color="accent"></mat-progress-bar>
-
-<div mat-dialog-content>
-    <mat-list>
-        <ul>
-            <mat-list-item *ngFor="let item of data.items"> {{item.itemName}} {{item.itemMessage}}</mat-list-item>
-        </ul>
-    </mat-list>
-</div>
-
-
-<div fxLayout="row" fxLayoutAlign="end center">
-    <div mat-dialog-actions>
-        <!--<button mat-button (click)="onNoClick()">No Thanks</button>-->
-        <!--<button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>OK</button>-->
-        <button mat-raised-button color="primary" [mat-dialog-close] cdkFocusInitial>Закрыть</button>
+<div class="container">
+    <div class="title">
+        <h1 mat-dialog-title>{{data.title}}</h1>
+    </div>
+    <div class="msg">
+        <div mat-dialog-content>
+        <mat-list>
+            <ul>
+                <mat-list-item *ngFor="let item of data.items"> {{item.itemName}} {{item.itemMessage}}</mat-list-item>
+            </ul>
+        </mat-list>
+    </div></div>
+    <div class="btnClose">
+        <div mat-dialog-actions>
+            <button mat-raised-button color="primary" [mat-dialog-close] cdkFocusInitial>Закрыть</button>
+        </div>
     </div>
 </div>

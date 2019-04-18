@@ -34,7 +34,12 @@
     </ng-container>
 
     <ng-container matColumnDef="del">
-        <th mat-header-cell *matHeaderCellDef ></th>
+        <th mat-header-cell *matHeaderCellDef >
+            <button mat-mini-fab color="primary" (click)="delAll()"
+                    *ngIf="((details.length > 0 ? true : false) && (status == paymentStatus.STATUS_NEW))" matTooltip="{{ tooltips.delAll }}">
+                <mat-icon>clear</mat-icon>
+            </button>
+        </th>
         <td mat-cell *matCellDef="let element">
             <button mat-mini-fab color="primary" (click)="delDetail(element)"
                     *ngIf="!(element.distrStrategy == paymentDistrStrategies.None)" matTooltip="{{ detailTableColumnsDisplay.del }}">

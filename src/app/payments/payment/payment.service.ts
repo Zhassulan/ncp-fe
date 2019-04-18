@@ -3,9 +3,9 @@ import {NcpPayment} from '../model/ncp-payment';
 import {PaymentsService} from '../payments.service';
 import {Observable, Subject} from 'rxjs';
 import {Operation} from './operations/model/operation';
-import {UploadFilePaymentService} from '../../equipment/upload-file-payment.service';
-import {msgs, msgType, PaymentDistrStrategy, PaymentStatus, dic, rests} from '../../settings';
-import {FilePaymentItem} from '../../equipment/model/file-payment-item';
+import {UploadFilePaymentService} from './equipment/upload-file-payment.service';
+import {msgs, PaymentDetailDistrStrategy, PaymentStatus, dic, rests, STATUSES} from '../../settings';
+import {FilePaymentItem} from './equipment/model/file-payment-item';
 import {DataService} from '../../data/data.service';
 import {NGXLogger} from 'ngx-logger';
 import {UserService} from '../../user/user.service';
@@ -13,11 +13,11 @@ import {PaymentParam} from '../model/payment-param';
 import {PaymentDetail} from '../model/payment-detail';
 import {NcpPaymentDetails} from '../model/ncp-payment-details';
 import {Equipment} from '../model/equipment';
-import {NotifService} from '../../notif/notif-service.service';
 import {PaymentParamEq} from '../model/payment-param-eq';
 import {DetailEquipment} from '../model/detail-equipment';
 import {Utils} from '../../utils';
 import {EquipmentCheckParam} from '../model/equipment-check-param';
+import {NotificationsService} from 'angular2-notifications';
 
 @Injectable()
 export class PaymentService {
@@ -39,7 +39,7 @@ export class PaymentService {
                 private dataService: DataService,
                 private logger: NGXLogger,
                 private userService: UserService,
-                private myNotifService: NotifService) {
+                private notifService: NotificationsService) {
     }
 
     setPayment(id) {
@@ -99,6 +99,11 @@ export class PaymentService {
         this.announceDetails();
     }
 
+    delAll()    {
+        this.details = [];
+        this.announceDetails();
+    }
+
     delOperation(row) {
         this.operations.splice(this.operations.indexOf(row), 1);
     }
@@ -142,36 +147,24 @@ export class PaymentService {
             this.addNewDetail(detail);
         }
         this.announceDetails();
-        this.checkFilePayment();
+        //this.checkFilePayment();
         this.setEquipments();
         //console.log('Обновлённые детали платежа:\n');
         //this.utils.printObj(this.details);
     }
 
-    checkFilePayment() {
-        if (!this.checkTotalSum()) {
-            this.myNotifService.add(msgType.warn, msgs.msgErrTotalSum);
-        }
-        if (!this.checkDocNum()) {
-            this.myNotifService.add(msgType.warn, msgs.msgErrDocNum);
-        }
-        if (!this.checkRnn()) {
-            this.myNotifService.add(msgType.warn, msgs.msgErrRnn);
-        }
-    }
-
     determineDistrStrategy(item: FilePaymentItem) {
         if (item.nomenclature.trim().toLowerCase().includes(dic.prepaid) && (item.account == null || String(item.account) == '')) {
-            return PaymentDistrStrategy.byMsisdn;
+            return PaymentDetailDistrStrategy.byMsisdn;
         } else
-            return PaymentDistrStrategy.byAccount;
+            return PaymentDetailDistrStrategy.byAccount;
     }
 
     determineDistrStrategyByDetail(detail: PaymentDetail) {
         if (detail.account == null || String(detail.account) == '') {
-            return PaymentDistrStrategy.byMsisdn;
+            return PaymentDetailDistrStrategy.byMsisdn;
         } else
-            return PaymentDistrStrategy.byAccount;
+            return PaymentDetailDistrStrategy.byAccount;
     }
 
     convertDbDetailToAppDetail(item: NcpPaymentDetails): PaymentDetail {
@@ -186,7 +179,7 @@ export class PaymentService {
         detail.distribute_date = item.distribute_date;
         detail.nomenclature = null;
         detail.icc = null;
-        detail.distrStrategy = PaymentDistrStrategy.None;
+        detail.distrStrategy = PaymentDetailDistrStrategy.None;
         return detail;
     }
 
@@ -251,10 +244,10 @@ export class PaymentService {
             ncpDetail.msisdn = detail.msisdn;
             ncpDetail.account = detail.account;
             ncpDetail.sum = detail.sum;
-            if (detail.distrStrategy == PaymentDistrStrategy.byAccount) {
+            if (detail.distrStrategy == PaymentDetailDistrStrategy.byAccount) {
                 ncpDetail.msisdn = null;
             }
-            if (detail.distrStrategy == PaymentDistrStrategy.byMsisdn) {
+            if (detail.distrStrategy == PaymentDetailDistrStrategy.byMsisdn) {
                 ncpDetail.account = null;
             }
             ncpDetail.status = detail.status;
@@ -347,7 +340,7 @@ export class PaymentService {
     }
 
     isCurrentSumValid(): boolean {
-        console.log('Сравниваются суммы ' + this.getDetailsSum() + ' == ' + this.payment.sum);
+        //console.log('Сравниваются суммы ' + this.getDetailsSum() + ' == ' + this.payment.sum);
         return this.getDetailsSum() == this.payment.sum;
     }
 
@@ -383,8 +376,53 @@ export class PaymentService {
             });
     }
 
-    checkEquipmentParams(equipmentCheckParams: EquipmentCheckParam []): Observable <any>    {
-        return this.dataService.checkEquipmentParams(equipmentCheckParams);
+    async checkEquipmentParams(iccSumList) {
+        const response = await this.dataService.checkEquipmentParams(iccSumList).toPromise();
+        return response;
+    }
+
+    async checkConditions(): Promise <boolean> {
+        this.paymentsService.setProgress(true);
+        let msg;
+        let result = true;
+        if (!this.checkTotalSum()) {
+            this.notifService.warn(msgs.msgErrTotalSum);
+            result = false;
+        }
+        if (!this.checkDocNum()) {
+            this.notifService.warn(msgs.msgErrDocNum);
+            result = false;
+        }
+        if (!this.checkRnn()) {
+            this.notifService.warn(msgs.msgErrRnn);
+            result = false;
+        }
+        if (!this.isCurrentSumValid()) {
+            this.notifService.warn(msgs.msgBadValue + this.getDetailsSum());
+            result = false;
+        }
+        let equipmentCheckParams = [];
+        if (this.equipments.length > 0) {
+            this.equipments.forEach(equipment => {
+                if (!equipment.nomenclature.toLowerCase().includes(dic.prepaid)) {
+                    let sum = this.details.find(x => x.id === equipment.paymentDetailId).sum;
+                    let account = this.details.find(x => x.id === equipment.paymentDetailId).account;
+                    equipmentCheckParams.push(new EquipmentCheckParam(equipment.icc, sum, Utils.removeRepeatedSpaces(equipment.nomenclature).trim().toLowerCase(), account));
+                }
+            });
+        }
+        if (equipmentCheckParams.length > 0) {
+            let res = await this.checkEquipmentParams(equipmentCheckParams);
+            res.data.forEach(item => {
+                if (item.status != STATUSES.STATUS_VALID) {
+                    this.notifService.warn(item.icc + ' ' + item.info);
+                    result = false;
+                }
+            });
+        }
+        this.paymentsService.setProgress(false);
+        console.log(result);
+        return result;
     }
 
 }

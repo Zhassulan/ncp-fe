@@ -1,3 +1,6 @@
+/**
+ * Деталь платежа, разноска на форме платежа
+ */
 export class PaymentDetail {
 
     id: number;
@@ -25,4 +28,5 @@ export class PaymentDetail {
         this.icc = null;
         this.distrStrategy = null;
     }
+
 }
