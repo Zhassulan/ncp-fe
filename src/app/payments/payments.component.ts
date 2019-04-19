@@ -1,27 +1,27 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {DataService} from '../data/data.service';
-import {NcpPayment} from './model/ncp-payment';
-import {DateRange} from '../data/date-range';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {SelectionModel} from '@angular/cdk/collections';
-import {FormControl} from '@angular/forms';
 import {NGXLogger} from 'ngx-logger';
-import {msgs, shrinkDetailsColumnSize, rests} from '../settings';
+import {DateRange} from '../data/date-range';
+import {NcpPayment} from './model/ncp-payment';
+import {DialogService} from '../dialog/dialog.service';
+import {NotificationsService} from 'angular2-notifications';
+import {DataService} from '../data/data.service';
 import {PaymentsService} from './payments.service';
+import {FormControl} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {PaymentService} from './payment/payment.service';
 import {UserService} from '../user/user.service';
 import {Router} from '@angular/router';
-import {PaymentService} from './payment/payment.service';
-import {NotificationsService} from 'angular2-notifications';
-import {Subscription} from 'rxjs';
-import {DialogService} from '../dialog/dialog.service';
+import {SelectionModel} from '@angular/cdk/collections';
+import {msgs, rests, shrinkDetailsColumnSize} from '../settings';
 
 @Component({
-    selector: 'app-ncp-payments',
-    templateUrl: './ncp-payments.component.html',
-    styleUrls: ['./ncp-payments.component.css']
+  selector: 'app-payments',
+  templateUrl: './payments.component.html',
+  styleUrls: ['./payments.component.css']
 })
+export class PaymentsComponent implements OnInit {
 
-export class NcpPaymentsComponent implements OnInit, AfterViewInit {
     //отображаемые в таблице колонки
     displayedColumns = [
         'ID',

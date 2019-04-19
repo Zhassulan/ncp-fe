@@ -1,25 +1,44 @@
 import {Component, OnInit} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
-import {msisdnLength} from '../../../settings';
-import {PaymentService} from '../payment.service';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {msisdnLength, PaymentStatus} from '../../../settings';
 import {PaymentDetail} from '../../model/payment-detail';
-import {PaymentStatus} from '../../../settings';
+import {PaymentService} from '../payment.service';
 
 @Component({
-    selector: 'app-payment-add-operation',
-    templateUrl: './add-operation.component.html',
-    styleUrls: ['./add-operation.component.css']
+    selector: 'app-add-detail',
+    templateUrl: './add-detail.component.html',
+    styleUrls: ['./add-detail.component.css']
 })
-export class AddOperationComponent implements OnInit {
+export class AddDetailComponent implements OnInit {
 
-    frmOperation: FormGroup;
+    frmDetail: FormGroup;
     paymentStatuses = PaymentStatus;
 
     constructor(private paymentService: PaymentService) {
     }
 
+    get msisdn() {
+        return this.frmDetail.get('msisdn');
+    }
+
+    get account() {
+        return this.frmDetail.get('account');
+    }
+
+    get sum() {
+        return this.frmDetail.get('sum');
+    }
+
+    get details() {
+        return this.paymentService.details;
+    }
+
+    get payment() {
+        return this.paymentService.payment;
+    }
+
     ngOnInit() {
-        this.frmOperation = new FormGroup({
+        this.frmDetail = new FormGroup({
             msisdn: new FormControl(
                 '',
                 [
@@ -37,26 +56,6 @@ export class AddOperationComponent implements OnInit {
                     Validators.max(1000000)
                 ]),
         });
-    }
-
-    get msisdn() {
-        return this.frmOperation.get('msisdn');
-    }
-
-    get account() {
-        return this.frmOperation.get('account');
-    }
-
-    get sum() {
-        return this.frmOperation.get('sum');
-    }
-
-    get details() {
-        return this.paymentService.details;
-    }
-
-    get payment() {
-        return this.paymentService.payment;
     }
 
     addDetail() {
@@ -96,7 +95,7 @@ export class AddOperationComponent implements OnInit {
         this.clearMsisdn();
     }
 
-    isValidAddBtn() : boolean {
+    isValidAddBtn(): boolean {
         return ((this.msisdn.value != '' && this.msisdn != null) && (this.sum.value != '' && this.sum.value != null) ||
             (this.account.value != '' && this.account != null) && (this.sum.value != '' && this.sum.value != null));
     }

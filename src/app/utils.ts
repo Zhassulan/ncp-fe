@@ -12,7 +12,7 @@ export class Utils {
     }
 
     printObj(obj)  {
-        this.logger.info(JSON.stringify(obj));
+        this.logger.info(JSON.stringify(obj, undefined, 2));
     }
 
     static removeRepeatedSpaces(str): string  {

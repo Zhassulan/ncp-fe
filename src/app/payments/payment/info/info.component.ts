@@ -1,6 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {PaymentService} from '../payment.service';
-import {Subscription} from 'rxjs';
 import {NcpPayment} from '../../model/ncp-payment';
 import {PaymentStatusRuPipe} from '../../payment-status-ru-pipe';
 
@@ -11,7 +9,6 @@ import {PaymentStatusRuPipe} from '../../payment-status-ru-pipe';
 })
 export class InfoComponent implements OnInit {
 
-    subscriptionPayment: Subscription;
     @Input() payment: NcpPayment;
     paymentStatusRuPipe: PaymentStatusRuPipe;
 

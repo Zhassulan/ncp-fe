@@ -1,27 +1,25 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {PaymentService} from './payment.service';
-import {OperationsComponent} from './operations/operations.component';
-import {PaymentsService} from '../payments.service';
-import {dic, msgs, rests, STATUSES} from '../../settings';
-import {from, concat, merge, Observable, of, Subscription, Subject} from 'rxjs';
-import {PaymentMenuItems} from '../../settings';
-import {DialogComponent} from './equipment/dialog/dialog.component';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {NGXLogger} from 'ngx-logger';
 import {MatDialog} from '@angular/material';
-import {UserService} from '../../user/user.service';
 import {NotificationsService} from 'angular2-notifications';
+import {msgs, PaymentMenuItems, rests} from '../../settings';
+import {PaymentsService} from '../payments.service';
+import {concat, Subscription} from 'rxjs';
+import {PaymentService} from './payment.service';
+import {UserService} from '../../user/user.service';
+import {DialogComponent} from './equipment/dialog/dialog.component';
+import {ActivatedRoute, Router} from '@angular/router';
+import {DetailsComponent} from './details/details.component';
 
 @Component({
-    selector: 'app-payment-view',
-    templateUrl: './view-payment.component.html',
-    styleUrls: ['./view-payment.component.css']
+    selector: 'app-payment',
+    templateUrl: './payment.component.html',
+    styleUrls: ['./payment.component.css']
 })
-
-export class ViewPaymentComponent implements OnInit {
+export class PaymentComponent implements OnInit {
 
     isWait: boolean;
-    @ViewChild(OperationsComponent) childOperationsComponent: OperationsComponent;
+    @ViewChild(DetailsComponent) childDetailsComponent: DetailsComponent;
     progressSubscription: Subscription; //для экранных уведомлений
     paymentId: number;
     paymentMenuItems = PaymentMenuItems;
@@ -39,10 +37,6 @@ export class ViewPaymentComponent implements OnInit {
 
     get payment() {
         return this.paymentService.payment;
-    }
-
-    get operations() {
-        return this.paymentService.operations;
     }
 
     get details() {
@@ -101,7 +95,7 @@ export class ViewPaymentComponent implements OnInit {
         let res = await this.paymentService.checkConditions();
         if (res) {
             this.distribute();
-        }   else    {
+        } else {
             this.notifService.error('Разноска отменена');
         }
     }

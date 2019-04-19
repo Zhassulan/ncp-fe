@@ -1,24 +1,21 @@
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {
-    Component, Input, OnDestroy, OnInit, ViewChild
-} from '@angular/core';
-import {Operation} from './model/operation';
+    PaymentDetailDistrStrategy, PaymentDetailsTableColumns, PaymentDetailTableColumnsDisplay, PaymentStatus,
+    TOOLTIPS
+} from '../../../settings';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
-import {PaymentService} from '../payment.service';
-import {Subscription} from 'rxjs';
-import {PaymentDetailsTableColumns, PaymentDetailDistrStrategy, PaymentDetailTableColumnsDisplay} from '../../../settings';
 import {PaymentDetail} from '../../model/payment-detail';
-import {TOOLTIPS} from '../../../settings';
-import {PaymentStatus} from '../../../settings';
+import {Subscription} from 'rxjs';
+import {PaymentService} from '../payment.service';
 
 @Component({
-    selector: 'app-payment-operations',
-    templateUrl: './operations.component.html',
-    styleUrls: ['./operations.component.css'],
+  selector: 'app-details',
+  templateUrl: './details.component.html',
+  styleUrls: ['./details.component.css']
 })
+export class DetailsComponent implements OnInit {
 
-export class OperationsComponent implements OnInit, OnDestroy {
-
-    paymentStatus = PaymentStatus;
+    paymentStatuses = PaymentStatus;
     tooltips = TOOLTIPS;
     dataSource = new MatTableDataSource<PaymentDetail>();
     displayedColumns: string[] = PaymentDetailsTableColumns;
@@ -33,34 +30,17 @@ export class OperationsComponent implements OnInit, OnDestroy {
     constructor(private paymentService: PaymentService) {
     }
 
-    get operations() {
-        return this.paymentService.operations;
-    }
-
     get details() {
-        //return this.paymentService.operations;
         return this.paymentService.details;
     }
 
     ngOnInit() {
-        /*
-        this.subscription = this.paymentService.operationsAnnounced$.subscribe(
-            operations => {
-                console.log('subscribe');
-                this.dataSource.data = operations;
-            }); */
         this.subscription = this.paymentService.detailsAnnounced$.subscribe(
             details => {
                 this.dataSource.data = details;
             });
         this.paginatorResultsLength = this.details.length;
         this.dataSource.paginator = this.paginator;
-    }
-
-    delOperation_(row) {
-        //this.paymentService.delOperation(row);
-        //this.dataSource.data = this.operations;
-        //this.paginatorResultsLength -= 1;
     }
 
     delDetail(row) {

@@ -7,7 +7,6 @@ import {HttpClientModule} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {LoginComponent} from './auth/login/login.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {NcpPaymentsComponent} from './payments/ncp-payments.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -23,7 +22,6 @@ import {PaymentDetailsPipe} from './payments/payment-details-pipe';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
 import {LoggerModule} from 'ngx-logger';
 import {environment} from '../environments/environment';
-import {ViewPaymentComponent} from './payments/payment/view-payment.component';
 import {UploadComponent} from './payments/payment/equipment/upload.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {BreadcrumbModule} from 'angular-crumbs';
@@ -36,35 +34,37 @@ import {UserService} from './user/user.service';
 import {PaymentsService} from './payments/payments.service';
 import {PhonePipe} from './payments/payment/phone-pipe';
 import {PaymentMenuComponent} from './payments/payment/menu/payment-menu.component';
-import {OperationsComponent} from './payments/payment/operations/operations.component';
 import {PaymentService} from './payments/payment/payment.service';
 import {InfoComponent} from './payments/payment/info/info.component';
-import {AddOperationComponent} from './payments/payment/add-operation/add-operation.component';
 import {SimpleNotificationsModule} from 'angular2-notifications';
 import { SearchComponent } from './payments/search/search.component';
+import { DetailsComponent } from './payments/payment/details/details.component';
+import {PaymentComponent} from './payments/payment/payment.component';
+import { PaymentsComponent } from './payments/payments.component';
+import { AddDetailComponent } from './payments/payment/add-detail/add-detail.component';
 
 registerLocaleData(localeRu, 'ru');
 
 @NgModule({
     declarations: [
         AppComponent,
-        NcpPaymentsComponent,
         LoginComponent,
         MenuToolbarComponent,
         PaymentStatusRuPipe,
         DialogReportComponent,
         PaymentDetailsPipe,
         LoginPageComponent,
-        ViewPaymentComponent,
         UploadComponent,
         DialogComponent,
         FilePaymentViewComponent,
         PhonePipe,
         PaymentMenuComponent,
-        OperationsComponent,
         InfoComponent,
-        AddOperationComponent,
         SearchComponent,
+        PaymentComponent,
+        DetailsComponent,
+        PaymentsComponent,
+        AddDetailComponent,
     ],
     entryComponents: [
         DialogReportComponent,
