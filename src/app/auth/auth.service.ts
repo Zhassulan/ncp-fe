@@ -1,27 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {environment} from '../../environments/environment';
-import {httpOptions, ldapGroups, locStorItems, msgs, rests} from '../settings';
-import {RestResponse} from '../data/rest-response';
-import {Observable} from 'rxjs';
-import {User} from './model/user';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
-import {NGXLogger} from 'ngx-logger';
-import {NotificationsService} from 'angular2-notifications';
+import {locStorItems} from '../settings';
 
 @Injectable()
 export class AuthService {
 
-    constructor(private http: HttpClient) {
-    }
-
-    login(userObj: User): Observable <RestResponse> {
-        return this.http.post <RestResponse>(environment.urlValidateLogin, userObj, httpOptions).catch(this.errorHandler);
-    }
-
-    isAuthorized(userObj: User): Observable <RestResponse>  {
-        return this.http.post <RestResponse>(environment.urlValidateAuthorization, userObj, httpOptions).catch(this.errorHandler);
+    constructor() {
     }
 
     logout() {
@@ -34,10 +17,6 @@ export class AuthService {
 
     isLogged(): boolean {
         return this.getUser() !== null;
-    }
-
-    errorHandler(error: HttpErrorResponse)  {
-        return Observable.throwError(error.message || "Ошибка сервера.");
     }
 
 }

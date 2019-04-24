@@ -37,11 +37,11 @@ import {PaymentMenuComponent} from './payments/payment/menu/payment-menu.compone
 import {PaymentService} from './payments/payment/payment.service';
 import {InfoComponent} from './payments/payment/info/info.component';
 import {SimpleNotificationsModule} from 'angular2-notifications';
-import { SearchComponent } from './payments/search/search.component';
-import { DetailsComponent } from './payments/payment/details/details.component';
+import {DetailsComponent} from './payments/payment/details/details.component';
 import {PaymentComponent} from './payments/payment/payment.component';
-import { PaymentsComponent } from './payments/payments.component';
-import { AddDetailComponent } from './payments/payment/add-detail/add-detail.component';
+import {PaymentsComponent} from './payments/payments.component';
+import {AddDetailComponent} from './payments/payment/add-detail/add-detail.component';
+import {SearchClientComponent} from './payments/search-client/search-client.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -60,11 +60,11 @@ registerLocaleData(localeRu, 'ru');
         PhonePipe,
         PaymentMenuComponent,
         InfoComponent,
-        SearchComponent,
         PaymentComponent,
         DetailsComponent,
         PaymentsComponent,
         AddDetailComponent,
+        SearchClientComponent,
     ],
     entryComponents: [
         DialogReportComponent,

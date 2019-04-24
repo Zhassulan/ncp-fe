@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {NcpPayment} from '../model/ncp-payment';
 import {PaymentsService} from '../payments.service';
-import {Observable, Subject} from 'rxjs';
+import {concat, Observable, Subject} from 'rxjs';
 import {UploadFilePaymentService} from './equipment/upload-file-payment.service';
 import {msgs, PaymentDetailDistrStrategy, PaymentStatus, dic, rests, STATUSES} from '../../settings';
 import {FilePaymentItem} from './equipment/model/file-payment-item';
@@ -16,6 +16,7 @@ import {DetailEquipment} from '../model/detail-equipment';
 import {Utils} from '../../utils';
 import {EquipmentCheckParam} from '../model/equipment-check-param';
 import {NotificationsService} from 'angular2-notifications';
+import {PaymentStatus} from '../../settings';
 
 @Injectable()
 export class PaymentService {
@@ -29,6 +30,7 @@ export class PaymentService {
     paymentAnnounced$ = this.paymentObs.asObservable();
     paymentParamEq: PaymentParamEq;
     utils = new Utils(this.logger);
+    paymentStatuses = PaymentStatus;
 
     constructor(private paymentsService: PaymentsService,
                 private uploadFilePaymentService: UploadFilePaymentService,
@@ -85,6 +87,7 @@ export class PaymentService {
 
     addNewDetail(detail: PaymentDetail) {
         this.details.push(detail);
+        console.log(JSON.stringify((this.details)));
         this.announceDetails();
     }
 
@@ -111,20 +114,25 @@ export class PaymentService {
     }
 
     getDetailsSum(key) {
-        return this.details.reduce((a, b) => a + (b[key] || 0), 0);
+        return this.details.reduce((a, b) => Number(a) + Number((b[key] || 0)), 0);
     }
 
     checkTotalSum(): boolean {
-        //return Number(this.filePaymentItems.slice(this.filePaymentItems.length - 1)[0].sum) == Number(this.payment.sum);
         return Number(this.getDetailsSum('sum')) == Number(this.payment.sum);
     }
 
     checkDocNum(): boolean {
-        return this.uploadFilePaymentService.filePayment.filePaymentHeader.payment_docnum == this.payment.paymentDocnum;
+        if (this.uploadFilePaymentService.filePayment)
+            return this.uploadFilePaymentService.filePayment.filePaymentHeader.payment_docnum == this.payment.paymentDocnum;
+        else
+            return true;
     }
 
     checkRnn(): boolean {
-        return this.uploadFilePaymentService.filePayment.filePaymentHeader.iin_bin_sender == this.payment.rnnSender;
+        if (this.uploadFilePaymentService.filePayment)
+            return this.uploadFilePaymentService.filePayment.filePaymentHeader.iin_bin_sender == this.payment.rnnSender;
+        else
+            return true;
     }
 
     addDetailsFromFilePayment() {
@@ -247,25 +255,28 @@ export class PaymentService {
         params.items = [];
         //this.printDetails();
         this.details.forEach(detail => {
-            let ncpDetail = new NcpPaymentDetails();
-            ncpDetail.id = detail.id;
-            ncpDetail.msisdn = detail.msisdn;
-            ncpDetail.account = detail.account;
-            ncpDetail.sum = detail.sum;
-            if (detail.distrStrategy == PaymentDetailDistrStrategy.byAccount) {
-                ncpDetail.msisdn = null;
-            }
-            if (detail.distrStrategy == PaymentDetailDistrStrategy.byMsisdn) {
-                ncpDetail.account = null;
-            }
-            ncpDetail.status = detail.status;
-            ncpDetail.err_message = detail.err_message;
-            ncpDetail.distribute_date = detail.distribute_date;
-            if ((detail.nomenclature != null || detail.nomenclature != '') && (detail.icc != null || detail.icc != '')) {
-                let equipment: Equipment = this.createEquipmentByDetail(this.payment.id, detail);
-                params.items.push(new DetailEquipment(ncpDetail, equipment));
+            if (detail.status == this.paymentStatuses.STATUS_NEW)   {
+                let ncpDetail = new NcpPaymentDetails();
+                ncpDetail.id = detail.id;
+                ncpDetail.msisdn = detail.msisdn;
+                ncpDetail.account = detail.account;
+                ncpDetail.sum = detail.sum;
+                if (detail.distrStrategy == PaymentDetailDistrStrategy.byAccount) {
+                    ncpDetail.msisdn = null;
+                }
+                if (detail.distrStrategy == PaymentDetailDistrStrategy.byMsisdn) {
+                    ncpDetail.account = null;
+                }
+                ncpDetail.status = detail.status;
+                ncpDetail.err_message = detail.err_message;
+                ncpDetail.distribute_date = detail.distribute_date;
+                if ((detail.nomenclature != null || detail.nomenclature != '') && (detail.icc != null || detail.icc != '')) {
+                    let equipment: Equipment = this.createEquipmentByDetail(this.payment.id, detail);
+                    params.items.push(new DetailEquipment(ncpDetail, equipment));
+                }
             }
         });
+        //console.log('Params:\n' + JSON.stringify(params));
         this.paymentParamEq = params;
         //this.logger.info("Параметр для разноски:\n" this.utils.printObj(this.paymentParamEq));
     }
@@ -287,10 +298,6 @@ export class PaymentService {
                 ()=> {}
                 )
             });
-    }
-
-    newEquipment(paymentId: number, equipment: Equipment)  {
-        return this.dataService.newEquipment(paymentId, equipment);
     }
 
     createEquipmentByDetail(paymentId: number, detail: PaymentDetail):Equipment   {
@@ -349,16 +356,7 @@ export class PaymentService {
     }
 
     isCurrentSumValid(): boolean {
-        //console.log('Сравниваются суммы ' + this.getDetailsSum() + ' == ' + this.payment.sum);
-        return this.getDetailsSum() == this.payment.sum;
-    }
-
-    getDetailsSum(): number {
-        let sum = 0;
-        this.details.forEach(detail => {
-            sum += Number(detail.sum);
-        });
-        return sum;
+        return this.getDetailsSum('sum') == this.payment.sum;
     }
 
     getBercutEquipmentInfo(icc): Observable <any> {
@@ -392,8 +390,12 @@ export class PaymentService {
 
     async checkConditions(): Promise <boolean> {
         this.paymentsService.setProgress(true);
-        let msg;
         let result = true;
+        if (!this.isNewDetailsExistsForDistribution()) {
+            this.notifService.warn(msgs.msgNoNewDetails);
+            this.paymentsService.setProgress(false);
+            return false;
+        }
         if (!this.checkTotalSum()) {
             this.notifService.warn(msgs.msgErrTotalSum);
             result = false;
@@ -406,10 +408,6 @@ export class PaymentService {
             this.notifService.warn(msgs.msgErrRnn);
             result = false;
         }
-        if (!this.isCurrentSumValid()) {
-            this.notifService.warn(msgs.msgBadValue + this.getDetailsSum());
-            result = false;
-        }
         result = await this.checkBercutEquipment();
         this.paymentsService.setProgress(false);
         return result;
@@ -420,8 +418,10 @@ export class PaymentService {
         let equipmentCheckParams = [];
         if (this.details.length > 0) {
             this.details.forEach(detail => {
-                if (!detail.nomenclature.toLowerCase().includes(dic.prepaid)) {
-                    equipmentCheckParams.push(new EquipmentCheckParam(detail.icc, detail.sum, Utils.removeRepeatedSpaces(detail.nomenclature).trim().toLowerCase(), detail.account));
+                if (detail.nomenclature)    {
+                    if (!detail.nomenclature.toLowerCase().includes(dic.prepaid)) {
+                        equipmentCheckParams.push(new EquipmentCheckParam(detail.icc, detail.sum, Utils.removeRepeatedSpaces(detail.nomenclature).trim().toLowerCase(), detail.account));
+                    }
                 }
             });
         }
@@ -434,6 +434,32 @@ export class PaymentService {
                 }
             });
         }
+        return result;
+    }
+
+    showPaymentStatus(status, id)   {
+        let msg;
+        switch (status) {
+            case PaymentStatus.STATUS_DISTRIBUTED: {
+                msg = msgs.msgSuccessDistributed + 'ID ' + id + this.userService.logUser();
+                this.logger.info(msg);
+                this.notifService.success(msg);
+            } break;
+            case PaymentStatus.STATUS_ERROR: {
+                msg = msgs.msgErrDistributePayment + 'ID ' + id + this.userService.logUser();
+                this.logger.warn(msg);
+                this.notifService.warn(msg);
+            } break;
+        }
+    }
+
+    isNewDetailsExistsForDistribution(): boolean    {
+        let result = false;
+        this.details.forEach(detail => {
+            if (detail.status == this.paymentStatuses.STATUS_NEW)   {
+                result = true;
+            }
+        });
         return result;
     }
 

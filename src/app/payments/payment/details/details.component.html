@@ -1,58 +1,65 @@
 <table mat-table [dataSource]="dataSource">
 
-  <ng-container matColumnDef="num">
-    <th mat-header-cell *matHeaderCellDef > {{ detailTableColumnsDisplay.num }}</th>
-    <td mat-cell *matCellDef="let element; let i = index;" > {{ paginator.pageIndex < 1 ? i + 1 : (i + 1) +
-      (paginator.pageIndex *10) }}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="num">
+        <th mat-header-cell *matHeaderCellDef> {{ detailTableColumnsDisplay.num }}</th>
+        <td mat-cell *matCellDef="let detail; let i = index;"> {{ paginator.pageIndex < 1 ? i + 1 : (i + 1) +
+            (paginator.pageIndex *10) }}
+        </td>
+    </ng-container>
 
-  <ng-container matColumnDef="nomenclature">
-    <th mat-header-cell *matHeaderCellDef > {{ detailTableColumnsDisplay.nomenclature }} </th>
-    <td mat-cell *matCellDef="let element" > {{element.nomenclature }}</td>
-  </ng-container>
+    <ng-container matColumnDef="nomenclature">
+        <th mat-header-cell *matHeaderCellDef> {{ detailTableColumnsDisplay.nomenclature }}</th>
+        <td mat-cell *matCellDef="let detail"> {{detail.nomenclature }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="msisdn">
-    <th mat-header-cell *matHeaderCellDef > {{ detailTableColumnsDisplay.msisdn }} </th>
-    <td mat-cell *matCellDef="let element" [ngClass]="{'boldText': element.distrStrategy == paymentDistrStrategies.byMsisdn}">
-      {{element.msisdn  ? (element.msisdn | phonePipe : element.msisdn) : null }}</td>
-  </ng-container>
+    <ng-container matColumnDef="msisdn">
+        <th mat-header-cell *matHeaderCellDef> {{ detailTableColumnsDisplay.msisdn }}</th>
+        <td mat-cell *matCellDef="let detail" [ngClass]="{'boldText': detail.distrStrategy == paymentDistrStrategies.byMsisdn}">
+            {{detail.msisdn ? (detail.msisdn | phonePipe : detail.msisdn) : null }}
+        </td>
+    </ng-container>
 
-  <ng-container matColumnDef="icc">
-    <th mat-header-cell *matHeaderCellDef > {{ detailTableColumnsDisplay.icc }} </th>
-    <td mat-cell *matCellDef="let element" > {{element.icc }}</td>
-  </ng-container>
+    <ng-container matColumnDef="icc">
+        <th mat-header-cell *matHeaderCellDef> {{ detailTableColumnsDisplay.icc }}</th>
+        <td mat-cell *matCellDef="let detail"> {{detail.icc }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="account">
-    <th mat-header-cell *matHeaderCellDef> {{ detailTableColumnsDisplay.account }} </th>
-    <td mat-cell *matCellDef="let element" [ngClass]="{'boldText': element.distrStrategy == paymentDistrStrategies.byAccount}" > {{element.account}}</td>
-  </ng-container>
+    <ng-container matColumnDef="account">
+        <th mat-header-cell *matHeaderCellDef> {{ detailTableColumnsDisplay.account }}</th>
+        <td mat-cell *matCellDef="let detail" [ngClass]="{'boldText': detail.distrStrategy == paymentDistrStrategies.byAccount}"> {{detail.account}}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="sum">
-    <th mat-header-cell *matHeaderCellDef > {{ detailTableColumnsDisplay.sum }} </th>
-    <td mat-cell *matCellDef="let element" > {{element.sum | currency : ' тг.'}}</td>
-  </ng-container>
+    <ng-container matColumnDef="sum">
+        <th mat-header-cell *matHeaderCellDef> {{ detailTableColumnsDisplay.sum }}</th>
+        <td mat-cell *matCellDef="let detail"> {{detail.sum | currency : ' тг.'}}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="del">
-    <th mat-header-cell *matHeaderCellDef >
-      <button mat-mini-fab color="primary" (click)="delAll()"
-              *ngIf="((details.length > 0 ? true : false) && (status == paymentStatuses.STATUS_NEW))" matTooltip="{{ tooltips.delAll }}">
-        <mat-icon>clear</mat-icon>
-      </button>
-    </th>
-    <td mat-cell *matCellDef="let element">
-      <button mat-mini-fab color="primary" (click)="delDetail(element)"
-              *ngIf="!(element.distrStrategy == paymentDistrStrategies.None)" matTooltip="{{ detailTableColumnsDisplay.del }}">
-        <mat-icon>clear</mat-icon>
-      </button>
-      <button mat-mini-fab disabled *ngIf="(element.distrStrategy == paymentDistrStrategies.None)">
-        <mat-icon>done</mat-icon>
-      </button>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="del">
+        <th mat-header-cell *matHeaderCellDef>
+            <button mat-mini-fab color="primary" (click)="delAll()"
+                    *ngIf="((details.length > 0 ? true : false) && (status == paymentStatuses.STATUS_NEW))" matTooltip="{{ tooltips.delAll }}">
+                <mat-icon>clear</mat-icon>
+            </button>
+        </th>
+        <td mat-cell *matCellDef="let detail">
+            <button mat-mini-fab color="primary" (click)="delDetail(detail)"
+                    *ngIf="(detail.status == paymentStatuses.STATUS_NEW || detail.status == paymentStatuses.STATUS_ERROR)"
+                        matTooltip="{{ detailTableColumnsDisplay.del  + ' (' + detail.err_message + ')' }}">
+                <mat-icon>clear</mat-icon>
+            </button>
+            <button mat-mini-fab disabled *ngIf="(detail.status == paymentStatuses.STATUS_DISTRIBUTED)">
+                <mat-icon>done</mat-icon>
+            </button>
+            <!--
+            <button mat-mini-fab *ngIf="(detail.status == paymentStatuses.STATUS_ERROR)" matTooltip="{{ detail.err_message }}">
+                <mat-icon>error_outline</mat-icon>
+            </button>
+            -->
+        </td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
 </table>
 
@@ -60,5 +67,5 @@
 
 
 <div fxLayout="row" fxLayoutAlign="end center">
-  <p class="mat-h3">Итого: <b>{{ getTotal() | currency : ' тг.' }}</b></p>
+    <p class="mat-h3">Итого: <b>{{ getTotal() | currency : ' тг.' }}</b></p>
 </div>

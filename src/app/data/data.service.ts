@@ -9,11 +9,11 @@ import {httpOptions} from '../settings';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import {FilePayment} from '../payments/payment/equipment/model/file-payment';
-import {RawPayment} from '../payments/model/raw-payment';
-import {NcpPaymentDetails} from '../payments/model/ncp-payment-details';
-import {Equipment} from '../payments/model/equipment';
 import {PaymentParamEq} from '../payments/model/payment-param-eq';
 import {EquipmentCheckParam} from '../payments/model/equipment-check-param';
+import {User} from '../auth/model/user';
+
+const API_URL = environment.apiUrl;
 
 @Injectable()
 export class DataService {
@@ -30,13 +30,12 @@ export class DataService {
         return Observable.throwError(error.message || "Ошибка сервера.");
     }
 
-    /**
-     * Получить все платежи NCP
-     * @param {DateRange} dr
-     * @returns {Observable<NcpPayment[]>}
-     */
-    getNcpPayments(dr: DateRange): Observable <RestResponse> {
-        return this._http.post<RestResponse>(environment.urlGetNcpPaymentsRange, dr, httpOptions).catch(this.errorHandler);
+    login(userObj: User): Observable <RestResponse> {
+        return this._http.post <RestResponse>(API_URL + '/auth/login', userObj, httpOptions).catch(this.errorHandler);
+    }
+
+    authorize(userObj: User): Observable <RestResponse>  {
+        return this._http.post <RestResponse>(API_URL + '/auth/authorization', userObj, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -44,8 +43,8 @@ export class DataService {
      * @param {DateRange} dr
      * @returns {Observable<NcpPayment[]>}
      */
-    getNcpPaymentsByPart(dr: DateRange): Observable <NcpPayment []> {
-        return this._http.post<NcpPayment []>(environment.urlGetNcpPaymentsRange, dr, httpOptions).catch(this.errorHandler);
+    getNcpPayments(dr: DateRange): Observable <RestResponse> {
+        return this._http.post<RestResponse>(API_URL + '/exdata/payments', dr, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -62,7 +61,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     paymentToTransit(id: number): Observable <RestResponse> {
-        return this._http.post <RestResponse> (environment.urlPaymentToTransit + '?id=' + id, httpOptions).catch(this.errorHandler);
+        return this._http.post <RestResponse> (API_URL + `/exdata/payment/${id}/transit/transfer`, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -72,7 +71,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     deleteTransitPayment(id: number, user: string) : Observable <RestResponse> {
-        return this._http.post <RestResponse> (environment.urlDeleteTransitPayment + '?id=' + id + '&user=' + user, httpOptions).catch(this.errorHandler);
+        return this._http.post <RestResponse> (API_URL + `/exdata/payment/${id}/transit/delete`, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -81,25 +80,7 @@ export class DataService {
      * @returns {Observable<any>}
      */
     postFilePayment(formData: FormData): Observable<any> {
-        return this._http.post<FilePayment>(environment.urlUploadEquipment, formData).catch(this.errorHandler);
-    }
-
-    /**
-     * создать грязный платёж
-     * @param {RawPayment} payment
-     * @returns {Observable<RestResponse>}
-     */
-    newRawPayment(payment: RawPayment): Observable<RestResponse> {
-        return this._http.post<RestResponse>(environment.urlNewRawPayment, payment, httpOptions).catch(this.errorHandler);
-    }
-
-    /**
-     * Получить платёж по ID грязного платежа
-     * @param {number} id
-     * @returns {Observable<RestResponse>}
-     */
-    getNcpPaymentByRawId(id: number): Observable<RestResponse>   {
-        return this._http.post<RestResponse>(environment.urlGetNcpPaymentByRawId + '?id=' + id, httpOptions).catch(this.errorHandler);
+        return this._http.post<FilePayment>(API_URL + '/exdata/equipment/upload', formData).catch(this.errorHandler);
     }
 
     /**
@@ -107,8 +88,8 @@ export class DataService {
      * @param {number} paymentId
      * @returns {Observable<RestResponse>}
      */
-    getPaymentDetails(paymentId: number): Observable<RestResponse>   {
-        return this._http.post<RestResponse>(environment.urlGetPaymentDetails + '?id=' + paymentId, httpOptions).catch(this.errorHandler);
+    getPaymentDetails(id: number): Observable<RestResponse>   {
+        return this._http.post<RestResponse>(API_URL + `/exdata/payment/${id}/details`, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -117,26 +98,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     distributePayment(params: PaymentParamEq): Observable<RestResponse>  {
-        return this._http.post<RestResponse>(environment.urlDistributePayment, params, httpOptions).catch(this.errorHandler);
-    }
-
-    /**
-     * Создать деталь платежа
-     * @param {NcpPaymentDetails} detail
-     * @returns {Observable<RestResponse>}
-     */
-    newPaymentDetail(detail: NcpPaymentDetails): Observable<RestResponse>   {
-        return this._http.post<RestResponse>(environment.urlNewPaymentDetail, detail, httpOptions).catch(this.errorHandler);
-    }
-
-    /**
-     * Добавить новую запись хранения доп полей для оборудования
-     * @param {number} paymentDetailId
-     * @param {Equipment} equipment
-     * @returns {Observable<RestResponse>}
-     */
-    newEquipment(paymentDetailId: number, equipment: Equipment): Observable<RestResponse>   {
-        return this._http.post<RestResponse>(environment.urlNewEquipment + '?id=' + paymentDetailId, equipment, httpOptions).catch(this.errorHandler);
+        return this._http.post<RestResponse>(API_URL + '/exdata/payment/distribute', params, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -145,7 +107,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     getPayment(id: number): Observable<RestResponse>   {
-        return this._http.post<RestResponse>(environment.urlGetPayment + '?id=' + id, httpOptions).catch(this.errorHandler);
+        return this._http.post<RestResponse>(API_URL + `/exdata/payment/${id}/`, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -154,29 +116,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     getPaymentEquipments(id: number): Observable<RestResponse>   {
-        return this._http.post<RestResponse>(environment.urlGetPaymentEquipments + '?id=' + id, httpOptions).catch(this.errorHandler);
-    }
-
-    /**
-     * получить информацию о дилере и складе на данный момент по ICC сим карты
-     * @param {string} icc
-     * @returns {Observable<RestResponse>}
-     */
-    getDealerInfo(icc: string): Observable<RestResponse>   {
-        return this._http.post<RestResponse>(environment.urlGetDealerInfoByIcc + '?icc=' + icc, httpOptions).catch(this.errorHandler);
-    }
-
-    /**
-     * Получить платежи за период постранично
-     * @param startDate
-     * @param endDate
-     * @param page
-     * @param offset
-     * @returns {Observable<RestResponse>}
-     */
-    getPaymentsByPage(startDate, endDate, page, offset): Observable<RestResponse>   {
-        return this._http.post<RestResponse>(environment.urlPaymentsByPage + '?start_date=' + startDate + '&end_date=' + endDate + '&page=' + page +
-            '&offset=' + offset, httpOptions).catch(this.errorHandler);
+        return this._http.post<RestResponse>(API_URL + `/exdata/payment/${id}/equipments`, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -185,7 +125,7 @@ export class DataService {
      * @returns {Observable<any>}
      */
     getBercutEquipmentInfoByIcc(icc:String)   {
-        return this._http.post<RestResponse>(environment.urlGetBercutEquipmentInfoByIcc + '?icc=' + icc, httpOptions).catch(this.errorHandler);
+        return this._http.post<RestResponse>(API_URL + `/exdata/equipment/${icc}`, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -194,7 +134,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     checkEquipmentParams(iccList: EquipmentCheckParam []):  Observable<RestResponse> {
-        return this._http.post<RestResponse>(environment.urlCheckEquipmentParams, iccList, httpOptions).catch(this.errorHandler);
+        return this._http.post<RestResponse>(API_URL + '/exdata/equipments/check', iccList, httpOptions).catch(this.errorHandler);
     }
 
 }

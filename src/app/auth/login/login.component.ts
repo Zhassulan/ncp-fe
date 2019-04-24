@@ -7,6 +7,7 @@ import {ldapGroups, rests, msgs, locStorItems} from '../../settings';
 import {NGXLogger} from 'ngx-logger';
 import {NotificationsService} from 'angular2-notifications';
 import {environment} from '../../../environments/environment';
+import {DataService} from '../../data/data.service';
 
 @Component({
     selector: 'app-login',
@@ -28,7 +29,8 @@ export class LoginComponent implements OnInit {
                 private router: Router,
                 private dialogRef:MatDialogRef<LoginComponent>,
                 private logger: NGXLogger,
-                private notifService: NotificationsService) {
+                private notifService: NotificationsService,
+                private dataService: DataService) {
     }
 
     login() {
@@ -38,10 +40,10 @@ export class LoginComponent implements OnInit {
         }
         let userObj = new User (this.userName, this.userPassword, checkLdapGroup);
         //проверка логина и пароля
-        this.authService.login(userObj).subscribe(data => {
+        this.dataService.login(userObj).subscribe(data => {
                 if (data.result == rests.restResultOk) {
                     //проверка нахождения в группе
-                    this.authService.isAuthorized(userObj).subscribe(data => {
+                    this.dataService.authorize(userObj).subscribe(data => {
                             if (data.result == rests.restResultOk) {
                                 this.logger.info(msgs.msgLoggedSuccess + ' ' + userObj.userName);
                                 localStorage.setItem(locStorItems.userName, data.data.userName);

@@ -7,6 +7,7 @@ import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {PaymentDetail} from '../../model/payment-detail';
 import {Subscription} from 'rxjs';
 import {PaymentService} from '../payment.service';
+import {PaymentStatusEnRu} from '../../../settings';
 
 @Component({
   selector: 'app-details',
@@ -16,6 +17,8 @@ import {PaymentService} from '../payment.service';
 export class DetailsComponent implements OnInit {
 
     paymentStatuses = PaymentStatus;
+    paymentStatusesEnRu = PaymentStatusEnRu;
+
     tooltips = TOOLTIPS;
     dataSource = new MatTableDataSource<PaymentDetail>();
     displayedColumns: string[] = PaymentDetailsTableColumns;

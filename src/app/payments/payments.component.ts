@@ -55,8 +55,6 @@ export class PaymentsComponent implements OnInit {
     //даты начала и конца дня
     dtStartDay: Date;
     dtEndDay: Date;
-    progressSubscription: Subscription;
-    isWait: boolean;
 
     constructor(private dataService: DataService,
                 private dialogService: DialogService,
@@ -71,10 +69,6 @@ export class PaymentsComponent implements OnInit {
         this.dtStartDay = new Date();
         this.dtEndDay = new Date();
         this.paginatorResultsLength = 0;
-        this.progressSubscription = this.paymentsService.progressAnnounced$.subscribe(
-            data => {
-                this.isWait = data;
-            });
     }
 
     ngOnInit() {

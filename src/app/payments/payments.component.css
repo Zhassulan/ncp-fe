@@ -37,8 +37,8 @@
             minmax(max-content, max-content)
             minmax(max-content, auto);
     grid-template-areas:
-            "item item item item search"
-            "payments payments payments payments payments";
+            "item item item item item search"
+            "payments payments payments payments payments payments";
     gap: 5px;
 }
 

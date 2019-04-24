@@ -1,7 +1,9 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
 import {locStorItems} from '../settings';
+import {PaymentsService} from '../payments/payments.service';
+import {Subscription} from 'rxjs';
 
 interface ROUTE {
     icon?: string;
@@ -14,7 +16,10 @@ interface ROUTE {
     templateUrl: './menu-toolbar.component.html',
     styleUrls: ['./menu-toolbar.component.css']
 })
-export class MenuToolbarComponent implements OnInit {
+export class MenuToolbarComponent implements AfterViewChecked {
+
+    isWait: boolean;
+    progressSubscription: Subscription;
 
     paymentRoutes: ROUTE[] = [
         {
@@ -59,18 +64,30 @@ export class MenuToolbarComponent implements OnInit {
     @Output() toggleSidenav = new EventEmitter<void>();
 
     constructor(private authService: AuthService,
-                private router: Router) {
+                private router: Router,
+                private paymentsService: PaymentsService,
+                private cdRef:ChangeDetectorRef) {
+        this.progressSubscription = this.paymentsService.progressAnnounced$.subscribe(
+            data => {
+                this.isWait = data;
+            });
     }
 
-    ngOnInit() { }
+    ngAfterViewChecked(): void {
+        if (!this.isWait)
+            this.isWait = false;
+        this.cdRef.detectChanges();
+    }
 
-    logout()    {
+
+
+    logout() {
         this.authService.logout();
         localStorage.removeItem(locStorItems.userName);
         this.router.navigate(['/login']);
     }
 
-    getUser()   {
+    getUser() {
         return this.authService.getUser();
     }
 

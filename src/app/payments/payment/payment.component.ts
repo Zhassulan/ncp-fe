@@ -2,13 +2,13 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {NGXLogger} from 'ngx-logger';
 import {MatDialog} from '@angular/material';
 import {NotificationsService} from 'angular2-notifications';
-import {msgs, PaymentMenuItems, rests} from '../../settings';
+import {msgs, PaymentMenuItems, PaymentStatus, PaymentStatusRu, rests} from '../../settings';
 import {PaymentsService} from '../payments.service';
 import {concat, Subscription} from 'rxjs';
 import {PaymentService} from './payment.service';
 import {UserService} from '../../user/user.service';
 import {DialogComponent} from './equipment/dialog/dialog.component';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, PRIMARY_OUTLET, Router, UrlSegment, UrlSegmentGroup, UrlTree} from '@angular/router';
 import {DetailsComponent} from './details/details.component';
 
 @Component({
@@ -18,9 +18,7 @@ import {DetailsComponent} from './details/details.component';
 })
 export class PaymentComponent implements OnInit {
 
-    isWait: boolean;
     @ViewChild(DetailsComponent) childDetailsComponent: DetailsComponent;
-    progressSubscription: Subscription; //для экранных уведомлений
     paymentId: number;
     paymentMenuItems = PaymentMenuItems;
     dialogRef;
@@ -45,10 +43,6 @@ export class PaymentComponent implements OnInit {
 
     ngOnInit() {
         this.paymentId = this.route.snapshot.params['id'];
-        this.progressSubscription = this.paymentsService.progressAnnounced$.subscribe(
-            data => {
-                this.isWait = data;
-            });
         this.loadPayment();
     }
 
@@ -92,11 +86,12 @@ export class PaymentComponent implements OnInit {
     }
 
     async menuDistribute() {
+
         let res = await this.paymentService.checkConditions();
         if (res) {
             this.distribute();
         } else {
-            this.notifService.error('Разноска отменена');
+            this.notifService.error(msgs.msgDistributionFailed);
         }
     }
 
@@ -106,9 +101,7 @@ export class PaymentComponent implements OnInit {
         this.paymentService.distribute().subscribe(distributeRes => {
                 if (distributeRes.result == rests.restResultOk) {
                     this.paymentService.setPaymentByData(distributeRes.data);
-                    msg = msgs.msgSuccessDistributed + 'ID ' + this.paymentId + this.userService.logUser();
-                    this.logger.info(msg);
-                    this.notifService.success(msg);
+                    this.paymentService.showPaymentStatus(distributeRes.data.status, distributeRes.data.id);
                     this.loadPayment();
                 }
                 if (distributeRes.result == rests.restResultErr) {

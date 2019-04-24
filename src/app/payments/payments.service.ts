@@ -6,7 +6,6 @@ import {locStorItems, msgs, PaymentStatusRu, rests} from '../settings';
 import {Observable, Subject} from 'rxjs';
 import {UserService} from '../user/user.service';
 import {NcpPayment} from './model/ncp-payment';
-import {RawPayment} from './model/raw-payment';
 import {RestResponse} from '../data/rest-response';
 
 @Injectable()
@@ -14,9 +13,7 @@ export class PaymentsService {
 
     payments = []; // платежи
     paginatorResultsLength: number;
-    newRawPayment: RawPayment = new RawPayment();
     newNcpPayment: NcpPayment = new NcpPayment();
-    isWait = false; //полоса прогресса
     private progressObs = new Subject<boolean>();
     progressAnnounced$ = this.progressObs.asObservable();
 
@@ -135,48 +132,6 @@ export class PaymentsService {
             });
     }
 
-    /*
-    createRawPayment(payment: RawPayment): Observable<RestResponse> {
-        return new Observable<any>(
-            observer => {
-                this.dataService.createRawPayment(payment).subscribe(data => {
-                        if (data.result == rests.restResultOk) {
-                            this.newRawPayment = data.data;
-                        }
-                        observer.next(data);
-                    },
-                    error2 => {
-                        observer.error(error2);
-                    },
-                    () => {
-                        observer.complete();
-                    });
-            });
-    }
-    */
-
-
-    getNcpPaymentByRawId(): Observable<RestResponse> {
-        return new Observable<any>(
-            observer => {
-                this.dataService.getNcpPaymentByRawId(this.newRawPayment.id).subscribe(data => {
-                        if (data.result == rests.restResultOk) {
-                            this.newNcpPayment = data.data;
-                            observer.next(data);
-                        }
-                        if (data.result == rests.restResultErr) {
-                            observer.error(data.data);
-                        }
-                    },
-                    error2 => {
-                        observer.error(error2);
-                    },
-                    () => {
-                        observer.complete();
-                    });
-            });
-    }
-
     /**
      * Обновление платежа в списке сервиса (кеш) после разноски
      * @param {number} paymentId
@@ -186,10 +141,11 @@ export class PaymentsService {
         this.payments.find(x => x.id == paymentId).status = paymentNewData.status;
     }
 
+    /*
     getPaymentsByPage(dr: DateRange, page, offset): Observable<RestResponse> {
         return new Observable(
             observer => {
-                this.dataService.getPaymentsByPage(dr.startDate, dr.endDate, page, offset).subscribe(data => {
+                this.dataService.payme(dr.startDate, dr.endDate, page, offset).subscribe(data => {
                         if (data.result == rests.restResultOk) {
                             observer.next(data);
                         }
@@ -207,6 +163,6 @@ export class PaymentsService {
                         observer.complete();
                     });
             });
-    }
+    }*/
 
 }

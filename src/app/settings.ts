@@ -33,7 +33,7 @@ export enum PaymentStatusRu {
 }
 
 /**
- * Платёж - маппинг числового статуса и перевода на русском
+ * Платёж - маппинг английского статуса и русского
  */
 export enum PaymentStatusEnRu {
     'STATUS_NEW' = 'Новый',
@@ -121,10 +121,6 @@ export const enum msgs {
     msgSuccessDelTransit = 'Успешно удалён с транзитного счёта. ',
     msgErrDelTransit = 'Ошибка удаления с транзитного счёта. ',
     msgErrUploadFilePayment = 'Ошибка загрузки файлового платежа. ',
-    msgSuccessNewRawPayment = 'Успешно создан грязный платёж. ',
-    msgErrNewRawPayment = 'Ошибка при создании грязного платежа. ',
-    msgErrGetNcpPaymentByRawId = 'Ошибка получения NCP платежа по грязному платежу. ',
-    msgSuccessGetNcpPaymentByRawId = 'Успешно получен NCP платёж по грязному платежу. ',
     msgErrTotalSum = 'Сумма платежа и сумма файла не совпадают. ',
     msgErrDocNum = 'Номер платежа не совпадает с номером в файле. ',
     msgErrRnn = 'ИИН платежа не совпадает с ИИН в файле. ',
@@ -138,6 +134,8 @@ export const enum msgs {
     msgErrGetPaymentData = 'Ошибка получения данных платежа. ',
     msgErrNoDataFound = 'Данные не найдены.',
     msgBadValue = 'Не верное значение.',
+    msgDistributionFailed = 'Разноска отменена.',
+    msgNoNewDetails = 'Нет новых разносок.',
 }
 
 /**

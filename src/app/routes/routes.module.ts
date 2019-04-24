@@ -12,7 +12,7 @@ import {PaymentsComponent} from '../payments/payments.component';
 
 const routes: Routes = [
     {path: '', redirectTo: 'payments', pathMatch: 'full'},
-    {path: 'payments', redirectTo: 'payment/230365'}, //для открытия конкретного платежа для отладки
+    {path: 'payments', redirectTo: 'payment/230365'}, //для открытия конкретного платежа для отладки TODO убрать в проде
     {path: 'payments', component: PaymentsComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Платежи'}},
     {path: 'login', component: LoginPageComponent},
     {path: 'equipment', component: UploadComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Оборудование'}},
