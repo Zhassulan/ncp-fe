@@ -77,7 +77,7 @@ export class PaymentComponent implements OnInit {
     }
 
     menuLoadEquipmentFileDlg() {
-        this.dialogRef = this.dialog.open(DialogComponent, {width: 'auto', height: '30%'});
+        this.dialogRef = this.dialog.open(DialogComponent, {width: '30%', height: '30%'});
         this.dialogRef.afterClosed().subscribe(result => {
             if (result != 'cancel') {
 
@@ -86,8 +86,7 @@ export class PaymentComponent implements OnInit {
     }
 
     async menuDistribute() {
-
-        let res = await this.paymentService.checkConditions();
+        let res = await this.paymentService.distributionCheckConditions(this.paymentId);
         if (res) {
             this.distribute();
         } else {
@@ -102,7 +101,7 @@ export class PaymentComponent implements OnInit {
                 if (distributeRes.result == rests.restResultOk) {
                     this.paymentService.setPaymentByData(distributeRes.data);
                     this.paymentService.showPaymentStatus(distributeRes.data.status, distributeRes.data.id);
-                    this.loadPayment();
+                    //this.loadPayment();
                 }
                 if (distributeRes.result == rests.restResultErr) {
                     msg = msgs.msgErrDistributePayment + ' ID ' + this.paymentId + '. ' + distributeRes.data + ' (' + distributeRes.result + ')' + this.userService.logUser();

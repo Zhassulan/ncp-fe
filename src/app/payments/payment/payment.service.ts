@@ -16,7 +16,7 @@ import {DetailEquipment} from '../model/detail-equipment';
 import {Utils} from '../../utils';
 import {EquipmentCheckParam} from '../model/equipment-check-param';
 import {NotificationsService} from 'angular2-notifications';
-import {PaymentStatus} from '../../settings';
+import {RestResponse} from '../../data/rest-response';
 
 @Injectable()
 export class PaymentService {
@@ -75,9 +75,22 @@ export class PaymentService {
             });
     }
 
-    setPaymentByData(payment: NcpPayment) {
+    setPaymentByData(payment) {
         this.payment = payment;
+        this.details = [];
+        payment.details.forEach(item => {
+            this.details.push(this.convertDbDetailToAppDetail(item));
+        });
         this.announcePayment();
+        this.announceDetails();
+        this.getPaymentEquipments(payment.id).subscribe(
+            data => {
+            },
+            error2 => {
+            },
+            () => {
+                this.announceDetails();
+            });
     }
 
     setPaymentStatus(status: number) {
@@ -87,7 +100,7 @@ export class PaymentService {
 
     addNewDetail(detail: PaymentDetail) {
         this.details.push(detail);
-        console.log(JSON.stringify((this.details)));
+        //console.log(JSON.stringify((this.details)));
         this.announceDetails();
     }
 
@@ -97,7 +110,12 @@ export class PaymentService {
     }
 
     delAll()    {
-        this.details = [];
+        this.details.forEach(detail => {
+            if (detail.status == PaymentStatus.STATUS_NEW)  {
+                this.details.splice(this.details.indexOf(detail), 1);
+            }
+        })
+        //this.details = [];
         this.announceDetails();
     }
 
@@ -117,6 +135,10 @@ export class PaymentService {
         return this.details.reduce((a, b) => Number(a) + Number((b[key] || 0)), 0);
     }
 
+    /**
+     * Сравнение суммы деталей с суммой платежа
+     * @returns {boolean} true - равны
+     */
     checkTotalSum(): boolean {
         return Number(this.getDetailsSum('sum')) == Number(this.payment.sum);
     }
@@ -242,11 +264,11 @@ export class PaymentService {
     }
 
     distribute(): Observable<any> {
-        this.preparePaymentParams();
+        this.distributionPrepareParams();
         return this.dataService.distributePayment(this.paymentParamEq);
     }
 
-    preparePaymentParams() {
+    distributionPrepareParams() {
         this.logger.info("Подготавливаются параметры для разноски.")
         let params: PaymentParamEq = new PaymentParamEq();
         params.id = this.payment.id;
@@ -255,7 +277,7 @@ export class PaymentService {
         params.items = [];
         //this.printDetails();
         this.details.forEach(detail => {
-            if (detail.status == this.paymentStatuses.STATUS_NEW)   {
+            //if (detail.status == this.paymentStatuses.STATUS_NEW)   {
                 let ncpDetail = new NcpPaymentDetails();
                 ncpDetail.id = detail.id;
                 ncpDetail.msisdn = detail.msisdn;
@@ -274,7 +296,7 @@ export class PaymentService {
                     let equipment: Equipment = this.createEquipmentByDetail(this.payment.id, detail);
                     params.items.push(new DetailEquipment(ncpDetail, equipment));
                 }
-            }
+            //}
         });
         //console.log('Params:\n' + JSON.stringify(params));
         this.paymentParamEq = params;
@@ -388,9 +410,17 @@ export class PaymentService {
         return response;
     }
 
-    async checkConditions(): Promise <boolean> {
+    async distributionCheckConditions(id): Promise <boolean> {
+
         this.paymentsService.setProgress(true);
         let result = true;
+        /*
+        result = await this.paymentBlocked(id);
+        if (result) {
+            this.notifService.warn(msgs.msgPaymentBlocked);
+            return false;
+        }
+        */
         if (!this.isNewDetailsExistsForDistribution()) {
             this.notifService.warn(msgs.msgNoNewDetails);
             this.paymentsService.setProgress(false);
@@ -408,27 +438,47 @@ export class PaymentService {
             this.notifService.warn(msgs.msgErrRnn);
             result = false;
         }
+        //result = await this.checkIcc();
         result = await this.checkBercutEquipment();
         this.paymentsService.setProgress(false);
         return result;
     }
+
+    /*async checkIcc(): Promise <boolean> {
+        let result = true;
+        for (const detail of this.details)  {
+            if (detail.icc) {
+                console.log('Проверка по icc ' + detail.icc);
+                let obs = await this.dataService.getBercutEquipmentInfoByIcc(detail.icc);
+                if (obs.result == rests.restResultErr) {
+                    result = false;
+                    this.notifService.warn(obs.data);
+                }
+            }
+        }
+        return result;
+    }
+    */
 
     async checkBercutEquipment(): Promise <boolean>  {
         let result = true;
         let equipmentCheckParams = [];
         if (this.details.length > 0) {
             this.details.forEach(detail => {
+                console.log(detail.nomenclature);
                 if (detail.nomenclature)    {
-                    if (!detail.nomenclature.toLowerCase().includes(dic.prepaid)) {
+                    //if (!detail.nomenclature.toLowerCase().includes(dic.prepaid)) {
                         equipmentCheckParams.push(new EquipmentCheckParam(detail.icc, detail.sum, Utils.removeRepeatedSpaces(detail.nomenclature).trim().toLowerCase(), detail.account));
-                    }
+                    //}
                 }
             });
         }
+        //console.log('equipmentCheckParams:\n');
+        //this.utils.printObj(equipmentCheckParams);
         if (equipmentCheckParams.length > 0) {
             let res = await this.checkEquipmentParams(equipmentCheckParams);
             res.data.forEach(item => {
-                if (item.status != STATUSES.STATUS_VALID) {
+                if (item.status != STATUSES.STATUS_VALID && item.status != STATUSES.STATUS_UNKNOWN) {
                     this.notifService.warn(item.icc + ' ' + item.info);
                     result = false;
                 }
@@ -461,6 +511,24 @@ export class PaymentService {
             }
         });
         return result;
+    }
+
+    async isNewPayment(id): Promise <boolean>  { //todo удалить в случае не надобности
+        let res = await this.dataService.getPaymentStatus(id).toPromise();
+        if (res.result == rests.restResultOk)   {
+            return res.data == PaymentStatus.STATUS_NEW ? true : false;
+        }   else {
+            return false;
+        }
+    }
+
+    async paymentBlocked(id): Promise <boolean>  {
+        let res = await this.dataService.paymentBlocked(id).toPromise();
+        if (res.result == rests.restResultOk)   {
+            return res.data;
+        }   else {
+            return false;
+        }
     }
 
 }

@@ -60,7 +60,8 @@ export const shrinkDetailsColumnSize: number = 200;
  */
 export const httpOptions = {
     headers: new HttpHeaders({
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        //'Cache-Control': 'no-cache, no-store',
     })
 };
 
@@ -126,16 +127,18 @@ export const enum msgs {
     msgErrRnn = 'ИИН платежа не совпадает с ИИН в файле. ',
     msgErrGetDetails = 'Ошибка получения деталей платежа. ',
     msgSuccessGotDetails = 'Успешно получены детали платежа. ',
-    msgErrDistributePayment = 'Ошибка разноски. ',
-    msgSuccessDistributed = 'Платёж успешно разнесён. ',
-    msgErrCreateEquipment = 'Ошибка создания записи по оборудованию. ',
-    msgSuccessCreateEquipment = 'Успешно создана запись по оборудованию. ',
-    msgErrGetPaymentDetails = 'Ошибка получения деталей платежа. ',
-    msgErrGetPaymentData = 'Ошибка получения данных платежа. ',
+    msgErrDistributePayment = 'Ошибка разноски.',
+    msgSuccessDistributed = 'Платёж успешно разнесён.',
+    msgErrCreateEquipment = 'Ошибка создания записи по оборудованию.',
+    msgSuccessCreateEquipment = 'Успешно создана запись по оборудованию.',
+    msgErrGetPaymentDetails = 'Ошибка получения деталей платежа.',
+    msgErrGetPaymentData = 'Ошибка получения данных платежа.',
     msgErrNoDataFound = 'Данные не найдены.',
     msgBadValue = 'Не верное значение.',
     msgDistributionFailed = 'Разноска отменена.',
     msgNoNewDetails = 'Нет новых разносок.',
+    msgPaymentNotNew = 'Платёж не в статусе новый.',
+    msgPaymentBlocked = 'Платёж уже в обработке.',
 }
 
 /**

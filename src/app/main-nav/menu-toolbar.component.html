@@ -50,6 +50,21 @@
                 {{item.title}}
             </a>
 
+            <mat-divider></mat-divider>
+
+            <h2 matSubheader> {{ 'РЕЕСТРЫ'}} </h2>
+
+            <a *ngFor="let item of registrytRoutes"
+               mat-list-item
+               (click)="sidenav.close()"
+               routerLinkActive
+               #routerLinkActiveInstance="routerLinkActive"
+               [class.list-item-active]="routerLinkActiveInstance.isActive"
+               [routerLink]="[item.route]">
+                <mat-icon matListIcon class="app-nav-list-icon"> {{ item.icon }}</mat-icon>
+                {{item.title}}
+            </a>
+
         </mat-nav-list>
 
     </mat-sidenav>

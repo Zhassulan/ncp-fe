@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {PaymentService} from '../payment.service';
 import {PaymentMenuItems} from '../../../settings';
+import {MatMenuTrigger} from '@angular/material';
 
 @Component({
     selector: 'app-payment-menu',

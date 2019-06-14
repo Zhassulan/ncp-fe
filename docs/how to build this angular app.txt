@@ -1,4 +1,4 @@
-Сборка для тестовой среды на сервере
+Сборка приложения:
 
 Тест
 ng build --configuration=staging --base-href /ncp-frontend/ --output-hashing=all

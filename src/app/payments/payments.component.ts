@@ -8,12 +8,13 @@ import {NotificationsService} from 'angular2-notifications';
 import {DataService} from '../data/data.service';
 import {PaymentsService} from './payments.service';
 import {FormControl} from '@angular/forms';
-import {Subscription} from 'rxjs';
 import {PaymentService} from './payment/payment.service';
 import {UserService} from '../user/user.service';
 import {Router} from '@angular/router';
 import {SelectionModel} from '@angular/cdk/collections';
 import {msgs, rests, shrinkDetailsColumnSize} from '../settings';
+import {environment} from '../../environments/environment';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-payments',
@@ -55,6 +56,7 @@ export class PaymentsComponent implements OnInit {
     //даты начала и конца дня
     dtStartDay: Date;
     dtEndDay: Date;
+    sub: Subscription;
 
     constructor(private dataService: DataService,
                 private dialogService: DialogService,
@@ -73,12 +75,13 @@ export class PaymentsComponent implements OnInit {
 
     ngOnInit() {
         this.setTimeBoundariesForDatePickers();
-        //this.setCalendarToDate('2019-01-03T00:00:00', '2019-01-03T23:59:59');
+        this.setCalendarToDate('2019-01-03T00:00:00.000', '2019-01-03T23:59:59.999');
         //this.setCalendarToDate('2019-04-16T00:00:00', '2019-04-16T23:59:59');
-        //this.getData();
-        this.getSampleData();
-        this.dataSource.data = [];
-        this.dataSource.data = this.paymentsService.payments;
+        if (this.paymentsService.payments.length == 0)  {
+            this.getData();
+            this.dataSource.data = [];
+            this.dataSource.data = this.paymentsService.payments;
+        }
     }
 
     ngAfterViewInit() {
@@ -86,7 +89,10 @@ export class PaymentsComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+    }
 
+    ngOnDestroy() {
+        //this.sub.unsubscribe();
     }
 
     /**
@@ -123,7 +129,7 @@ export class PaymentsComponent implements OnInit {
         this.paymentsService.setProgress(true);
         this.dataSource.data = [];
         let dr = new DateRange(this.pickerStartDate.value.getTime(), this.pickerEndDate.value.getTime());
-        this.paymentsService.getData(dr).subscribe(data => {
+        this.sub = this.paymentsService.getData(dr).subscribe(data => {
                 this.dataSource.data = data;
             },
             error2 => {
@@ -141,7 +147,7 @@ export class PaymentsComponent implements OnInit {
     getSampleData() {
         this.paymentsService.setProgress(true);
         this.dataSource.data = [];
-        this.paymentsService.getSampleData().subscribe(data => {
+        this.sub = this.paymentsService.getSampleData().subscribe(data => {
             this.dataSource.data = data;
         }, error2 => {
             this.notifService.error(msgs.msgErrLoadData + ' ' + error2);
@@ -174,7 +180,7 @@ export class PaymentsComponent implements OnInit {
     toTransit(payment) {
         let msg;
         this.paymentsService.setProgress(true);
-        this.paymentsService.toTransit(payment.id).subscribe(data => {
+        this.sub = this.paymentsService.toTransit(payment.id).subscribe(data => {
                 if (data.result == rests.restResultOk) {
                     payment = data.data;
                     msg = msgs.msgSuccessToTransit + ' ID платежа ' + payment.id + ' TRANSIT_PDOC_ID ' + data.data.transitPaymentDocNumId + this.userService.logUser();
@@ -261,7 +267,7 @@ export class PaymentsComponent implements OnInit {
     deleteTransit(payment) {
         let msg;
         this.paymentsService.setProgress(true);
-        this.paymentsService.deleteTransit(payment.id).subscribe(data => {
+        this.sub = this.paymentsService.deleteTransit(payment.id).subscribe(data => {
                 if (data.result == rests.restResultOk) {
                     payment = data.data;
                     msg = msgs.msgSuccessDelTransit + ' ID платежа ' + payment.id + this.userService.logUser();

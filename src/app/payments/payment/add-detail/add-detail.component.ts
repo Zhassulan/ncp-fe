@@ -53,7 +53,7 @@ export class AddDetailComponent implements OnInit {
             sum: new FormControl('',
                 [
                     Validators.min(1),
-                    Validators.max(1000000)
+                    //Validators.max(1000000)
                 ]),
         });
     }

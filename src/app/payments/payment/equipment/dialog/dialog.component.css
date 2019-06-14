@@ -1,10 +1,10 @@
 .mainContainer {
     display: grid;
     grid-template-areas:
-        "title title title progress"
-        "file . . open"
-        ". . . ."
-        ". . process cancel";
+        "title title title title"
+        "file file . open"
+        "file file . ."
+        "progress . process cancel";
     grid-template-rows: auto auto auto;
     grid-template-columns: auto auto 20% 20%;
     justify-items: stretch;
@@ -37,6 +37,8 @@
 
 .fileName {
     grid-area: file;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 .progress {

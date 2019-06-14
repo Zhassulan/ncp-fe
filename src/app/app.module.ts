@@ -27,7 +27,6 @@ import {LayoutModule} from '@angular/cdk/layout';
 import {BreadcrumbModule} from 'angular-crumbs';
 import {DialogComponent} from './payments/payment/equipment/dialog/dialog.component';
 import {UploadFilePaymentService} from './payments/payment/equipment/upload-file-payment.service';
-import {FilePaymentViewComponent} from './payments/payment/equipment/file-payment-view/file-payment-view.component';
 import {registerLocaleData} from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
 import {UserService} from './user/user.service';
@@ -42,6 +41,8 @@ import {PaymentComponent} from './payments/payment/payment.component';
 import {PaymentsComponent} from './payments/payments.component';
 import {AddDetailComponent} from './payments/payment/add-detail/add-detail.component';
 import {SearchClientComponent} from './payments/search-client/search-client.component';
+import { RegistriesComponent } from './registry/registries/registries.component';
+import {AppService} from './app.service';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -56,7 +57,6 @@ registerLocaleData(localeRu, 'ru');
         LoginPageComponent,
         UploadComponent,
         DialogComponent,
-        FilePaymentViewComponent,
         PhonePipe,
         PaymentMenuComponent,
         InfoComponent,
@@ -65,6 +65,7 @@ registerLocaleData(localeRu, 'ru');
         PaymentsComponent,
         AddDetailComponent,
         SearchClientComponent,
+        RegistriesComponent,
     ],
     entryComponents: [
         DialogReportComponent,
@@ -109,6 +110,7 @@ registerLocaleData(localeRu, 'ru');
         UserService,
         PaymentsService,
         PaymentService,
+        AppService
     ],
     bootstrap: [AppComponent]
 })

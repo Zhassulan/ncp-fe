@@ -124,7 +124,7 @@ export class DataService {
      * @param {String} icc
      * @returns {Observable<any>}
      */
-    getBercutEquipmentInfoByIcc(icc:String)   {
+    getBercutEquipmentInfoByIcc(icc:String):  Observable<RestResponse>   {
         return this._http.post<RestResponse>(API_URL + `/exdata/equipment/${icc}`, httpOptions).catch(this.errorHandler);
     }
 
@@ -136,5 +136,18 @@ export class DataService {
     checkEquipmentParams(iccList: EquipmentCheckParam []):  Observable<RestResponse> {
         return this._http.post<RestResponse>(API_URL + '/exdata/equipments/check', iccList, httpOptions).catch(this.errorHandler);
     }
+
+    getPaymentStatus(id): Observable<RestResponse> {
+        return this._http.post<RestResponse>(API_URL + `/exdata/payment/${id}/status`, httpOptions).catch(this.errorHandler);
+    }
+
+    paymentBlocked(id): Observable<RestResponse> {
+        return this._http.post<RestResponse>(API_URL + `/exdata/payment/${id}/blocked`, httpOptions).catch(this.errorHandler);
+    }
+
+    getAllRegistries(): Observable<RestResponse> {
+        return this._http.post<RestResponse>(API_URL + `/exdata/registry/all`, httpOptions).catch(this.errorHandler);
+    }
+
 
 }

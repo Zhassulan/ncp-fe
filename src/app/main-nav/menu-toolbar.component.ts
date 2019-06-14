@@ -61,6 +61,14 @@ export class MenuToolbarComponent implements AfterViewChecked {
         }
     ];
 
+    registrytRoutes: ROUTE[] = [
+        {
+            icon: 'assignment_ind',
+            route: 'registry/all',
+            title: 'Реестры',
+        }
+    ];
+
     @Output() toggleSidenav = new EventEmitter<void>();
 
     constructor(private authService: AuthService,

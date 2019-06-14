@@ -10,9 +10,9 @@ import {PaymentService} from '../payment.service';
 import {PaymentStatusEnRu} from '../../../settings';
 
 @Component({
-  selector: 'app-details',
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.css']
+    selector: 'app-details',
+    templateUrl: './details.component.html',
+    styleUrls: ['./details.component.css']
 })
 export class DetailsComponent implements OnInit {
 
