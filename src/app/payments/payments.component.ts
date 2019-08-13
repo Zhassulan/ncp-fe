@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {NGXLogger} from 'ngx-logger';
 import {DateRange} from '../data/date-range';
@@ -21,7 +21,11 @@ import {Subscription} from 'rxjs';
   templateUrl: './payments.component.html',
   styleUrls: ['./payments.component.css']
 })
-export class PaymentsComponent implements OnInit {
+export class PaymentsComponent implements OnInit, OnChanges {
+
+    ngOnChanges(changes: SimpleChanges): void {
+
+    }
 
     //отображаемые в таблице колонки
     displayedColumns = [
@@ -74,21 +78,19 @@ export class PaymentsComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.setCalendarToDate('2019-07-02T00:00:00.000', '2019-07-02T23:59:59.999');
         this.setTimeBoundariesForDatePickers();
-        this.setCalendarToDate('2019-01-03T00:00:00.000', '2019-01-03T23:59:59.999');
-        //this.setCalendarToDate('2019-04-16T00:00:00', '2019-04-16T23:59:59');
-        if (this.paymentsService.payments.length == 0)  {
-            this.getData();
-            this.dataSource.data = [];
-            this.dataSource.data = this.paymentsService.payments;
-        }
-    }
+        this.getData();
+        this.dataSource.data = this.paymentsService.payments;
 
-    ngAfterViewInit() {
         this.paginatorResultsLength = this.paymentsService.paginatorResultsLength;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+    }
+
+    ngAfterViewInit() {
+
     }
 
     ngOnDestroy() {
@@ -126,11 +128,13 @@ export class PaymentsComponent implements OnInit {
      * загрузка платежей с сервера
      */
     getData() {
+        this.setTimeBoundariesForDatePickers();
         this.paymentsService.setProgress(true);
         this.dataSource.data = [];
         let dr = new DateRange(this.pickerStartDate.value.getTime(), this.pickerEndDate.value.getTime());
         this.sub = this.paymentsService.getData(dr).subscribe(data => {
                 this.dataSource.data = data;
+                this.dataSource.data = this.paymentsService.payments;
             },
             error2 => {
                 this.notifService.error(msgs.msgErrLoadData + ' ' + error2);
@@ -138,6 +142,9 @@ export class PaymentsComponent implements OnInit {
             },
             () => {
                 this.paymentsService.setProgress(false);
+                if (this.dataSource.data.length == 0)   {
+                    this.notifService.warn(msgs.msgErrNoDataFound);
+                }
             });
     }
 

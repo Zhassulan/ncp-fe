@@ -1,0 +1,71 @@
+.object {
+    display: grid;
+    grid-template-areas:
+            "topGap"
+            "item";
+    grid-template-rows: 10px auto;
+    grid-template-columns: auto;
+    grid-gap: 5px;
+    justify-items: center;
+}
+
+.topGap {
+    grid-area: topGap;
+}
+
+.item {
+    grid-area: item;
+    width: 75%;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 17% 17% 30% 35%;
+    grid-template-rows: 70px auto;
+    grid-template-areas:
+            "header header header header"
+            "leftSide leftSide rightSide rightSide"
+            "footer footer footer1 footer1";
+    justify-items: stretch;
+    align-self: start;
+}
+
+.item-header {
+    grid-area: header;
+}
+
+.item-b {
+    grid-area: main;
+}
+
+.item-c {
+    grid-area: leftSide;
+}
+
+.item-d {
+    grid-area: rightSide;
+}
+
+.item-e {
+    grid-area: footer;
+}
+
+.item-footer1 {
+    grid-area: footer1;
+}
+
+.top {
+    display: grid;
+    grid-template-columns: 97% 3%;
+    grid-template-areas: "top1 top2"
+}
+
+.item-top1 {
+    grid-area: top1;
+    align-self: center;
+    justify-self: center;
+}
+
+.item-top2 {
+    grid-area: top2;
+}

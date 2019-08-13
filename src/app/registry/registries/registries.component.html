@@ -1,49 +1,65 @@
 <div class="container">
 
-    <div class="title"></div>
+    <div class="top">
+        <div ngClass="header">
+            <div ngClass="item">
+                    <button mat-raised-button color="primary" (click)="save()"
+                            matTooltip="Экспорт в Excel">
+                        Экспорт
+                    </button>
+            </div>
+            <!--
+            <div ngClass="search">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Быстрый поиск">
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+            -->
+        </div>
+    </div>
 
     <div class="registries">
 
-        <table mat-table [dataSource]="dataSource" matSort>
+        <mat-table [dataSource]="dataSource" matSort>
             <ng-container matColumnDef="ID">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-                <td mat-cell *matCellDef="let row"> {{row.id}}</td>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.id}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="created">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Дата </th>
-                <td mat-cell *matCellDef="let row"> {{row.created | date : 'yyyy-MM-dd HH:MM:SS'}}</td>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Дата </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.created | date : 'yyyy-MM-dd HH:MM:SS'}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="bin">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> БИН </th>
-                <td mat-cell *matCellDef="let row"> {{row.bin}}</td>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> БИН </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.bin}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="company">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Компания </th>
-                <td mat-cell *matCellDef="let row"> {{row.company}}</td>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Компания </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.company}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="phone">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Телефон </th>
-                <td mat-cell *matCellDef="let row"> {{row.phone}}
-                </td>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Телефон </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.phone}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="email">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>e-mail</th>
-                <td mat-cell *matCellDef="let row"> {{row.email}}</td>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>e-mail</mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.email}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="msisdn">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Опл. номер</th>
-                <td mat-cell *matCellDef="let row"> {{row.msisdn}}</td>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Опл. номер</mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.msisdn}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="amount">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Сумма</th>
-                <td mat-cell *matCellDef="let row"> {{row.amount}}</td>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Сумма</mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.amount}}</mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <!-- you can add to signature of mat-row for catch click on hole row: (click)="onRowClicked(row)"-->
             <!-- for Highlight: rowHighlight [paymentStatus]="row.getStatus()"-->
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        </table>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)"></mat-row>
+        </mat-table>
         <mat-paginator [length]="!paginatorResultsLength" [pageSize]="30"></mat-paginator>
     </div>
 

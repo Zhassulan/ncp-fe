@@ -7,6 +7,8 @@ import {NotificationsService} from 'angular2-notifications';
 import {msgs, rests} from '../../settings';
 import {PaymentsService} from '../../payments/payments.service';
 import {AppService} from '../../app.service';
+import {ExcelService} from '../../excel/excel.service';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-registries',
@@ -31,12 +33,14 @@ export class RegistriesComponent implements OnInit {
     dataSource = new MatTableDataSource<NcpPayment>();
     //общее количество для пагинации
     paginatorResultsLength: number;
+    excelServ = this.excelService;
 
-    constructor(
-        private dataService: DataService,
-        private logger: NGXLogger,
-        private notifService: NotificationsService,
-        private appService: AppService) {
+    constructor(private dataService: DataService,
+                private logger: NGXLogger,
+                private notifService: NotificationsService,
+                private appService: AppService,
+                private  excelService: ExcelService,
+                private router: Router) {
     }
 
     ngOnInit() {
@@ -48,13 +52,13 @@ export class RegistriesComponent implements OnInit {
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
     }
 
-    getData()   {
+    getData() {
         this.appService.setProgress(true);
         this.dataService.getAllRegistries().subscribe(
             data => {
-                if (data.result = rests.restResultOk)   {
+                if (data.result = rests.restResultOk) {
                     this.dataSource.data = data.data;
-                }   else    {
+                } else {
                     this.logger.error(data.data);
                 }
             },
@@ -62,10 +66,22 @@ export class RegistriesComponent implements OnInit {
                 this.logger.error(error2);
                 this.notifService.error(msgs.msgErrLoadData + ' ' + error2);
                 this.appService.setProgress(false);
-                },
+            },
             () => {
                 this.appService.setProgress(false);
             });
+    }
+
+    save()  {
+        this.excelService.save(this.dataSource.data);
+    }
+
+    onRowClicked(registry) {
+        this.menuOnRegistryOpen(registry);
+    }
+
+    menuOnRegistryOpen(registry) {
+        this.router.navigate(['registry/' + registry.id]);
     }
 
 }

@@ -2,6 +2,7 @@ import {Title} from '@angular/platform-browser';
 import {Component, ViewEncapsulation, AfterViewInit, OnInit} from '@angular/core';
 import {locStorItems} from './settings';
 import {NotificationsService} from 'angular2-notifications';
+import {ExcelService} from './excel/excel.service';
 
 @Component({
     selector: 'app-root',
@@ -14,7 +15,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     title = 'NCP';
 
     constructor(private titleService: Title,
-                private notifService: NotificationsService) {
+                private notifService: NotificationsService,
+                private excelService: ExcelService) {
         this.titleService.setTitle(this.title);
     }
 

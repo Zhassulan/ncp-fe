@@ -1,3 +1,4 @@
+/*
 .container {
     display: grid;
     grid-template-areas:
@@ -17,19 +18,52 @@
     grid-area: registries;
     width: 100%;
 }
+*/
 
-.mat-table {
-    display: table;
-    width: 100%;
+.container {
+    display: grid;
+    grid-template-areas:
+            "top"
+            "registries";
+    grid-template-rows: auto auto;
+    grid-template-columns: auto;
+    justify-items: stretch;
+    padding: 0.5em;
 }
 
-.mat-header-row, .mat-row {
-    display: table-row;
+.top {
+    grid-area: top;
 }
 
-.mat-header-cell, .mat-cell {
-    display: table-cell;
-    vertical-align: middle;
-    padding-right: 1%;
-    /* word-wrap: break-word; */
+.registries {
+    grid-area: registries;
+}
+
+.item {
+    justify-self: center;
+    align-self: center;
+}
+
+.search {
+    grid-area: search;
+    justify-self: end;
+}
+
+.header {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns:
+            minmax(max-content, max-content)
+            minmax(max-content, max-content)
+            minmax(max-content, max-content)
+            minmax(max-content, max-content)
+            minmax(max-content, auto);
+    grid-template-areas:
+            "item item item item item search"
+            "registries registries registries registries registries registries";
+    gap: 5px;
+}
+
+.mat-table .mat-row:hover {
+    background-color: #eeeeee;
 }

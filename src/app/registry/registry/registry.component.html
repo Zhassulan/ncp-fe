@@ -1,0 +1,34 @@
+<div class="object">
+  <div class="topGap"></div>
+
+  <div class="item">
+    <mat-card>
+      <div class="container">
+
+        <div class="item-header">
+          <div class="top">
+            <div class="item-top1">
+              <h1 class="mat-h1"><b># {{ payment.paymentId }} от {{ payment.creationDate | date }}</b></h1>
+            </div>
+            <div class="item-top2">
+              <app-payment-menu (selectedItem)="onSelected($event)"></app-payment-menu>
+            </div>
+          </div>
+        </div>
+        <div class="item-c">
+          <app-payment-info [payment]="payment"></app-payment-info>
+          <app-add-detail></app-add-detail>
+        </div>
+        <div class="item-d">
+          <app-details [status]="payment.status"></app-details>
+        </div>
+
+        <!--<div class="item-e">footer</div>
+        <div class="item-footer1">footer1</div>
+        -->
+
+      </div>
+    </mat-card>
+  </div>
+</div>
+<simple-notifications></simple-notifications>

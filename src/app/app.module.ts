@@ -41,8 +41,11 @@ import {PaymentComponent} from './payments/payment/payment.component';
 import {PaymentsComponent} from './payments/payments.component';
 import {AddDetailComponent} from './payments/payment/add-detail/add-detail.component';
 import {SearchClientComponent} from './payments/search-client/search-client.component';
-import { RegistriesComponent } from './registry/registries/registries.component';
+import {RegistriesComponent} from './registry/registries/registries.component';
 import {AppService} from './app.service';
+import {ExcelService} from './excel/excel.service';
+import {FileSaverModule} from 'ngx-filesaver';
+import { RegistryComponent } from './registry/registry/registry.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -66,6 +69,7 @@ registerLocaleData(localeRu, 'ru');
         AddDetailComponent,
         SearchClientComponent,
         RegistriesComponent,
+        RegistryComponent,
     ],
     entryComponents: [
         DialogReportComponent,
@@ -95,7 +99,8 @@ registerLocaleData(localeRu, 'ru');
             headerName: 'My-Xsrf-Header',
         }),*/
         BreadcrumbModule,
-        SimpleNotificationsModule.forRoot()
+        SimpleNotificationsModule.forRoot(),
+        FileSaverModule
     ],
     providers: [
         AUTH_PROVIDERS,
@@ -110,7 +115,8 @@ registerLocaleData(localeRu, 'ru');
         UserService,
         PaymentsService,
         PaymentService,
-        AppService
+        AppService,
+        ExcelService
     ],
     bootstrap: [AppComponent]
 })

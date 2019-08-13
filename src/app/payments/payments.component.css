@@ -6,17 +6,13 @@
     grid-template-rows: auto auto;
     grid-template-columns: auto;
     justify-items: stretch;
+    padding: 0.5em;
 }
 
 .top {
     grid-area: top;
 }
 
-.payments {
-    grid-area: payments;
-}
-
-/* строка меню */
 .item {
     justify-self: center;
     align-self: center;
@@ -46,21 +42,7 @@
     grid-area: payments;
 }
 
-.mat-table {
-    display: table;
-    width: 100%;
-}
-.mat-header-row, .mat-row {
-    display: table-row;
-}
-
-.mat-header-cell, .mat-cell {
-    display: table-cell;
-    vertical-align: middle;
-    padding-right: 1%;
-    /* word-wrap: break-word; */
-}
-.mat-row:hover {
+.mat-table .mat-row:hover {
     background-color: #eeeeee;
 }
 
@@ -68,7 +50,37 @@
     background: #ccffe6;
 }
 
-.mat-column-managers {
-    width: 10%;
+.mat-column-ID {
+    flex: 0 0 5% !important;
+    width: 5% !important;
 }
 
+.mat-column-select {
+    flex: 0 0 2% !important;
+    width: 2% !important;
+}
+
+.mat-column-rowMenu {
+    flex: 0 0 2% !important;
+    width: 2% !important;
+}
+
+.mat-column-statusRu {
+    flex: 0 0 5% !important;
+    width: 5% !important;
+}
+
+.mat-column-knp {
+    flex: 0 0 5% !important;
+    width: 5% !important;
+}
+
+.mat-column-knp {
+    flex: 0 0 5% !important;
+    width: 5% !important;
+}
+
+.mat-column-paymentDetails {
+    flex: 0 0 20% !important;
+    width: 20% !important;
+}

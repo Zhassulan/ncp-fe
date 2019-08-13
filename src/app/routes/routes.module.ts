@@ -9,15 +9,17 @@ import {UploadComponent} from '../payments/payment/equipment/upload.component';
 import {PaymentComponent} from '../payments/payment/payment.component';
 import {PaymentsComponent} from '../payments/payments.component';
 import {RegistriesComponent} from '../registry/registries/registries.component';
+import {RegistryComponent} from '../registry/registry/registry.component';
 
 const routes: Routes = [
+    {path: 'login', component: LoginPageComponent},
     {path: '', redirectTo: 'payments', pathMatch: 'full'},
     //{path: 'payments', redirectTo: 'payment/230365'}, //для открытия конкретного платежа для отладки TODO убрать в проде
     {path: 'payments', component: PaymentsComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Платежи'}},
-    {path: 'login', component: LoginPageComponent},
-    {path: 'equipment', component: UploadComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Оборудование'}},
     {path: 'payment/:id', component: PaymentComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Платёж'}},
+    {path: 'equipment', component: UploadComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Оборудование'}},
     {path: 'registry/all', component: RegistriesComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Реестры    '}},
+    {path: 'registry/:id', component: RegistryComponent, canActivate: [LoggedInGuard], data: {breadcrumb: 'Реестр'}},
 ];
 
 @NgModule({

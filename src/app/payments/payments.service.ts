@@ -34,8 +34,6 @@ export class PaymentsService {
                             this.payments  = data.data;
                             this.updateStatusRu();
                             observer.next(this.payments);
-                        }   else {
-                            observer.error(msgs.msgErrNoDataFound);
                         }
                     },
                     error2 => {
