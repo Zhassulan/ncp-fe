@@ -38,10 +38,18 @@ export class LoginComponent implements OnInit {
         if (environment.production) {
             checkLdapGroup = ldapGroups.managers;
         }
-        let userObj = new User (this.userName, this.userPassword, checkLdapGroup);
+        //let userObj = new User (this.userName, this.userPassword, checkLdapGroup);
         //проверка логина и пароля
-        this.dataService.login(userObj).subscribe(data => {
+        this.dataService.login(this.userName, this.userPassword).subscribe(data => {
                 if (data.result == rests.restResultOk) {
+                    this.authService.doSignIn(
+                        'TokenFakeValue111', // TODO data.token
+                        this.userName    // TODO data.username
+                    );
+                    this.router.navigate(['payments']);
+                    this.dialogRef.close();
+                };
+                    /*
                     //проверка нахождения в группе
                     this.dataService.authorize(userObj).subscribe(data => {
                             if (data.result == rests.restResultOk) {
@@ -60,14 +68,15 @@ export class LoginComponent implements OnInit {
                             this.logger.error(msgs.msgSysErrRights + ' ' + userObj.userName + ' ' + error2);
                         });
                 }
+                */
                 if (data.result == rests.restResultErr) {
                     this.notifService.warn(msgs.msgWrongCreds);
-                    this.logger.warn(msgs.msgWrongCreds + ' ' + userObj.userName);
+                    this.logger.warn(msgs.msgWrongCreds + ' ' + this.userName);
                 }
             },
             error2 => {
-                this.notifService.error(msgs.msgSysErrCreds + ' ' + error2);
-                this.logger.error(msgs.msgSysErrCreds + ' ' + userObj.userName + ' ' + error2);
+                this.notifService.error(msgs.msgSysErrCreds);
+                this.logger.error(msgs.msgSysErrCreds + ' ' + this.userName + ' ' + error2);
             });
     }
 

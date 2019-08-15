@@ -1,10 +1,12 @@
+import {Utils} from '../../utils';
+
 export class User {
 
-    userName: string;
-    userPassword: string;
-    group: string;
+    userName;
+    userPassword;
+    group;
 
-    constructor(userName: string, userPassword: string, group: string) {
+    constructor(userName, userPassword, group) {
         this.userName = userName;
         this.userPassword = userPassword;
         this.group = group;

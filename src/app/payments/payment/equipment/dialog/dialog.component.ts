@@ -96,7 +96,7 @@ export class DialogComponent implements OnInit {
                 this.dialogRef.close();
             },
             error2 => {
-                //this.paymentsService.setProgress(false);
+                //this.appService.setProgress(false);
                 this.isWait = false;
             },
             () => {

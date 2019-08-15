@@ -132,13 +132,14 @@ export const enum msgs {
     msgErrCreateEquipment = 'Ошибка создания записи по оборудованию.',
     msgSuccessCreateEquipment = 'Успешно создана запись по оборудованию.',
     msgErrGetPaymentDetails = 'Ошибка получения деталей платежа.',
-    msgErrGetPaymentData = 'Ошибка получения данных платежа.',
+    msgErrGetPaymentData = 'Ошибка загрузки платежа.',
     msgErrNoDataFound = 'Данные не найдены.',
     msgBadValue = 'Не верное значение.',
     msgDistributionFailed = 'Разноска отменена.',
     msgNoNewDetails = 'Нет новых разносок.',
     msgPaymentNotNew = 'Платёж не в статусе новый.',
     msgPaymentBlocked = 'Платёж уже в обработке.',
+    msgErrGetRegistryData = 'Ошибка загрузки реестра.',
 }
 
 /**
@@ -231,3 +232,22 @@ export enum TOOLTIPS {
  */
 export class Settings {
 }
+
+/**
+ * Колонки таблицы детали реестра
+ * @type {string[]}
+ */
+export const RegistryDetailsTableCols = [
+    'num',
+    'msisdn',
+    'amount'
+];
+
+/**
+ * Заголовки колонок таблицы деталей реестра
+ */
+export enum RegistryDetailTableColsDisplay {
+    num = '#',
+    msisdn = 'Номер',
+    amount = 'Сумма'
+};

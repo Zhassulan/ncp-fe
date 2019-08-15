@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {locStorItems} from '../settings';
 import {PaymentsService} from '../payments/payments.service';
 import {Subscription} from 'rxjs';
+import {AppService} from '../app.service';
 
 interface ROUTE {
     icon?: string;
@@ -74,8 +75,9 @@ export class MenuToolbarComponent implements AfterViewChecked {
     constructor(private authService: AuthService,
                 private router: Router,
                 private paymentsService: PaymentsService,
-                private cdRef:ChangeDetectorRef) {
-        this.progressSubscription = this.paymentsService.progressAnnounced$.subscribe(
+                private cdRef:ChangeDetectorRef,
+                private appService: AppService) {
+        this.progressSubscription = this.appService.progressAnnounced$.subscribe(
             data => {
                 this.isWait = data;
             });
@@ -86,8 +88,6 @@ export class MenuToolbarComponent implements AfterViewChecked {
             this.isWait = false;
         this.cdRef.detectChanges();
     }
-
-
 
     logout() {
         this.authService.logout();

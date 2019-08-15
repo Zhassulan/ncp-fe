@@ -1,11 +1,13 @@
 export class RegistryProperties {
 
+    id: number;
     bin: string;
     company: string;
     phone: string;
     email: string;
     total: number;
-    dt: string;
     comment: string;
+    sendDt: string;
+    created: string;
 
 }

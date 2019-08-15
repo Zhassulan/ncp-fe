@@ -46,6 +46,11 @@ import {AppService} from './app.service';
 import {ExcelService} from './excel/excel.service';
 import {FileSaverModule} from 'ngx-filesaver';
 import { RegistryComponent } from './registry/registry/registry.component';
+import {RegistryService} from './registry/registry.service';
+import { RegistryDetailsComponent } from './registry/registry/registry-details/registry-details.component';
+import { RegistryPropertiesComponent } from './registry/registry/registry-properties/registry-properties.component';
+import {SessionService} from './auth/session.service';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -70,6 +75,9 @@ registerLocaleData(localeRu, 'ru');
         SearchClientComponent,
         RegistriesComponent,
         RegistryComponent,
+        RegistryDetailsComponent,
+        RegistryPropertiesComponent,
+        PageNotFoundComponent,
     ],
     entryComponents: [
         DialogReportComponent,
@@ -116,7 +124,9 @@ registerLocaleData(localeRu, 'ru');
         PaymentsService,
         PaymentService,
         AppService,
-        ExcelService
+        ExcelService,
+        RegistryService,
+        SessionService
     ],
     bootstrap: [AppComponent]
 })

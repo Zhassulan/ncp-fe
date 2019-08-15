@@ -10,6 +10,7 @@ import {UserService} from '../../user/user.service';
 import {DialogComponent} from './equipment/dialog/dialog.component';
 import {ActivatedRoute, PRIMARY_OUTLET, Router, UrlSegment, UrlSegmentGroup, UrlTree} from '@angular/router';
 import {DetailsComponent} from './details/details.component';
+import {AppService} from '../../app.service';
 
 @Component({
     selector: 'app-payment',
@@ -30,7 +31,8 @@ export class PaymentComponent implements OnInit {
                 private route: ActivatedRoute,
                 private logger: NGXLogger,
                 public dialog: MatDialog,
-                private userService: UserService,) {
+                private userService: UserService,
+                private appService: AppService) {
     }
 
     get payment() {
@@ -62,17 +64,17 @@ export class PaymentComponent implements OnInit {
     }
 
     loadPayment() {
-        this.paymentsService.setProgress(true);
+        this.appService.setProgress(true);
         let first = this.paymentService.loadPayment(this.paymentId);
         let second = this.paymentService.getPaymentDetails(this.paymentId);
         const result = concat(first, second);
         result.subscribe(
             data => {
             }, error => {
-                this.paymentsService.setProgress(false);
+                this.appService.setProgress(false);
                 this.notifService.error(error);
             }, () => {
-                this.paymentsService.setProgress(false);
+                this.appService.setProgress(false);
             });
     }
 
@@ -95,7 +97,7 @@ export class PaymentComponent implements OnInit {
     }
 
     distribute() {
-        this.paymentsService.setProgress(true);
+        this.appService.setProgress(true);
         let msg;
         this.paymentService.distribute().subscribe(distributeRes => {
                 if (distributeRes.result == rests.restResultOk) {
@@ -113,10 +115,10 @@ export class PaymentComponent implements OnInit {
                 msg = msgs.msgErrDistributePayment + ' ID ' + this.paymentId + '. ' + error2 + this.userService.logUser();
                 this.logger.error(msg + error2);
                 this.notifService.error(msg + error2);
-                this.paymentsService.setProgress(false);
+                this.appService.setProgress(false);
             },
             () => {
-                this.paymentsService.setProgress(false);
+                this.appService.setProgress(false);
             });
     }
 

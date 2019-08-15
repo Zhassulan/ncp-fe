@@ -17,6 +17,7 @@ import {Utils} from '../../utils';
 import {EquipmentCheckParam} from '../model/equipment-check-param';
 import {NotificationsService} from 'angular2-notifications';
 import {RestResponse} from '../../data/rest-response';
+import {AppService} from '../../app.service';
 
 @Injectable()
 export class PaymentService {
@@ -37,7 +38,8 @@ export class PaymentService {
                 private dataService: DataService,
                 private logger: NGXLogger,
                 private userService: UserService,
-                private notifService: NotificationsService) {
+                private notifService: NotificationsService,
+                private appService: AppService) {
     }
 
     setPayment(id) {
@@ -412,7 +414,7 @@ export class PaymentService {
 
     async distributionCheckConditions(id): Promise <boolean> {
 
-        this.paymentsService.setProgress(true);
+        this.appService.setProgress(true);
         let result = true;
         /*
         result = await this.paymentBlocked(id);
@@ -423,7 +425,7 @@ export class PaymentService {
         */
         if (!this.isNewDetailsExistsForDistribution()) {
             this.notifService.warn(msgs.msgNoNewDetails);
-            this.paymentsService.setProgress(false);
+            this.appService.setProgress(false);
             return false;
         }
         if (!this.checkTotalSum()) {
@@ -440,7 +442,7 @@ export class PaymentService {
         }
         //result = await this.checkIcc();
         result = await this.checkBercutEquipment();
-        this.paymentsService.setProgress(false);
+        this.appService.setProgress(false);
         return result;
     }
 

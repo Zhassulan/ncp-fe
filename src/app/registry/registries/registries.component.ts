@@ -64,7 +64,7 @@ export class RegistriesComponent implements OnInit {
             },
             error2 => {
                 this.logger.error(error2);
-                this.notifService.error(msgs.msgErrLoadData + ' ' + error2);
+                this.notifService.error(msgs.msgErrLoadData);
                 this.appService.setProgress(false);
             },
             () => {

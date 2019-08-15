@@ -20,52 +20,32 @@
 
 .container {
     display: grid;
-    grid-template-columns: 17% 17% 30% 35%;
+    grid-template-columns: auto auto auto 10%;
     grid-template-rows: 70px auto;
     grid-template-areas:
-            "header header header header"
-            "leftSide leftSide rightSide rightSide"
-            "footer footer footer1 footer1";
+            "header header header menu"
+            "properties . . ."
+            "details details details .";
     justify-items: stretch;
     align-self: start;
 }
 
-.item-header {
+.header {
     grid-area: header;
-}
-
-.item-b {
-    grid-area: main;
-}
-
-.item-c {
-    grid-area: leftSide;
-}
-
-.item-d {
-    grid-area: rightSide;
-}
-
-.item-e {
-    grid-area: footer;
-}
-
-.item-footer1 {
-    grid-area: footer1;
-}
-
-.top {
-    display: grid;
-    grid-template-columns: 97% 3%;
-    grid-template-areas: "top1 top2"
-}
-
-.item-top1 {
-    grid-area: top1;
     align-self: center;
     justify-self: center;
 }
 
-.item-top2 {
-    grid-area: top2;
+.menu {
+    grid-area: menu;
+    align-self: right;
+    justify-self: right;
+}
+
+.properties {
+    grid-area: properties;
+}
+
+.details {
+    grid-area: details;
 }

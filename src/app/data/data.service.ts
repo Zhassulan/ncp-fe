@@ -30,8 +30,13 @@ export class DataService {
         return Observable.throwError(error.message || "Ошибка сервера.");
     }
 
-    login(userObj: User): Observable <RestResponse> {
-        return this._http.post <RestResponse>(API_URL + '/auth/login', userObj, httpOptions).catch(this.errorHandler);
+    /**
+     *  Аутентификация
+     * @param {User} userObj
+     * @returns {Observable<RestResponse>}
+     */
+    login(userName, userPassword): Observable <RestResponse> {
+        return this._http.post <RestResponse>(API_URL + '/auth/login', new User(userName, userPassword, null), httpOptions).catch(this.errorHandler);
     }
 
     authorize(userObj: User): Observable <RestResponse>  {
@@ -147,6 +152,10 @@ export class DataService {
 
     getAllRegistries(): Observable<RestResponse> {
         return this._http.post<RestResponse>(API_URL + `/exdata/registry/all`, httpOptions).catch(this.errorHandler);
+    }
+
+    getRegistry(id):  Observable<RestResponse> {
+        return this._http.post<RestResponse>(API_URL + `/exdata/registry/${id}`, httpOptions).catch(this.errorHandler);
     }
 
 

@@ -14,16 +14,10 @@ export class PaymentsService {
     payments = []; // платежи
     paginatorResultsLength: number;
     newNcpPayment: NcpPayment = new NcpPayment();
-    private progressObs = new Subject<boolean>();
-    progressAnnounced$ = this.progressObs.asObservable();
 
     constructor(private dataService: DataService,
                 private logger: NGXLogger,
                 private userService: UserService) {
-    }
-
-    setProgress(boolVal: boolean) {
-        this.progressObs.next(boolVal);
     }
 
     getData(dr: DateRange): Observable<any> {

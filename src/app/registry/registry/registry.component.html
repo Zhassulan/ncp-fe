@@ -1,34 +1,29 @@
 <div class="object">
-  <div class="topGap"></div>
+    <div class="topGap"></div>
+    <div class="item">
+        <mat-card>
+            <div class="container">
 
-  <div class="item">
-    <mat-card>
-      <div class="container">
+                <div class="header">
+                    <h2 class="mat-h2"># {{ registry ? registry.properties.id : null}} от {{ registry ? (registry.properties.created | date) : null }}</h2>
+                </div>
+                <div class="menu">
+                    menu
+                    <!--
+                    <app-payment-menu (selectedItem)="onSelected($event)"></app-payment-menu>
+                    -->
+                </div>
 
-        <div class="item-header">
-          <div class="top">
-            <div class="item-top1">
-              <h1 class="mat-h1"><b># {{ payment.paymentId }} от {{ payment.creationDate | date }}</b></h1>
+                <div class="properties">
+                    <app-registry-properties [registry]="registry"></app-registry-properties>
+                </div>
+
+                <div class="details">
+                    <mat-divider></mat-divider>
+                    <app-registry-details></app-registry-details>
+                </div>
             </div>
-            <div class="item-top2">
-              <app-payment-menu (selectedItem)="onSelected($event)"></app-payment-menu>
-            </div>
-          </div>
-        </div>
-        <div class="item-c">
-          <app-payment-info [payment]="payment"></app-payment-info>
-          <app-add-detail></app-add-detail>
-        </div>
-        <div class="item-d">
-          <app-details [status]="payment.status"></app-details>
-        </div>
-
-        <!--<div class="item-e">footer</div>
-        <div class="item-footer1">footer1</div>
-        -->
-
-      </div>
-    </mat-card>
-  </div>
+        </mat-card>
+    </div>
 </div>
 <simple-notifications></simple-notifications>

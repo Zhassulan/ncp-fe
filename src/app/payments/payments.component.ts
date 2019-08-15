@@ -15,6 +15,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {msgs, rests, shrinkDetailsColumnSize} from '../settings';
 import {environment} from '../../environments/environment';
 import {Subscription} from 'rxjs';
+import {AppService} from '../app.service';
 
 @Component({
   selector: 'app-payments',
@@ -69,7 +70,8 @@ export class PaymentsComponent implements OnInit, OnChanges {
                 private userService: UserService,
                 private router: Router,
                 private paymentService: PaymentService,
-                private notifService: NotificationsService) {
+                private notifService: NotificationsService,
+                private appService: AppService,) {
 
         this.dataSource = new MatTableDataSource(this.paymentsService.payments);
         this.dtStartDay = new Date();
@@ -78,11 +80,8 @@ export class PaymentsComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        this.setCalendarToDate('2019-07-02T00:00:00.000', '2019-07-02T23:59:59.999');
-        this.setTimeBoundariesForDatePickers();
+        //this.setCalendarToDate('2019-07-02T00:00:00.000', '2019-07-02T23:59:59.999');
         this.getData();
-        this.dataSource.data = this.paymentsService.payments;
-
         this.paginatorResultsLength = this.paymentsService.paginatorResultsLength;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -129,19 +128,19 @@ export class PaymentsComponent implements OnInit, OnChanges {
      */
     getData() {
         this.setTimeBoundariesForDatePickers();
-        this.paymentsService.setProgress(true);
+        this.appService.setProgress(true);
         this.dataSource.data = [];
         let dr = new DateRange(this.pickerStartDate.value.getTime(), this.pickerEndDate.value.getTime());
         this.sub = this.paymentsService.getData(dr).subscribe(data => {
                 this.dataSource.data = data;
-                this.dataSource.data = this.paymentsService.payments;
+                //this.dataSource.data = this.paymentsService.payments;
             },
             error2 => {
-                this.notifService.error(msgs.msgErrLoadData + ' ' + error2);
-                this.paymentsService.setProgress(false);
+                this.notifService.error(msgs.msgErrLoadData);
+                this.appService.setProgress(false);
             },
             () => {
-                this.paymentsService.setProgress(false);
+                this.appService.setProgress(false);
                 if (this.dataSource.data.length == 0)   {
                     this.notifService.warn(msgs.msgErrNoDataFound);
                 }
@@ -152,15 +151,15 @@ export class PaymentsComponent implements OnInit, OnChanges {
      * загрузка платежей из json файла в папке assets (режим разработки/отладки, чтобы быстро загрузить данные)
      */
     getSampleData() {
-        this.paymentsService.setProgress(true);
+        this.appService.setProgress(true);
         this.dataSource.data = [];
         this.sub = this.paymentsService.getSampleData().subscribe(data => {
             this.dataSource.data = data;
         }, error2 => {
-            this.notifService.error(msgs.msgErrLoadData + ' ' + error2);
-            this.paymentsService.setProgress(false);
+            this.notifService.error(msgs.msgErrLoadData);
+            this.appService.setProgress(false);
         }, () => {
-            this.paymentsService.setProgress(false);
+            this.appService.setProgress(false);
         });
     }
 
@@ -186,7 +185,7 @@ export class PaymentsComponent implements OnInit, OnChanges {
      */
     toTransit(payment) {
         let msg;
-        this.paymentsService.setProgress(true);
+        this.appService.setProgress(true);
         this.sub = this.paymentsService.toTransit(payment.id).subscribe(data => {
                 if (data.result == rests.restResultOk) {
                     payment = data.data;
@@ -203,10 +202,10 @@ export class PaymentsComponent implements OnInit, OnChanges {
                 msg = msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + error2 + this.userService.logUser();
                 this.logger.error(msg);
                 this.dialogService.addItem(msg);
-                this.paymentsService.setProgress(false);
+                this.appService.setProgress(false);
             },
             () => {
-                this.paymentsService.setProgress(false);
+                this.appService.setProgress(false);
             });
     }
 
@@ -273,7 +272,7 @@ export class PaymentsComponent implements OnInit, OnChanges {
 
     deleteTransit(payment) {
         let msg;
-        this.paymentsService.setProgress(true);
+        this.appService.setProgress(true);
         this.sub = this.paymentsService.deleteTransit(payment.id).subscribe(data => {
                 if (data.result == rests.restResultOk) {
                     payment = data.data;
@@ -290,10 +289,10 @@ export class PaymentsComponent implements OnInit, OnChanges {
                 msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + error2 + this.userService.logUser();
                 this.logger.error(msg);
                 this.dialogService.addItem( msg);
-                this.paymentsService.setProgress(false);
+                this.appService.setProgress(false);
             },
             () => {
-                this.paymentsService.setProgress(false);
+                this.appService.setProgress(false);
             });
     }
 

@@ -1,0 +1,21 @@
+.mat-table {
+    display: table;
+    width: 100%;
+}
+.mat-header-row, .mat-row {
+    display: table-row;
+}
+
+.mat-header-cell, .mat-cell {
+    display: table-cell;
+    vertical-align: middle;
+    padding-right: 1%;
+    /* word-wrap: break-word; */
+}
+.mat-row:hover {
+    background-color: #eeeeee;
+}
+
+.boldText {
+    font-weight: bold;
+}
