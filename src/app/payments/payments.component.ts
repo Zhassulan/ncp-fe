@@ -82,6 +82,10 @@ export class PaymentsComponent implements OnInit, OnChanges {
     ngOnInit() {
         //this.setCalendarToDate('2019-07-02T00:00:00.000', '2019-07-02T23:59:59.999');
         this.getData();
+        this.setPaginator();
+    }
+
+    setPaginator()  {
         this.paginatorResultsLength = this.paymentsService.paginatorResultsLength;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

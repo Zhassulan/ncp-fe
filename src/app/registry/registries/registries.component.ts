@@ -39,17 +39,13 @@ export class RegistriesComponent implements OnInit {
                 private logger: NGXLogger,
                 private notifService: NotificationsService,
                 private appService: AppService,
-                private  excelService: ExcelService,
+                private excelService: ExcelService,
                 private router: Router) {
     }
 
     ngOnInit() {
-        this.dataSource.data = [];
         this.getData();
-        this.paginatorResultsLength = this.dataSource.data.length;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+        this.setPaginator();
     }
 
     getData() {
@@ -70,6 +66,13 @@ export class RegistriesComponent implements OnInit {
             () => {
                 this.appService.setProgress(false);
             });
+    }
+
+    setPaginator()  {
+        this.paginatorResultsLength = this.dataSource.data.length;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
     }
 
     save()  {

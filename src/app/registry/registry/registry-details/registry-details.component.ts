@@ -3,7 +3,7 @@ import {
     RegistryDetailsTableCols,
     RegistryDetailTableColsDisplay
 } from '../../../settings';
-import {MatPaginator, MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {RegistryDetail} from '../../model/registry-detail';
 import {Subscription} from 'rxjs';
 import {Registry} from '../../model/registry';
@@ -24,6 +24,7 @@ export class RegistryDetailsComponent implements OnInit {
     i: number = 0;
     paginatorResultsLength: number = 0;
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
     constructor(private registryService: RegistryService) {
     }
@@ -32,7 +33,15 @@ export class RegistryDetailsComponent implements OnInit {
         this.subscription = this.registryService.registryAnnounced$.subscribe(
             data => {
                 this.dataSource.data = data.details;
+                this.setPaginator();
             });
+    }
+
+    setPaginator()  {
+        this.paginatorResultsLength = this.dataSource.data.length;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
     }
 
 }

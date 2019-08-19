@@ -16,7 +16,6 @@ import {Subscription} from 'rxjs';
 })
 export class RegistryComponent implements OnInit {
 
-
     constructor(private registryService: RegistryService,
                 private route: ActivatedRoute,
                 private appService: AppService,

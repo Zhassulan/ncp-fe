@@ -1,6 +1,6 @@
 import {Component, enableProdMode, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialogRef} from '@angular/material';
 import {User} from '../model/user';
 import {ldapGroups, rests, msgs, locStorItems} from '../../settings';
@@ -20,12 +20,16 @@ export class LoginComponent implements OnInit {
     userName: string;
     userPassword: string;
     isWait: boolean = true;
+    returnUrl: string;
 
     ngOnInit(): void {
         this.isWait = false;
+        this.authService.logout();
+        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }
 
     constructor(public authService: AuthService,
+                private route: ActivatedRoute,
                 private router: Router,
                 private dialogRef:MatDialogRef<LoginComponent>,
                 private logger: NGXLogger,
@@ -46,7 +50,12 @@ export class LoginComponent implements OnInit {
                         'TokenFakeValue111', // TODO data.token
                         this.userName    // TODO data.username
                     );
-                    this.router.navigate(['payments']);
+                    console.log('return url: ' + this.returnUrl);
+                    if (this.returnUrl == '/')  {
+                        this.router.navigate(['payments']);
+                    }   else    {
+                        this.router.navigateByUrl(this.returnUrl);
+                    }
                     this.dialogRef.close();
                 };
                     /*
