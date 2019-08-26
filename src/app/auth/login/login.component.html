@@ -9,7 +9,7 @@
         </div>
         <div ngClass="pwd">
             <mat-form-field>
-                <input matInput placeholder="Пароль" type="password" required [(ngModel)]="userPassword" name="userPassword">
+                <input #box matInput placeholder="Пароль" type="password" required [(ngModel)]="userPassword" name="userPassword" (keyup.enter)="onEnter(box.keyVal)">
             </mat-form-field>
         </div>
         <div ngClass="btnLogin">

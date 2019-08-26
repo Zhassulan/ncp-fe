@@ -21,6 +21,16 @@ export class LoginComponent implements OnInit {
     userPassword: string;
     isWait: boolean = true;
     returnUrl: string;
+    keyVal: string = '';
+
+    constructor(public authService: AuthService,
+                private route: ActivatedRoute,
+                private router: Router,
+                private dialogRef: MatDialogRef<LoginComponent>,
+                private logger: NGXLogger,
+                private notifService: NotificationsService,
+                private dataService: DataService) {
+    }
 
     ngOnInit(): void {
         this.isWait = false;
@@ -28,13 +38,10 @@ export class LoginComponent implements OnInit {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }
 
-    constructor(public authService: AuthService,
-                private route: ActivatedRoute,
-                private router: Router,
-                private dialogRef:MatDialogRef<LoginComponent>,
-                private logger: NGXLogger,
-                private notifService: NotificationsService,
-                private dataService: DataService) {
+    onEnter(value: string) {
+        this.keyVal = value;
+        //console.log('Enter pressed');
+        this.login();
     }
 
     login() {
@@ -50,34 +57,35 @@ export class LoginComponent implements OnInit {
                         'TokenFakeValue111', // TODO data.token
                         this.userName    // TODO data.username
                     );
-                    console.log('return url: ' + this.returnUrl);
-                    if (this.returnUrl == '/')  {
+                    //console.log('return url: ' + this.returnUrl);
+                    if (this.returnUrl == '/') {
                         this.router.navigate(['payments']);
-                    }   else    {
+                    } else {
                         this.router.navigateByUrl(this.returnUrl);
                     }
                     this.dialogRef.close();
-                };
-                    /*
-                    //проверка нахождения в группе
-                    this.dataService.authorize(userObj).subscribe(data => {
-                            if (data.result == rests.restResultOk) {
-                                this.logger.info(msgs.msgLoggedSuccess + ' ' + userObj.userName);
-                                localStorage.setItem(locStorItems.userName, data.data.userName);
-                                this.router.navigate(['payments']);
-                                this.dialogRef.close();
-                            }
-                            if (data.result == rests.restResultErr) {
-                                this.notifService.warn(msgs.msgNoRights);
-                                this.logger.warn(msgs.msgNoRights + ' ' + userObj.userName);
-                            }
-                        },
-                        error2 => {
-                            this.notifService.error(msgs.msgSysErrRights + ' ' + error2);
-                            this.logger.error(msgs.msgSysErrRights + ' ' + userObj.userName + ' ' + error2);
-                        });
                 }
-                */
+                ;
+                /*
+                //проверка нахождения в группе
+                this.dataService.authorize(userObj).subscribe(data => {
+                        if (data.result == rests.restResultOk) {
+                            this.logger.info(msgs.msgLoggedSuccess + ' ' + userObj.userName);
+                            localStorage.setItem(locStorItems.userName, data.data.userName);
+                            this.router.navigate(['payments']);
+                            this.dialogRef.close();
+                        }
+                        if (data.result == rests.restResultErr) {
+                            this.notifService.warn(msgs.msgNoRights);
+                            this.logger.warn(msgs.msgNoRights + ' ' + userObj.userName);
+                        }
+                    },
+                    error2 => {
+                        this.notifService.error(msgs.msgSysErrRights + ' ' + error2);
+                        this.logger.error(msgs.msgSysErrRights + ' ' + userObj.userName + ' ' + error2);
+                    });
+            }
+            */
                 if (data.result == rests.restResultErr) {
                     this.notifService.warn(msgs.msgWrongCreds);
                     this.logger.warn(msgs.msgWrongCreds + ' ' + this.userName);

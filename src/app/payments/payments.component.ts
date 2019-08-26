@@ -37,7 +37,7 @@ export class PaymentsComponent implements OnInit, OnChanges {
         'accountSender',
         'knp',
         'paymentDetails',
-        'managers',
+       // 'managers',
         'statusRu',
         'select',
         'rowMenu']; //, 'Mobipay', 'distribution'];
