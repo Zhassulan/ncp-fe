@@ -65,7 +65,6 @@ export class LoginComponent implements OnInit {
                     }
                     this.dialogRef.close();
                 }
-                ;
                 /*
                 //проверка нахождения в группе
                 this.dataService.authorize(userObj).subscribe(data => {

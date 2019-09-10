@@ -16,29 +16,29 @@ import {msgs, rests, shrinkDetailsColumnSize} from '../settings';
 import {environment} from '../../environments/environment';
 import {Subscription} from 'rxjs';
 import {AppService} from '../app.service';
+import {ExcelService} from '../excel/excel.service';
 
 @Component({
   selector: 'app-payments',
   templateUrl: './payments.component.html',
   styleUrls: ['./payments.component.css']
 })
-export class PaymentsComponent implements OnInit, OnChanges {
-
-    ngOnChanges(changes: SimpleChanges): void {
-
-    }
+export class PaymentsComponent implements OnInit {
 
     //отображаемые в таблице колонки
     displayedColumns = [
         'ID',
+        'creationDate',
         'nameSender',
         'sum',
         'rnnSender',
         'accountSender',
+        'accountRecipient',
         'knp',
         'paymentDetails',
-       // 'managers',
+        'managers',
         'statusRu',
+        'distributeDate',
         'select',
         'rowMenu']; //, 'Mobipay', 'distribution'];
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -71,7 +71,8 @@ export class PaymentsComponent implements OnInit, OnChanges {
                 private router: Router,
                 private paymentService: PaymentService,
                 private notifService: NotificationsService,
-                private appService: AppService,) {
+                private appService: AppService,
+                private excelService: ExcelService,) {
 
         this.dataSource = new MatTableDataSource(this.paymentsService.payments);
         this.dtStartDay = new Date();
@@ -80,7 +81,9 @@ export class PaymentsComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        //this.setCalendarToDate('2019-07-02T00:00:00.000', '2019-07-02T23:59:59.999');
+        if (environment.production = false) {
+            this.setCalendarToDate('2019-07-02T00:00:00.000', '2019-07-02T23:59:59.999');
+        }
         this.getData();
         this.setPaginator();
     }
@@ -321,6 +324,10 @@ export class PaymentsComponent implements OnInit, OnChanges {
         //console.log(dtEndDay);
         this.pickerStartDate.setValue(dtStartDay);
         this.pickerEndDate.setValue(dtEndDay);
+    }
+
+    export()    {
+        this.excelService.save(this.dataSource.data);
     }
 
 }

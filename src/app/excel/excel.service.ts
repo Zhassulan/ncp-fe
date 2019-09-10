@@ -16,7 +16,8 @@ export class ExcelService {
         const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
         const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
         const blob: Blob = new Blob([excelBuffer], {type: EXCEL_TYPE});
-        this.fileSaverService.save(blob, 'registries_export_' + new  Date().getTime() + EXCEL_EXTENSION);
+        //this.fileSaverService.save(blob, 'export_' + new Date().toDateString() + '_' + new Date().toTimeString() + EXCEL_EXTENSION);
+        this.fileSaverService.save(blob, 'export' + EXCEL_EXTENSION);
     }
 
 }
