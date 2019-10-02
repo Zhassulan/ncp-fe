@@ -1,5 +1,5 @@
-import {Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTable, MatTableDataSource} from '@angular/material';
 import {NGXLogger} from 'ngx-logger';
 import {DateRange} from '../data/date-range';
 import {NcpPayment} from './model/ncp-payment';
@@ -72,7 +72,8 @@ export class PaymentsComponent implements OnInit {
                 private paymentService: PaymentService,
                 private notifService: NotificationsService,
                 private appService: AppService,
-                private excelService: ExcelService,) {
+                private excelService: ExcelService,
+                ) {
 
         this.dataSource = new MatTableDataSource(this.paymentsService.payments);
         this.dtStartDay = new Date();
@@ -81,7 +82,7 @@ export class PaymentsComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (environment.production = false) {
+        if (!environment.production) {
             this.setCalendarToDate('2019-07-02T00:00:00.000', '2019-07-02T23:59:59.999');
         }
         this.getData();

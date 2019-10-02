@@ -105,10 +105,10 @@ export class PaymentComponent implements OnInit {
                     this.paymentService.showPaymentStatus(distributeRes.data.status, distributeRes.data.id);
                     //this.loadPayment();
                 }
-                if (distributeRes.result == rests.restResultErr) {
+                if (distributeRes.result == rests.restResultErr || distributeRes.result == rests.restResultErrValidPhone) {
                     msg = msgs.msgErrDistributePayment + ' ID ' + this.paymentId + '. ' + distributeRes.data + ' (' + distributeRes.result + ')' + this.userService.logUser();
                     this.logger.warn(msg + distributeRes.data);
-                    this.notifService.warn(msg);
+                    this.notifService.warn(msgs.msgErrDistributePayment + '. ' + distributeRes.data);
                 }
             },
             error2 => {

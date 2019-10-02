@@ -104,6 +104,7 @@ export const enum timeouts {
 export const enum rests {
     restResultOk = 'ok',
     restResultErr = 'error',
+    restResultErrValidPhone = 'error_not_valid_phones'
 }
 
 /**

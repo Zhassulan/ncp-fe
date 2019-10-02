@@ -161,7 +161,7 @@ export class PaymentService {
 
     addDetailsFromFilePayment() {
         //console.log('Добавляются детали из файлового объекта в платёж сервиса\n');
-        for (let item of this.filePaymentItems.slice(0, this.filePaymentItems.length - 1)) {
+        for (let item of this.filePaymentItems.slice(0, this.filePaymentItems.length)) {
             let detail = new PaymentDetail();
             detail.nomenclature = item.nomenclature;
             detail.msisdn = item.msisdn;
