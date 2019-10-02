@@ -7,7 +7,7 @@ export const environment = {
     logging: {
         level: NgxLoggerLevel.DEBUG,
         serverLogLevel: NgxLoggerLevel.DEBUG,
-        serverLoggingUrl: 'https://test.tele2.kz/onlinebank/dataservice/logging/log'
+        serverLoggingUrl: 'https://test.tele2.kz/onlinebank/dataservice/exdata/log'
     },
 
 };
