@@ -104,8 +104,7 @@ export class PaymentComponent implements OnInit {
                     this.paymentService.setPaymentByData(distributeRes.data);
                     this.paymentService.showPaymentStatus(distributeRes.data.status, distributeRes.data.id);
                     //this.loadPayment();
-                }
-                if (distributeRes.result == rests.restResultErr || distributeRes.result == rests.restResultErrValidPhone) {
+                } else {
                     msg = msgs.msgErrDistributePayment + ' ID ' + this.paymentId + '. ' + distributeRes.data + ' (' + distributeRes.result + ')' + this.userService.logUser();
                     this.logger.warn(msg + distributeRes.data);
                     this.notifService.warn(msgs.msgErrDistributePayment + '. ' + distributeRes.data);
