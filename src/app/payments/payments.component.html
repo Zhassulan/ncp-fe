@@ -25,8 +25,11 @@
                 </button>
             </div>
             <div ngClass="item">
-                <button mat-raised-button color="primary" (click)="toTransitSelected()" matBadge="{{selectedItems}}"
-                        matBadgePosition="before" matBadgeColor="accent" [matBadgeHidden]="!isBadgeVisible"
+                <button mat-raised-button color="primary" (click)="toTransitSelected()"
+                            matBadge="{{ selection.selected.length }}"
+                            matBadgePosition="before"
+                            matBadgeColor="accent"
+                            [matBadgeHidden]="selection.selected.length === 0"
                         matTooltip="Выделенные на транзитный счёт">Транзит
                 </button>
             </div>
@@ -65,7 +68,7 @@
             </ng-container>
             <ng-container matColumnDef="sum">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Сумма</mat-header-cell>
-                <mat-cell *matCellDef="let paymentRow"> {{paymentRow.sum}}</mat-cell>
+                <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.sum | currency : ' ' }} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="rnnSender">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>ИИН</mat-header-cell>
@@ -112,19 +115,21 @@
             <ng-container matColumnDef="select">
                 <mat-header-cell *matHeaderCellDef>
                     <mat-checkbox (change)="$event ? masterToggle() : null"
-                                  [checked]="selection.hasValue() && isAllSelected()"
+                                  [checked]="selection.selected.length > 0"
                                   [indeterminate]="selection.hasValue() && !isAllSelected()">
                     </mat-checkbox>
                 </mat-header-cell>
                 <mat-cell *matCellDef="let paymentRow">
                     <mat-checkbox (click)="$event.stopPropagation()"
-                                  (change)="$event ? processForSelect(paymentRow) : null"
+                                  (change)="$event ? selection.toggle(paymentRow) : null"
                                   [checked]="selection.isSelected(paymentRow)">
                     </mat-checkbox>
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="rowMenu">
-                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>
+                </mat-header-cell>
+
                 <mat-cell *matCellDef="let paymentRow">
                     <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Действия над платежом">
                         <mat-icon>more_vert</mat-icon>
@@ -159,7 +164,10 @@
                      [ngClass]="{'row_highlight': paymentRow.status == 1 || paymentRow.status == 7 }"
                      (click)="onRowClicked(paymentRow)"></mat-row>
         </mat-table>
-        <mat-paginator [length]="!paginatorResultsLength" [pageSize]="30"></mat-paginator>
+        <mat-paginator
+                [length]="!paginatorResultsLength"
+                [pageSize]="pageSize"
+                [pageSizeOptions]="pageSizeOptions"></mat-paginator>
     </div>
 </div>
 <simple-notifications></simple-notifications>

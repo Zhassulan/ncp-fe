@@ -151,12 +151,11 @@ export class DataService {
     }
 
     getAllRegistries(): Observable<RestResponse> {
-        return this._http.post<RestResponse>(API_URL + `/exdata/registry/all`, httpOptions).catch(this.errorHandler);
+        return this._http.post<RestResponse>(API_URL + `/exdata/registries`, httpOptions).catch(this.errorHandler);
     }
 
     getRegistry(id):  Observable<RestResponse> {
         return this._http.post<RestResponse>(API_URL + `/exdata/registry/${id}`, httpOptions).catch(this.errorHandler);
     }
-
 
 }

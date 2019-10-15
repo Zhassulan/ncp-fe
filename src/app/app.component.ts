@@ -14,9 +14,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     title = 'NCP';
 
-    constructor(private titleService: Title,
-                private notifService: NotificationsService,
-                private excelService: ExcelService) {
+    constructor(private titleService: Title) {
         this.titleService.setTitle(this.title);
     }
 

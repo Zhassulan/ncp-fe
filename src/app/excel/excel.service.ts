@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {FileSaverService} from 'ngx-filesaver';
 import * as XLSX from 'xlsx';
+import {Utils} from '../utils';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -11,7 +12,8 @@ export class ExcelService {
     constructor(private fileSaverService: FileSaverService) {
     }
 
-    save(data) {
+    save(inData) {
+        let data = JSON.parse(JSON.stringify(inData));
         this.processMills(data);
         const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
         const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
@@ -22,20 +24,16 @@ export class ExcelService {
     }
 
     processMills(data)  {
-        let options = {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            timezone: 'UTC',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric'
-        };
         //alert( date.toLocaleString("ru", options) ); // среда, 31 декабря 2014 г. н.э. 12:30:00
         data.forEach(item => {
-            item.creationDate = new Date(item.creationDate).toLocaleString("ru", options).replace(',','');
-            item.distributeDate = new Date(item.distributeDate).toLocaleString("ru", options).replace(',','');
-        })
+            if (item.creationDate) {
+                item.creationDate = Utils.convertMillsToDate(item.creationDate);
+                item.distributeDate = Utils.convertMillsToDate(item.distributeDate);
+            }
+            if (item.created) {
+                item.created = Utils.convertMillsToDate(item.created);
+            }
+        });
     }
 
 }

@@ -32,4 +32,18 @@ export class Utils {
         return md5.end().toString();
     }
 
+    static convertMillsToDate(mills)    {
+        let options = {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            timezone: 'UTC',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric'
+        };
+        let dt = new Date(mills).toLocaleString("ru", options);
+        return new Date(mills).toLocaleString("ru", options).replace(',','');
+    }
+
 }

@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {NcpPayment} from '../../payments/model/ncp-payment';
 import {DataService} from '../../data/data.service';
 import {NGXLogger} from 'ngx-logger';
 import {NotificationsService} from 'angular2-notifications';
@@ -9,6 +8,7 @@ import {PaymentsService} from '../../payments/payments.service';
 import {AppService} from '../../app.service';
 import {ExcelService} from '../../excel/excel.service';
 import {Router} from '@angular/router';
+import {RegistryReportItem} from '../model/registry-report-item';
 
 @Component({
     selector: 'app-registries',
@@ -30,10 +30,15 @@ export class RegistriesComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     //источник данных для таблицы
-    dataSource = new MatTableDataSource<NcpPayment>();
+    dataSource = new MatTableDataSource<RegistryReportItem>();
     //общее количество для пагинации
     paginatorResultsLength: number;
     excelServ = this.excelService;
+
+    // MatPaginator Inputs
+    pageSize = 30;
+    pageSizeOptions: number[] = [50, 100, 150, 250, 300];
+
 
     constructor(private dataService: DataService,
                 private logger: NGXLogger,

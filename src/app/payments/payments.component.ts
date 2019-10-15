@@ -1,5 +1,5 @@
-import {Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTable, MatTableDataSource} from '@angular/material';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTable, MatTableDataSource, PageEvent} from '@angular/material';
 import {NGXLogger} from 'ngx-logger';
 import {DateRange} from '../data/date-range';
 import {NcpPayment} from './model/ncp-payment';
@@ -62,6 +62,9 @@ export class PaymentsComponent implements OnInit {
     dtStartDay: Date;
     dtEndDay: Date;
     sub: Subscription;
+    // MatPaginator Inputs
+    pageSize = 30;
+    pageSizeOptions: number[] = [50, 100, 150, 250, 300];
 
     constructor(private dataService: DataService,
                 private dialogService: DialogService,
@@ -131,10 +134,15 @@ export class PaymentsComponent implements OnInit {
         }
     }
 
+    getData()   {
+        this.getServerData();
+        //this.getFileData();
+    }
+
     /**
      * загрузка платежей с сервера
      */
-    getData() {
+    getServerData() {
         this.setTimeBoundariesForDatePickers();
         this.appService.setProgress(true);
         this.dataSource.data = [];
@@ -158,7 +166,7 @@ export class PaymentsComponent implements OnInit {
     /**
      * загрузка платежей из json файла в папке assets (режим разработки/отладки, чтобы быстро загрузить данные)
      */
-    getSampleData() {
+    getFileData() {
         this.appService.setProgress(true);
         this.dataSource.data = [];
         this.sub = this.paymentsService.getSampleData().subscribe(data => {
@@ -218,14 +226,12 @@ export class PaymentsComponent implements OnInit {
     }
 
     toTransitSelected() {
-        if (this.selectedItems > 0) {
+        if (this.selection.selected.length > 0) {
             this.dialogService.clear();
             this.dialogService.title = 'Перевод на транзитный счёт';
             this.dialogService.openDialog();
-            this.dataSource.data.forEach(payment => {
-                if (payment.isChecked) {
-                    this.toTransit(payment);
-                }
+            this.selection.selected.forEach(payment => {
+                this.toTransit(payment);
             });
         } else {
             this.notifService.warn('Не выбрано ни одного платежа');
@@ -247,28 +253,31 @@ export class PaymentsComponent implements OnInit {
         return numSelected === numRows;
     }
 
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
     masterToggle() {
-        this.isAllSelected() ? this.clearSelection() : this.selectAll();
+        if (this.isAllSelected())   {
+            this.selection.clear();
+        }   else    {
+            if (this.selection.selected.length > 0) {
+                this.selection.clear()
+            }   else    {
+                this.dataSource.filteredData.forEach(row => this.selection.select(row));
+            }
+        }
     }
 
     selectAll() {
-        this.selectedItems = 0;
-        this.dataSource.data.forEach(row => {
+        let filteredData = this.dataSource.filteredData;
+        filteredData.forEach(row => {
             this.selection.select(row);
-            this.selectedItems++;
-            !row.isChecked ? row.isChecked = true : row.isChecked = false;
         });
-        this.isBadgeVisible = true;
     }
 
-    clearSelection() {
-        this.selection.clear();
-        this.dataSource.data.forEach(row => {
-            row.isChecked = false;
-        });
-        this.isBadgeVisible = false;
-        this.selectedItems = 0;
+    /** The label for the checkbox on the passed row */
+    checkboxLabel(row?: NcpPayment): string {
+        if (!row) {
+            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+        }
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${this.selection.selected.length}`;
     }
 
     menuOnRowToTransit(paymentRow) {
@@ -328,7 +337,7 @@ export class PaymentsComponent implements OnInit {
     }
 
     export()    {
-        this.excelService.save(this.dataSource.data);
+        this.selection.selected.length > 0 ? this.excelService.save(this.selection.selected) : this.excelService.save(this.dataSource.data);
     }
 
 }

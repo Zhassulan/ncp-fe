@@ -77,7 +77,7 @@ registerLocaleData(localeRu, 'ru');
         RegistryComponent,
         RegistryDetailsComponent,
         RegistryPropertiesComponent,
-        PageNotFoundComponent,
+        PageNotFoundComponent
     ],
     entryComponents: [
         DialogReportComponent,

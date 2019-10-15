@@ -23,15 +23,15 @@
         <mat-table [dataSource]="dataSource" matSort>
             <ng-container matColumnDef="ID">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.id}}</mat-cell>
+                <mat-cell *matCellDef="let row"> {{ row.registryId }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="created">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Дата </mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.created | date : 'yyyy-MM-dd HH:MM:SS'}}</mat-cell>
+                <mat-cell *matCellDef="let row"> {{ row.created | date : "dd.MM.yy HH:mm" }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="bin">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> БИН </mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.bin}}</mat-cell>
+                <mat-cell *matCellDef="let row"> {{ row.bin }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="company">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Компания </mat-header-cell>
@@ -51,7 +51,7 @@
             </ng-container>
             <ng-container matColumnDef="amount">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Сумма</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.amount}}</mat-cell>
+                <mat-cell *matCellDef="let row"> {{row.amount | currency : ' '}}</mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -59,7 +59,11 @@
             <!-- for Highlight: rowHighlight [paymentStatus]="row.getStatus()"-->
             <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)"></mat-row>
         </mat-table>
-        <mat-paginator [length]="!paginatorResultsLength" [pageSize]="30"></mat-paginator>
+        <mat-paginator
+                [length]="!paginatorResultsLength"
+                [pageSize]="pageSize"
+                [pageSizeOptions]="pageSizeOptions">
+        </mat-paginator>
     </div>
 
 </div>
