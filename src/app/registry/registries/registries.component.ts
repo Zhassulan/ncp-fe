@@ -93,7 +93,7 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
     }
 
     menuOnRegistryOpen(registry) {
-        this.router.navigate(['registry/' + registry.id]);
+        this.router.navigate(['registry/' + registry.registryId]);
     }
 
 }
