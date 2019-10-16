@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {NcpPayment} from '../payments/model/ncp-payment';
 import {Observable} from 'rxjs';
 import {DateRange} from './date-range';
@@ -12,6 +12,7 @@ import {FilePayment} from '../payments/payment/equipment/model/file-payment';
 import {PaymentParamEq} from '../payments/model/payment-param-eq';
 import {EquipmentCheckParam} from '../payments/model/equipment-check-param';
 import {User} from '../auth/model/user';
+import {Version} from '../version';
 
 const API_URL = environment.apiUrl;
 
@@ -156,6 +157,10 @@ export class DataService {
 
     getRegistry(id):  Observable<RestResponse> {
         return this._http.post<RestResponse>(API_URL + `/exdata/registry/${id}`, httpOptions).catch(this.errorHandler);
+    }
+
+    getVersion(): Observable <Version> {
+        return this._http.get<Version>(API_URL + '/exdata/ver', httpOptions).catch(this.errorHandler);
     }
 
 }

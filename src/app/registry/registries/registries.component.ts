@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {DataService} from '../../data/data.service';
 import {NGXLogger} from 'ngx-logger';
@@ -15,7 +15,7 @@ import {RegistryReportItem} from '../model/registry-report-item';
     templateUrl: './registries.component.html',
     styleUrls: ['./registries.component.css']
 })
-export class RegistriesComponent implements OnInit {
+export class RegistriesComponent implements OnInit, AfterViewInit {
 
     displayedColumns = [
         'ID',
@@ -51,6 +51,10 @@ export class RegistriesComponent implements OnInit {
     ngOnInit() {
         this.getData();
         this.setPaginator();
+    }
+
+    ngAfterViewInit()   {
+        this.appService.checkVersion();
     }
 
     getData() {

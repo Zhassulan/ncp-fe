@@ -1,8 +1,6 @@
 import {Title} from '@angular/platform-browser';
-import {Component, ViewEncapsulation, AfterViewInit, OnInit} from '@angular/core';
-import {locStorItems} from './settings';
-import {NotificationsService} from 'angular2-notifications';
-import {ExcelService} from './excel/excel.service';
+import {Component, ViewEncapsulation, OnInit} from '@angular/core';
+import {appTitle} from './settings';
 
 @Component({
     selector: 'app-root',
@@ -10,21 +8,12 @@ import {ExcelService} from './excel/excel.service';
     styleUrls: ['./app.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class AppComponent implements OnInit, AfterViewInit {
-
-    title = 'NCP';
+export class AppComponent implements OnInit {
 
     constructor(private titleService: Title) {
-        this.titleService.setTitle(this.title);
+        this.titleService.setTitle(appTitle);
     }
 
     ngOnInit(): void { }
-
-    ngAfterViewInit() {
-        //localStorage.clear();
-        if (localStorage.getItem(locStorItems.version) == null) {
-            localStorage.setItem(locStorItems.version, '0');
-        }
-    }
 
 }

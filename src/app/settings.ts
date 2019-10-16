@@ -141,6 +141,8 @@ export const enum msgs {
     msgPaymentNotNew = 'Платёж не в статусе новый.',
     msgPaymentBlocked = 'Платёж уже в обработке.',
     msgErrGetRegistryData = 'Ошибка загрузки реестра.',
+    msgErrGetVer = 'Ошибка получения версии приложения.',
+    msgInfRefreshPage = 'Есть обновления, обновите кеш страницы [Ctrl]+[F5]',
 }
 
 /**
@@ -149,9 +151,8 @@ export const enum msgs {
 export enum locStorItems {
     tokenName = 'token',
     userName = 'username',
-    version = 'version'
+    version = 'ncp_version'
 }
-
 
 /**
  * длина номера абонента
@@ -252,3 +253,5 @@ export enum RegistryDetailTableColsDisplay {
     msisdn = 'Номер',
     amount = 'Сумма'
 };
+
+export const appTitle = 'NCP';

@@ -1,5 +1,5 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTable, MatTableDataSource, PageEvent} from '@angular/material';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {NGXLogger} from 'ngx-logger';
 import {DateRange} from '../data/date-range';
 import {NcpPayment} from './model/ncp-payment';
@@ -23,7 +23,7 @@ import {ExcelService} from '../excel/excel.service';
   templateUrl: './payments.component.html',
   styleUrls: ['./payments.component.css']
 })
-export class PaymentsComponent implements OnInit {
+export class PaymentsComponent implements OnInit, AfterViewInit {
 
     //отображаемые в таблице колонки
     displayedColumns = [
@@ -92,15 +92,15 @@ export class PaymentsComponent implements OnInit {
         this.setPaginator();
     }
 
+    ngAfterViewInit()   {
+        this.appService.checkVersion();
+    }
+
     setPaginator()  {
         this.paginatorResultsLength = this.paymentsService.paginatorResultsLength;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-    }
-
-    ngAfterViewInit() {
-
     }
 
     ngOnDestroy() {
@@ -135,8 +135,12 @@ export class PaymentsComponent implements OnInit {
     }
 
     getData()   {
-        this.getServerData();
-        //this.getFileData();
+        if (environment.production) {
+            this.getServerData();
+        }   else   {
+            this.getFileData();
+            //this.getServerData();
+        }
     }
 
     /**
