@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  tst:
+    image: docker.tele2.kz/ncp/ncp:latest
+    ports:
+      - "4200:80"
+    container_name: ncp
+networks:
+  default:
+    driver: bridge
+    attachable: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.33.0.0/16

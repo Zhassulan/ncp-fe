@@ -85,9 +85,9 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        if (!environment.production) {
-            this.setCalendarToDate('2019-07-02T00:00:00.000', '2019-07-02T23:59:59.999');
-        }
+        /*
+        this.setCalendarToDate('2019-07-02T00:00:00.000', '2019-07-02T23:59:59.999');
+        */
         this.getData();
         this.setPaginator();
     }
@@ -135,12 +135,8 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     }
 
     getData()   {
-        if (environment.production) {
-            this.getServerData();
-        }   else   {
-            this.getFileData();
-            //this.getServerData();
-        }
+        //this.getFileData();
+        this.getServerData();
     }
 
     /**

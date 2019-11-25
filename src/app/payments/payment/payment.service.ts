@@ -29,7 +29,6 @@ export class PaymentService {
     private paymentObs = new Subject<NcpPayment>();
     detailsAnnounced$ = this.detailsObs.asObservable();
     paymentAnnounced$ = this.paymentObs.asObservable();
-    paymentParamEq: PaymentParamEq;
     utils = new Utils(this.logger);
     paymentStatuses = PaymentStatus;
 
@@ -266,20 +265,18 @@ export class PaymentService {
     }
 
     distribute(): Observable<any> {
-        this.distributionPrepareParams();
-        return this.dataService.distributePayment(this.paymentParamEq);
+        return this.dataService.distributePayment(this.getPreparedParameters());
     }
 
-    distributionPrepareParams() {
-        this.logger.info("Подготавливаются параметры для разноски.")
+    getPreparedParameters():PaymentParamEq {
+        this.logger.debug("Подготавливаются параметры для разноски..")
         let params: PaymentParamEq = new PaymentParamEq();
         params.id = this.payment.id;
         params.profileId = this.payment.profileId;
         params.agent = this.userService.getUserName();
         params.items = [];
-        //this.printDetails();
-        this.details.forEach(detail => {
-            //if (detail.status == this.paymentStatuses.STATUS_NEW)   {
+        this.logger.debug('Детали платежа:\n' + Utils.toJsonString(this.details));
+        for (let detail of this.details) {
                 let ncpDetail = new NcpPaymentDetails();
                 ncpDetail.id = detail.id;
                 ncpDetail.msisdn = detail.msisdn;
@@ -297,12 +294,12 @@ export class PaymentService {
                 if ((detail.nomenclature != null || detail.nomenclature != '') && (detail.icc != null || detail.icc != '')) {
                     let equipment: Equipment = this.createEquipmentByDetail(this.payment.id, detail);
                     params.items.push(new DetailEquipment(ncpDetail, equipment));
+                }   else {
+                    params.items.push(new DetailEquipment(ncpDetail, null));
                 }
-            //}
-        });
-        //console.log('Params:\n' + JSON.stringify(params));
-        this.paymentParamEq = params;
-        //this.logger.info("Параметр для разноски:\n" this.utils.printObj(this.paymentParamEq));
+        }
+        this.logger.debug("Параметры для разноски:\n" + Utils.toJsonString(params));
+        return params;
     }
 
     getPaymentData(id): Observable<any> {

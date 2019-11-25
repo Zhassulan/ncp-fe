@@ -1,0 +1,64 @@
+image: docker:latest
+services:
+  - docker:dind
+
+cache:
+  key: cache-global-key
+  paths:
+    - .m2/
+
+variables:
+  DOCKER_DRIVER: overlay
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2"
+
+#  SPRING_PROFILES_ACTIVE: gitlab-ci
+
+stages:
+  - build
+  - package
+  - deploy
+
+maven-build:
+  image: openjdk:8-jdk-alpine
+  stage: build
+  script:
+    - "chmod +x ./mvnw"
+    - "./mvnw package"
+  artifacts:
+    paths:
+      - target/*.jar
+
+docker-build:
+  stage: package
+  script:
+  - echo $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
+  - docker pull $CI_REGISTRY_IMAGE:latest || true
+  - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA --tag $CI_REGISTRY_IMAGE:latest .
+  - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  - docker push $CI_REGISTRY_IMAGE:latest
+  #- docker build --cache-from $CONTAINER_IMAGE:latest -t docker.tele2.kz/requests/req-bot .
+  #- docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
+  #- docker push docker.tele2.kz/requests/req-bot
+
+docker-deploy:
+  stage: deploy
+  image: governmentpaas/git-ssh
+  environment:
+    name: development
+  only:
+  - master
+  before_script:
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan "$SSH_SERVER_HOST" >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+  script:
+  - ssh -T root@$SSH_SERVER_HOST "
+    /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yaml down
+    && /usr/bin/docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
+    && /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yaml pull
+    && /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yaml up -d
+    && /usr/bin/docker logout docker.tele2.kz"

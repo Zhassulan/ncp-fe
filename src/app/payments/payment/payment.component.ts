@@ -11,6 +11,7 @@ import {DialogComponent} from './equipment/dialog/dialog.component';
 import {ActivatedRoute, PRIMARY_OUTLET, Router, UrlSegment, UrlSegmentGroup, UrlTree} from '@angular/router';
 import {DetailsComponent} from './details/details.component';
 import {AppService} from '../../app.service';
+import {Utils} from '../../utils';
 
 @Component({
     selector: 'app-payment',
@@ -100,18 +101,19 @@ export class PaymentComponent implements OnInit {
         this.appService.setProgress(true);
         let msg;
         this.paymentService.distribute().subscribe(distributeRes => {
+                console.log('Accepted result from distribution ' +  Utils.toJsonString(distributeRes));
                 if (distributeRes.result == rests.restResultOk) {
                     this.paymentService.setPaymentByData(distributeRes.data);
                     this.paymentService.showPaymentStatus(distributeRes.data.status, distributeRes.data.id);
                     //this.loadPayment();
                 } else {
                     msg = msgs.msgErrDistributePayment + ' ID ' + this.paymentId + '. ' + distributeRes.data + ' (' + distributeRes.result + ')' + this.userService.logUser();
-                    this.logger.warn(msg + distributeRes.data);
-                    this.notifService.warn(msgs.msgErrDistributePayment + '. ' + distributeRes.data);
+                    this.logger.warn(msg + distributeRes.data + ' ' + this.userService.logUser());
+                    this.notifService.warn(msgs.msgErrDistributePayment + ' ' + distributeRes.data);
                 }
             },
             error2 => {
-                msg = msgs.msgErrDistributePayment + ' ID ' + this.paymentId + '. ' + error2 + this.userService.logUser();
+                msg = msgs.msgErrDistributePayment + ' Payment ID ' + this.paymentId + '. ' + error2 + this.userService.logUser();
                 this.logger.error(msg + error2);
                 this.notifService.error(msg + error2);
                 this.appService.setProgress(false);

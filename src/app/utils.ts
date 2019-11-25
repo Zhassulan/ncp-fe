@@ -16,9 +16,18 @@ export class Utils {
         return str.replace(/\s\s+/g, ' ');
     }
 
+    /**
+     * Печать объекта в формате JSON
+     * @param obj
+     */
     printObj(obj) {
         this.logger.info(JSON.stringify(obj, undefined, 2));
     }
+
+    static toJsonString(obj) {
+        return JSON.stringify(obj, undefined, 2);
+    }
+
 
     static getMd5(strVal) {
         let md5 = new Md5();
