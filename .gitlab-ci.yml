@@ -2,17 +2,6 @@ image: docker:latest
 services:
   - docker:dind
 
-cache:
-  key: cache-global-key
-  paths:
-    - .m2/
-
-variables:
-  DOCKER_DRIVER: overlay
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2"
-
-#  SPRING_PROFILES_ACTIVE: gitlab-ci
-
 stages:
   - build
   - package
