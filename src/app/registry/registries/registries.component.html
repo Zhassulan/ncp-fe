@@ -8,6 +8,9 @@
             <div ngClass="item">
                 <mat-form-field>
                     <input matInput placeholder="БИН" [formControl]="binFormCtl">
+                    <button mat-button *ngIf="binFormCtl.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearBin()">
+                        <mat-icon>close</mat-icon>
+                    </button>
                     <mat-error *ngIf="binFormCtl.hasError('pattern')">
                         Пожалуйста введите корректный БИН
                     </mat-error>
@@ -24,14 +27,12 @@
                         Экспорт
                     </button>
             </div>
-            <!--
             <div ngClass="search">
                 <mat-form-field>
                     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Быстрый поиск">
                     <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
             </div>
-            -->
         </div>
     </div>
 
@@ -69,6 +70,21 @@
             <ng-container matColumnDef="amount">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Сумма</mat-header-cell>
                 <mat-cell *matCellDef="let row"> {{row.amount | currency : ' '}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="rowMenu">
+                <mat-header-cell *matHeaderCellDef>
+                </mat-header-cell>
+
+                <mat-cell *matCellDef="let row">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Действия над реестром">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="menuOnRegistryOpen(row)">
+                            <span>Открыть</span>
+                        </button>
+                    </mat-menu>
+                </mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

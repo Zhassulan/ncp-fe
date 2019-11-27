@@ -163,13 +163,13 @@ export class DataService {
         return this._http.get<Version>(API_URL + '/exdata/ver', httpOptions).catch(this.errorHandler);
     }
 
-    getRegistriesByRange(startDate, endDate): Observable <any> {
+    getRegistriesByRange(startDate, endDate, bin): Observable <any> {
         const options = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
             }),
             params:
-                new HttpParams().set('start_date', startDate).append('end_date', endDate)
+                new HttpParams().set('start_date', startDate).append('end_date', endDate).append('bin', bin)
         };
         return this._http.get <RestResponse> (
             API_URL + '/exdata/registry/range', options).catch(this.errorHandler);

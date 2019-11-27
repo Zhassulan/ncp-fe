@@ -30,6 +30,7 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
         'email',
         'msisdn',
         'amount',
+        'rowMenu'
     ];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -87,7 +88,7 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
     getRange() {
         this.dateRangeComponent.setTimeBoundariesForDatePickers();
         this.appService.setProgress(true);
-        this.dataService.getRegistriesByRange(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime()).subscribe(
+        this.dataService.getRegistriesByRange(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime(), this.binFormCtl.value).subscribe(
             data => {
                 if (Array.isArray(data) && data.length)
                     this.dataSource.data = data;
@@ -116,11 +117,22 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
     }
 
     onRowClicked(registry) {
-        this.menuOnRegistryOpen(registry);
+        //this.menuOnRegistryOpen(registry);
     }
 
     menuOnRegistryOpen(registry) {
         this.router.navigate(['registry/' + registry.registryId]);
+    }
+
+    applyFilter(filterValue: string) {
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage();
+        }
+    }
+
+    clearBin() {
+        this.binFormCtl.setValue('');
     }
 
 }

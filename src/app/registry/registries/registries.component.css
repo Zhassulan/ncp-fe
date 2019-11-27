@@ -67,3 +67,13 @@
 .mat-table .mat-row:hover {
     background-color: #eeeeee;
 }
+
+.mat-column-ID {
+    flex: 0 0 3% !important;
+    width: 3% !important;
+}
+
+.mat-column-rowMenu {
+    flex: 0 0 2% !important;
+    width: 2% !important;
+}
