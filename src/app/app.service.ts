@@ -3,6 +3,7 @@ import {Subject} from 'rxjs';
 import {locStorItems, msgs} from './settings';
 import {NotificationsService} from 'angular2-notifications';
 import {DataService} from './data/data.service';
+import {NGXLogger} from 'ngx-logger';
 
 @Injectable()
 export class AppService {
@@ -11,7 +12,8 @@ export class AppService {
     progressAnnounced$ = this.progressObs.asObservable();
 
     constructor(private dataService: DataService,
-                private notif: NotificationsService) {
+                private notif: NotificationsService,
+                private logger: NGXLogger) {
     }
 
     setProgress(boolVal: boolean) {
@@ -29,6 +31,8 @@ export class AppService {
                     this.notif.info(msgs.msgInfRefreshPage);
                 }
             }
+        }, error2 => {
+            this.logger.error(error2);
         });
     }
 

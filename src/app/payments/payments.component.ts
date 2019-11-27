@@ -1,22 +1,22 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {MatDatepickerInputEvent, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {NGXLogger} from 'ngx-logger';
 import {DateRange} from '../data/date-range';
-import {NcpPayment} from './model/ncp-payment';
 import {DialogService} from '../dialog/dialog.service';
 import {NotificationsService} from 'angular2-notifications';
 import {DataService} from '../data/data.service';
 import {PaymentsService} from './payments.service';
-import {FormControl} from '@angular/forms';
 import {PaymentService} from './payment/payment.service';
 import {UserService} from '../user/user.service';
 import {Router} from '@angular/router';
 import {SelectionModel} from '@angular/cdk/collections';
 import {msgs, rests, shrinkDetailsColumnSize} from '../settings';
-import {environment} from '../../environments/environment';
 import {Subscription} from 'rxjs';
 import {AppService} from '../app.service';
 import {ExcelService} from '../excel/excel.service';
+import {DateRangeComponent} from '../date-range/date-range.component';
+import {Utils} from '../utils';
+import {VNcpPayment} from './model/vncp-payment';
 
 @Component({
   selector: 'app-payments',
@@ -25,7 +25,6 @@ import {ExcelService} from '../excel/excel.service';
 })
 export class PaymentsComponent implements OnInit, AfterViewInit {
 
-    //отображаемые в таблице колонки
     displayedColumns = [
         'ID',
         'creationDate',
@@ -36,35 +35,31 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         'accountRecipient',
         'knp',
         'paymentDetails',
-        'managers',
+        'managedBy',
         'statusRu',
         'distributeDate',
         'select',
-        'rowMenu']; //, 'Mobipay', 'distribution'];
+        'rowMenu'];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     //источник данных для таблицы
-    dataSource = new MatTableDataSource<NcpPayment>();
+    dataSource = new MatTableDataSource<VNcpPayment>();
     //общее количество для пагинации
     paginatorResultsLength: number;
     //выбранные в таблице модели
-    selection = new SelectionModel<NcpPayment>(true, []);
-    //объекты выбора даты на странице
-    pickerStartDate = new FormControl(new Date());
-    pickerEndDate = new FormControl(new Date());
+    selection = new SelectionModel<VNcpPayment>(true, []);
     //индикатор для отображения\скрытия количества выделенных
     isBadgeVisible = false;
     //подсчёт выбранных элементов
     selectedItems: number = 0;
     //обрезка больших текстов в деталях\назначение платежа
     shrinkDetailsColumnSize = shrinkDetailsColumnSize;
-    //даты начала и конца дня
-    dtStartDay: Date;
-    dtEndDay: Date;
     sub: Subscription;
-    // MatPaginator Inputs
     pageSize = 30;
     pageSizeOptions: number[] = [50, 100, 150, 250, 300];
+
+    @ViewChild(DateRangeComponent)
+    private dateRangeComponent: DateRangeComponent;
 
     constructor(private dataService: DataService,
                 private dialogService: DialogService,
@@ -77,10 +72,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
                 private appService: AppService,
                 private excelService: ExcelService,
                 ) {
-
         this.dataSource = new MatTableDataSource(this.paymentsService.payments);
-        this.dtStartDay = new Date();
-        this.dtEndDay = new Date();
         this.paginatorResultsLength = 0;
     }
 
@@ -107,18 +99,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         //this.sub.unsubscribe();
     }
 
-    /**
-     *  Установить границы времени для календарей диапазона дат
-     */
-    setTimeBoundariesForDatePickers() {
-        this.dtStartDay = new Date(this.pickerStartDate.value.getTime());
-        this.dtEndDay = new Date(this.pickerEndDate.value.getTime());
-        this.dtStartDay.setHours(0, 0, 0, 0);
-        this.dtEndDay.setHours(23, 59, 59, 999);
-        this.pickerStartDate.setValue(this.dtStartDay);
-        this.pickerEndDate.setValue(this.dtEndDay);
-    }
-
     onRowClicked(paymentRow) {
         //this.menuOnRowOpenPayment(paymentRow);
     }
@@ -143,13 +123,15 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
      * загрузка платежей с сервера
      */
     getServerData() {
-        this.setTimeBoundariesForDatePickers();
+        this.dateRangeComponent.setTimeBoundariesForDatePickers();
         this.appService.setProgress(true);
         this.dataSource.data = [];
-        let dr = new DateRange(this.pickerStartDate.value.getTime(), this.pickerEndDate.value.getTime());
+        let stDt = this.dateRangeComponent.pickerStartDate.value.getTime();
+        let enDt = this.dateRangeComponent.pickerEndDate.value.getTime();
+        console.log('Загрузка платежей за время ' + Utils.convertMillsToDate(stDt)+ ' по ' + Utils.convertMillsToDate(enDt));
+        let dr = new DateRange(stDt, enDt);
         this.sub = this.paymentsService.getData(dr).subscribe(data => {
                 this.dataSource.data = data;
-                //this.dataSource.data = this.paymentsService.payments;
             },
             error2 => {
                 this.notifService.error(msgs.msgErrLoadData);
@@ -177,22 +159,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         }, () => {
             this.appService.setProgress(false);
         });
-    }
-
-    /**
-     * фиксирование количества выделенных в таблице платежей и установка атрибута класса платёж в статус отмеченный
-     * @param paymentRow
-     */
-    processForSelect(paymentRow) {
-        if (!paymentRow.isChecked) {
-            this.selectedItems++;
-            paymentRow.isChecked = true;
-        } else {
-            paymentRow.isChecked = false;
-            this.selectedItems--;
-        }
-        //скрытие\показ кружочка с количеством выделенные в кнопке ТРАНЗИТ
-        this.selectedItems > 0 ? this.isBadgeVisible = true : this.isBadgeVisible = false;
     }
 
     /**
@@ -238,14 +204,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    catchEndDatePickerEvent(type: string, event: MatDatepickerInputEvent<Date>) {
-        if (type == 'input') {
-            let end = new Date(this.pickerEndDate.value);
-            end.setHours(23, 59, 59, 999);
-            this.pickerEndDate.setValue(end);
-        }
-    }
-
     /** Whether the number of selected elements matches the total number of rows. */
     isAllSelected() {
         const numSelected = this.selection.selected.length;
@@ -273,7 +231,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     }
 
     /** The label for the checkbox on the passed row */
-    checkboxLabel(row?: NcpPayment): string {
+    checkboxLabel(row?: VNcpPayment): string {
         if (!row) {
             return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
         }
@@ -295,17 +253,17 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
                     payment = data.data;
                     msg = msgs.msgSuccessDelTransit + ' ID платежа ' + payment.id + this.userService.logUser();
                     this.logger.info(msg);
-                    this.dialogService.addItem( msg);
+                    this.dialogService.addItem(msg);
                 } else {
                     msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')' + this.userService.logUser();
                     this.logger.warn(msg);
-                    this.dialogService.addItem( msg);
+                    this.dialogService.addItem(msg);
                 }
             },
             error2 => {
                 msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + error2 + this.userService.logUser();
                 this.logger.error(msg);
-                this.dialogService.addItem( msg);
+                this.dialogService.addItem(msg);
                 this.appService.setProgress(false);
             },
             () => {
@@ -325,16 +283,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         this.router.navigate(['payment/' + paymentRow.id]);
     }
 
-    setCalendarToDate(startDate, endDate) {
-        let dtStartDay = new Date(startDate);
-        let dtEndDay = new Date(endDate);
-        dtStartDay.setHours(0, 0, 0, 0);
-        dtEndDay.setHours(23, 59, 59, 999);
-        //console.log(dtStartDay);
-        //console.log(dtEndDay);
-        this.pickerStartDate.setValue(dtStartDay);
-        this.pickerEndDate.setValue(dtEndDay);
-    }
 
     export()    {
         this.selection.selected.length > 0 ? this.excelService.save(this.selection.selected) : this.excelService.save(this.dataSource.data);

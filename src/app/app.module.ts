@@ -51,6 +51,7 @@ import { RegistryDetailsComponent } from './registry/registry/registry-details/r
 import { RegistryPropertiesComponent } from './registry/registry/registry-properties/registry-properties.component';
 import {SessionService} from './auth/session.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { DateRangeComponent } from './date-range/date-range.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -77,7 +78,8 @@ registerLocaleData(localeRu, 'ru');
         RegistryComponent,
         RegistryDetailsComponent,
         RegistryPropertiesComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        DateRangeComponent
     ],
     entryComponents: [
         DialogReportComponent,

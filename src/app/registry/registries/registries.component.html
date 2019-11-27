@@ -3,6 +3,23 @@
     <div class="top">
         <div ngClass="header">
             <div ngClass="item">
+                <app-date-range></app-date-range>
+            </div>
+            <div ngClass="item">
+                <mat-form-field>
+                    <input matInput placeholder="БИН" [formControl]="binFormCtl">
+                    <mat-error *ngIf="binFormCtl.hasError('pattern')">
+                        Пожалуйста введите корректный БИН
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div ngClass="item">
+                <button mat-raised-button color="primary" (click)="getRange()"
+                        matTooltip="Загрузка данных за указанную дату">
+                    Загрузка
+                </button>
+            </div>
+            <div ngClass="item">
                     <button mat-raised-button color="primary" (click)="save()" matTooltip="Экспорт в Excel">
                         Экспорт
                     </button>

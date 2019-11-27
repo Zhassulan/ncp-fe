@@ -9,6 +9,10 @@ import {AppService} from '../../app.service';
 import {ExcelService} from '../../excel/excel.service';
 import {Router} from '@angular/router';
 import {RegistryReportItem} from '../model/registry-report-item';
+import {DateRangeComponent} from '../../date-range/date-range.component';
+import {FormControl, Validators} from '@angular/forms';
+import {Utils} from '../../utils';
+import {DateRange} from '../../data/date-range';
 
 @Component({
     selector: 'app-registries',
@@ -34,11 +38,14 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
     //общее количество для пагинации
     paginatorResultsLength: number;
     excelServ = this.excelService;
-
     // MatPaginator Inputs
     pageSize = 30;
     pageSizeOptions: number[] = [50, 100, 150, 250, 300];
-
+    binFormCtl = new FormControl('', [
+        Validators.pattern('\\d{12}'),
+    ]);
+    @ViewChild(DateRangeComponent)
+    private dateRangeComponent: DateRangeComponent;
 
     constructor(private dataService: DataService,
                 private logger: NGXLogger,
@@ -49,15 +56,15 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.getData();
+        this.getAll();
         this.setPaginator();
     }
 
-    ngAfterViewInit()   {
+    ngAfterViewInit() {
         this.appService.checkVersion();
     }
 
-    getData() {
+    getAll() {
         this.appService.setProgress(true);
         this.dataService.getAllRegistries().subscribe(
             data => {
@@ -77,14 +84,34 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
             });
     }
 
-    setPaginator()  {
+    getRange() {
+        this.dateRangeComponent.setTimeBoundariesForDatePickers();
+        this.appService.setProgress(true);
+        this.dataService.getRegistriesByRange(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime()).subscribe(
+            data => {
+                if (Array.isArray(data) && data.length)
+                    this.dataSource.data = data;
+                else
+                    this.notifService.warn(msgs.msgErrNoDataFound);
+            },
+            error2 => {
+                this.notifService.error(error2);
+                this.appService.setProgress(false);
+            },
+            () => {
+                this.appService.setProgress(false);
+            }
+        );
+    }
+
+    setPaginator() {
         this.paginatorResultsLength = this.dataSource.data.length;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
     }
 
-    save()  {
+    save() {
         this.excelService.save(this.dataSource.data);
     }
 

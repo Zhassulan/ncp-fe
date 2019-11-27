@@ -55,6 +55,14 @@ const routes: Routes = [
         }
     },
     {
+        path: 'registry',
+        component: RegistriesComponent,
+        canActivate: [LoggedInGuard],
+        data: {
+            breadcrumb: 'Реестры'
+        }
+    },
+    {
         path: 'registry/all',
         component: RegistriesComponent,
         canActivate: [LoggedInGuard],

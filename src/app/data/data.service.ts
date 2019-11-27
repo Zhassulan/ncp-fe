@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
-import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
 import {NcpPayment} from '../payments/model/ncp-payment';
 import {Observable} from 'rxjs';
 import {DateRange} from './date-range';
@@ -152,7 +152,7 @@ export class DataService {
     }
 
     getAllRegistries(): Observable<RestResponse> {
-        return this._http.post<RestResponse>(API_URL + `/exdata/registries`, httpOptions).catch(this.errorHandler);
+        return this._http.post<RestResponse>(API_URL + `/exdata/registry/all`, httpOptions).catch(this.errorHandler);
     }
 
     getRegistry(id):  Observable<RestResponse> {
@@ -161,6 +161,18 @@ export class DataService {
 
     getVersion(): Observable <Version> {
         return this._http.get<Version>(API_URL + '/exdata/ver', httpOptions).catch(this.errorHandler);
+    }
+
+    getRegistriesByRange(startDate, endDate): Observable <any> {
+        const options = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+            }),
+            params:
+                new HttpParams().set('start_date', startDate).append('end_date', endDate)
+        };
+        return this._http.get <RestResponse> (
+            API_URL + '/exdata/registry/range', options).catch(this.errorHandler);
     }
 
 }
