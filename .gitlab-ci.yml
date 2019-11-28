@@ -33,7 +33,7 @@ docker-build:
   script:
     - docker build --cache-from $CONTAINER_IMAGE:latest -t docker.tele2.kz/ncp/ncp-frontend-app .
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-    - docker push docker.tele2.kz/ncp/ncp-fronend-app
+    - docker push docker.tele2.kz/ncp/ncp-frontend-app
 
 #docker-deploy:
 #  stage: deploy
