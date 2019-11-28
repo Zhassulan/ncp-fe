@@ -35,7 +35,7 @@ spec:
   ports:
   - port: 8291
     protocol: TCP
-    targetPort: 80
+    targetPort: 8080
   selector:
     app: frontend-app
   externalIPs:
@@ -67,7 +67,7 @@ spec:
           runAsGroup: 1000
         name: frontend-app
         ports:
-        - containerPort: 80
+        - containerPort: 8080
           name: frontend-app
         volumeMounts:
         - name: ncp-frontend-app-pv-storage
