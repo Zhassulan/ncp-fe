@@ -35,24 +35,24 @@ docker-build:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
     - docker push docker.tele2.kz/ncp/ncp-frontend-app
 
-docker-deploy:
-  stage: deploy
-  image: ubuntu
-  environment:
-    name: development
-  only:
-  - master
-  before_script:
-  - eval $(ssh-agent -s)
-  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
-  - ssh-keyscan "$SSH_SERVER_HOST" >> ~/.ssh/known_hosts
-  - chmod 644 ~/.ssh/known_hosts
-  script:
-  - ssh -T root@$SSH_SERVER_HOST "
-    /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yaml down
-    && /usr/bin/docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-    && /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yaml pull
-    && /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yaml up -d
-    && /usr/bin/docker logout docker.tele2.kz"
+#docker-deploy:
+#  stage: deploy
+#  image: ubuntu
+#  environment:
+#    name: development
+#  only:
+#  - master
+#  before_script:
+#  - eval $(ssh-agent -s)
+#  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+#  - mkdir -p ~/.ssh
+#  - chmod 700 ~/.ssh
+#  - ssh-keyscan "$SSH_SERVER_HOST" >> ~/.ssh/known_hosts
+#  - chmod 644 ~/.ssh/known_hosts
+#  script:
+#  - ssh -T root@$SSH_SERVER_HOST "
+#    /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yaml down
+#    && /usr/bin/docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
+#    && /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yaml pull
+#    && /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yaml up -d
+#    && /usr/bin/docker logout docker.tele2.kz"
