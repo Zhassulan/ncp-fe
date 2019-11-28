@@ -5,11 +5,12 @@ cache:
   key: cache-global-key
   paths:
     - dist/
+    - node_modules/
 
 stages:
   - build
   - package
-  - deploy
+  #- deploy
 
 angular-build:
   image: docker.tele2.kz/ncp/angular-cli
@@ -29,15 +30,9 @@ angular-build:
 docker-build:
   stage: package
   script:
-  - echo $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-  - docker pull $CI_REGISTRY_IMAGE:latest || true
-  - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA --tag $CI_REGISTRY_IMAGE:latest .
-  - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-  - docker push $CI_REGISTRY_IMAGE:latest
-  #- docker build --cache-from $CONTAINER_IMAGE:latest -t docker.tele2.kz/requests/req-bot .
-  #- docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-  #- docker push docker.tele2.kz/requests/req-bot
+    - docker build --cache-from $CONTAINER_IMAGE:latest -t docker.tele2.kz/ncp/ncp-fronend-app .
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
+    - docker push docker.tele2.kz/ncp/ncp-fronend-app
 
 docker-deploy:
   stage: deploy
