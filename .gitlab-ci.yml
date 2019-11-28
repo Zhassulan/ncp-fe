@@ -1,21 +1,29 @@
 image: docker:latest
 services:
   - docker:dind
+cache:
+  key: cache-global-key
+  paths:
+    - dist/
 
 stages:
   - build
   - package
   - deploy
 
-maven-build:
-  image: openjdk:8-jdk-alpine
+angular-build:
+  image: docker.tele2.kz/ncp/angular-cli
   stage: build
+  before_script:
+    - ssh-keyscan -H $SSH_SERVER_HOST >> ~/.ssh/known_hosts
+
   script:
-    - "chmod +x ./mvnw"
-    - "./mvnw package"
+    #- export SSHPASS=$USER_PASS
+    #- sshpass -e scp ncp-frontend-app-deployment.yaml kube@$SSH_SERVER_HOST:/home/kube/ncp-frontend-app-deployment.yaml
+    - ng build --configuration=production --base-href /ncp-frontend/ --output-hashing=all --prod=true
   artifacts:
     paths:
-      - target/*.jar
+      - dist/*
 
 docker-build:
   stage: package
