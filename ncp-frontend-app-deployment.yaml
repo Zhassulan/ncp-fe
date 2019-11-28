@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ncp-frontend-app-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/kube-pod/ncp-frontend-app"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ncp-frontend-app-pv-claim
+  namespace: ncp
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-app
+  namespace: ncp
+spec:
+  ports:
+  - port: 8291
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: frontend-app
+  externalIPs:
+    - 10.200.200.3
+  type: LoadBalancer
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: frontend-app
+  namespace: ncp
+spec:
+  selector:
+    matchLabels:
+      app: frontend-app
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: frontend-app
+    spec:
+      containers:
+      - image: docker.tele2.kz/ncp/ncp-frontend-app:latest
+        imagePullPolicy: Always
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+        name: frontend-app
+        ports:
+        - containerPort: 80
+          name: frontend-app
+        volumeMounts:
+        - name: ncp-frontend-app-pv-storage
+          mountPath: /var/log/nginx
+      imagePullSecrets:
+        - name: regcred
+      volumes:
+      - name: ncp-frontend-app-pv-storage
+        persistentVolumeClaim:
+          claimName: ncp-frontend-app-pv-claim
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-external-ncp-frontend-app
+  namespace: ncp
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend-app
+  ingress:
+    - from: []
+      ports:
+        - protocol: TCP
+          port: 8291
