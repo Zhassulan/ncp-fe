@@ -20,7 +20,7 @@ angular-build:
   script:
     #- export SSHPASS=$USER_PASS
     #- sshpass -e scp ncp-frontend-app-deployment.yaml kube@$SSH_SERVER_HOST:/home/kube/ncp-frontend-app-deployment.yaml
-    - nmp install
+    - npm install
     - ng build --configuration=production --base-href /ncp-frontend/ --output-hashing=all --prod=true
   artifacts:
     paths:
