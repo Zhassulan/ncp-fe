@@ -29,10 +29,6 @@ angular-build:
 
 docker-build:
   stage: package
-  before_script:
-    - ls -alrt /var/run/nginx.pid
-    - cat /etc/nginx/nginx.conf
-    - ls -alrt /etc/nginx/conf.d/*
   script:
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest .
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
