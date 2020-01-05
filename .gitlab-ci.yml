@@ -21,9 +21,6 @@ angular-build:
   script:
     - export SSHPASS=$USER_PASS
     - sshpass -e scp ncp-frontend-app-deployment.yaml kube@$SSH_SERVER_HOST:/home/kube/ncp-frontend-app-deployment.yaml
-    - ls -alrt /var/run/nginx.pid
-    - cat /etc/nginx/nginx.conf
-    - ls -alrt /etc/nginx/conf.d/*
     - npm install
     - ng build --configuration=production --base-href /ncp-frontend/ --output-hashing=all --prod=true
   artifacts:
@@ -32,6 +29,10 @@ angular-build:
 
 docker-build:
   stage: package
+  before_script:
+    - ls -alrt /var/run/nginx.pid
+    - cat /etc/nginx/nginx.conf
+    - ls -alrt /etc/nginx/conf.d/*
   script:
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest .
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
