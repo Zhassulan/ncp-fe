@@ -30,9 +30,9 @@ angular-build:
 docker-build:
   stage: package
   script:
-    - docker build --cache-from $CONTAINER_IMAGE:latest -t $CONTAINER_IMAGE .
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest .
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-    - docker push $CONTAINER_IMAGE
+    - docker push $CI_REGISTRY_IMAGE:latest
 
 docker-deploy:
   stage: deploy
