@@ -13,7 +13,7 @@ stages:
   - deploy
 
 angular-build:
-  image: docker.tele2.kz/ncp/angular-cli
+  image: docker.tele2.kz/ncp/angular-cli:latest
   stage: build
   before_script:
     - ssh-keyscan -H $SSH_SERVER_HOST >> ~/.ssh/known_hosts
@@ -30,9 +30,9 @@ angular-build:
 docker-build:
   stage: package
   script:
-    - docker build --cache-from $CONTAINER_IMAGE:latest -t docker.tele2.kz/ncp/ncp-frontend-app .
+    - docker build --cache-from $CONTAINER_IMAGE:latest -t $CONTAINER_IMAGE .
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-    - docker push docker.tele2.kz/ncp/ncp-frontend-app
+    - docker push $CONTAINER_IMAGE
 
 docker-deploy:
   stage: deploy
