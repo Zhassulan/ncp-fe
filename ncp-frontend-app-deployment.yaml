@@ -5,6 +5,8 @@ metadata:
   name: frontend-app
   namespace: ncp
 spec:
+  externalIPs:
+    - 10.200.200.22
   ports:
   - port: 8291
     protocol: TCP
