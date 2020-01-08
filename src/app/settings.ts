@@ -95,7 +95,8 @@ export const roles = {
  * Временная задержка после ввода логина и пароля
  */
 export const enum timeouts {
-    timeoutAfterLoginInput = 3000
+    timeoutAfterLoginInput = 3000,
+    msg = 6000
 }
 
 /**
@@ -117,6 +118,7 @@ export const enum msgs {
     msgSysErrRights = 'Системная ошибка проверки разрешений. ',
     msgWrongCreds = 'Не верный пользователь или пароль. ',
     msgSysErrCreds = 'Системная ошибка проверки логина/пароля. ',
+    msgErrLogin = 'Ошибка входа.',
     msgErrLoadData = 'Ошибка загрузки данных. ',
     msgErrToTransit = 'Ошибка переноса на транзитный счёт. ',
     msgSuccessToTransit = 'Платёж успешно перенесён на тразнитный счёт. ',
@@ -143,6 +145,8 @@ export const enum msgs {
     msgErrGetRegistryData = 'Ошибка загрузки реестра.',
     msgErrGetVer = 'Ошибка получения версии приложения.',
     msgInfRefreshPage = 'Есть обновления, обновите кеш страницы [Ctrl]+[F5]',
+    msgDataNotProvided = 'Данные не предоставлены',
+    msgNotSelected = 'Не выбрано',
 }
 
 /**

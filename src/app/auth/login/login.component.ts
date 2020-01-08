@@ -17,8 +17,8 @@ import {DataService} from '../../data/data.service';
 
 export class LoginComponent implements OnInit {
 
-    userName: string;
-    userPassword: string;
+    userName: string = "zhassulan.tokbayev";
+    userPassword: string = "WorkPwd19-4";
     isWait: boolean = true;
     returnUrl: string;
     keyVal: string = '';
@@ -40,50 +40,28 @@ export class LoginComponent implements OnInit {
 
     onEnter(value: string) {
         this.keyVal = value;
-        //console.log('Enter pressed');
         this.login();
     }
 
     login() {
-        let checkLdapGroup = ldapGroups.tele2users;
-        /*if (environment.production) {
-            checkLdapGroup = ldapGroups.managers;
+        if (!(this.userName && this.userPassword))  {
+            this.notifService.warn(msgs.msgDataNotProvided);
+            return;
         }
-        */
-        //проверка логина и пароля
-        let userObj = new User(this.userName, this.userPassword, checkLdapGroup);
-        this.dataService.login(this.userName, this.userPassword).subscribe(data => {
-                if (data.result == rests.restResultOk) {
-                    //проверка нахождения в группе
-                    this.dataService.authorize(userObj).subscribe(data => {
-                            if (data.result == rests.restResultOk) {
-                                this.logger.info(msgs.msgLoggedSuccess + ' ' + userObj.userName);
-                                localStorage.setItem(locStorItems.userName, data.data.userName);
-                                if (this.returnUrl == '/') {
-                                    this.router.navigate(['payments']);
-                                } else {
-                                    this.router.navigateByUrl(this.returnUrl);
-                                }
-                                this.dialogRef.close();
-                            }
-                            if (data.result == rests.restResultErr) {
-                                this.notifService.warn(msgs.msgNoRights);
-                                this.logger.warn(msgs.msgNoRights + ' ' + userObj.userName);
-                            }
-                        },
-                        error2 => {
-                            this.notifService.error(msgs.msgSysErrRights + ' ' + error2);
-                            this.logger.error(msgs.msgSysErrRights + ' ' + userObj.userName + ' ' + error2);
-                        });
+        this.dataService.login(this.userName, this.userPassword).subscribe(
+            data => {
+                localStorage.setItem(locStorItems.userName, this.userName);
+                this.logger.info(msgs.msgLoggedSuccess + ' ' + this.userName);
+                if (this.returnUrl == '/') {
+                    this.router.navigate(['main']);
+                } else {
+                    this.router.navigateByUrl(this.returnUrl);
                 }
-                if (data.result == rests.restResultErr) {
-                    this.notifService.warn(msgs.msgWrongCreds);
-                    this.logger.warn(msgs.msgWrongCreds + ' ' + this.userName);
-                }
+                this.dialogRef.close();
             },
             error2 => {
-                this.notifService.error(msgs.msgSysErrCreds);
-                this.logger.error(msgs.msgSysErrCreds + ' ' + this.userName + ' ' + error2);
+                this.notifService.error(msgs.msgErrLogin, error2);
+                this.logger.error(msgs.msgErrLogin + ' ' + this.userName + ' ' + error2);
             });
     }
 

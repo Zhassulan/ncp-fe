@@ -92,7 +92,7 @@ export class MenuToolbarComponent implements AfterViewChecked {
     logout() {
         this.authService.logout();
         localStorage.removeItem(locStorItems.userName);
-        this.router.navigate(['/login']);
+        this.router.navigate(['login']);
     }
 
     getUser() {

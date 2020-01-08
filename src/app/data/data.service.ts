@@ -13,13 +13,14 @@ import {PaymentParamEq} from '../payments/model/payment-param-eq';
 import {EquipmentCheckParam} from '../payments/model/equipment-check-param';
 import {User} from '../auth/model/user';
 import {Version} from '../version';
+import {VNcpPayment} from '../payments/model/vncp-payment';
 
 const API_URL = environment.apiUrl;
 
 @Injectable()
 export class DataService {
 
-    constructor(private _http: HttpClient) {
+    constructor(private httpClient: HttpClient) {
     }
 
     /**
@@ -27,8 +28,8 @@ export class DataService {
      * @param {HttpErrorResponse} error
      * @returns {Observable<never>}
      */
-    errorHandler(error: HttpErrorResponse)  {
-        return Observable.throwError(error.message || "Ошибка сервера.");
+    errorHandler(error: HttpErrorResponse) {
+        return Observable.throwError(error.message || 'Ошибка сервера.');
     }
 
     /**
@@ -36,12 +37,20 @@ export class DataService {
      * @param {User} userObj
      * @returns {Observable<RestResponse>}
      */
-    login(userName, userPassword): Observable <RestResponse> {
-        return this._http.post <RestResponse>(API_URL + '/auth/login', new User(userName, userPassword, null), httpOptions).catch(this.errorHandler);
+    login(userName, userPassword) {
+        const body = new HttpParams()
+            .set('username', userName)
+            .set('password', userPassword);
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/x-www-form-urlencoded'
+            })
+        };
+        return this.httpClient.post(API_URL + '/auth/login', body.toString(), httpOptions).catch(this.errorHandler);
     }
 
-    authorize(userObj: User): Observable <RestResponse>  {
-        return this._http.post <RestResponse>(API_URL + '/auth/authorization', userObj, httpOptions).catch(this.errorHandler);
+    authorize(userObj: User): Observable<RestResponse> {
+        return this.httpClient.post <RestResponse>(API_URL + '/auth/authorization', userObj, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -49,8 +58,11 @@ export class DataService {
      * @param {DateRange} dr
      * @returns {Observable<NcpPayment[]>}
      */
-    getNcpPayments(dr: DateRange): Observable <RestResponse> {
-        return this._http.post<RestResponse>(API_URL + '/exdata/payments', dr, httpOptions).catch(this.errorHandler);
+    getNcpPayments(dr: DateRange): Observable <any> {
+        const params = new HttpParams()
+            .set('startDate', dr.startDate)
+            .set('endDate', dr.endDate);
+        return this.httpClient.get(API_URL + '/payment/all', {params}).catch(this.errorHandler);
     }
 
     /**
@@ -58,7 +70,7 @@ export class DataService {
      * @returns {Observable<any>}
      */
     public getNcpPaymentsJson(): Observable<any> {
-        return this._http.get("./assets/payments.json").catch(this.errorHandler);
+        return this.httpClient.get('./assets/payments.json').catch(this.errorHandler);
     }
 
     /**
@@ -66,8 +78,8 @@ export class DataService {
      * @param {number} id
      * @returns {Observable<RestResponse>}
      */
-    paymentToTransit(id: number): Observable <RestResponse> {
-        return this._http.post <RestResponse> (API_URL + `/exdata/payment/${id}/transit/transfer`, httpOptions).catch(this.errorHandler);
+    paymentToTransit(id: number): Observable<RestResponse> {
+        return this.httpClient.post <RestResponse>(API_URL + `/payment/${id}/transit/transfer`, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -76,8 +88,8 @@ export class DataService {
      * @param {string} user
      * @returns {Observable<RestResponse>}
      */
-    deleteTransitPayment(id: number, user: string) : Observable <RestResponse> {
-        return this._http.post <RestResponse> (API_URL + `/exdata/payment/${id}/transit/delete`, httpOptions).catch(this.errorHandler);
+    deleteTransitPayment(id: number, user: string): Observable<RestResponse> {
+        return this.httpClient.post <RestResponse>(API_URL + `/payment/${id}/transit/delete`, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -86,7 +98,7 @@ export class DataService {
      * @returns {Observable<any>}
      */
     postFilePayment(formData: FormData): Observable<any> {
-        return this._http.post<FilePayment>(API_URL + '/exdata/equipment/upload', formData).catch(this.errorHandler);
+        return this.httpClient.post<FilePayment>(API_URL + '/equipment/upload', formData).catch(this.errorHandler);
     }
 
     /**
@@ -94,8 +106,8 @@ export class DataService {
      * @param {number} paymentId
      * @returns {Observable<RestResponse>}
      */
-    getPaymentDetails(id: number): Observable<RestResponse>   {
-        return this._http.post<RestResponse>(API_URL + `/exdata/payment/${id}/details`, httpOptions).catch(this.errorHandler);
+    getPaymentDetails(id: number): Observable<RestResponse> {
+        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/details`, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -103,8 +115,8 @@ export class DataService {
      * @param {PaymentParamEq} params
      * @returns {Observable<RestResponse>}
      */
-    distributePayment(params: PaymentParamEq): Observable<RestResponse>  {
-        return this._http.post<RestResponse>(API_URL + '/exdata/payment/distribute', params, httpOptions).catch(this.errorHandler);
+    distributePayment(params: PaymentParamEq): Observable<RestResponse> {
+        return this.httpClient.post<RestResponse>(API_URL + '/payment/distribute', params, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -112,8 +124,8 @@ export class DataService {
      * @param {number} id
      * @returns {Observable<RestResponse>}
      */
-    getPayment(id: number): Observable<RestResponse>   {
-        return this._http.post<RestResponse>(API_URL + `/exdata/payment/${id}/`, httpOptions).catch(this.errorHandler);
+    getPayment(id: number): Observable<RestResponse> {
+        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/`, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -121,8 +133,8 @@ export class DataService {
      * @param {number} id
      * @returns {Observable<RestResponse>}
      */
-    getPaymentEquipments(id: number): Observable<RestResponse>   {
-        return this._http.post<RestResponse>(API_URL + `/exdata/payment/${id}/equipments`, httpOptions).catch(this.errorHandler);
+    getPaymentEquipments(id: number): Observable<RestResponse> {
+        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/equipments`, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -130,8 +142,8 @@ export class DataService {
      * @param {String} icc
      * @returns {Observable<any>}
      */
-    getBercutEquipmentInfoByIcc(icc:String):  Observable<RestResponse>   {
-        return this._http.post<RestResponse>(API_URL + `/exdata/equipment/${icc}`, httpOptions).catch(this.errorHandler);
+    getBercutEquipmentInfoByIcc(icc: String): Observable<RestResponse> {
+        return this.httpClient.post<RestResponse>(API_URL + `/equipment/${icc}`, httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -139,31 +151,31 @@ export class DataService {
      * @param {IccSum[]} iccList
      * @returns {Observable<RestResponse>}
      */
-    checkEquipmentParams(iccList: EquipmentCheckParam []):  Observable<RestResponse> {
-        return this._http.post<RestResponse>(API_URL + '/exdata/equipments/check', iccList, httpOptions).catch(this.errorHandler);
+    checkEquipmentParams(iccList: EquipmentCheckParam []): Observable<RestResponse> {
+        return this.httpClient.post<RestResponse>(API_URL + '/equipments/check', iccList, httpOptions).catch(this.errorHandler);
     }
 
     getPaymentStatus(id): Observable<RestResponse> {
-        return this._http.post<RestResponse>(API_URL + `/exdata/payment/${id}/status`, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/status`, httpOptions).catch(this.errorHandler);
     }
 
     paymentBlocked(id): Observable<RestResponse> {
-        return this._http.post<RestResponse>(API_URL + `/exdata/payment/${id}/blocked`, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/blocked`, httpOptions).catch(this.errorHandler);
     }
 
     getAllRegistries(): Observable<RestResponse> {
-        return this._http.post<RestResponse>(API_URL + `/exdata/registry/all`, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post<RestResponse>(API_URL + `/registry/all`, httpOptions).catch(this.errorHandler);
     }
 
-    getRegistry(id):  Observable<RestResponse> {
-        return this._http.post<RestResponse>(API_URL + `/exdata/registry/${id}`, httpOptions).catch(this.errorHandler);
+    getRegistry(id): Observable<RestResponse> {
+        return this.httpClient.post<RestResponse>(API_URL + `/registry/${id}`, httpOptions).catch(this.errorHandler);
     }
 
-    getVersion(): Observable <Version> {
-        return this._http.get<Version>(API_URL + '/exdata/ver', httpOptions).catch(this.errorHandler);
+    getVersion(): Observable<Version> {
+        return this.httpClient.get<Version>(API_URL + '/ver', httpOptions).catch(this.errorHandler);
     }
 
-    getRegistriesByRange(startDate, endDate, bin): Observable <any> {
+    getRegistriesByRange(startDate, endDate, bin): Observable<any> {
         const options = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -171,8 +183,8 @@ export class DataService {
             params:
                 new HttpParams().set('start_date', startDate).append('end_date', endDate).append('bin', bin)
         };
-        return this._http.get <RestResponse> (
-            API_URL + '/exdata/registry/range', options).catch(this.errorHandler);
+        return this.httpClient.get <RestResponse>(
+            API_URL + '/registry/range', options).catch(this.errorHandler);
     }
 
 }

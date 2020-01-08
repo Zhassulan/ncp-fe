@@ -1,14 +1,17 @@
 import {Injectable} from '@angular/core';
 import {locStorItems} from '../settings';
 import {SessionService} from './session.service';
+import {CookieService} from 'ngx-cookie-service';
 
 @Injectable()
 export class AuthService {
 
-    constructor() {
+    constructor(private cookieService: CookieService) {
     }
 
     logout() {
+        console.log('Logging out..');
+        this.cookieService.deleteAll();
         localStorage.removeItem(locStorItems.userName);
     }
 
