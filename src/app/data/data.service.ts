@@ -5,7 +5,7 @@ import {NcpPayment} from '../payments/model/ncp-payment';
 import {Observable} from 'rxjs';
 import {DateRange} from './date-range';
 import {RestResponse} from './rest-response';
-import {httpOptions} from '../settings';
+import {httpOptions, PaymentActions} from '../settings';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import {FilePayment} from '../payments/payment/equipment/model/file-payment';
@@ -14,6 +14,7 @@ import {EquipmentCheckParam} from '../payments/model/equipment-check-param';
 import {User} from '../auth/model/user';
 import {Version} from '../version';
 import {VNcpPayment} from '../payments/model/vncp-payment';
+import {RequestPostPayment} from './request-post-payment';
 
 const API_URL = environment.apiUrl;
 
@@ -62,7 +63,7 @@ export class DataService {
         const params = new HttpParams()
             .set('startDate', dr.startDate)
             .set('endDate', dr.endDate);
-        return this.httpClient.get(API_URL + '/payment/all', {params}).catch(this.errorHandler);
+        return this.httpClient.get(API_URL + '/payments', {params}).catch(this.errorHandler);
     }
 
     /**
@@ -79,7 +80,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     paymentToTransit(id: number): Observable<RestResponse> {
-        return this.httpClient.post <RestResponse>(API_URL + `/payment/${id}/transit/transfer`, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post <RestResponse>(API_URL + `/payments/${id}`, new RequestPostPayment(PaymentActions.TO_TRANSIT), httpOptions).catch(this.errorHandler);
     }
 
     /**
@@ -89,7 +90,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     deleteTransitPayment(id: number, user: string): Observable<RestResponse> {
-        return this.httpClient.post <RestResponse>(API_URL + `/payment/${id}/transit/delete`, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post <RestResponse>(API_URL + `/payment/${id}`, {"payment_action":"from_transit"}, httpOptions).catch(this.errorHandler);
     }
 
     /**

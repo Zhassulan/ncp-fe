@@ -20,7 +20,7 @@ import {Utils} from '../../utils';
 })
 export class PaymentComponent implements OnInit {
 
-    @ViewChild(DetailsComponent) childDetailsComponent: DetailsComponent;
+    @ViewChild(DetailsComponent, { static: true }) childDetailsComponent: DetailsComponent;
     paymentId: number;
     paymentMenuItems = PaymentMenuItems;
     dialogRef;

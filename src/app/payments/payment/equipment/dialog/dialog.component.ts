@@ -17,7 +17,7 @@ export class DialogComponent implements OnInit {
     //wopts: XLSX.WritingOptions = { bookType: 'xlsx', type: 'array' };
     //fileName: string = 'SheetJS.xlsx';
 
-    @ViewChild('file') file;
+    @ViewChild('file', { static: true }) file;
     fileObj: File;
     showUploadButton: boolean = false;
     isWait = false;

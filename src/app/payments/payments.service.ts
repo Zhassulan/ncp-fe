@@ -1,24 +1,16 @@
 import {Injectable} from '@angular/core';
 import {DataService} from '../data/data.service';
-import {NGXLogger} from 'ngx-logger';
-import {DateRange} from '../data/date-range';
-import {locStorItems, msgs, PaymentStatusRu, rests} from '../settings';
-import {Observable, Subject} from 'rxjs';
-import {UserService} from '../user/user.service';
+import {locStorItems, PaymentStatusRu, rests} from '../settings';
+import {Observable} from 'rxjs';
 import {NcpPayment} from './model/ncp-payment';
-import {RestResponse} from '../data/rest-response';
 
 @Injectable()
 export class PaymentsService {
 
     payments = []; // платежи
     paginatorResultsLength: number;
-    newNcpPayment: NcpPayment = new NcpPayment();
 
-    constructor(private dataService: DataService,
-                private logger: NGXLogger,
-                private userService: UserService) {
-    }
+    constructor(private dataService: DataService) {    }
 
     setStatusRu(payment) {
         payment.statusRu = PaymentStatusRu[payment.status];
@@ -28,8 +20,8 @@ export class PaymentsService {
         payment.status = PaymentStatusRu[payment.status];
     }
 
-    updateStatusRu() {
-        this.payments.forEach(payment => {
+    updateStatusRu(payments) {
+        payments.forEach(payment => {
             this.setStatusRu(payment);
         });
     }

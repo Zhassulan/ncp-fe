@@ -25,7 +25,7 @@ export class DetailsComponent implements OnInit {
     detailTableColumnsDisplay = PaymentDetailTableColumnsDisplay;
     i: number = 0;
     paginatorResultsLength: number = 0;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     subscription: Subscription;
     paymentDistrStrategies = PaymentDetailDistrStrategy;
     @Input() status: boolean;

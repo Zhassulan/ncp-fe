@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSnackBar, MatSort, MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {NGXLogger} from 'ngx-logger';
 import {DateRange} from '../data/date-range';
 import {DialogService} from '../dialog/dialog.service';
@@ -9,13 +9,14 @@ import {PaymentService} from './payment/payment.service';
 import {UserService} from '../user/user.service';
 import {Router} from '@angular/router';
 import {SelectionModel} from '@angular/cdk/collections';
-import {msgs, rests, timeouts} from '../settings';
+import {msgs, rests} from '../settings';
 import {Subscription} from 'rxjs';
 import {AppService} from '../app.service';
 import {ExcelService} from '../excel/excel.service';
 import {DateRangeComponent} from '../date-range/date-range.component';
 import {Utils} from '../utils';
 import {VNcpPayment} from './model/vncp-payment';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'app-payments',
@@ -39,8 +40,8 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         'distributeDate',
         'select',
         'rowMenu'];
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
     //источник данных для таблицы
     dataSource = new MatTableDataSource<VNcpPayment>();
     //общее количество для пагинации
@@ -51,7 +52,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     pageSize = 30;
     pageSizeOptions: number[] = [50, 100, 150, 250, 300];
 
-    @ViewChild(DateRangeComponent)
+    @ViewChild(DateRangeComponent, { static: true })
     private dateRangeComponent: DateRangeComponent;
 
     constructor(private dataService: DataService,
@@ -63,7 +64,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
                 private paymentService: PaymentService,
                 private appService: AppService,
                 private excelService: ExcelService,
-                private snackBar: MatSnackBar
+                private notif: NotificationsService
                 ) {
         this.dataSource = new MatTableDataSource(this.paymentsService.payments);
         this.paginatorResultsLength = 0;
@@ -121,20 +122,22 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         this.dataSource.data = [];
         let stDt = this.dateRangeComponent.pickerStartDate.value.getTime();
         let enDt = this.dateRangeComponent.pickerEndDate.value.getTime();
-        console.log('Загрузка платежей за время ' + Utils.convertMillsToDate(stDt)+ ' по ' + Utils.convertMillsToDate(enDt));
+        console.log('Загрузка платежей за время ' + Utils.convertMillsToDate(stDt)+ ' - ' + Utils.convertMillsToDate(enDt));
         let dr = new DateRange(stDt, enDt);
         this.sub = this.dataService.getNcpPayments(dr).subscribe(data => {
+                this.paymentsService.updateStatusRu(data);
                 this.dataSource.data = data;
             },
             error2 => {
                 console.log(error2);
-                this.openSnack(msgs.msgErrLoadData);
+                this.notif.error(msgs.msgErrLoadData);
+                this.logger.error(msgs.msgErrLoadData + ' ' + error2);
                 this.appService.setProgress(false);
             },
             () => {
                 this.appService.setProgress(false);
                 if (this.dataSource.data.length == 0)   {
-                    this.openSnack(msgs.msgErrNoDataFound);
+                    this.notif.info(msgs.msgNoData);
                 }
             });
     }
@@ -148,7 +151,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         this.sub = this.dataService.getNcpPaymentsJson().subscribe(data => {
             this.dataSource.data = data;
         }, error2 => {
-            this.openSnack(msgs.msgErrLoadData);
+            this.notif.error(msgs.msgErrLoadData);
             this.appService.setProgress(false);
         }, () => {
             this.appService.setProgress(false);
@@ -194,7 +197,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
                 this.toTransit(payment);
             });
         } else {
-            this.openSnack(msgs.msgNotSelected);
+            this.notif.warn(msgs.msgNotSelected)
         }
     }
 
@@ -280,10 +283,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
 
     export()    {
         this.selection.selected.length > 0 ? this.excelService.save(this.selection.selected) : this.excelService.save(this.dataSource.data);
-    }
-
-    openSnack(msg) {
-        this.snackBar.open(msg, null,{ duration: timeouts.msg});
     }
 
 }

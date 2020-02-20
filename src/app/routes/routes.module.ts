@@ -16,7 +16,7 @@ import {PageNotFoundComponent} from '../page-not-found/page-not-found.component'
 const routes: Routes = [
     {
         path: '',
-        redirectTo: 'main',
+        redirectTo: 'payments',
         pathMatch: 'full'
     },
     {
@@ -32,11 +32,8 @@ const routes: Routes = [
     //{path: 'payments', redirectTo: 'payment/230365'}, //для открытия конкретного платежа для отладки TODO убрать в проде
     {
         path: 'main',
-        component: PaymentsComponent,
-        canActivate: [LoggedInGuard],
-        data: {
-            breadcrumb: 'Платежи'
-        }
+        redirectTo: 'payments',
+        pathMatch: 'full'
     },
     {
         path: 'payments',
