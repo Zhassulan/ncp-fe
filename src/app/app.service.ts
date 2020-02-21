@@ -5,7 +5,9 @@ import {NotificationsService} from 'angular2-notifications';
 import {DataService} from './data/data.service';
 import {NGXLogger} from 'ngx-logger';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class AppService {
 
     private progressObs = new Subject<boolean>();

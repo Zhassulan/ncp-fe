@@ -11,9 +11,8 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {CommonModule, registerLocaleData} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MenuToolbarComponent} from './main-nav/menu-toolbar.component';
-import {MaterialsModule} from './materials/materials.module';
 import {RoutesModule} from './routes/routes.module';
-import {MAT_DATE_LOCALE, MatButtonModule, MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule} from '@angular/material';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {PaymentStatusRuPipe} from './payments/payment-status-ru-pipe';
 import {DialogReportComponent} from './dialog/dialog-report/dialog-report.component';
 import {DialogService} from './dialog/dialog.service';
@@ -52,6 +51,7 @@ import {SessionService} from './auth/session.service';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {DateRangeComponent} from './date-range/date-range.component';
 import {AuthInterceptor} from './auth/auth-interceptor';
+import {MaterialsModule} from './materials/materials.module';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -87,7 +87,6 @@ registerLocaleData(localeRu, 'ru');
         DialogComponent
     ],
     imports: [
-        MaterialsModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -98,19 +97,10 @@ registerLocaleData(localeRu, 'ru');
         FlexLayoutModule,
         LoggerModule.forRoot(environment.logging),
         LayoutModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatSidenavModule,
-        MatIconModule,
-        MatListModule,
-        /*
-        HttpClientXsrfModule.withOptions({
-            cookieName: 'My-Xsrf-Cookie',
-            headerName: 'My-Xsrf-Header',
-        }),*/
         BreadcrumbModule,
         SimpleNotificationsModule.forRoot(),
-        FileSaverModule
+        FileSaverModule,
+        MaterialsModule
     ],
     providers: [
         AUTH_PROVIDERS,
@@ -133,7 +123,7 @@ registerLocaleData(localeRu, 'ru');
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
             multi: true
-        },
+        }
     ],
     bootstrap: [AppComponent]
 })

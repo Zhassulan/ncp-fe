@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatDatepickerInputEvent} from '@angular/material';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
     selector: 'app-date-range',

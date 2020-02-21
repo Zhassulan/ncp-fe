@@ -1,7 +1,7 @@
 import {Component, enableProdMode, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {MatDialogRef} from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import {User} from '../model/user';
 import {ldapGroups, rests, msgs, locStorItems} from '../../settings';
 import {NGXLogger} from 'ngx-logger';
@@ -17,8 +17,8 @@ import {DataService} from '../../data/data.service';
 
 export class LoginComponent implements OnInit {
 
-    userName: string = "zhassulan.tokbayev";
-    userPassword: string = "WorkPwd19-4";
+    userName: string;
+    userPassword: string;
     isWait: boolean = true;
     returnUrl: string;
     keyVal: string = '';

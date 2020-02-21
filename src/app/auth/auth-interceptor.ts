@@ -7,7 +7,9 @@ import {NotificationsService} from 'angular2-notifications';
 import {AuthService} from './auth.service';
 import * as HttpStatus from 'http-status-codes';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class AuthInterceptor implements HttpInterceptor {
 
     constructor(private router: Router,

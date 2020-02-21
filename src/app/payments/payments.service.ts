@@ -4,7 +4,9 @@ import {locStorItems, PaymentStatusRu, rests} from '../settings';
 import {Observable} from 'rxjs';
 import {NcpPayment} from './model/ncp-payment';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class PaymentsService {
 
     payments = []; // платежи

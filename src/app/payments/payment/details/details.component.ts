@@ -3,7 +3,8 @@ import {
     PaymentDetailDistrStrategy, PaymentDetailsTableColumns, PaymentDetailTableColumnsDisplay, PaymentStatus,
     TOOLTIPS
 } from '../../../settings';
-import {MatPaginator, MatTableDataSource} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import {PaymentDetail} from '../../model/payment-detail';
 import {Subscription} from 'rxjs';
 import {PaymentService} from '../payment.service';

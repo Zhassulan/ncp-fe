@@ -1,28 +1,26 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {NcpPayment} from '../payments/model/ncp-payment';
 import {Observable} from 'rxjs';
 import {DateRange} from './date-range';
 import {RestResponse} from './rest-response';
 import {httpOptions, PaymentActions} from '../settings';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
 import {FilePayment} from '../payments/payment/equipment/model/file-payment';
 import {PaymentParamEq} from '../payments/model/payment-param-eq';
 import {EquipmentCheckParam} from '../payments/model/equipment-check-param';
 import {User} from '../auth/model/user';
 import {Version} from '../version';
-import {VNcpPayment} from '../payments/model/vncp-payment';
 import {RequestPostPayment} from './request-post-payment';
 
 const API_URL = environment.apiUrl;
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class DataService {
 
-    constructor(private httpClient: HttpClient) {
-    }
+    constructor(private httpClient: HttpClient) { }
 
     /**
      *  Перехватчик ошибки от http метода
@@ -30,7 +28,8 @@ export class DataService {
      * @returns {Observable<never>}
      */
     errorHandler(error: HttpErrorResponse) {
-        return Observable.throwError(error.message || 'Ошибка сервера.');
+        //return Observable.throwError(error.message || 'Ошибка сервера.');
+        return null;
     }
 
     /**
@@ -47,11 +46,11 @@ export class DataService {
                 'Content-Type': 'application/x-www-form-urlencoded'
             })
         };
-        return this.httpClient.post(API_URL + '/auth/login', body.toString(), httpOptions).catch(this.errorHandler);
+        return this.httpClient.post(API_URL + '/auth/login', body.toString(), httpOptions);
     }
 
     authorize(userObj: User): Observable<RestResponse> {
-        return this.httpClient.post <RestResponse>(API_URL + '/auth/authorization', userObj, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post <RestResponse>(API_URL + '/auth/authorization', userObj, httpOptions);
     }
 
     /**
@@ -63,7 +62,7 @@ export class DataService {
         const params = new HttpParams()
             .set('startDate', dr.startDate)
             .set('endDate', dr.endDate);
-        return this.httpClient.get(API_URL + '/payments', {params}).catch(this.errorHandler);
+        return this.httpClient.get(API_URL + '/payments', {params});
     }
 
     /**
@@ -71,7 +70,7 @@ export class DataService {
      * @returns {Observable<any>}
      */
     public getNcpPaymentsJson(): Observable<any> {
-        return this.httpClient.get('./assets/payments.json').catch(this.errorHandler);
+        return this.httpClient.get('./assets/payments.json');
     }
 
     /**
@@ -80,7 +79,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     paymentToTransit(id: number): Observable<RestResponse> {
-        return this.httpClient.post <RestResponse>(API_URL + `/payments/${id}`, new RequestPostPayment(PaymentActions.TO_TRANSIT), httpOptions).catch(this.errorHandler);
+        return this.httpClient.post <RestResponse>(API_URL + `/payments/${id}`, new RequestPostPayment(PaymentActions.TO_TRANSIT), httpOptions);
     }
 
     /**
@@ -90,7 +89,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     deleteTransitPayment(id: number, user: string): Observable<RestResponse> {
-        return this.httpClient.post <RestResponse>(API_URL + `/payment/${id}`, {"payment_action":"from_transit"}, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post <RestResponse>(API_URL + `/payment/${id}`, {"payment_action":"from_transit"}, httpOptions);
     }
 
     /**
@@ -99,7 +98,7 @@ export class DataService {
      * @returns {Observable<any>}
      */
     postFilePayment(formData: FormData): Observable<any> {
-        return this.httpClient.post<FilePayment>(API_URL + '/equipment/upload', formData).catch(this.errorHandler);
+        return this.httpClient.post<FilePayment>(API_URL + '/equipment/upload', formData);
     }
 
     /**
@@ -108,7 +107,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     getPaymentDetails(id: number): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/details`, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/details`, httpOptions);
     }
 
     /**
@@ -117,7 +116,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     distributePayment(params: PaymentParamEq): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + '/payment/distribute', params, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post<RestResponse>(API_URL + '/payment/distribute', params, httpOptions);
     }
 
     /**
@@ -126,7 +125,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     getPayment(id: number): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/`, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/`, httpOptions);
     }
 
     /**
@@ -135,7 +134,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     getPaymentEquipments(id: number): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/equipments`, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/equipments`, httpOptions);
     }
 
     /**
@@ -144,7 +143,7 @@ export class DataService {
      * @returns {Observable<any>}
      */
     getBercutEquipmentInfoByIcc(icc: String): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/equipment/${icc}`, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post<RestResponse>(API_URL + `/equipment/${icc}`, httpOptions);
     }
 
     /**
@@ -153,27 +152,27 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     checkEquipmentParams(iccList: EquipmentCheckParam []): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + '/equipments/check', iccList, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post<RestResponse>(API_URL + '/equipments/check', iccList, httpOptions);
     }
 
     getPaymentStatus(id): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/status`, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/status`, httpOptions);
     }
 
     paymentBlocked(id): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/blocked`, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/blocked`, httpOptions);
     }
 
     getAllRegistries(): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/registry/all`, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post<RestResponse>(API_URL + `/registry/all`, httpOptions);
     }
 
     getRegistry(id): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/registry/${id}`, httpOptions).catch(this.errorHandler);
+        return this.httpClient.post<RestResponse>(API_URL + `/registry/${id}`, httpOptions);
     }
 
     getVersion(): Observable<Version> {
-        return this.httpClient.get<Version>(API_URL + '/ver', httpOptions).catch(this.errorHandler);
+        return this.httpClient.get<Version>(API_URL + '/ver', httpOptions);
     }
 
     getRegistriesByRange(startDate, endDate, bin): Observable<any> {
@@ -185,7 +184,7 @@ export class DataService {
                 new HttpParams().set('start_date', startDate).append('end_date', endDate).append('bin', bin)
         };
         return this.httpClient.get <RestResponse>(
-            API_URL + '/registry/range', options).catch(this.errorHandler);
+            API_URL + '/registry/range', options);
     }
 
 }

@@ -1,9 +1,11 @@
 import {Injectable} from '@angular/core';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {DialogReportComponent} from './dialog-report/dialog-report.component';
 import {DialogData} from './dialog-data';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class DialogService {
 
     title: string = null;

@@ -3,7 +3,9 @@ import {locStorItems} from '../settings';
 import {SessionService} from './session.service';
 import {CookieService} from 'ngx-cookie-service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class AuthService {
 
     constructor(private cookieService: CookieService) {
