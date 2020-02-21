@@ -1,62 +1,18 @@
 import {Injectable} from '@angular/core';
 import {DataService} from '../data/data.service';
-import {NGXLogger} from 'ngx-logger';
-import {DateRange} from '../data/date-range';
-import {locStorItems, msgs, PaymentStatusRu, rests} from '../settings';
-import {Observable, Subject} from 'rxjs';
-import {UserService} from '../user/user.service';
+import {locStorItems, PaymentStatusRu, rests} from '../settings';
+import {Observable} from 'rxjs';
 import {NcpPayment} from './model/ncp-payment';
-import {RestResponse} from '../data/rest-response';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class PaymentsService {
 
     payments = []; // платежи
     paginatorResultsLength: number;
-    newNcpPayment: NcpPayment = new NcpPayment();
 
-    constructor(private dataService: DataService,
-                private logger: NGXLogger,
-                private userService: UserService) {
-    }
-
-    getData(dr: DateRange): Observable<any> {
-        return new Observable(
-            observer => {
-                this.dataService.getNcpPayments(dr).subscribe(data => {
-                        if (data.result == rests.restResultOk) {
-                            this.payments  = data.data;
-                            this.updateStatusRu();
-                            observer.next(this.payments);
-                        }
-                    },
-                    error2 => {
-                        let msg = msgs.msgErrLoadData + error2 + this.userService.logUser();
-                        this.logger.error(msg);
-                        observer.error(msg);
-                    },
-                    () => {
-                        observer.complete();
-                    });
-            });
-    }
-
-    getSampleData(): Observable<any> {
-        return new Observable(
-            observer => {
-                this.dataService.getNcpPaymentsJson().subscribe(data => {
-                    this.payments = data;
-                    this.updateStatusRu();
-                    observer.next(this.payments);
-                }, error2 => {
-                    let msg = msgs.msgErrLoadData + error2 + this.userService.logUser();
-                    this.logger.error(msg);
-                    observer.error(msg);
-                }, () => {
-                    observer.complete();
-                });
-            });
-    }
+    constructor(private dataService: DataService) {    }
 
     setStatusRu(payment) {
         payment.statusRu = PaymentStatusRu[payment.status];
@@ -66,8 +22,8 @@ export class PaymentsService {
         payment.status = PaymentStatusRu[payment.status];
     }
 
-    updateStatusRu() {
-        this.payments.forEach(payment => {
+    updateStatusRu(payments) {
+        payments.forEach(payment => {
             this.setStatusRu(payment);
         });
     }

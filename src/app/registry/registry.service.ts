@@ -8,7 +8,9 @@ import {UserService} from '../user/user.service';
 import {PaymentDetail} from '../payments/model/payment-detail';
 import {RegistryDetail} from './model/registry-detail';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class RegistryService {
 
     registry: Registry;

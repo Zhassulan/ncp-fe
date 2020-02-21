@@ -8,7 +8,9 @@ import {NGXLogger} from 'ngx-logger';
 import {NotificationsService} from 'angular2-notifications';
 import {Utils} from '../../../utils';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class UploadFilePaymentService {
 
     filePayment: FilePayment;
@@ -46,7 +48,8 @@ export class UploadFilePaymentService {
     }
 
     errorHandler(error: HttpErrorResponse) {
-        return Observable.throwError(error.message || 'Ошибка сервера.');
+        //return Observable.throwError(error.message || 'Ошибка сервера.');
+        return null;
     }
 
     resetFilePayment()  {

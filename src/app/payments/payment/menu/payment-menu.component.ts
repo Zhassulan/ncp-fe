@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {PaymentService} from '../payment.service';
 import {PaymentMenuItems} from '../../../settings';
 
@@ -12,22 +12,14 @@ export class PaymentMenuComponent implements OnInit {
     paymentMenuItems = PaymentMenuItems;
     @Output() selectedItem = new EventEmitter<number>();
 
-    constructor(private paymentService: PaymentService) {
-    }
+    constructor(private paymentService: PaymentService) { }
 
-    ngOnInit() {
-    }
+    ngOnInit() { }
 
-    select(item: number) {
-        this.selectedItem.emit(item);
-    }
+    select(item: number) { this.selectedItem.emit(item); }
 
-    get details() {
-        return this.paymentService.details;
-    }
+    get details() { return this.paymentService.details; }
 
-    isBlocked():boolean  {
-        return this.paymentService.isBlocked();
-    }
+    isBlocked():boolean  { return this.paymentService.isBlocked(); }
 
 }

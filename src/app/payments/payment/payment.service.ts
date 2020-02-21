@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {NcpPayment} from '../model/ncp-payment';
 import {PaymentsService} from '../payments.service';
-import {concat, Observable, Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {UploadFilePaymentService} from './equipment/upload-file-payment.service';
-import {msgs, PaymentDetailDistrStrategy, PaymentStatus, dic, rests, STATUSES} from '../../settings';
+import {dic, msgs, PaymentDetailDistrStrategy, PaymentStatus, rests, STATUSES} from '../../settings';
 import {FilePaymentItem} from './equipment/model/file-payment-item';
 import {DataService} from '../../data/data.service';
 import {NGXLogger} from 'ngx-logger';
@@ -16,10 +16,11 @@ import {DetailEquipment} from '../model/detail-equipment';
 import {Utils} from '../../utils';
 import {EquipmentCheckParam} from '../model/equipment-check-param';
 import {NotificationsService} from 'angular2-notifications';
-import {RestResponse} from '../../data/rest-response';
 import {AppService} from '../../app.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class PaymentService {
 
     payment: NcpPayment = new NcpPayment();

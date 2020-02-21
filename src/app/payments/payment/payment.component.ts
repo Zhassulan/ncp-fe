@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NGXLogger} from 'ngx-logger';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
 import {msgs, PaymentMenuItems, PaymentStatus, PaymentStatusRu, rests} from '../../settings';
 import {PaymentsService} from '../payments.service';
@@ -20,7 +20,7 @@ import {Utils} from '../../utils';
 })
 export class PaymentComponent implements OnInit {
 
-    @ViewChild(DetailsComponent) childDetailsComponent: DetailsComponent;
+    @ViewChild(DetailsComponent, { static: true }) childDetailsComponent: DetailsComponent;
     paymentId: number;
     paymentMenuItems = PaymentMenuItems;
     dialogRef;

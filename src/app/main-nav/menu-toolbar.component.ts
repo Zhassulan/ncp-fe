@@ -1,4 +1,4 @@
-import {AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Output} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
 import {locStorItems} from '../settings';
@@ -92,7 +92,7 @@ export class MenuToolbarComponent implements AfterViewChecked {
     logout() {
         this.authService.logout();
         localStorage.removeItem(locStorItems.userName);
-        this.router.navigate(['/login']);
+        this.router.navigate(['login']);
     }
 
     getUser() {

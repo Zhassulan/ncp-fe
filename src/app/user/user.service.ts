@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import {locStorItems} from '../settings';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class UserService {
 
   constructor() { }

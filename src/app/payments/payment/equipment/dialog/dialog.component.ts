@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatDialogRef} from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import {UploadFilePaymentService} from '../upload-file-payment.service';
 import {PaymentService} from '../../payment.service';
 //import * as XLSX from 'xlsx';
@@ -17,7 +17,7 @@ export class DialogComponent implements OnInit {
     //wopts: XLSX.WritingOptions = { bookType: 'xlsx', type: 'array' };
     //fileName: string = 'SheetJS.xlsx';
 
-    @ViewChild('file') file;
+    @ViewChild('file', { static: true }) file;
     fileObj: File;
     showUploadButton: boolean = false;
     isWait = false;

@@ -1,5 +1,7 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import {DataService} from '../../data/data.service';
 import {NGXLogger} from 'ngx-logger';
 import {NotificationsService} from 'angular2-notifications';
@@ -32,8 +34,8 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
         'amount',
         'rowMenu'
     ];
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
     //источник данных для таблицы
     dataSource = new MatTableDataSource<RegistryReportItem>();
     //общее количество для пагинации
@@ -45,7 +47,7 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
     binFormCtl = new FormControl('', [
         Validators.pattern('\\d{12}'),
     ]);
-    @ViewChild(DateRangeComponent)
+    @ViewChild(DateRangeComponent, { static: true })
     private dateRangeComponent: DateRangeComponent;
 
     constructor(private dataService: DataService,
@@ -93,7 +95,7 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
                 if (Array.isArray(data) && data.length)
                     this.dataSource.data = data;
                 else
-                    this.notifService.warn(msgs.msgErrNoDataFound);
+                    this.notifService.warn(msgs.msgNoData);
             },
             error2 => {
                 this.notifService.error(error2);

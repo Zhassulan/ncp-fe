@@ -1,19 +1,18 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, LOCALE_ID} from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {AUTH_PROVIDERS, AuthService} from './auth/auth.service';
 import {LoggedInGuard} from './auth/logged-in.guard';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {LoginComponent} from './auth/login/login.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {CommonModule} from '@angular/common';
+import {CommonModule, registerLocaleData} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MenuToolbarComponent} from './main-nav/menu-toolbar.component';
-import {MaterialsModule} from './materials/materials.module';
 import {RoutesModule} from './routes/routes.module';
-import {MAT_DATE_LOCALE, MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule} from '@angular/material';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {PaymentStatusRuPipe} from './payments/payment-status-ru-pipe';
 import {DialogReportComponent} from './dialog/dialog-report/dialog-report.component';
 import {DialogService} from './dialog/dialog.service';
@@ -27,7 +26,6 @@ import {LayoutModule} from '@angular/cdk/layout';
 import {BreadcrumbModule} from 'angular-crumbs';
 import {DialogComponent} from './payments/payment/equipment/dialog/dialog.component';
 import {UploadFilePaymentService} from './payments/payment/equipment/upload-file-payment.service';
-import {registerLocaleData} from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
 import {UserService} from './user/user.service';
 import {PaymentsService} from './payments/payments.service';
@@ -45,13 +43,15 @@ import {RegistriesComponent} from './registry/registries/registries.component';
 import {AppService} from './app.service';
 import {ExcelService} from './excel/excel.service';
 import {FileSaverModule} from 'ngx-filesaver';
-import { RegistryComponent } from './registry/registry/registry.component';
+import {RegistryComponent} from './registry/registry/registry.component';
 import {RegistryService} from './registry/registry.service';
-import { RegistryDetailsComponent } from './registry/registry/registry-details/registry-details.component';
-import { RegistryPropertiesComponent } from './registry/registry/registry-properties/registry-properties.component';
+import {RegistryDetailsComponent} from './registry/registry/registry-details/registry-details.component';
+import {RegistryPropertiesComponent} from './registry/registry/registry-properties/registry-properties.component';
 import {SessionService} from './auth/session.service';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { DateRangeComponent } from './date-range/date-range.component';
+import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
+import {DateRangeComponent} from './date-range/date-range.component';
+import {AuthInterceptor} from './auth/auth-interceptor';
+import {MaterialsModule} from './materials/materials.module';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -87,7 +87,6 @@ registerLocaleData(localeRu, 'ru');
         DialogComponent
     ],
     imports: [
-        MaterialsModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -98,19 +97,10 @@ registerLocaleData(localeRu, 'ru');
         FlexLayoutModule,
         LoggerModule.forRoot(environment.logging),
         LayoutModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatSidenavModule,
-        MatIconModule,
-        MatListModule,
-        /*
-        HttpClientXsrfModule.withOptions({
-            cookieName: 'My-Xsrf-Cookie',
-            headerName: 'My-Xsrf-Header',
-        }),*/
         BreadcrumbModule,
         SimpleNotificationsModule.forRoot(),
-        FileSaverModule
+        FileSaverModule,
+        MaterialsModule
     ],
     providers: [
         AUTH_PROVIDERS,
@@ -128,7 +118,12 @@ registerLocaleData(localeRu, 'ru');
         AppService,
         ExcelService,
         RegistryService,
-        SessionService
+        SessionService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        }
     ],
     bootstrap: [AppComponent]
 })
