@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {DialogData} from '../../../dialog/dialog-data';
+import {RegistryDialogData} from '../payment.component';
 
 @Component({
     selector: 'app-add-registry-modal',
@@ -11,13 +11,13 @@ export class AddRegistryModalComponent implements OnInit {
 
     constructor(
         public dialogRef: MatDialogRef<AddRegistryModalComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+        @Inject(MAT_DIALOG_DATA) public data: RegistryDialogData) {
     }
 
     ngOnInit(): void {
     }
 
-    onNoClick(): void {
+    onCloseClick(): void {
         this.dialogRef.close();
     }
 
