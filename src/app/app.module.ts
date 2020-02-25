@@ -53,6 +53,7 @@ import {DateRangeComponent} from './date-range/date-range.component';
 import {AuthInterceptor} from './auth/auth-interceptor';
 import {MaterialsModule} from './materials/materials.module';
 import { AddRegistryModalComponent } from './payments/payment/add-registry-modal/add-registry-modal.component';
+import { CalendarDeferModalComponent } from './payments/payment/calendar-defer-modal/calendar-defer-modal.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -81,13 +82,15 @@ registerLocaleData(localeRu, 'ru');
         RegistryPropertiesComponent,
         PageNotFoundComponent,
         DateRangeComponent,
-        AddRegistryModalComponent
+        AddRegistryModalComponent,
+        CalendarDeferModalComponent
     ],
     entryComponents: [
         DialogReportComponent,
         LoginComponent,
         DialogComponent,
-        AddRegistryModalComponent
+        AddRegistryModalComponent,
+        CalendarDeferModalComponent
     ],
     imports: [
         CommonModule,

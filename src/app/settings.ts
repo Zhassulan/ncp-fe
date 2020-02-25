@@ -212,8 +212,9 @@ export enum PaymentDetailTableColumnsDisplay {
  */
 export enum PaymentMenuItems {
     LOAD_EQUIPMENT = 1,
-    DISTRIBUTE = 2,
-    REGISTRY
+    DISTRIBUTE = 2 ,
+    REGISTRY = 3,
+    DEFER = 4
 }
 
 /**

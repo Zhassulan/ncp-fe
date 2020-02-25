@@ -8,6 +8,9 @@
     <button mat-menu-item [disabled]="isBlocked()" (click)="select(paymentMenuItems.LOAD_EQUIPMENT)">
         <span>Оборудование</span>
     </button>
+    <button mat-menu-item [disabled]="(details.length == 0 || isBlocked())" (click)="select(paymentMenuItems.DEFER)">
+        <span>Отложить</span>
+    </button>
     <button mat-menu-item [disabled]="(details.length == 0 || isBlocked())" (click)="select(paymentMenuItems.DISTRIBUTE)">
         <span>Разнести</span>
     </button>

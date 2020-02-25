@@ -14,9 +14,14 @@ import {AppService} from '../../app.service';
 import {Utils} from '../../utils';
 import {AddRegistryModalComponent} from './add-registry-modal/add-registry-modal.component';
 import {PaymentDetail} from '../model/payment-detail';
+import {CalendarDeferModalComponent} from './calendar-defer-modal/calendar-defer-modal.component';
 
 export interface RegistryDialogData {
     registry: string;
+}
+
+export interface CalendarDialogData {
+    date: string;
 }
 
 @Component({
@@ -32,6 +37,7 @@ export class PaymentComponent implements OnInit {
     dialogRef;
     registry: string;
     paymentDetails = [];
+    deferDate: string;
 
     constructor(private router: Router,
                 public paymentService: PaymentService,
@@ -71,8 +77,11 @@ export class PaymentComponent implements OnInit {
                 this.loadRegistry();
             }
                 break;
+            case this.paymentMenuItems.DEFER: {
+                this.defer();
+            }
+                break;
             default:
-
         }
     }
 
@@ -135,7 +144,7 @@ export class PaymentComponent implements OnInit {
             });
     }
 
-    loadRegistry(): void {
+    loadRegistry() {
         const dialogRef = this.dialog.open(AddRegistryModalComponent, {
             width: '50%',
             data: {registry: this.registry}
@@ -169,7 +178,7 @@ export class PaymentComponent implements OnInit {
         if (brokenRows.length) {
             console.log(brokenRows);
             this.notifService.warn(`Есть ошибочные строки:\n ${brokenRows}`);
-        }   else {
+        } else {
             this.addImportedDetails();
         }
         //console.log('brokenRows:\n' + brokenRows);
@@ -187,6 +196,22 @@ export class PaymentComponent implements OnInit {
             paymentDetail.status = PaymentStatus.STATUS_NEW;
             this.paymentService.addNewDetail(paymentDetail);
         }
+    }
+
+    defer() {
+        const dialogRef = this.dialog.open(CalendarDeferModalComponent, {
+            width: '30%',
+            data: { date: this.deferDate }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            //console.log('Result from dialog: ' + result);
+            this.setDeferDate(result);
+        });
+    }
+
+    setDeferDate(date)  {
+        this.deferDate = date;
+
     }
 
 }

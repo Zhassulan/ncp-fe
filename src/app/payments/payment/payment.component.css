@@ -7,6 +7,7 @@
     grid-template-columns: auto;
     grid-gap: 5px;
     justify-items: center;
+
 }
 
 .topGap {
@@ -15,19 +16,22 @@
 
 .paymentItem {
     grid-area: paymentItem;
-    width: 75%;
+    width: 95%;
+    background-color: white;
+    border-radius: 5px;
 }
 
 .container {
     display: grid;
     grid-template-columns: 17% 17% 30% 35%;
-    grid-template-rows: 70px auto;
+    grid-template-rows: 70px auto auto;
     grid-template-areas:
             "header header header header"
             "leftSide leftSide rightSide rightSide"
             "footer footer footer1 footer1";
     justify-items: stretch;
     align-self: start;
+    grid-column-gap: 10px;
 }
 
 .item-header {
@@ -69,3 +73,4 @@
 .item-top2 {
     grid-area: top2;
 }
+
