@@ -23,6 +23,7 @@ export class PaymentsService {
     }
 
     updateStatusRu(payments) {
+        console.log(payments);
         payments.forEach(payment => {
             this.setStatusRu(payment);
         });

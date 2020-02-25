@@ -61,7 +61,6 @@ export const shrinkDetailsColumnSize: number = 200;
 export const httpOptions = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        //'Cache-Control': 'no-cache, no-store',
     })
 };
 
@@ -212,7 +211,8 @@ export enum PaymentDetailTableColumnsDisplay {
  */
 export enum PaymentMenuItems {
     LOAD_EQUIPMENT = 1,
-    DISTRIBUTE = 2
+    DISTRIBUTE = 2,
+    REGISTRY
 }
 
 /**

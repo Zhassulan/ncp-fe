@@ -52,6 +52,7 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {DateRangeComponent} from './date-range/date-range.component';
 import {AuthInterceptor} from './auth/auth-interceptor';
 import {MaterialsModule} from './materials/materials.module';
+import { AddRegistryModalComponent } from './payments/payment/add-registry-modal/add-registry-modal.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -79,12 +80,14 @@ registerLocaleData(localeRu, 'ru');
         RegistryDetailsComponent,
         RegistryPropertiesComponent,
         PageNotFoundComponent,
-        DateRangeComponent
+        DateRangeComponent,
+        AddRegistryModalComponent
     ],
     entryComponents: [
         DialogReportComponent,
         LoginComponent,
-        DialogComponent
+        DialogComponent,
+        AddRegistryModalComponent
     ],
     imports: [
         CommonModule,

@@ -2,8 +2,11 @@
     <mat-icon>more_vert</mat-icon>
 </button>
 <mat-menu #menu="matMenu">
+    <button mat-menu-item [disabled]="isBlocked()" (click)="select(paymentMenuItems.REGISTRY)">
+        <span>Реестр</span>
+    </button>
     <button mat-menu-item [disabled]="isBlocked()" (click)="select(paymentMenuItems.LOAD_EQUIPMENT)">
-        <span>Загрузить разноски - оборудование</span>
+        <span>Оборудование</span>
     </button>
     <button mat-menu-item [disabled]="(details.length == 0 || isBlocked())" (click)="select(paymentMenuItems.DISTRIBUTE)">
         <span>Разнести</span>

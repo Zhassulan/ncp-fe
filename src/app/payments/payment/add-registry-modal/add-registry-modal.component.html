@@ -1,0 +1,32 @@
+<div class="form">
+
+    <div class="header">
+        <h1 mat-dialog-title>Реестры</h1>
+    </div>
+
+    <div class="list">
+        <div mat-dialog-content>
+            <mat-form-field appearance="fill" style="width: 100%">
+                <mat-label>Список</mat-label>
+                <textarea matInput class="area"></textarea>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="buttons">
+            <div></div>
+            <div>
+                <div mat-dialog-actions>
+                    <button mat-raised-button color="primary" [mat-dialog-close] cdkFocusInitial>Загрузить</button>
+                </div>
+            </div>
+            <div>
+                <div mat-dialog-actions>
+                    <button mat-raised-button color="primary" [mat-dialog-close] cdkFocusInitial>Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

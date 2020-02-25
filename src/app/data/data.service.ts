@@ -13,24 +13,15 @@ import {User} from '../auth/model/user';
 import {Version} from '../version';
 import {RequestPostPayment} from './request-post-payment';
 
+const API_URL_ROOT = environment.apiUrlRoot;
 const API_URL = environment.apiUrl;
 
 @Injectable({
     providedIn: 'root',
 })
 export class DataService {
-
+    
     constructor(private httpClient: HttpClient) { }
-
-    /**
-     *  Перехватчик ошибки от http метода
-     * @param {HttpErrorResponse} error
-     * @returns {Observable<never>}
-     */
-    errorHandler(error: HttpErrorResponse) {
-        //return Observable.throwError(error.message || 'Ошибка сервера.');
-        return null;
-    }
 
     /**
      *  Аутентификация
@@ -38,19 +29,11 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     login(userName, userPassword) {
-        const body = new HttpParams()
-            .set('username', userName)
-            .set('password', userPassword);
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/x-www-form-urlencoded'
-            })
-        };
-        return this.httpClient.post(API_URL + '/auth/login', body.toString(), httpOptions);
+        return this.httpClient.post(API_URL_ROOT + '/auth/login', new User(userName, userPassword, null), httpOptions);
     }
 
     authorize(userObj: User): Observable<RestResponse> {
-        return this.httpClient.post <RestResponse>(API_URL + '/auth/authorization', userObj, httpOptions);
+        return this.httpClient.post <RestResponse>(API_URL_ROOT + '/auth/authorization', userObj, httpOptions);
     }
 
     /**
@@ -60,8 +43,8 @@ export class DataService {
      */
     getNcpPayments(dr: DateRange): Observable <any> {
         const params = new HttpParams()
-            .set('startDate', dr.startDate)
-            .set('endDate', dr.endDate);
+            .set('start', dr.startDate)
+            .set('end', dr.endDate);
         return this.httpClient.get(API_URL + '/payments', {params});
     }
 

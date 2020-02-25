@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NGXLogger} from 'ngx-logger';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
 import {msgs, PaymentMenuItems, PaymentStatus, PaymentStatusRu, rests} from '../../settings';
 import {PaymentsService} from '../payments.service';
@@ -12,6 +12,7 @@ import {ActivatedRoute, PRIMARY_OUTLET, Router, UrlSegment, UrlSegmentGroup, Url
 import {DetailsComponent} from './details/details.component';
 import {AppService} from '../../app.service';
 import {Utils} from '../../utils';
+import {AddRegistryModalComponent} from './add-registry-modal/add-registry-modal.component';
 
 @Component({
     selector: 'app-payment',
@@ -20,7 +21,7 @@ import {Utils} from '../../utils';
 })
 export class PaymentComponent implements OnInit {
 
-    @ViewChild(DetailsComponent, { static: true }) childDetailsComponent: DetailsComponent;
+    @ViewChild(DetailsComponent, {static: true}) childDetailsComponent: DetailsComponent;
     paymentId: number;
     paymentMenuItems = PaymentMenuItems;
     dialogRef;
@@ -57,6 +58,10 @@ export class PaymentComponent implements OnInit {
                 break;
             case this.paymentMenuItems.DISTRIBUTE: {
                 this.menuDistribute();
+            }
+                break;
+            case this.paymentMenuItems.REGISTRY: {
+                this.loadRegistry();
             }
                 break;
             default:
@@ -101,7 +106,7 @@ export class PaymentComponent implements OnInit {
         this.appService.setProgress(true);
         let msg;
         this.paymentService.distribute().subscribe(distributeRes => {
-                console.log('Accepted result from distribution ' +  Utils.toJsonString(distributeRes));
+                console.log('Accepted result from distribution ' + Utils.toJsonString(distributeRes));
                 if (distributeRes.result == rests.restResultOk) {
                     this.paymentService.setPaymentByData(distributeRes.data);
                     this.paymentService.showPaymentStatus(distributeRes.data.status, distributeRes.data.id);
@@ -121,6 +126,18 @@ export class PaymentComponent implements OnInit {
             () => {
                 this.appService.setProgress(false);
             });
+    }
+
+    loadRegistry(): void {
+        const dialogRef = this.dialog.open(AddRegistryModalComponent, {
+            width: '50%',
+            data: {name: null, animal: null}
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+            console.log(result);
+            //this.animal = result;
+        });
     }
 
 }
