@@ -112,12 +112,12 @@ export class PaymentService {
     }
 
     delAll()    {
-        this.details.forEach(detail => {
+/*        this.details.forEach(detail => {
             if (detail.status == PaymentStatus.STATUS_NEW)  {
                 this.details.splice(this.details.indexOf(detail), 1);
             }
-        })
-        //this.details = [];
+        })*/
+        this.details = [];
         this.announceDetails();
     }
 

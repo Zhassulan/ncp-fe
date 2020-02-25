@@ -162,6 +162,7 @@ export enum locStorItems {
  * @type {number}
  */
 export const msisdnLength = 10;
+export const msisdnLengthCity = 11;
 
 /**
  * Стратегия разноска детали платежа

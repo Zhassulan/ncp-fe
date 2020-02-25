@@ -15,7 +15,7 @@
     <ng-container matColumnDef="msisdn">
         <th mat-header-cell *matHeaderCellDef> {{ detailTableColumnsDisplay.msisdn }}</th>
         <td mat-cell *matCellDef="let detail" [ngClass]="{'boldText': detail.distrStrategy == paymentDistrStrategies.byMsisdn}">
-            {{detail.msisdn ? (detail.msisdn | phonePipe : detail.msisdn) : null }}
+            {{ detail.msisdn ? (detail.msisdn | phonePipe : detail.msisdn) : null }}
         </td>
     </ng-container>
 
@@ -44,7 +44,7 @@
         <td mat-cell *matCellDef="let detail">
             <button mat-mini-fab color="primary" (click)="delDetail(detail)"
                     *ngIf="(detail.status == paymentStatuses.STATUS_NEW || detail.status == paymentStatuses.STATUS_ERROR)"
-                        matTooltip="{{ detailTableColumnsDisplay.del  + ' (' + detail.err_message + ')' }}">
+                        matTooltip="{{ detailTableColumnsDisplay.del }}">
                 <mat-icon>clear</mat-icon>
             </button>
             <button mat-mini-fab disabled *ngIf="(detail.status == paymentStatuses.STATUS_DISTRIBUTED)">
