@@ -36,16 +36,18 @@ export class PaymentComponent implements OnInit {
     paymentMenuItems = PaymentMenuItems;
     dialogRef;
     registry: string;
-    paymentDetails = [];
     deferDate: string;
+    label: string;
+    show: boolean = false;
+    isValidRegistry: boolean = false;
 
     constructor(private router: Router,
                 public paymentService: PaymentService,
                 private paymentsService: PaymentsService,
                 private notifService: NotificationsService,
                 private route: ActivatedRoute,
-                private logger: NGXLogger,
-                public dialog: MatDialog,
+                private log: NGXLogger,
+                public dlg: MatDialog,
                 private userService: UserService,
                 private appService: AppService) {
     }
@@ -63,22 +65,22 @@ export class PaymentComponent implements OnInit {
         this.loadPayment();
     }
 
-    onSelected(selected: number) {
+    menuOnSelected(selected: number) {
         switch (selected) {
             case this.paymentMenuItems.LOAD_EQUIPMENT: {
-                this.menuLoadEquipmentFileDlg();
+                this.dlgOpenEquipment();
             }
                 break;
             case this.paymentMenuItems.DISTRIBUTE: {
-                this.menuDistribute();
+                this.distributeCalling();
             }
                 break;
             case this.paymentMenuItems.REGISTRY: {
-                this.loadRegistry();
+                this.dlgOpenRegistry();
             }
                 break;
             case this.paymentMenuItems.DEFER: {
-                this.defer();
+                this.dlgOpenDefer();
             }
                 break;
             default:
@@ -92,16 +94,18 @@ export class PaymentComponent implements OnInit {
         const result = concat(first, second);
         result.subscribe(
             data => {
-            }, error => {
+            },
+            error => {
                 this.appService.setProgress(false);
                 this.notifService.error(error);
             }, () => {
+                this.show = true;
                 this.appService.setProgress(false);
             });
     }
 
-    menuLoadEquipmentFileDlg() {
-        this.dialogRef = this.dialog.open(DialogComponent, {width: '30%', height: '30%'});
+    dlgOpenEquipment() {
+        this.dialogRef = this.dlg.open(DialogComponent, {width: '30%', height: '30%'});
         this.dialogRef.afterClosed().subscribe(result => {
             if (result != 'cancel') {
 
@@ -109,7 +113,7 @@ export class PaymentComponent implements OnInit {
         });
     }
 
-    async menuDistribute() {
+    async distributeCalling() {
         let res = await this.paymentService.distributionCheckConditions(this.paymentId);
         if (res) {
             this.distribute();
@@ -129,13 +133,13 @@ export class PaymentComponent implements OnInit {
                     //this.loadPayment();
                 } else {
                     msg = msgs.msgErrDistributePayment + ' ID ' + this.paymentId + '. ' + distributeRes.data + ' (' + distributeRes.result + ')' + this.userService.logUser();
-                    this.logger.warn(msg + distributeRes.data + ' ' + this.userService.logUser());
+                    this.log.warn(msg + distributeRes.data + ' ' + this.userService.logUser());
                     this.notifService.warn(msgs.msgErrDistributePayment + ' ' + distributeRes.data);
                 }
             },
             error2 => {
                 msg = msgs.msgErrDistributePayment + ' Payment ID ' + this.paymentId + '. ' + error2 + this.userService.logUser();
-                this.logger.error(msg + error2);
+                this.log.error(msg + error2);
                 this.notifService.error(msg + error2);
                 this.appService.setProgress(false);
             },
@@ -144,74 +148,34 @@ export class PaymentComponent implements OnInit {
             });
     }
 
-    loadRegistry() {
-        const dialogRef = this.dialog.open(AddRegistryModalComponent, {
+    dlgOpenRegistry() {
+        const dialogRef = this.dlg.open(AddRegistryModalComponent, {
             width: '50%',
             data: {registry: this.registry}
         });
         dialogRef.afterClosed().subscribe(result => {
-            //console.log('Result from dialog: ' + result);
-            this.processRegistryDialogData(result);
+            //console.log('Result from dlg: ' + result);
+            let data = this.paymentService.importRegistryData(result);
+            data.broken.length ? this.notifService.warn(`Есть ошибочные строки:\n ${data.broken}`) :
+                this.paymentService.registryValidation(data.imported) ? this.paymentService.addImportedRegistriesPayment(data.imported) : null;
         });
     }
 
-    processRegistryDialogData(rawdata) {
-        let rows = rawdata.split('\n');
-        let brokenRows = [];
-        if (rows.length) this.paymentDetails = [];
-        for (let row of rows) {
-            if (row === '') continue;
-            let parts = row.split('\t');
-            if (parts.length === 2) {
-                let paymentDetail = new PaymentDetail();
-                let b = true;
-                if (isNaN(parts[0])) {
-                    b = false;
-                } else
-                    this.isMSISDN(parts[0]) ? paymentDetail.msisdn = parts[0] : paymentDetail.account = parts[0];
-                isNaN(parts[1]) ? b = false : paymentDetail.sum = parts[1];
-                !b ? brokenRows.push(row) : this.paymentDetails.push(paymentDetail);
-            } else {
-                brokenRows.push(row);
-            }
-        }
-        if (brokenRows.length) {
-            console.log(brokenRows);
-            this.notifService.warn(`Есть ошибочные строки:\n ${brokenRows}`);
-        } else {
-            this.addImportedDetails();
-        }
-        //console.log('brokenRows:\n' + brokenRows);
-        //console.log('registries:\n' + this.paymentDetails);
-    }
-
-    isMSISDN(value) {
-        return /^(707|747|708|700|727|701|702|705|777|756|7172|771)(\d{7}$)/i.test(value);
-    }
-
-    addImportedDetails() {
-        this.paymentService.delAll();
-        for (let paymentDetail of this.paymentDetails) {
-            paymentDetail.distrStrategy = this.paymentService.determineDistrStrategyByDetail(paymentDetail);
-            paymentDetail.status = PaymentStatus.STATUS_NEW;
-            this.paymentService.addNewDetail(paymentDetail);
-        }
-    }
-
-    defer() {
-        const dialogRef = this.dialog.open(CalendarDeferModalComponent, {
+    dlgOpenDefer() {
+        const dialogRef = this.dlg.open(CalendarDeferModalComponent, {
             width: '30%',
-            data: { date: this.deferDate }
+            data: {date: this.deferDate},
         });
         dialogRef.afterClosed().subscribe(result => {
-            //console.log('Result from dialog: ' + result);
+            console.log('Result from dlg: ' + result);
             this.setDeferDate(result);
         });
     }
 
-    setDeferDate(date)  {
+    setDeferDate(date) {
+        console.log('Setting defer date');
         this.deferDate = date;
-
+        //this.label = 'ожидает отложен на ' + new Date(this.deferDate).toLocaleDateString();
     }
 
 }

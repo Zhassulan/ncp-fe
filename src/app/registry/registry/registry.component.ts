@@ -48,11 +48,11 @@ export class RegistryComponent implements OnInit {
         /*
         switch (selected) {
             case this.paymentMenuItems.LOAD_EQUIPMENT: {
-                this.menuLoadEquipmentFileDlg();
+                this.dlgOpenEquipment();
             }
                 break;
             case this.paymentMenuItems.DISTRIBUTE: {
-                this.menuDistribute();
+                this.distributeCalling();
             }
                 break;
             default:

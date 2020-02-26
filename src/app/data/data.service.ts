@@ -21,7 +21,7 @@ const API_URL = environment.apiUrl;
 })
 export class DataService {
     
-    constructor(private httpClient: HttpClient) { }
+    constructor(private http: HttpClient) { }
 
     /**
      *  Аутентификация
@@ -29,11 +29,11 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     login(userName, userPassword) {
-        return this.httpClient.post(API_URL_ROOT + '/auth/login', new User(userName, userPassword, null), httpOptions);
+        return this.http.post(API_URL_ROOT + '/auth/login', new User(userName, userPassword, null), httpOptions);
     }
 
     authorize(userObj: User): Observable<RestResponse> {
-        return this.httpClient.post <RestResponse>(API_URL_ROOT + '/auth/authorization', userObj, httpOptions);
+        return this.http.post <RestResponse>(API_URL_ROOT + '/auth/authorization', userObj, httpOptions);
     }
 
     /**
@@ -45,7 +45,7 @@ export class DataService {
         const params = new HttpParams()
             .set('start', dr.startDate)
             .set('end', dr.endDate);
-        return this.httpClient.get(API_URL + '/payments', {params});
+        return this.http.get(API_URL + '/payments', {params});
     }
 
     /**
@@ -53,7 +53,7 @@ export class DataService {
      * @returns {Observable<any>}
      */
     public getNcpPaymentsJson(): Observable<any> {
-        return this.httpClient.get('./assets/payments.json');
+        return this.http.get('./assets/payments.json');
     }
 
     /**
@@ -62,7 +62,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     paymentToTransit(id: number): Observable<RestResponse> {
-        return this.httpClient.post <RestResponse>(API_URL + `/payments/${id}`, new RequestPostPayment(PaymentActions.TO_TRANSIT), httpOptions);
+        return this.http.post <RestResponse>(API_URL + `/payments/${id}`, new RequestPostPayment(PaymentActions.TO_TRANSIT), httpOptions);
     }
 
     /**
@@ -72,7 +72,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     deleteTransitPayment(id: number, user: string): Observable<RestResponse> {
-        return this.httpClient.post <RestResponse>(API_URL + `/payment/${id}`, {"payment_action":"from_transit"}, httpOptions);
+        return this.http.post <RestResponse>(API_URL + `/payment/${id}`, {"payment_action":"from_transit"}, httpOptions);
     }
 
     /**
@@ -81,7 +81,7 @@ export class DataService {
      * @returns {Observable<any>}
      */
     postFilePayment(formData: FormData): Observable<any> {
-        return this.httpClient.post<FilePayment>(API_URL + '/equipment/upload', formData);
+        return this.http.post<FilePayment>(API_URL + '/equipment/upload', formData);
     }
 
     /**
@@ -90,7 +90,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     getPaymentDetails(id: number): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/details`, httpOptions);
+        return this.http.get<RestResponse>(API_URL + `/payment/${id}/details`, httpOptions);
     }
 
     /**
@@ -99,7 +99,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     distributePayment(params: PaymentParamEq): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + '/payment/distribute', params, httpOptions);
+        return this.http.post<RestResponse>(API_URL + '/payment/distribute', params, httpOptions);
     }
 
     /**
@@ -108,7 +108,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     getPayment(id: number): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/`, httpOptions);
+        return this.http.get<RestResponse>(API_URL + `/payment/${id}/`, httpOptions);
     }
 
     /**
@@ -117,7 +117,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     getPaymentEquipments(id: number): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/equipments`, httpOptions);
+        return this.http.get<RestResponse>(API_URL + `/payment/${id}/equipments`, httpOptions);
     }
 
     /**
@@ -126,7 +126,7 @@ export class DataService {
      * @returns {Observable<any>}
      */
     getBercutEquipmentInfoByIcc(icc: String): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/equipment/${icc}`, httpOptions);
+        return this.http.post<RestResponse>(API_URL + `/equipment/${icc}`, httpOptions);
     }
 
     /**
@@ -135,27 +135,27 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     checkEquipmentParams(iccList: EquipmentCheckParam []): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + '/equipments/check', iccList, httpOptions);
+        return this.http.post<RestResponse>(API_URL + '/equipments/check', iccList, httpOptions);
     }
 
     getPaymentStatus(id): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/status`, httpOptions);
+        return this.http.post<RestResponse>(API_URL + `/payment/${id}/status`, httpOptions);
     }
 
     paymentBlocked(id): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/payment/${id}/blocked`, httpOptions);
+        return this.http.post<RestResponse>(API_URL + `/payment/${id}/blocked`, httpOptions);
     }
 
     getAllRegistries(): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/registry/all`, httpOptions);
+        return this.http.post<RestResponse>(API_URL + `/registry/all`, httpOptions);
     }
 
     getRegistry(id): Observable<RestResponse> {
-        return this.httpClient.post<RestResponse>(API_URL + `/registry/${id}`, httpOptions);
+        return this.http.post<RestResponse>(API_URL + `/registry/${id}`, httpOptions);
     }
 
     getVersion(): Observable<Version> {
-        return this.httpClient.get<Version>(API_URL + '/ver', httpOptions);
+        return this.http.get<Version>(API_URL + '/ver', httpOptions);
     }
 
     getRegistriesByRange(startDate, endDate, bin): Observable<any> {
@@ -166,8 +166,16 @@ export class DataService {
             params:
                 new HttpParams().set('start_date', startDate).append('end_date', endDate).append('bin', bin)
         };
-        return this.httpClient.get <RestResponse>(
+        return this.http.get <RestResponse>(
             API_URL + '/registry/range', options);
+    }
+
+    isValidAccount(profileId, account) {
+        return this.http.get(API_URL + `/profile/${profileId}/account/${account}`, httpOptions);
+    }
+
+    isValidMsisdn(profileId, msisdn) {
+        return this.http.get(API_URL + `/profile/${profileId}/account/${msisdn}`, httpOptions);
     }
 
 }

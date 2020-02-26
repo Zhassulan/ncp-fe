@@ -8,12 +8,17 @@
                 <div class="item-header">
                     <div class="top">
                         <div class="item-top1">
-                            <h1 class="mat-h1"><b># {{ payment.paymentId }} от {{ payment.creationDate | date }}</b></h1>
+                            <div *ngIf="show">
+                                <h1 class="mat-h1">{{ payment.paymentId}} от {{ payment.creationDate | date }}</h1>
+                            </div>
                         </div>
                         <div class="item-top2">
-                            <app-payment-menu (selectedItem)="onSelected($event)"></app-payment-menu>
+                            <app-payment-menu (selectedItem)="menuOnSelected($event)" [isRegistriesValid]="isValidRegistry"></app-payment-menu>
                         </div>
                     </div>
+                </div>
+                <div class="status">
+                    {{ label }}
                 </div>
                 <div class="item-c">
                     <app-payment-info [payment]="payment"></app-payment-info>

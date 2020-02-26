@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {NcpPayment} from '../model/ncp-payment';
 import {PaymentsService} from '../payments.service';
-import {Observable, Subject} from 'rxjs';
+import {concat, Observable, Subject} from 'rxjs';
 import {UploadFilePaymentService} from './equipment/upload-file-payment.service';
 import {dic, msgs, PaymentDetailDistrStrategy, PaymentStatus, rests, STATUSES} from '../../settings';
 import {FilePaymentItem} from './equipment/model/file-payment-item';
@@ -67,7 +67,7 @@ export class PaymentService {
                         }
                     },
                     error2 => {
-                        let msg = msgs.msgErrGetDetails + error2 + this.userService.logUser();
+                        let msg = msgs.msgErrGetPaymentData + error2 + this.userService.logUser();
                         this.logger.error(msg);
                         observer.error(msgs.msgErrGetPaymentData);
                     },
@@ -528,6 +528,48 @@ export class PaymentService {
             return res.data;
         }   else {
             return false;
+        }
+    }
+
+    importRegistryData(rawdata) {
+        let importedRegistries = [];
+        let rows = rawdata.split('\n');
+        let brokenRows = [];
+        if (rows.length) importedRegistries = [];
+        for (let row of rows) {
+            if (row === '') continue;
+            let parts = row.split('\t');
+            if (parts.length === 2) {
+                let paymentDetail = new PaymentDetail();
+                let b = true;
+                if (isNaN(parts[0])) {
+                    b = false;
+                } else
+                    this.isMSISDN(parts[0]) ? paymentDetail.msisdn = parts[0] : paymentDetail.account = parts[0];
+                isNaN(parts[1]) ? b = false : paymentDetail.sum = parts[1];
+                !b ? brokenRows.push(row) : importedRegistries.push(paymentDetail);
+            } else {
+                brokenRows.push(row);
+            }
+        }
+        return { 'broken': brokenRows, 'imported': importedRegistries};
+    }
+
+    isMSISDN(value) {
+        return /^(707|747|708|700|727|701|702|705|777|756|7172|771)(\d{7}$)/i.test(value);
+    }
+
+    registryValidation(importedRegistry): boolean {
+
+        return true;
+    }
+
+    addImportedRegistriesPayment(importedRegistry) {
+        this.delAll();
+        for (let paymentDetail of importedRegistry) {
+            paymentDetail.distrStrategy = this.determineDistrStrategyByDetail(paymentDetail);
+            paymentDetail.status = PaymentStatus.STATUS_NEW;
+            this.addNewDetail(paymentDetail);
         }
     }
 

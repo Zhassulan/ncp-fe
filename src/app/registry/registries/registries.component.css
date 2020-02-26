@@ -3,7 +3,7 @@
     display: grid;
     grid-template-areas:
             "title"
-            "registries";
+            "importedRegistries";
     grid-template-rows: auto auto;
     grid-template-columns: auto;
     justify-items: stretch;
@@ -14,8 +14,8 @@
     grid-area: title;
 }
 
-.registries {
-    grid-area: registries;
+.importedRegistries {
+    grid-area: importedRegistries;
     width: 100%;
 }
 */
