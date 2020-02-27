@@ -15,6 +15,8 @@ import {Utils} from '../../utils';
 import {AddRegistryModalComponent} from './add-registry-modal/add-registry-modal.component';
 import {PaymentDetail} from '../model/payment-detail';
 import {CalendarDeferModalComponent} from './calendar-defer-modal/calendar-defer-modal.component';
+import {DialogService} from '../../dialog/dialog.service';
+import {MatSort} from '@angular/material/sort';
 
 export interface RegistryDialogData {
     registry: string;
@@ -40,6 +42,7 @@ export class PaymentComponent implements OnInit {
     label: string;
     show: boolean = false;
     isValidRegistry: boolean = false;
+    @ViewChild(MatSort, {static: true}) sort: MatSort;
 
     constructor(private router: Router,
                 public paymentService: PaymentService,
@@ -49,7 +52,8 @@ export class PaymentComponent implements OnInit {
                 private log: NGXLogger,
                 public dlg: MatDialog,
                 private userService: UserService,
-                private appService: AppService) {
+                private appService: AppService,
+                private dlgService: DialogService) {
     }
 
     get payment() {
@@ -149,15 +153,48 @@ export class PaymentComponent implements OnInit {
     }
 
     dlgOpenRegistry() {
+        let valids = 0;
+        let invalids = 0;
+        let i = 1;
         const dialogRef = this.dlg.open(AddRegistryModalComponent, {
             width: '50%',
             data: {registry: this.registry}
         });
+
         dialogRef.afterClosed().subscribe(result => {
             //console.log('Result from dlg: ' + result);
             let data = this.paymentService.importRegistryData(result);
-            data.broken.length ? this.notifService.warn(`Есть ошибочные строки:\n ${data.broken}`) :
-                this.paymentService.registryValidation(data.imported) ? this.paymentService.addImportedRegistriesPayment(data.imported) : null;
+            if (data.broken.length) {
+                this.notifService.warn(`Есть ошибочные строки:\n ${data.broken}`);
+                return;
+            }
+            this.appService.setProgress(true);
+            this.paymentService.registryValidation(this.dlgService, data.imported).subscribe(
+                data => {
+                    if (data.result) {
+                        this.dlgService.addItem(i++ + ') ' + data.item + ' - ' + msgs.msgValid);
+                        valids++;
+                    } else {
+                        this.dlgService.addItem(i++ + ') ' + data.item + ' - ' + msgs.msgNoData);
+                        invalids++;
+                    }
+                },
+                error => {
+                    this.notifService.error(error);
+                    console.log(error);
+                    this.appService.setProgress(false);
+                },
+                () => {
+                    let msg;
+                    msg = `Проверено ${valids + invalids} элементов, из них валидные ${valids} и ошибочные ${invalids}.`;
+                    if (invalids > 0) {
+                        msg += `Устраните ошибки и попробуйте импортировать реестр снова.`;
+                    } else {
+                        this.paymentService.addImportedRegistriesPayment(data.imported);
+                    }
+                    this.dlgService.addItem(msg);
+                    this.appService.setProgress(false);
+                });
         });
     }
 

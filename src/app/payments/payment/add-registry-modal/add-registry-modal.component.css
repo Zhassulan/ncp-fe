@@ -36,4 +36,5 @@
             ". . .";
     grid-template-rows: auto;
     grid-template-columns: auto 15% 15%;
+    grid-column-gap: 10px;
 }

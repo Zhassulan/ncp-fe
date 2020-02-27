@@ -170,12 +170,12 @@ export class DataService {
             API_URL + '/registry/range', options);
     }
 
-    isValidAccount(profileId, account) {
+    accountValidation(profileId, account): Observable<any> {
         return this.http.get(API_URL + `/profile/${profileId}/account/${account}`, httpOptions);
     }
 
-    isValidMsisdn(profileId, msisdn) {
-        return this.http.get(API_URL + `/profile/${profileId}/account/${msisdn}`, httpOptions);
+    msisdnValidation(profileId, msisdn): Observable<any> {
+        return this.http.get(API_URL + `/profile/${profileId}/msisdn/${msisdn}`, httpOptions);
     }
 
 }
