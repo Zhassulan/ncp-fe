@@ -34,6 +34,7 @@ export class PaymentService {
     detailsAnnounced$ = this.detailsObs.asObservable();
     private paymentObs = new Subject<NcpPayment>();
     paymentAnnounced$ = this.paymentObs.asObservable();
+    importedRegisty = [];
 
     constructor(private paymentsService: PaymentsService,
                 private uploadFilePaymentService: UploadFilePaymentService,
@@ -574,6 +575,7 @@ export class PaymentService {
 
         let invalids = 0;
         let valids = 0;
+        this.importedRegisty = importedRegistry;
 
         let apiCalls: Observable<any> [] = [];
         for (let registry of importedRegistry) {

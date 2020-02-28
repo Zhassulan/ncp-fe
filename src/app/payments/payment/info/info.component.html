@@ -46,3 +46,11 @@
         <p class="mat-h3">{{ payment.sum | currency : ' тг.' }}</p>
     </div>
 </div>
+<div fxLayout="row" fxLayoutAlign="space-between start">
+    <div fxLayout="column">
+        <p class="mat-h3"><b>Дата отложенной разноски:</b></p>
+    </div>
+    <div fxLayout="column" ngClass="longTitle">
+        <p class="mat-h3">{{ payment.closeDate | date }}</p>
+    </div>
+</div>

@@ -24,22 +24,14 @@
 .container {
     display: grid;
     grid-template-columns: 17% 17% 30% 35%;
-    grid-template-rows: 70px auto auto auto;
+    grid-template-rows: calc(100vh - 90vh) auto auto;
     grid-template-areas:
             "header header header header"
-            "status status status status"
             "leftSide leftSide rightSide rightSide"
-            "footer footer footer1 footer1";
+            "footer footer footer footer";
     justify-items: stretch;
     align-self: start;
     grid-column-gap: 10px;
-}
-
-
-.status {
-    grid-area: status;
-    align-self: center;
-    justify-self: center;
 }
 
 .item-header {

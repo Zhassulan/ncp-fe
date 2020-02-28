@@ -1,25 +1,3 @@
-/*
-.container {
-    display: grid;
-    grid-template-areas:
-            "title"
-            "importedRegistries";
-    grid-template-rows: auto auto;
-    grid-template-columns: auto;
-    justify-items: stretch;
-    grid-gap: 5px;
-}
-
-.title {
-    grid-area: title;
-}
-
-.importedRegistries {
-    grid-area: importedRegistries;
-    width: 100%;
-}
-*/
-
 .container {
     display: grid;
     grid-template-areas:

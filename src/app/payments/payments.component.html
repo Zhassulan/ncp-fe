@@ -82,7 +82,6 @@
             <ng-container matColumnDef="paymentDetails">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Назначение платежа</mat-header-cell>
                 <mat-cell *matCellDef="let paymentRow">
-                    <!-- {{paymentRow.importedRegistries | paymentDetailsPipe: paymentRow.importedRegistries | slice : 0 : shrinkDetailsColumnSize }} -->
                     {{ paymentRow.paymentDetails }}
                 </mat-cell>
             </ng-container>

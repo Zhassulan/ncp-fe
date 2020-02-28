@@ -48,7 +48,7 @@ export class RegistryComponent implements OnInit {
         /*
         switch (selected) {
             case this.paymentMenuItems.LOAD_EQUIPMENT: {
-                this.dlgOpenEquipment();
+                this.dlgImportEquipment();
             }
                 break;
             case this.paymentMenuItems.DISTRIBUTE: {

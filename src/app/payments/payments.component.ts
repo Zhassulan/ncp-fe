@@ -74,7 +74,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
 
 
     ngOnInit() {
-
         this.getData();
         this.setPaginator();
     }
@@ -230,7 +229,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         });
     }
 
-    /** The label for the checkbox on the passed row */
+    /** The statusLabel for the checkbox on the passed row */
     checkboxLabel(row?: VNcpPayment): string {
         if (!row) {
             return `${this.isAllSelected() ? 'select' : 'deselect'} all`;

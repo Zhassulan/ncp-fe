@@ -38,8 +38,7 @@ export class PaymentComponent implements OnInit {
     paymentMenuItems = PaymentMenuItems;
     dialogRef;
     registry: string;
-    deferDate: string;
-    label: string;
+    deferDate = new Date();
     show: boolean = false;
     isValidRegistry: boolean = false;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -72,7 +71,7 @@ export class PaymentComponent implements OnInit {
     menuOnSelected(selected: number) {
         switch (selected) {
             case this.paymentMenuItems.LOAD_EQUIPMENT: {
-                this.dlgOpenEquipment();
+                this.dlgImportEquipment();
             }
                 break;
             case this.paymentMenuItems.DISTRIBUTE: {
@@ -80,11 +79,11 @@ export class PaymentComponent implements OnInit {
             }
                 break;
             case this.paymentMenuItems.REGISTRY: {
-                this.dlgOpenRegistry();
+                this.dlgImportRegistry();
             }
                 break;
             case this.paymentMenuItems.DEFER: {
-                this.dlgOpenDefer();
+                this.dlgSetDeferDate();
             }
                 break;
             default:
@@ -108,7 +107,7 @@ export class PaymentComponent implements OnInit {
             });
     }
 
-    dlgOpenEquipment() {
+    dlgImportEquipment() {
         this.dialogRef = this.dlg.open(DialogComponent, {width: '30%', height: '30%'});
         this.dialogRef.afterClosed().subscribe(result => {
             if (result != 'cancel') {
@@ -152,10 +151,11 @@ export class PaymentComponent implements OnInit {
             });
     }
 
-    dlgOpenRegistry() {
+    dlgImportRegistry() {
         let valids = 0;
         let invalids = 0;
         let i = 1;
+        let registrySum = 0;
         const dialogRef = this.dlg.open(AddRegistryModalComponent, {
             width: '50%',
             data: {registry: this.registry}
@@ -163,19 +163,24 @@ export class PaymentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             //console.log('Result from dlg: ' + result);
+            if (result) this.isValidRegistry = false;
             let data = this.paymentService.importRegistryData(result);
             if (data.broken.length) {
                 this.notifService.warn(`Есть ошибочные строки:\n ${data.broken}`);
                 return;
             }
+            for (let item of data.imported) {
+                registrySum += Number(item.sum);
+            }
             this.appService.setProgress(true);
+            let sum = 0;
             this.paymentService.registryValidation(this.dlgService, data.imported).subscribe(
                 data => {
                     if (data.result) {
-                        this.dlgService.addItem(i++ + ') ' + data.item + ' - ' + msgs.msgValid);
+                        this.dlgService.addItem(i++ + ') ' + data.data + ' - ' + msgs.msgValid);
                         valids++;
                     } else {
-                        this.dlgService.addItem(i++ + ') ' + data.item + ' - ' + msgs.msgNoData);
+                        this.dlgService.addItem(i++ + ') ' + data.data + ' - ' + msgs.msgNoData);
                         invalids++;
                     }
                 },
@@ -186,33 +191,40 @@ export class PaymentComponent implements OnInit {
                 },
                 () => {
                     let msg;
-                    msg = `Проверено ${valids + invalids} элементов, из них валидные ${valids} и ошибочные ${invalids}.`;
+                    this.dlgService.addItem(`Проверено ${valids + invalids} из ${this.paymentService.importedRegisty.length} элементов, из них валидные ${valids} и ошибочных ${invalids}.`);
                     if (invalids > 0) {
-                        msg += `Устраните ошибки и попробуйте импортировать реестр снова.`;
+                        this.dlgService.addItem(`Ошибка. Исправьте номера\\счета и попробуйте импортировать реестр снова.`);
+                    } else
+                    if (this.payment.sum != registrySum) {
+                        this.dlgService.addItem(`Ошибка. Сумма импортированного реестра ${registrySum} не совпадает с суммой платежа ${this.payment.sum}.`);
                     } else {
+                        this.isValidRegistry = true;
                         this.paymentService.addImportedRegistriesPayment(data.imported);
                     }
-                    this.dlgService.addItem(msg);
                     this.appService.setProgress(false);
                 });
         });
     }
 
-    dlgOpenDefer() {
+    dlgSetDeferDate() {
         const dialogRef = this.dlg.open(CalendarDeferModalComponent, {
             width: '30%',
             data: {date: this.deferDate},
         });
         dialogRef.afterClosed().subscribe(result => {
-            console.log('Result from dlg: ' + result);
-            this.setDeferDate(result);
+            let today = new Date();
+            let tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            console.log(`tomorrow - ${tomorrow}`);
+            let dt = new Date(result);
+            if (dt < today || result.getTime() == today.getTime())
+                this.notifService.warn(`Ошибка. Дата должна быть больше ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`);
+            else
+                if (dt.getDate() >= tomorrow.getDate() &&  dt.getMonth() >= tomorrow.getMonth() && dt.getFullYear() >= tomorrow.getFullYear())  {
+                    this.payment.closeDate = dt.getTime().toString();
+                    this.notifService.info(`Установлена дата отложенной разноски ${dt.getDate()}/${dt.getMonth() + 1}/${dt.getFullYear()}`)
+                }
         });
-    }
-
-    setDeferDate(date) {
-        console.log('Setting defer date');
-        this.deferDate = date;
-        //this.label = 'ожидает отложен на ' + new Date(this.deferDate).toLocaleDateString();
     }
 
 }

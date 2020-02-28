@@ -9,6 +9,7 @@ import {PaymentDetail} from '../../model/payment-detail';
 import {Subscription} from 'rxjs';
 import {PaymentService} from '../payment.service';
 import {PaymentStatusEnRu} from '../../../settings';
+import {MatSort} from '@angular/material/sort';
 
 @Component({
     selector: 'app-details',
@@ -19,17 +20,18 @@ export class DetailsComponent implements OnInit {
 
     paymentStatuses = PaymentStatus;
     paymentStatusesEnRu = PaymentStatusEnRu;
-
     tooltips = TOOLTIPS;
     dataSource = new MatTableDataSource<PaymentDetail>();
     displayedColumns: string[] = PaymentDetailsTableColumns;
     detailTableColumnsDisplay = PaymentDetailTableColumnsDisplay;
     i: number = 0;
     paginatorResultsLength: number = 0;
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     subscription: Subscription;
     paymentDistrStrategies = PaymentDetailDistrStrategy;
+
     @Input() status: boolean;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, {static: true}) sort: MatSort;
 
     constructor(private paymentService: PaymentService) {
     }
@@ -42,9 +44,14 @@ export class DetailsComponent implements OnInit {
         this.subscription = this.paymentService.detailsAnnounced$.subscribe(
             details => {
                 this.dataSource.data = details;
+                this.setPaginator();
             });
-        this.paginatorResultsLength = this.details.length;
+    }
+
+    setPaginator() {
+        this.paginatorResultsLength = this.dataSource.data.length;
         this.dataSource.paginator = this.paginator;
+        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
     }
 
     delDetail(row) {
