@@ -12,6 +12,7 @@ import {EquipmentCheckParam} from '../payments/model/equipment-check-param';
 import {User} from '../auth/model/user';
 import {Version} from '../version';
 import {RequestPostPayment} from './request-post-payment';
+import {Payment} from '../payments/model/payment/payment';
 
 const API_URL_ROOT = environment.apiUrlRoot;
 const API_URL = environment.apiUrl;
@@ -41,15 +42,15 @@ export class DataService {
      * @param {DateRange} dr
      * @returns {Observable<NcpPayment[]>}
      */
-    getNcpPayments(dr: DateRange): Observable <any> {
+    payments(start, end) {
         const params = new HttpParams()
-            .set('start', dr.startDate)
-            .set('end', dr.endDate);
-        return this.http.get(API_URL + '/payments', {params});
+            .set('start', start)
+            .set('end', end);
+        return this.http.get<Payment []>(API_URL + '/payments', {params});
     }
 
     /**
-     * Получить платежи из файла (быстрее для отладки), предварительно можно заготовить за какой день выгрузив из getNcpPayments
+     * Получить платежи из файла (быстрее для отладки), предварительно можно заготовить за какой день выгрузив из payments
      * @returns {Observable<any>}
      */
     public getNcpPaymentsJson(): Observable<any> {
@@ -107,8 +108,8 @@ export class DataService {
      * @param {number} id
      * @returns {Observable<RestResponse>}
      */
-    getPayment(id: number): Observable<RestResponse> {
-        return this.http.get<RestResponse>(API_URL + `/payment/${id}/`, httpOptions);
+    getPayment(id: number) {
+        return this.http.get<Payment>(API_URL + `/payment/${id}/`, httpOptions);
     }
 
     /**
@@ -176,6 +177,10 @@ export class DataService {
 
     msisdnValidation(profileId, msisdn): Observable<any> {
         return this.http.get(API_URL + `/profile/${profileId}/msisdn/${msisdn}`, httpOptions);
+    }
+
+    deferPayment(payment)  {
+        return this.http.post(API_URL + `/payment/defer`, payment, httpOptions);
     }
 
 }

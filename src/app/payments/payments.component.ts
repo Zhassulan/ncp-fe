@@ -3,7 +3,6 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {NGXLogger} from 'ngx-logger';
-import {DateRange} from '../data/date-range';
 import {DialogService} from '../dialog/dialog.service';
 import {DataService} from '../data/data.service';
 import {PaymentsService} from './payments.service';
@@ -11,14 +10,14 @@ import {PaymentService} from './payment/payment.service';
 import {UserService} from '../user/user.service';
 import {Router} from '@angular/router';
 import {SelectionModel} from '@angular/cdk/collections';
-import {msgs, rests} from '../settings';
+import {msgs, PaymentStatus, rests} from '../settings';
 import {Subscription} from 'rxjs';
 import {AppService} from '../app.service';
 import {ExcelService} from '../excel/excel.service';
 import {DateRangeComponent} from '../date-range/date-range.component';
 import {Utils} from '../utils';
-import {VNcpPayment} from './model/vncp-payment';
 import {NotificationsService} from 'angular2-notifications';
+import {Payment} from './model/payment/payment';
 
 @Component({
     selector: 'app-payments',
@@ -45,14 +44,15 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
     //источник данных для таблицы
-    dataSource = new MatTableDataSource<VNcpPayment>();
+    dataSource = new MatTableDataSource<Payment>();
     //общее количество для пагинации
     paginatorResultsLength: number;
     //выбранные в таблице модели
-    selection = new SelectionModel<VNcpPayment>(true, []);
+    selection = new SelectionModel<Payment>(true, []);
     sub: Subscription;
     pageSize = 30;
     pageSizeOptions: number[] = [50, 100, 150, 250, 300];
+    PaymentStatus = PaymentStatus;
 
     @ViewChild(DateRangeComponent, {static: true})
     private dateRangeComponent: DateRangeComponent;
@@ -71,7 +71,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         this.dataSource = new MatTableDataSource(this.paymentsService.payments);
         this.paginatorResultsLength = 0;
     }
-
 
     ngOnInit() {
         this.getData();
@@ -124,11 +123,10 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         let stDt = this.dateRangeComponent.pickerStartDate.value.getTime();
         let enDt = this.dateRangeComponent.pickerEndDate.value.getTime();
         console.log('Загрузка платежей за время ' + Utils.convertMillsToDate(stDt) + ' - ' + Utils.convertMillsToDate(enDt));
-        let dr = new DateRange(stDt, enDt);
-        this.sub = this.dataService.getNcpPayments(dr).subscribe(data => {
-                if (data.data.length > 0)  {
-                    this.paymentsService.updateStatusRu(data.data);
-                    this.dataSource.data = data.data;
+        this.sub = this.dataService.payments(stDt, enDt).subscribe(data => {
+                if (data)  {
+                    this.paymentsService.initStatusRu(data);
+                    this.dataSource.data = data;
                 }   else {
                     this.notif.info(msgs.msgNoData);
                 }
@@ -137,7 +135,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
                 console.log(error2);
                 this.notif.error(msgs.msgErrLoadData);
                 this.logger.error(msgs.msgErrLoadData + ' ' + error2);
-
             },
             () => {
                 this.appService.setProgress(false);
@@ -230,7 +227,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     }
 
     /** The statusLabel for the checkbox on the passed row */
-    checkboxLabel(row?: VNcpPayment): string {
+    checkboxLabel(row?: Payment): string {
         if (!row) {
             return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
         }
@@ -278,7 +275,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     }
 
     menuOnRowOpenPayment(paymentRow) {
-        this.paymentService.setPayment(paymentRow.id);
         this.router.navigate(['payment/' + paymentRow.id]);
     }
 

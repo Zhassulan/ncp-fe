@@ -12,7 +12,6 @@ import {PaymentService} from '../payment.service';
 export class AddDetailComponent implements OnInit {
 
     frmDetail: FormGroup;
-    paymentStatuses = PaymentStatus;
 
     constructor(private paymentService: PaymentService) {
     }
@@ -30,7 +29,7 @@ export class AddDetailComponent implements OnInit {
     }
 
     get details() {
-        return this.paymentService.details;
+        return this.paymentService.payment.details;
     }
 
     get payment() {
@@ -65,7 +64,8 @@ export class AddDetailComponent implements OnInit {
         detail.sum = Number(this.sum.value);
         detail.distrStrategy = this.paymentService.determineDistrStrategyByDetail(detail);
         detail.status = PaymentStatus.STATUS_NEW;
-        this.paymentService.addNewDetail(detail);
+        this.paymentService.addDetail(detail);
+        this.paymentService.announcePayment();
         this.clearFields();
     }
 

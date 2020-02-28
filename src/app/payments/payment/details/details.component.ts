@@ -10,6 +10,7 @@ import {Subscription} from 'rxjs';
 import {PaymentService} from '../payment.service';
 import {PaymentStatusEnRu} from '../../../settings';
 import {MatSort} from '@angular/material/sort';
+import {Detail} from '../../model/payment/detail';
 
 @Component({
     selector: 'app-details',
@@ -21,7 +22,7 @@ export class DetailsComponent implements OnInit {
     paymentStatuses = PaymentStatus;
     paymentStatusesEnRu = PaymentStatusEnRu;
     tooltips = TOOLTIPS;
-    dataSource = new MatTableDataSource<PaymentDetail>();
+    dataSource = new MatTableDataSource<Detail>();
     displayedColumns: string[] = PaymentDetailsTableColumns;
     detailTableColumnsDisplay = PaymentDetailTableColumnsDisplay;
     i: number = 0;
@@ -37,7 +38,7 @@ export class DetailsComponent implements OnInit {
     }
 
     get details() {
-        return this.paymentService.details;
+        return this.paymentService.payment.details;
     }
 
     ngOnInit() {
@@ -61,7 +62,7 @@ export class DetailsComponent implements OnInit {
     }
 
     delAll() {
-        this.paymentService.delAll();
+        this.paymentService.payment.details = [];
         this.dataSource.data = this.details;
         this.paginatorResultsLength = this.details.length;
     }

@@ -20,7 +20,7 @@ export class PaymentMenuComponent implements OnInit {
 
     select(item: number) { this.selectedItem.emit(item); }
 
-    get details() { return this.paymentService.details; }
+    get details() { return this.paymentService.payment.details; }
 
     isBlocked():boolean  { return this.paymentService.isBlocked(); }
 

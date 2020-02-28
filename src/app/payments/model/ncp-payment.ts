@@ -1,6 +1,9 @@
 /**
  * Модель NCP платёж, таблица ncp_payment
  */
+import {NcpPaymentDetails} from './ncp-payment-details';
+import {Action} from './payment/action';
+
 export class NcpPayment {
 
     id: number;
@@ -22,13 +25,12 @@ export class NcpPayment {
     mobipayPartner: string;
     paymentDetails: string;
     transitPaymentDocNumId: number;
-    details: string [];
-    actions: string [];
+    details: NcpPaymentDetails [];
+    actions: Action [];
     managers: string;
     mobipay: boolean;
     isChecked?: boolean;
     statusRu: string;
-
 
     constructor() {
         this.paymentId = 11;

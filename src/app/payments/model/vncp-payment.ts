@@ -1,6 +1,7 @@
-export class VNcpPayment {
+import {Id} from './payment/id';
 
-    id: number;
+export class VNcpPayment extends Id {
+
     creationDate: string;
     nameSender: string;
     sum: number;

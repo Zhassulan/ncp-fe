@@ -22,7 +22,7 @@ export class PaymentsService {
         payment.status = PaymentStatusRu[payment.status];
     }
 
-    updateStatusRu(payments) {
+    initStatusRu(payments) {
         payments.forEach(payment => {
             this.setStatusRu(payment);
         });

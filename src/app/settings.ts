@@ -13,7 +13,8 @@ export enum PaymentStatus {
     STATUS_TRANSIT = 6,
     STATUS_TRANSIT_DISTRIBUTED = 7,
     STATUS_TRANSIT_CANCELLED = 8,
-    STATUS_TRANSIT_ERROR = 9
+    STATUS_TRANSIT_ERROR = 9,
+    STATUS_DEFERRED = 10
 }
 
 /**
@@ -29,7 +30,8 @@ export enum PaymentStatusRu {
     'На транзитном счёте',
     'Разнесён с транзитного счёта',
     'Удалён с транзитного счёта',
-    'Ошибка разнесения с тразитного счёта'
+    'Ошибка разнесения с тразитного счёта',
+    'Отложен'
 }
 
 /**
@@ -45,7 +47,8 @@ export enum PaymentStatusEnRu {
     'STATUS_TRANSIT' = 'На транзитном счёте',
     'STATUS_TRANSIT_DISTRIBUTED' = 'Разнесён с транзитного счёта',
     'STATUS_TRANSIT_CANCELLED' = 'Удалён с транзитного счёта',
-    'STATUS_TRANSIT_ERROR' = 'Ошибка разнесения с тразитного счёта'
+    'STATUS_TRANSIT_ERROR' = 'Ошибка разнесения с тразитного счёта',
+    'STATUS_DEFERRED' = 'Отложен',
 }
 
 /**

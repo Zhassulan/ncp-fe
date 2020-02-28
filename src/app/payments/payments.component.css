@@ -43,10 +43,6 @@
     grid-area: payments;
 }
 
-.mat-table .mat-row:hover {
-    background-color: #eeeeee;
-}
-
 .row_highlight {
     background: #ccffe6;
 }

@@ -2,21 +2,19 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {NGXLogger} from 'ngx-logger';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
-import {msgs, PaymentMenuItems, PaymentStatus, rests} from '../../settings';
+import {msgs, PaymentMenuItems} from '../../settings';
 import {PaymentsService} from '../payments.service';
-import {concat} from 'rxjs';
 import {PaymentService} from './payment.service';
 import {UserService} from '../../user/user.service';
 import {DialogComponent} from './equipment/dialog/dialog.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DetailsComponent} from './details/details.component';
 import {AppService} from '../../app.service';
-import {Utils} from '../../utils';
 import {AddRegistryModalComponent} from './add-registry-modal/add-registry-modal.component';
-import {PaymentDetail} from '../model/payment-detail';
 import {CalendarDeferModalComponent} from './calendar-defer-modal/calendar-defer-modal.component';
 import {DialogService} from '../../dialog/dialog.service';
 import {MatSort} from '@angular/material/sort';
+import {DataService} from '../../data/data.service';
 
 export interface RegistryDialogData {
     registry: string;
@@ -34,7 +32,6 @@ export interface CalendarDialogData {
 export class PaymentComponent implements OnInit {
 
     @ViewChild(DetailsComponent, {static: true}) childDetailsComponent: DetailsComponent;
-    paymentId: number;
     paymentMenuItems = PaymentMenuItems;
     dialogRef;
     registry: string;
@@ -52,7 +49,8 @@ export class PaymentComponent implements OnInit {
                 public dlg: MatDialog,
                 private userService: UserService,
                 private appService: AppService,
-                private dlgService: DialogService) {
+                private dlgService: DialogService,
+                private dataService: DataService) {
     }
 
     get payment() {
@@ -60,12 +58,11 @@ export class PaymentComponent implements OnInit {
     }
 
     get details() {
-        return this.paymentService.details;
+        return this.paymentService.payment.details;
     }
 
     ngOnInit() {
-        this.paymentId = this.route.snapshot.params['id'];
-        this.loadPayment();
+        this.load(this.route.snapshot.params['id']);
     }
 
     menuOnSelected(selected: number) {
@@ -90,34 +87,35 @@ export class PaymentComponent implements OnInit {
         }
     }
 
-    loadPayment() {
+    load(id) {
         this.appService.setProgress(true);
-        let first = this.paymentService.loadPayment(this.paymentId);
-        let second = this.paymentService.getPaymentDetails(this.paymentId);
-        const result = concat(first, second);
-        result.subscribe(
+        this.dataService.getPayment(id).subscribe(
             data => {
+                if (data) {
+                    this.paymentService.payment = data;
+                    this.show = true;
+                }
             },
             error => {
                 this.appService.setProgress(false);
                 this.notifService.error(error);
-            }, () => {
-                this.show = true;
+            },
+            () => {
                 this.appService.setProgress(false);
-            });
+            }
+        );
     }
 
     dlgImportEquipment() {
         this.dialogRef = this.dlg.open(DialogComponent, {width: '30%', height: '30%'});
         this.dialogRef.afterClosed().subscribe(result => {
             if (result != 'cancel') {
-
             }
         });
     }
 
     async distributeCalling() {
-        let res = await this.paymentService.distributionCheckConditions(this.paymentId);
+        let res = await this.paymentService.distributionCheckConditions(this.paymentService.payment.id);
         if (res) {
             this.distribute();
         } else {
@@ -127,23 +125,12 @@ export class PaymentComponent implements OnInit {
 
     distribute() {
         this.appService.setProgress(true);
-        let msg;
         this.paymentService.distribute().subscribe(distributeRes => {
-                console.log('Accepted result from distribution ' + Utils.toJsonString(distributeRes));
-                if (distributeRes.result == rests.restResultOk) {
-                    this.paymentService.setPaymentByData(distributeRes.data);
-                    this.paymentService.showPaymentStatus(distributeRes.data.status, distributeRes.data.id);
-                    //this.loadPayment();
-                } else {
-                    msg = msgs.msgErrDistributePayment + ' ID ' + this.paymentId + '. ' + distributeRes.data + ' (' + distributeRes.result + ')' + this.userService.logUser();
-                    this.log.warn(msg + distributeRes.data + ' ' + this.userService.logUser());
-                    this.notifService.warn(msgs.msgErrDistributePayment + ' ' + distributeRes.data);
-                }
+                this.paymentService.payment = distributeRes.data;
+                this.paymentService.announcePayment();
             },
-            error2 => {
-                msg = msgs.msgErrDistributePayment + ' Payment ID ' + this.paymentId + '. ' + error2 + this.userService.logUser();
-                this.log.error(msg + error2);
-                this.notifService.error(msg + error2);
+            error => {
+                this.notifService.error(error);
                 this.appService.setProgress(false);
             },
             () => {
@@ -191,11 +178,10 @@ export class PaymentComponent implements OnInit {
                 },
                 () => {
                     let msg;
-                    this.dlgService.addItem(`Проверено ${valids + invalids} из ${this.paymentService.importedRegisty.length} элементов, из них валидные ${valids} и ошибочных ${invalids}.`);
+                    this.dlgService.addItem(`Проверено ${valids + invalids} из ${data.imported.length} элементов, из них валидные ${valids} и ошибочных ${invalids}.`);
                     if (invalids > 0) {
                         this.dlgService.addItem(`Ошибка. Исправьте номера\\счета и попробуйте импортировать реестр снова.`);
-                    } else
-                    if (this.payment.sum != registrySum) {
+                    } else if (this.payment.sum != registrySum) {
                         this.dlgService.addItem(`Ошибка. Сумма импортированного реестра ${registrySum} не совпадает с суммой платежа ${this.payment.sum}.`);
                     } else {
                         this.isValidRegistry = true;
@@ -219,11 +205,21 @@ export class PaymentComponent implements OnInit {
             let dt = new Date(result);
             if (dt < today || result.getTime() == today.getTime())
                 this.notifService.warn(`Ошибка. Дата должна быть больше ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`);
-            else
-                if (dt.getDate() >= tomorrow.getDate() &&  dt.getMonth() >= tomorrow.getMonth() && dt.getFullYear() >= tomorrow.getFullYear())  {
-                    this.payment.closeDate = dt.getTime().toString();
-                    this.notifService.info(`Установлена дата отложенной разноски ${dt.getDate()}/${dt.getMonth() + 1}/${dt.getFullYear()}`)
-                }
+            else if (dt.getDate() >= tomorrow.getDate() && dt.getMonth() >= tomorrow.getMonth() && dt.getFullYear() >= tomorrow.getFullYear()) {
+                this.payment.closeDate = dt.getTime().toString();
+                this.notifService.info(`Установлена дата отложенной разноски ${dt.getDate()}/${dt.getMonth() + 1}/${dt.getFullYear()}`);
+                this.paymentService.defer().subscribe(
+                    data => {
+
+                    },
+                    error => {
+
+                    },
+                    () => {
+
+                    }
+                );
+            }
         });
     }
 

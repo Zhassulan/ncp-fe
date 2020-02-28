@@ -125,16 +125,18 @@
                             <span>Открыть</span>
                         </button>
                         <button mat-menu-item
-                                [disabled]="(paymentRow.status == 6 || paymentRow.status == 7 || paymentRow.status == 1)"
+                                [disabled]="(paymentRow.status == PaymentStatus.STATUS_TRANSIT  ||
+                                            paymentRow.status == PaymentStatus.STATUS_TRANSIT_DISTRIBUTED ||
+                                            paymentRow.status == PaymentStatus.STATUS_DISTRIBUTED)"
                                 (click)="menuOnRowToTransit(paymentRow)">
                             <!--<mat-icon>dialpad</mat-icon>-->
                             <span>На транзит</span>
                         </button>
-                        <button mat-menu-item [disabled]="!(paymentRow.status == 6)"
+                        <button mat-menu-item [disabled]="!(paymentRow.status == PaymentStatus.STATUS_TRANSIT)"
                                 (click)="menuOnRowDeleteTransit(paymentRow)">
                             <span>Удалить с транзита</span>
                         </button>
-                        <button mat-menu-item [disabled]="!(paymentRow.status == 6)">
+                        <button mat-menu-item [disabled]="!(paymentRow.status == PaymentStatus.STATUS_TRANSIT)">
                             <span>Разнести с транзитного счёта</span>
                         </button>
                         <button mat-menu-item [disabled]>
@@ -146,8 +148,7 @@
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <!-- you can add to signature of mat-row for catch click on hole row: (click)="onRowClicked(paymentRow)"-->
             <!-- for Highlight: paymentRowHighlight [paymentStatus]="paymentRow.getStatus()"-->
-            <mat-row *matRowDef="let paymentRow; columns: displayedColumns;"
-                     [ngClass]="{'row_highlight': paymentRow.status == 1 || paymentRow.status == 7 }"
+            <mat-row *matRowDef="let paymentRow; columns: displayedColumns;" [ngClass]="{'row_highlight': paymentRow.status == 1 || paymentRow.status == 7 }"
                      (click)="onRowClicked(paymentRow)"></mat-row>
         </mat-table>
         <mat-paginator
