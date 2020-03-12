@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {NcpPayment} from '../payments/model/ncp-payment';
 import {Observable} from 'rxjs';
 import {DateRange} from './date-range';
@@ -12,7 +12,8 @@ import {EquipmentCheckParam} from '../payments/model/equipment-check-param';
 import {User} from '../auth/model/user';
 import {Version} from '../version';
 import {RequestPostPayment} from './request-post-payment';
-import {Payment} from '../payments/model/payment/payment';
+import {Payment} from '../payments/payment/model/payment';
+import {Phone} from '../client/model/phone';
 
 const API_URL_ROOT = environment.apiUrlRoot;
 const API_URL = environment.apiUrl;
@@ -24,12 +25,17 @@ export class DataService {
     
     constructor(private http: HttpClient) { }
 
+    /*errorHandler(error: HttpErrorResponse) {
+        return throwError(error.message || ' Ошибка сервера.');
+    }
+*/
     /**
      *  Аутентификация
      * @param {User} userObj
      * @returns {Observable<RestResponse>}
      */
     login(userName, userPassword) {
+        //return this.http.post(API_URL_ROOT + '/auth/login', new User(userName, userPassword, null), httpOptions).pipe(catchError(this.errorHandler));
         return this.http.post(API_URL_ROOT + '/auth/login', new User(userName, userPassword, null), httpOptions);
     }
 
@@ -46,7 +52,7 @@ export class DataService {
         const params = new HttpParams()
             .set('start', start)
             .set('end', end);
-        return this.http.get<Payment []>(API_URL + '/payments', {params});
+        return this.http.get<Payment []>(`${API_URL}/payments`, {params});
     }
 
     /**
@@ -63,7 +69,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     paymentToTransit(id: number): Observable<RestResponse> {
-        return this.http.post <RestResponse>(API_URL + `/payments/${id}`, new RequestPostPayment(PaymentActions.TO_TRANSIT), httpOptions);
+        return this.http.post <RestResponse>(`${API_URL}/payment/${id}/transit`, new RequestPostPayment(PaymentActions.TO_TRANSIT), httpOptions);
     }
 
     /**
@@ -73,7 +79,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     deleteTransitPayment(id: number, user: string): Observable<RestResponse> {
-        return this.http.post <RestResponse>(API_URL + `/payment/${id}`, {"payment_action":"from_transit"}, httpOptions);
+        return this.http.delete <RestResponse>(API_URL + `/payment/${id}/transit`);
     }
 
     /**
@@ -86,21 +92,12 @@ export class DataService {
     }
 
     /**
-     * получить детали платежа
-     * @param {number} paymentId
-     * @returns {Observable<RestResponse>}
-     */
-    getPaymentDetails(id: number): Observable<RestResponse> {
-        return this.http.get<RestResponse>(API_URL + `/payment/${id}/details`, httpOptions);
-    }
-
-    /**
      * разнести платёж
      * @param {PaymentParamEq} params
      * @returns {Observable<RestResponse>}
      */
-    distributePayment(params: PaymentParamEq): Observable<RestResponse> {
-        return this.http.post<RestResponse>(API_URL + '/payment/distribute', params, httpOptions);
+    distributePayment(paymentDetails): Observable<RestResponse> {
+        return this.http.post<RestResponse>(API_URL + '/payment/distribute', paymentDetails, httpOptions);
     }
 
     /**
@@ -159,16 +156,12 @@ export class DataService {
         return this.http.get<Version>(API_URL + '/ver', httpOptions);
     }
 
-    getRegistriesByRange(startDate, endDate, bin): Observable<any> {
-        const options = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-            }),
-            params:
-                new HttpParams().set('start_date', startDate).append('end_date', endDate).append('bin', bin)
-        };
-        return this.http.get <RestResponse>(
-            API_URL + '/registry/range', options);
+    getRegistriesByRange(start, end, bin): Observable<any> {
+        const params = new HttpParams()
+            .set('start', start)
+            .set('end', end)
+            .set('bin', bin);
+        return this.http.get<RestResponse>(API_URL + '/registry/range', {params});
     }
 
     accountValidation(profileId, account): Observable<any> {
@@ -181,6 +174,10 @@ export class DataService {
 
     deferPayment(payment)  {
         return this.http.post(API_URL + `/payment/defer`, payment, httpOptions);
+    }
+
+    getClientPhones(id)   {
+        return this.http.get<Phone []>(`${API_URL}/client/${id}/phones`);
     }
 
 }

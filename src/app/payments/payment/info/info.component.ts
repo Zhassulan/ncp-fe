@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NcpPayment} from '../../model/ncp-payment';
 import {PaymentStatusRuPipe} from '../../payment-status-ru-pipe';
+import {Payment} from '../model/payment';
 
 @Component({
     selector: 'app-payment-info',
@@ -9,13 +10,10 @@ import {PaymentStatusRuPipe} from '../../payment-status-ru-pipe';
 })
 export class InfoComponent implements OnInit {
 
-    @Input() payment: NcpPayment;
-    paymentStatusRuPipe: PaymentStatusRuPipe;
+    @Input() payment: Payment;
 
-    constructor() {
-    }
+    constructor() { }
 
-    ngOnInit() {
-    }
+    ngOnInit() { }
 
 }

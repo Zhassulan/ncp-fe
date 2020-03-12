@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {NGXLogger} from 'ngx-logger';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
-import {msgs, PaymentMenuItems} from '../../settings';
+import {msgs, PaymentMenuItems, PaymentStatus} from '../../settings';
 import {PaymentsService} from '../payments.service';
 import {PaymentService} from './payment.service';
 import {UserService} from '../../user/user.service';
@@ -14,7 +14,6 @@ import {AddRegistryModalComponent} from './add-registry-modal/add-registry-modal
 import {CalendarDeferModalComponent} from './calendar-defer-modal/calendar-defer-modal.component';
 import {DialogService} from '../../dialog/dialog.service';
 import {MatSort} from '@angular/material/sort';
-import {DataService} from '../../data/data.service';
 
 export interface RegistryDialogData {
     registry: string;
@@ -36,9 +35,10 @@ export class PaymentComponent implements OnInit {
     dialogRef;
     registry: string;
     deferDate = new Date();
-    show: boolean = false;
     isValidRegistry: boolean = false;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
+    private _msisdns: String [] = [];
+    private _accounts: String [] = [];
 
     constructor(private router: Router,
                 public paymentService: PaymentService,
@@ -49,8 +49,15 @@ export class PaymentComponent implements OnInit {
                 public dlg: MatDialog,
                 private userService: UserService,
                 private appService: AppService,
-                private dlgService: DialogService,
-                private dataService: DataService) {
+                private dlgService: DialogService) {
+    }
+
+    get msisdns() {
+        return this._msisdns;
+    }
+
+    get accounts() {
+        return this._accounts;
     }
 
     get payment() {
@@ -63,6 +70,7 @@ export class PaymentComponent implements OnInit {
 
     ngOnInit() {
         this.load(this.route.snapshot.params['id']);
+
     }
 
     menuOnSelected(selected: number) {
@@ -89,11 +97,28 @@ export class PaymentComponent implements OnInit {
 
     load(id) {
         this.appService.setProgress(true);
-        this.dataService.getPayment(id).subscribe(
+        this.paymentService.loadPayment(id).subscribe(
             data => {
-                if (data) {
-                    this.paymentService.payment = data;
-                    this.show = true;
+                if (!this.paymentService.isBlocked()) this.loadPhones(data.profileId);
+            },
+            error => {
+                this.appService.setProgress(false);
+                this.notifService.error(error);
+            },
+            () => {
+                this.appService.setProgress(false);
+            }
+        );
+    }
+
+    loadPhones(id) {
+        this.paymentService.loadPhones(id).subscribe(
+            data => {
+                this._accounts = [];
+                this._msisdns = [];
+                for (let item of this.paymentService.phones) {
+                    if (item.msisdn) this._msisdns.push(item.msisdn);
+                    if (item.account) this._accounts.push(item.account.toString());
                 }
             },
             error => {
@@ -116,17 +141,13 @@ export class PaymentComponent implements OnInit {
 
     async distributeCalling() {
         let res = await this.paymentService.distributionCheckConditions(this.paymentService.payment.id);
-        if (res) {
-            this.distribute();
-        } else {
-            this.notifService.error(msgs.msgDistributionFailed);
-        }
+        res ? this.distribute() : this.notifService.error(msgs.msgDistributionFailed);
     }
 
     distribute() {
         this.appService.setProgress(true);
         this.paymentService.distribute().subscribe(distributeRes => {
-                this.paymentService.payment = distributeRes.data;
+                this.paymentService.setPayment(distributeRes.data);
                 this.paymentService.announcePayment();
             },
             error => {
@@ -210,7 +231,7 @@ export class PaymentComponent implements OnInit {
                 this.notifService.info(`Установлена дата отложенной разноски ${dt.getDate()}/${dt.getMonth() + 1}/${dt.getFullYear()}`);
                 this.paymentService.defer().subscribe(
                     data => {
-
+                        //todo Отложить платёж
                     },
                     error => {
 

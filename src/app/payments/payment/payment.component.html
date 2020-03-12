@@ -1,15 +1,13 @@
 <div class="payment">
     <div class="topGap"></div>
-
     <div class="paymentItem">
         <mat-card>
             <div class="container">
-
                 <div class="item-header">
                     <div class="top">
                         <div class="item-top1">
-                            <div *ngIf="show">
-                                <h1 class="mat-h1">{{ payment.paymentId}} от {{ payment.creationDate | date }}</h1>
+                            <div *ngIf="payment">
+                                <h1 class="mat-h1">{{ payment.paymentId }} от {{ payment.creationDate | date }}</h1>
                             </div>
                         </div>
                         <div class="item-top2">
@@ -18,17 +16,15 @@
                     </div>
                 </div>
                 <div class="item-c">
-                    <app-payment-info [payment]="payment"></app-payment-info>
-                    <app-add-detail></app-add-detail>
+                    <app-payment-info [payment]="payment" *ngIf="payment"></app-payment-info>
+                    <app-add-detail *ngIf="payment" [msisdns]="msisdns" [accounts]="accounts"></app-add-detail>
                 </div>
                 <div class="item-d">
-                    <app-details [status]="payment.status"></app-details>
+                    <app-details *ngIf="payment"></app-details>
                 </div>
-
                 <!--<div class="item-e">footer</div>
                 <div class="item-footer1">footer1</div>
                 -->
-
             </div>
         </mat-card>
     </div>

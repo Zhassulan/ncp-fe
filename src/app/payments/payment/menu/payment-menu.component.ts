@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PaymentService} from '../payment.service';
 import {PaymentMenuItems} from '../../../settings';
-import {NcpPayment} from '../../model/ncp-payment';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-payment-menu',
@@ -13,15 +13,20 @@ export class PaymentMenuComponent implements OnInit {
     paymentMenuItems = PaymentMenuItems;
     @Output() selectedItem = new EventEmitter<number>();
     @Input() isRegistriesValid: boolean;
+    subscription: Subscription;
+    details = [];
 
-    constructor(private paymentService: PaymentService) { }
+    constructor(private paymentService: PaymentService) {
+        this.subscription = this.paymentService.paymentAnnounced$.subscribe(
+            payment => {
+                this.details = payment.details;
+            });
+    }
 
     ngOnInit() { }
 
     select(item: number) { this.selectedItem.emit(item); }
 
-    get details() { return this.paymentService.payment.details; }
-
-    isBlocked():boolean  { return this.paymentService.isBlocked(); }
+    isBlocked() { this.paymentService.isBlocked(); }
 
 }

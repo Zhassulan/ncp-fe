@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import {UploadFilePaymentService} from '../upload-file-payment.service';
 import {PaymentService} from '../../payment.service';
-//import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx';
 
 //type AOA = any[][];
 

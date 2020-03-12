@@ -17,7 +17,7 @@ import {ExcelService} from '../excel/excel.service';
 import {DateRangeComponent} from '../date-range/date-range.component';
 import {Utils} from '../utils';
 import {NotificationsService} from 'angular2-notifications';
-import {Payment} from './model/payment/payment';
+import {Payment} from './payment/model/payment';
 
 @Component({
     selector: 'app-payments',
@@ -131,10 +131,11 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
                     this.notif.info(msgs.msgNoData);
                 }
             },
-            error2 => {
-                console.log(error2);
-                this.notif.error(msgs.msgErrLoadData);
-                this.logger.error(msgs.msgErrLoadData + ' ' + error2);
+            error => {
+                this.appService.setProgress(false);
+                console.log(error.message);
+                this.notif.error(msgs.msgErrLoadData, error.message);
+                this.logger.error(msgs.msgErrLoadData + ' ' + error.message);
             },
             () => {
                 this.appService.setProgress(false);

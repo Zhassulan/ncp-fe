@@ -1,7 +1,7 @@
 /**
  * Класс для хранения дополнительных свойств платежа по оборудованию
  */
-import {Id} from './payment/id';
+import {Id} from '../payment/model/id';
 
 export class Equipment extends Id {
 

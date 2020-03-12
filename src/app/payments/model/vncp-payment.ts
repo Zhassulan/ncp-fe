@@ -1,4 +1,4 @@
-import {Id} from './payment/id';
+import {Id} from '../payment/model/id';
 
 export class VNcpPayment extends Id {
 

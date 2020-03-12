@@ -1,4 +1,4 @@
-import {NcpPaymentDetails} from '../ncp-payment-details';
+import {NcpPaymentDetails} from '../../model/ncp-payment-details';
 import {Id} from './id';
 
 export class Detail extends Id {

@@ -1,8 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {msisdnLength, PaymentStatus} from '../../../settings';
-import {PaymentDetail} from '../../model/payment-detail';
 import {PaymentService} from '../payment.service';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {Detail} from '../model/detail';
 
 @Component({
     selector: 'app-add-detail',
@@ -11,61 +13,71 @@ import {PaymentService} from '../payment.service';
 })
 export class AddDetailComponent implements OnInit {
 
-    frmDetail: FormGroup;
-
-    constructor(private paymentService: PaymentService) {
-    }
-
-    get msisdn() {
-        return this.frmDetail.get('msisdn');
-    }
-
-    get account() {
-        return this.frmDetail.get('account');
-    }
-
-    get sum() {
-        return this.frmDetail.get('sum');
-    }
-
-    get details() {
-        return this.paymentService.payment.details;
-    }
-
-    get payment() {
-        return this.paymentService.payment;
-    }
-
-    ngOnInit() {
-        this.frmDetail = new FormGroup({
-            msisdn: new FormControl(
-                '',
+    @Input() msisdns;
+    @Input() accounts;
+    msisdnFilteredOptions: Observable<string[]>;
+    accountFilteredOptions: Observable<string[]>;
+    frmDetail: FormGroup = new FormGroup(
+        {
+            msisdnControl: new FormControl('',
                 [
                     Validators.minLength(msisdnLength),
                     Validators.maxLength(msisdnLength),
-                ]
-            ),
-            account: new FormControl('',
+                ]),
+            accountControl: new FormControl('',
                 [
                     Validators.minLength(1),
                 ]),
-            sum: new FormControl('',
+            sumControl: new FormControl('',
                 [
                     Validators.min(1),
                     //Validators.max(1000000)
-                ]),
-        });
+                ])
+        }
+    );
+
+    constructor(private paymentService: PaymentService) {
+        this.msisdnFilteredOptions = this.msisdnControl.valueChanges
+            .pipe(
+                startWith(''),
+                map(state => state ? this._filterMsisdn(state) : this.msisdns.slice())
+            );
+        this.accountFilteredOptions = this.accountControl.valueChanges
+            .pipe(
+                startWith(''),
+                map(state => state ? this._filterAccount(state) : this.accounts.slice())
+            );
+    }
+
+    private _filterMsisdn(value: string): String [] {
+        const filterValue = value.toLowerCase();
+        return this.msisdns.filter(item => item.indexOf(filterValue) === 0);
+    }
+
+    private _filterAccount(value: string): String [] {
+        const filterValue = value.toLowerCase();
+        return this.accounts.filter(item => item.indexOf(filterValue) === 0);
+    }
+
+    get msisdnControl() {
+        return this.frmDetail.get('msisdnControl');
+    }
+
+    get accountControl() {
+        return this.frmDetail.get('accountControl');
+    }
+
+    get sumControl() {
+        return this.frmDetail.get('sumControl');
     }
 
     addDetail() {
-        let detail = new PaymentDetail();
-        detail.msisdn = this.msisdn.value;
-        detail.account = this.account.value;
-        detail.sum = Number(this.sum.value);
-        detail.distrStrategy = this.paymentService.determineDistrStrategyByDetail(detail);
+        let detail = new Detail();
+        detail.msisdn = this.msisdnControl.value;
+        detail.account = this.accountControl.value;
+        detail.sum = Number(this.sumControl.value);
         detail.status = PaymentStatus.STATUS_NEW;
         this.paymentService.addDetail(detail);
-        this.paymentService.announcePayment();
         this.clearFields();
     }
 
@@ -76,15 +88,15 @@ export class AddDetailComponent implements OnInit {
     }
 
     clearMsisdn() {
-        this.msisdn.setValue('');
+        this.msisdnControl.setValue('');
     }
 
     clearAccount() {
-        this.account.setValue('');
+        this.accountControl.setValue('');
     }
 
     clearSum() {
-        this.sum.setValue('');
+        this.sumControl.setValue('');
     }
 
     msisdnChanged() {
@@ -95,13 +107,11 @@ export class AddDetailComponent implements OnInit {
         this.clearMsisdn();
     }
 
-    isValidAddBtn(): boolean {
-        return ((this.msisdn.value != '' && this.msisdn != null) && (this.sum.value != '' && this.sum.value != null) ||
-            (this.account.value != '' && this.account != null) && (this.sum.value != '' && this.sum.value != null));
-    }
-
     isBlocked(): boolean {
         return this.paymentService.isBlocked();
+    }
+
+    ngOnInit(): void {
     }
 
 }
