@@ -63,6 +63,7 @@ export class PaymentService {
 
     delAll() {
         this._payment.details = [];
+        this.uploadFilePaymentService.resetFilePayment();
         this.announcePayment();
     }
 
@@ -121,8 +122,8 @@ export class PaymentService {
         return this.uploadFilePaymentService.filePayment ? this.uploadFilePaymentService.filePayment.filePaymentHeader.iin_bin_sender == this._payment.rnnSender : true;
     }
 
-    distribute(): Observable<any> {
-        return this.dataService.distributePayment(this._payment.details);
+    distribute() {
+        return this.dataService.distribute(this._payment.id, this._payment.details);
     }
 
     setEquipments() {
@@ -168,12 +169,14 @@ export class PaymentService {
     }
 
     isBlocked(): boolean {
-        return  this._payment.status == PaymentStatus.STATUS_DISTRIBUTED ||
+        let b;
+        this._payment ?  b = this._payment.status == PaymentStatus.STATUS_DISTRIBUTED ||
                 this._payment.status == PaymentStatus.STATUS_EXPIRED ||
                 this._payment.status == PaymentStatus.STATUS_DELETED ||
                 this._payment.status == PaymentStatus.STATUS_DEFERRED ||
                 this._payment.status == PaymentStatus.STATUS_TRANSIT_DISTRIBUTED ||
-                this._payment.status != PaymentStatus.STATUS_TRANSIT;
+                this._payment.status != PaymentStatus.STATUS_TRANSIT : true;
+        return b;
     }
 
     isCurrentSumValid(): boolean {
@@ -228,10 +231,11 @@ export class PaymentService {
             this.notifService.warn(msgs.msgErrTotalSum);
             result = false;
         }
-        if (!this.checkDocNum()) {
-            this.notifService.warn(msgs.msgErrDocNum);
-            result = false;
-        }
+        if (this.uploadFilePaymentService.filePayment)
+            if (!this.checkDocNum()) {
+                this.notifService.warn(msgs.msgErrDocNum);
+                result = false;
+            }
         if (!this.checkRnn()) {
             this.notifService.warn(msgs.msgErrRnn);
             result = false;
@@ -331,8 +335,8 @@ export class PaymentService {
         let apiCalls: Observable<any> [] = [];
         for (let registry of importedRegistry) {
             apiCalls.push(registry.account ?
-                this.dataService.accountValidation(this._payment.profileId, registry.account) :
-                this.dataService.msisdnValidation(this._payment.profileId, registry.msisdn));
+                this.validateAccount(this._payment.profileId, registry.account) :
+                this.validateMsisdn(this._payment.profileId, registry.msisdn));
         }
         const array$ = from(apiCalls);
         return array$.pipe(concatAll());
@@ -384,6 +388,26 @@ export class PaymentService {
                 }
             );
         });
+    }
+
+    validateAccount(profileId, account)   {
+        return this.dataService.validateAccount(profileId, account);
+    }
+
+    validateMsisdn(profileId, msisdn)  {
+        return this.dataService.validateMsisdn(profileId, msisdn);
+    }
+
+    validateIcc(profileId, icc)   {
+
+    }
+
+    validateNomenclature(profileId, nomenclature)  {
+
+    }
+
+    validateDetail(detail: Detail)    {
+
     }
 
 }

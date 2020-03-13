@@ -50,13 +50,11 @@ export class AddDetailComponent implements OnInit {
     }
 
     private _filterMsisdn(value: string): String [] {
-        const filterValue = value.toLowerCase();
-        return this.msisdns.filter(item => item.indexOf(filterValue) === 0);
+        return this.msisdns.filter(item => item.indexOf(value) === 0);
     }
 
     private _filterAccount(value: string): String [] {
-        const filterValue = value.toLowerCase();
-        return this.accounts.filter(item => item.indexOf(filterValue) === 0);
+        return this.accounts.filter(item => item.indexOf(value) === 0);
     }
 
     get msisdnControl() {

@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import {MatDialogRef} from '@angular/material/dialog';
 import {UploadFilePaymentService} from '../upload-file-payment.service';
 import {PaymentService} from '../../payment.service';
-import * as XLSX from 'xlsx';
+import readXlsxFile from 'read-excel-file';
 
 //type AOA = any[][];
 
@@ -17,7 +17,7 @@ export class DialogComponent implements OnInit {
     //wopts: XLSX.WritingOptions = { bookType: 'xlsx', type: 'array' };
     //fileName: string = 'SheetJS.xlsx';
 
-    @ViewChild('file', { static: true }) file;
+    @ViewChild('file', {static: true}) file;
     fileObj: File;
     showUploadButton: boolean = false;
     isWait = false;
@@ -30,7 +30,7 @@ export class DialogComponent implements OnInit {
     ngOnInit() {
     }
 
-    onFileAdded()   {
+    onFileAdded() {
         const files: { [key: string]: File } = this.file.nativeElement.files;
         for (let key in files) {
             if (!isNaN(parseInt(key))) {
@@ -85,6 +85,14 @@ export class DialogComponent implements OnInit {
 
     addFile() {
         this.file.nativeElement.click();
+    }
+
+    parse() {
+        readXlsxFile(this.fileObj).then((rows) => {
+            // `rows` is an array of rows
+            // each row being an array of cells.
+            console.log(rows);
+        });
     }
 
     upload() {

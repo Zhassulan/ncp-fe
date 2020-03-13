@@ -80,7 +80,7 @@ export class PaymentComponent implements OnInit {
             }
                 break;
             case this.paymentMenuItems.DISTRIBUTE: {
-                this.distributeCalling();
+                this.dlgDistribute();
             }
                 break;
             case this.paymentMenuItems.REGISTRY: {
@@ -139,24 +139,21 @@ export class PaymentComponent implements OnInit {
         });
     }
 
-    async distributeCalling() {
-        let res = await this.paymentService.distributionCheckConditions(this.paymentService.payment.id);
-        res ? this.distribute() : this.notifService.error(msgs.msgDistributionFailed);
+    dlgDistribute() {
+        this.appService.setProgress(true);
+        this.paymentService.distribute().subscribe( data => {
+            this.notifService.info(msgs.msgSuccessDistributed);
+        }, error => {
+            this.notifService.error(error);
+            this.appService.setProgress(false);
+        }, () => {
+            this.appService.setProgress(false);
+        })
     }
 
-    distribute() {
-        this.appService.setProgress(true);
-        this.paymentService.distribute().subscribe(distributeRes => {
-                this.paymentService.setPayment(distributeRes.data);
-                this.paymentService.announcePayment();
-            },
-            error => {
-                this.notifService.error(error);
-                this.appService.setProgress(false);
-            },
-            () => {
-                this.appService.setProgress(false);
-            });
+    async dlgDistributeOld() {
+        /*let res = await this.paymentService.distributionCheckConditions(this.paymentService.payment.id);
+        res ? this.distribute() : this.notifService.error(msgs.msgDistributionFailed);*/
     }
 
     dlgImportRegistry() {
@@ -170,8 +167,10 @@ export class PaymentComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            //console.log('Result from dlg: ' + result);
-            if (result) this.isValidRegistry = false;
+            if (!result) {
+                this.isValidRegistry = false;
+                return;
+            }
             let data = this.paymentService.importRegistryData(result);
             if (data.broken.length) {
                 this.notifService.warn(`Есть ошибочные строки:\n ${data.broken}`);

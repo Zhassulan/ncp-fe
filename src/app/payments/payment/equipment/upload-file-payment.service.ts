@@ -13,13 +13,17 @@ import {Utils} from '../../../utils';
 })
 export class UploadFilePaymentService {
 
-    filePayment: FilePayment;
+    private _filePayment: FilePayment;
     formData;
     utils = new Utils(this.logger);
 
     constructor(private dataService: DataService,
                 private logger: NGXLogger,
                 private notifService: NotificationsService) {
+    }
+
+    get filePayment(): FilePayment {
+        return this._filePayment;
     }
 
     upload(file: File): Observable<any> {
@@ -30,7 +34,7 @@ export class UploadFilePaymentService {
             observer => {
                 this.dataService.postFilePayment(formData).subscribe(
                     data => {
-                        this.filePayment = data.data;
+                        this._filePayment = data.data;
                         //console.log('Загружены данные из файла:\n');
                         //this.utils.printObj(this.filePayment);
                         observer.next(true);
@@ -53,7 +57,7 @@ export class UploadFilePaymentService {
     }
 
     resetFilePayment()  {
-        this.filePayment = null;
+        this._filePayment = null;
     }
 
 }

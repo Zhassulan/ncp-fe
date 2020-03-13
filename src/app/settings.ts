@@ -127,7 +127,7 @@ export const enum msgs {
     msgSuccessDelTransit = 'Успешно удалён с транзитного счёта',
     msgErrDelTransit = 'Ошибка удаления с транзитного счёта',
     msgErrUploadFilePayment = 'Ошибка загрузки файлового платежа',
-    msgErrTotalSum = 'Сумма платежа и сумма файла не совпадают',
+    msgErrTotalSum = 'Сумма платежа и сумма деталей не совпадают',
     msgErrDocNum = 'Номер платежа не совпадает с номером в файле',
     msgErrRnn = 'ИИН платежа не совпадает с ИИН в файле',
     msgErrGetDetails = 'Ошибка получения деталей платежа',

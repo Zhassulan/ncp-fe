@@ -36,11 +36,12 @@
     "ngx-cookie-service": "^2.4.0",
     "ngx-filesaver": "^2.2.1",
     "ngx-logger": "^3.4.6",
+    "read-excel-file": "^4.0.5",
     "rxjs": "^6.5.4",
     "ts-md5": "^1.2.7",
     "tslib": "^1.11.1",
     "web-animations-js": "^2.3.2",
-    "xlsx": "^0.14.5",
+    "xlsx": "^0.15.5",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

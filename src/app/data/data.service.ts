@@ -28,7 +28,8 @@ export class DataService {
     /*errorHandler(error: HttpErrorResponse) {
         return throwError(error.message || ' Ошибка сервера.');
     }
-*/
+    */
+
     /**
      *  Аутентификация
      * @param {User} userObj
@@ -36,11 +37,11 @@ export class DataService {
      */
     login(userName, userPassword) {
         //return this.http.post(API_URL_ROOT + '/auth/login', new User(userName, userPassword, null), httpOptions).pipe(catchError(this.errorHandler));
-        return this.http.post(API_URL_ROOT + '/auth/login', new User(userName, userPassword, null), httpOptions);
+        return this.http.post(`${API_URL_ROOT}/auth/login`, new User(userName, userPassword, null), httpOptions);
     }
 
     authorize(userObj: User): Observable<RestResponse> {
-        return this.http.post <RestResponse>(API_URL_ROOT + '/auth/authorization', userObj, httpOptions);
+        return this.http.post <RestResponse>(`${API_URL_ROOT}/auth/authorization`, userObj, httpOptions);
     }
 
     /**
@@ -88,7 +89,7 @@ export class DataService {
      * @returns {Observable<any>}
      */
     postFilePayment(formData: FormData): Observable<any> {
-        return this.http.post<FilePayment>(API_URL + '/equipment/upload', formData);
+        return this.http.post<FilePayment>(`${API_URL}/equipment/upload`, formData);
     }
 
     /**
@@ -96,8 +97,8 @@ export class DataService {
      * @param {PaymentParamEq} params
      * @returns {Observable<RestResponse>}
      */
-    distributePayment(paymentDetails): Observable<RestResponse> {
-        return this.http.post<RestResponse>(API_URL + '/payment/distribute', paymentDetails, httpOptions);
+    distribute(id, details) {
+        return this.http.post(`${API_URL}/payment/${id}/distribute`, details, httpOptions);
     }
 
     /**
@@ -106,7 +107,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     getPayment(id: number) {
-        return this.http.get<Payment>(API_URL + `/payment/${id}/`, httpOptions);
+        return this.http.get<Payment>(`${API_URL}/payment/${id}/`, httpOptions);
     }
 
     /**
@@ -115,7 +116,7 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     getPaymentEquipments(id: number): Observable<RestResponse> {
-        return this.http.get<RestResponse>(API_URL + `/payment/${id}/equipments`, httpOptions);
+        return this.http.get<RestResponse>(`${API_URL}/payment/${id}/equipments`, httpOptions);
     }
 
     /**
@@ -124,7 +125,7 @@ export class DataService {
      * @returns {Observable<any>}
      */
     getBercutEquipmentInfoByIcc(icc: String): Observable<RestResponse> {
-        return this.http.post<RestResponse>(API_URL + `/equipment/${icc}`, httpOptions);
+        return this.http.post<RestResponse>(`${API_URL}/equipment/${icc}`, httpOptions);
     }
 
     /**
@@ -133,27 +134,27 @@ export class DataService {
      * @returns {Observable<RestResponse>}
      */
     checkEquipmentParams(iccList: EquipmentCheckParam []): Observable<RestResponse> {
-        return this.http.post<RestResponse>(API_URL + '/equipments/check', iccList, httpOptions);
+        return this.http.post<RestResponse>(`${API_URL}/equipments/check`, iccList, httpOptions);
     }
 
     getPaymentStatus(id): Observable<RestResponse> {
-        return this.http.post<RestResponse>(API_URL + `/payment/${id}/status`, httpOptions);
+        return this.http.post<RestResponse>(`${API_URL}/payment/${id}/status`, httpOptions);
     }
 
     paymentBlocked(id): Observable<RestResponse> {
-        return this.http.post<RestResponse>(API_URL + `/payment/${id}/blocked`, httpOptions);
+        return this.http.post<RestResponse>(`${API_URL}/payment/${id}/blocked`, httpOptions);
     }
 
     getAllRegistries(): Observable<RestResponse> {
-        return this.http.post<RestResponse>(API_URL + `/registry/all`, httpOptions);
+        return this.http.post<RestResponse>(`${API_URL}/registry/all`, httpOptions);
     }
 
     getRegistry(id): Observable<RestResponse> {
-        return this.http.post<RestResponse>(API_URL + `/registry/${id}`, httpOptions);
+        return this.http.post<RestResponse>(`${API_URL}/registry/${id}`, httpOptions);
     }
 
     getVersion(): Observable<Version> {
-        return this.http.get<Version>(API_URL + '/ver', httpOptions);
+        return this.http.get<Version>(`${API_URL}/ver`, httpOptions);
     }
 
     getRegistriesByRange(start, end, bin): Observable<any> {
@@ -161,19 +162,19 @@ export class DataService {
             .set('start', start)
             .set('end', end)
             .set('bin', bin);
-        return this.http.get<RestResponse>(API_URL + '/registry/range', {params});
+        return this.http.get<RestResponse>(`${API_URL}/registry/range`, {params});
     }
 
-    accountValidation(profileId, account): Observable<any> {
-        return this.http.get(API_URL + `/profile/${profileId}/account/${account}`, httpOptions);
+    validateAccount(profileId, account) {
+        return this.http.get(`${API_URL}/profile/${profileId}/account/${account}`, httpOptions);
     }
 
-    msisdnValidation(profileId, msisdn): Observable<any> {
-        return this.http.get(API_URL + `/profile/${profileId}/msisdn/${msisdn}`, httpOptions);
+    validateMsisdn(profileId, msisdn) {
+        return this.http.get(`${API_URL}/profile/${profileId}/msisdn/${msisdn}`, httpOptions);
     }
 
     deferPayment(payment)  {
-        return this.http.post(API_URL + `/payment/defer`, payment, httpOptions);
+        return this.http.post(`${API_URL}/payment/defer`, payment, httpOptions);
     }
 
     getClientPhones(id)   {

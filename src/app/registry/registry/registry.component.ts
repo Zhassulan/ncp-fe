@@ -52,7 +52,7 @@ export class RegistryComponent implements OnInit {
             }
                 break;
             case this.paymentMenuItems.DISTRIBUTE: {
-                this.distributeCalling();
+                this.dlgDistribute();
             }
                 break;
             default:
