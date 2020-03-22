@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {NcpPayment} from '../payments/model/ncp-payment';
 import {Observable} from 'rxjs';
 import {DateRange} from './date-range';
@@ -15,7 +15,6 @@ import {RequestPostPayment} from './request-post-payment';
 import {Payment} from '../payments/payment/model/payment';
 import {Phone} from '../client/model/phone';
 
-const API_URL_ROOT = environment.apiUrlRoot;
 const API_URL = environment.apiUrl;
 
 @Injectable({
@@ -35,13 +34,22 @@ export class DataService {
      * @param {User} userObj
      * @returns {Observable<RestResponse>}
      */
-    login(userName, userPassword) {
-        //return this.http.post(API_URL_ROOT + '/auth/login', new User(userName, userPassword, null), httpOptions).pipe(catchError(this.errorHandler));
-        return this.http.post(`${API_URL_ROOT}/auth/login`, new User(userName, userPassword, null), httpOptions);
-    }
+    login(username, password) {
+        //return this.http.post(API_URL + '/auth/login', new User(userName, userPassword, null), httpOptions).pipe(catchError(this.errorHandler));
+        //return this.http.post(`${API_URL}/auth/login`, new User(userName, userPassword, null), httpOptions);
+            const body = new HttpParams()
+                .set('username', username)
+                .set('password', password);
+            const httpOptions = {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                })
+            };
+            return this.http.post(API_URL + '/auth/login', body.toString(), httpOptions);
+        }
 
     authorize(userObj: User): Observable<RestResponse> {
-        return this.http.post <RestResponse>(`${API_URL_ROOT}/auth/authorization`, userObj, httpOptions);
+        return this.http.post <RestResponse>(`${API_URL}/auth/authorization`, userObj, httpOptions);
     }
 
     /**
@@ -53,7 +61,7 @@ export class DataService {
         const params = new HttpParams()
             .set('start', start)
             .set('end', end);
-        return this.http.get<Payment []>(`${API_URL}/payments`, {params});
+        return this.http.get<Payment []>(`${API_URL}/payments`, { params });
     }
 
     /**

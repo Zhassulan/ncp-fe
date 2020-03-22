@@ -135,7 +135,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
                 this.appService.setProgress(false);
                 console.log(error.message);
                 this.notif.error(msgs.msgErrLoadData, error.message);
-                this.logger.error(msgs.msgErrLoadData + ' ' + error.message);
             },
             () => {
                 this.appService.setProgress(false);

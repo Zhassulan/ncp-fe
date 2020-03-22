@@ -12,17 +12,16 @@ export class AuthService {
     }
 
     logout() {
-        console.log('Logging out..');
         this.cookieService.deleteAll();
-        localStorage.removeItem(locStorItems.userName);
+        sessionStorage.removeItem(locStorItems.userName);
     }
 
     getUser(): any {
-        return localStorage.getItem(locStorItems.userName);
+        return sessionStorage.getItem(locStorItems.userName);
     }
 
     isLogged(): boolean {
-        return localStorage.getItem("username") !== null;
+        return sessionStorage.getItem("username") !== null;
     }
 
 }

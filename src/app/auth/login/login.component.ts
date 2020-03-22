@@ -50,18 +50,12 @@ export class LoginComponent implements OnInit {
         }
         this.dataService.login(this.userName, this.userPassword).subscribe(
             data => {
-                localStorage.setItem(locStorItems.userName, this.userName);
-                this.logger.info(msgs.msgLoggedSuccess + ' ' + this.userName);
-                if (this.returnUrl == '/') {
-                    this.router.navigate(['main']);
-                } else {
-                    this.router.navigateByUrl(this.returnUrl);
-                }
+                sessionStorage.setItem(locStorItems.userName, this.userName);
+                this.returnUrl == '/' ? this.router.navigate(['main']) : this.router.navigateByUrl(this.returnUrl);
                 this.dialogRef.close();
             },
             error2 => {
                 this.notifService.error(msgs.msgErrLogin, error2);
-                this.logger.error(msgs.msgErrLogin + ' ' + this.userName + ' ' + error2);
             });
     }
 
