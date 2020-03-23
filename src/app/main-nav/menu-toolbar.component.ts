@@ -22,47 +22,16 @@ export class MenuToolbarComponent implements AfterViewChecked {
     isWait: boolean;
     progressSubscription: Subscription;
 
-    paymentRoutes: ROUTE[] = [
+    routes: ROUTE[] = [
         {
             icon: 'credit_card',
             route: 'payments',
             title: 'Платежи',
         }, {
             icon: 'dashboard',
-            route: 'sales/dashboards',
-            title: '----------',
-        }
-    ];
-
-    accountRoutes: ROUTE[] = [
-        {
-            icon: 'contacts',
-            route: 'sales/accounts',
-            title: '----------',
-        }, {
-            icon: 'people',
-            route: 'sales/contacts',
-            title: '----------',
-        }, {
-            icon: 'settings_phone',
-            route: 'sales/leads',
-            title: '----------',
-        }, {
-            icon: 'account_box',
-            route: 'sales/opportunities',
-            title: '----------',
-        }
-    ];
-
-    equipmentRoutes: ROUTE[] = [
-        {
-            icon: 'router',
-            route: 'sales/equipment',
-            title: '----------',
-        }
-    ];
-
-    registrytRoutes: ROUTE[] = [
+            route: 'clients',
+            title: 'Клиенты',
+        },
         {
             icon: 'assignment_ind',
             route: 'registry/all',

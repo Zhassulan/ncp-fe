@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {DataService} from '../data/data.service';
 import {locStorItems, PaymentStatusRu, rests} from '../settings';
 import {Observable} from 'rxjs';
 import {NcpPayment} from './model/ncp-payment';
+import {PayDataService} from '../data/pay-data-service';
 
 @Injectable({
     providedIn: 'root',
@@ -12,7 +12,7 @@ export class PaymentsService {
     payments = []; // платежи
     paginatorResultsLength: number;
 
-    constructor(private dataService: DataService) {    }
+    constructor(private payDataService: PayDataService) {    }
 
     setStatusRu(payment) {
         payment.statusRu = PaymentStatusRu[payment.status];
@@ -38,7 +38,7 @@ export class PaymentsService {
     toTransit(paymentId): Observable<any> {
         return new Observable(
             observer => {
-                this.dataService.paymentToTransit(paymentId).subscribe(data => {
+                this.payDataService.toTransit(paymentId).subscribe(data => {
                         if (data.result == rests.restResultOk) {
                             let payment = this.payments.find(x => x.id == paymentId);
                             payment.status = data.data.status;
@@ -63,7 +63,7 @@ export class PaymentsService {
     deleteTransit(paymentId): Observable<any> {
         return new Observable<any>(
             observer => {
-                this.dataService.deleteTransitPayment(paymentId, localStorage.getItem(locStorItems.userName)).subscribe(data => {
+                this.payDataService.fromTransit(paymentId, localStorage.getItem(locStorItems.userName)).subscribe(data => {
                         if (data.result == rests.restResultOk) {
                             let payment = this.payments.find(x => x.id == paymentId);
                             payment.status = data.data.status;

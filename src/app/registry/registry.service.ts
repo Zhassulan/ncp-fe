@@ -2,11 +2,9 @@ import {Injectable} from '@angular/core';
 import {Registry} from './model/registry';
 import {msgs, rests} from '../settings';
 import {Observable, Subject} from 'rxjs';
-import {DataService} from '../data/data.service';
 import {NGXLogger} from 'ngx-logger';
 import {UserService} from '../user/user.service';
-import {PaymentDetail} from '../payments/model/payment-detail';
-import {RegistryDetail} from './model/registry-detail';
+import {PayDataService} from '../data/pay-data-service';
 
 @Injectable({
     providedIn: 'root',
@@ -17,9 +15,9 @@ export class RegistryService {
     private registryObs = new Subject<Registry>();
     registryAnnounced$ = this.registryObs.asObservable();
 
-    constructor(private dataService: DataService,
-                private logger: NGXLogger,
-                private userService: UserService) {
+    constructor(private logger: NGXLogger,
+                private userService: UserService,
+                private payDataService: PayDataService) {
     }
 
     announceRegistry() {
@@ -30,7 +28,7 @@ export class RegistryService {
         console.log('Загрузка реестра ID ' + id);
         return new Observable(
             observer => {
-                this.dataService.getRegistry(id).subscribe(data => {
+                this.payDataService.getRegistry(id).subscribe(data => {
                         if (data.result == rests.restResultOk) {
                             this.registry = data.data;
                             this.announceRegistry();

@@ -1,0 +1,46 @@
+.container {
+    display: grid;
+    grid-template-areas:
+            ". . .";
+    grid-template-rows: auto;
+    grid-template-columns: 20%  60% 20%;
+}
+
+.content {
+    display: grid;
+    grid-template-areas:
+            "."
+            ".";
+    grid-template-rows: auto auto;
+    grid-template-columns: auto;
+
+}
+
+.panel {
+}
+
+.clients {
+}
+
+.inputs {
+    display: grid;
+    grid-template-areas:
+            ". . ."
+            ". . ."
+            ". . ."
+            ". . .";
+    grid-template-rows: auto auto auto auto;
+    grid-template-columns: auto auto auto;
+    align-items: center;
+    align-content: center;
+}
+
+.buttons {
+    display: grid;
+    grid-template-areas:
+            ". .";
+    grid-template-rows: auto;
+    grid-template-columns: auto auto;
+    align-items: center;
+    align-content: center;
+}

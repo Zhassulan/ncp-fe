@@ -1,20 +1,17 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import {DataService} from '../../data/data.service';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
 import {NGXLogger} from 'ngx-logger';
 import {NotificationsService} from 'angular2-notifications';
 import {msgs, rests} from '../../settings';
-import {PaymentsService} from '../../payments/payments.service';
 import {AppService} from '../../app.service';
 import {ExcelService} from '../../excel/excel.service';
 import {Router} from '@angular/router';
 import {RegistryReportItem} from '../model/registry-report-item';
 import {DateRangeComponent} from '../../date-range/date-range.component';
 import {FormControl, Validators} from '@angular/forms';
-import {Utils} from '../../utils';
-import {DateRange} from '../../data/date-range';
+import {PayDataService} from '../../data/pay-data-service';
 
 @Component({
     selector: 'app-registries',
@@ -50,12 +47,12 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
     @ViewChild(DateRangeComponent, { static: true })
     private dateRangeComponent: DateRangeComponent;
 
-    constructor(private dataService: DataService,
-                private logger: NGXLogger,
+    constructor(private logger: NGXLogger,
                 private notifService: NotificationsService,
                 private appService: AppService,
                 private excelService: ExcelService,
-                private router: Router) {
+                private router: Router,
+                private payDataService: PayDataService) {
     }
 
     ngOnInit() {
@@ -69,7 +66,7 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
 
     getAll() {
         this.appService.setProgress(true);
-        this.dataService.getAllRegistries().subscribe(
+        this.payDataService.registries().subscribe(
             data => {
                 if (data.result = rests.restResultOk) {
                     this.dataSource.data = data.data;
@@ -90,7 +87,7 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
     getRange() {
         this.dateRangeComponent.setTimeBoundariesForDatePickers();
         this.appService.setProgress(true);
-        this.dataService.getRegistriesByRange(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime(), this.binFormCtl.value).subscribe(
+        this.payDataService.registriesRange(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime(), this.binFormCtl.value).subscribe(
             data => {
                 if (Array.isArray(data) && data.length)
                     this.dataSource.data = data;

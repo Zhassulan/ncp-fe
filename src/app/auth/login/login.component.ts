@@ -7,7 +7,7 @@ import {ldapGroups, rests, msgs, locStorItems} from '../../settings';
 import {NGXLogger} from 'ngx-logger';
 import {NotificationsService} from 'angular2-notifications';
 import {environment} from '../../../environments/environment';
-import {DataService} from '../../data/data.service';
+import {AppDataService} from '../../data/app-data-service';
 
 @Component({
     selector: 'app-login',
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
                 private dialogRef: MatDialogRef<LoginComponent>,
                 private logger: NGXLogger,
                 private notifService: NotificationsService,
-                private dataService: DataService) {
+                private appDataService: AppDataService) {
     }
 
     ngOnInit(): void {
@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
             this.notifService.warn(msgs.msgDataNotProvided);
             return;
         }
-        this.dataService.login(this.userName, this.userPassword).subscribe(
+        this.appDataService.login(this.userName, this.userPassword).subscribe(
             data => {
                 sessionStorage.setItem(locStorItems.userName, this.userName);
                 this.returnUrl == '/' ? this.router.navigate(['main']) : this.router.navigateByUrl(this.returnUrl);

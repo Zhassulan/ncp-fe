@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {PaymentsService} from '../payments.service';
 import {UploadFilePaymentService} from './equipment/upload-file-payment.service';
 import {msgs, PaymentStatus, rests, STATUSES} from '../../settings';
-import {DataService} from '../../data/data.service';
 import {NGXLogger} from 'ngx-logger';
 import {UserService} from '../../user/user.service';
 import {PaymentDetail} from '../model/payment-detail';
@@ -17,7 +16,9 @@ import {from, Observable, Subject} from 'rxjs';
 import {concatAll} from 'rxjs/operators';
 import {Payment} from './model/payment';
 import {Detail} from './model/detail';
-import {Phone} from '../../client/model/phone';
+import {Phone} from './model/phone';
+import {ClientDataService} from '../../data/client-data-service';
+import {PayDataService} from '../../data/pay-data-service';
 
 @Injectable({
     providedIn: 'root',
@@ -30,11 +31,12 @@ export class PaymentService {
 
     constructor(private paymentsService: PaymentsService,
                 private uploadFilePaymentService: UploadFilePaymentService,
-                private dataService: DataService,
                 private logger: NGXLogger,
                 private userService: UserService,
                 private notifService: NotificationsService,
-                private appService: AppService) {
+                private appService: AppService,
+                private clientDataService: ClientDataService,
+                private payDataService: PayDataService) {
     }
 
     private _payment: Payment;
@@ -123,7 +125,7 @@ export class PaymentService {
     }
 
     distribute() {
-        return this.dataService.distribute(this._payment.id, this._payment.details);
+        return this.payDataService.distribute(this._payment.id, this._payment.details);
     }
 
     setEquipments() {
@@ -151,7 +153,7 @@ export class PaymentService {
     getPaymentEquipments(id: number): Observable<any> {
         return new Observable(
             observer => {
-                this.dataService.getPaymentEquipments(id).subscribe(
+                this.payDataService.equipments(id).subscribe(
                     data => {
                         if (data.result == rests.restResultOk) {
                             this.setEquipmentsInDetails(data.data);
@@ -187,7 +189,7 @@ export class PaymentService {
         console.log('Получение информации оборудования по ICC ' + icc + '..');
         return new Observable(
             observer => {
-                this.dataService.getBercutEquipmentInfoByIcc(icc).subscribe(
+                this.payDataService.bercutEquipmentInfoByIcc(icc).subscribe(
                     data => {
                         if (data.result == rests.restResultOk) {
                             //console.log(data.data);
@@ -208,7 +210,7 @@ export class PaymentService {
     }
 
     async checkEquipmentParams(equipmentParams) {
-        const response = await this.dataService.checkEquipmentParams(equipmentParams).toPromise();
+        const response = await this.payDataService.checkEquipmentParams(equipmentParams).toPromise();
         return response;
     }
 
@@ -353,12 +355,12 @@ export class PaymentService {
     }
 
     defer(): Observable<any> {
-        return this.dataService.deferPayment(this._payment);
+        return this.payDataService.defer(this._payment);
     }
 
     loadPayment(id) {
         return new Observable <Payment>(observer => {
-            this.dataService.getPayment(id).subscribe(
+            this.payDataService.get(id).subscribe(
                 data => {
                     this._payment = data;
                     observer.next(data);
@@ -375,7 +377,7 @@ export class PaymentService {
 
     loadPhones(id) {
         return new Observable <Phone []>(observer => {
-            this.dataService.getClientPhones(id).subscribe(
+            this.clientDataService.phones(id).subscribe(
                 data => {
                     this.phones = data;
                     observer.next(data);
@@ -391,11 +393,11 @@ export class PaymentService {
     }
 
     validateAccount(profileId, account)   {
-        return this.dataService.validateAccount(profileId, account);
+        return this.payDataService.validateAccount(profileId, account);
     }
 
     validateMsisdn(profileId, msisdn)  {
-        return this.dataService.validateMsisdn(profileId, msisdn);
+        return this.payDataService.validateMsisdn(profileId, msisdn);
     }
 
     validateIcc(profileId, icc)   {

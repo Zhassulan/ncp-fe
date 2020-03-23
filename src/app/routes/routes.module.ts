@@ -12,6 +12,7 @@ import {PaymentsComponent} from '../payments/payments.component';
 import {RegistriesComponent} from '../registry/registries/registries.component';
 import {RegistryComponent} from '../registry/registry/registry.component';
 import {PageNotFoundComponent} from '../page-not-found/page-not-found.component';
+import {ClientsComponent} from '../clients/clients.component';
 
 const routes: Routes = [
     {
@@ -49,6 +50,14 @@ const routes: Routes = [
         canActivate: [LoggedInGuard],
         data: {
             breadcrumb: 'Платёж'
+        }
+    },
+    {
+        path: 'clients',
+        component: ClientsComponent,
+        canActivate: [LoggedInGuard],
+        data: {
+            breadcrumb: 'Клиенты'
         }
     },
     {

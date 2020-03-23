@@ -4,7 +4,6 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {NGXLogger} from 'ngx-logger';
 import {DialogService} from '../dialog/dialog.service';
-import {DataService} from '../data/data.service';
 import {PaymentsService} from './payments.service';
 import {PaymentService} from './payment/payment.service';
 import {UserService} from '../user/user.service';
@@ -18,6 +17,7 @@ import {DateRangeComponent} from '../date-range/date-range.component';
 import {Utils} from '../utils';
 import {NotificationsService} from 'angular2-notifications';
 import {Payment} from './payment/model/payment';
+import {PayDataService} from '../data/pay-data-service';
 
 @Component({
     selector: 'app-payments',
@@ -57,8 +57,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     @ViewChild(DateRangeComponent, {static: true})
     private dateRangeComponent: DateRangeComponent;
 
-    constructor(private dataService: DataService,
-                private dialogService: DialogService,
+    constructor(private dialogService: DialogService,
                 private logger: NGXLogger,
                 private paymentsService: PaymentsService,
                 private userService: UserService,
@@ -66,7 +65,8 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
                 private paymentService: PaymentService,
                 private appService: AppService,
                 private excelService: ExcelService,
-                private notif: NotificationsService
+                private notif: NotificationsService,
+                private payDataService: PayDataService
     ) {
         this.dataSource = new MatTableDataSource(this.paymentsService.payments);
         this.paginatorResultsLength = 0;
@@ -123,7 +123,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         let stDt = this.dateRangeComponent.pickerStartDate.value.getTime();
         let enDt = this.dateRangeComponent.pickerEndDate.value.getTime();
         console.log('Загрузка платежей за время ' + Utils.convertMillsToDate(stDt) + ' - ' + Utils.convertMillsToDate(enDt));
-        this.sub = this.dataService.payments(stDt, enDt).subscribe(data => {
+        this.sub = this.payDataService.all(stDt, enDt).subscribe(data => {
                 if (data)  {
                     this.paymentsService.initStatusRu(data);
                     this.dataSource.data = data;
@@ -147,7 +147,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     getFileData() {
         this.appService.setProgress(true);
         this.dataSource.data = [];
-        this.sub = this.dataService.getNcpPaymentsJson().subscribe(data => {
+        this.sub = this.payDataService.json().subscribe(data => {
             this.dataSource.data = data;
         }, error2 => {
             this.notif.error(msgs.msgErrLoadData);

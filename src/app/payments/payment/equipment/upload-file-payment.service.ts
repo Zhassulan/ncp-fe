@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {DataService} from '../../../data/data.service';
 import {FilePayment} from './model/file-payment';
 import {HttpErrorResponse} from '@angular/common/http';
 import {msgs} from '../../../settings';
 import {NGXLogger} from 'ngx-logger';
 import {NotificationsService} from 'angular2-notifications';
 import {Utils} from '../../../utils';
+import {PayDataService} from '../../../data/pay-data-service';
 
 @Injectable({
     providedIn: 'root',
@@ -17,9 +17,9 @@ export class UploadFilePaymentService {
     formData;
     utils = new Utils(this.logger);
 
-    constructor(private dataService: DataService,
-                private logger: NGXLogger,
-                private notifService: NotificationsService) {
+    constructor(private logger: NGXLogger,
+                private notifService: NotificationsService,
+                private payDataService: PayDataService) {
     }
 
     get filePayment(): FilePayment {
@@ -32,7 +32,7 @@ export class UploadFilePaymentService {
         this.formData = formData;
         return new Observable (
             observer => {
-                this.dataService.postFilePayment(formData).subscribe(
+                this.payDataService.postFile(formData).subscribe(
                     data => {
                         this._filePayment = data.data;
                         //console.log('Загружены данные из файла:\n');

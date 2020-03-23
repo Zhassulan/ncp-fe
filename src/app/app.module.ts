@@ -16,7 +16,6 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {PaymentStatusRuPipe} from './payments/payment-status-ru-pipe';
 import {DialogReportComponent} from './dialog/dialog-report/dialog-report.component';
 import {DialogService} from './dialog/dialog.service';
-import {DataService} from './data/data.service';
 import {PaymentDetailsPipe} from './payments/payment-details-pipe';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
 import {LoggerModule} from 'ngx-logger';
@@ -38,7 +37,6 @@ import {DetailsComponent} from './payments/payment/details/details.component';
 import {PaymentComponent} from './payments/payment/payment.component';
 import {PaymentsComponent} from './payments/payments.component';
 import {AddDetailComponent} from './payments/payment/add-detail/add-detail.component';
-import {SearchClientComponent} from './payments/search-client/search-client.component';
 import {RegistriesComponent} from './registry/registries/registries.component';
 import {AppService} from './app.service';
 import {ExcelService} from './excel/excel.service';
@@ -54,6 +52,11 @@ import {AuthInterceptor} from './auth/auth-interceptor';
 import {MaterialsModule} from './materials/materials.module';
 import {AddRegistryModalComponent} from './payments/payment/add-registry-modal/add-registry-modal.component';
 import {CalendarDeferModalComponent} from './payments/payment/calendar-defer-modal/calendar-defer-modal.component';
+import { ClientsComponent } from './clients/clients.component';
+import { ListComponent } from './clients/list/list.component';
+import {PayDataService} from './data/pay-data-service';
+import {AppDataService} from './data/app-data-service';
+import {ClientDataService} from './data/client-data-service';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -75,7 +78,6 @@ registerLocaleData(localeRu, 'ru');
         DetailsComponent,
         PaymentsComponent,
         AddDetailComponent,
-        SearchClientComponent,
         RegistriesComponent,
         RegistryComponent,
         RegistryDetailsComponent,
@@ -83,7 +85,9 @@ registerLocaleData(localeRu, 'ru');
         PageNotFoundComponent,
         DateRangeComponent,
         AddRegistryModalComponent,
-        CalendarDeferModalComponent
+        CalendarDeferModalComponent,
+        ClientsComponent,
+        ListComponent
     ],
     entryComponents: [
         DialogReportComponent,
@@ -115,7 +119,9 @@ registerLocaleData(localeRu, 'ru');
         {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
         {provide: LOCALE_ID, useValue: 'ru-RU'},
         DialogService,
-        DataService,
+        PayDataService,
+        AppDataService,
+        ClientDataService,
         AuthService,
         UploadFilePaymentService,
         UserService,
