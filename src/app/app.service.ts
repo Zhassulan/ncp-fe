@@ -22,8 +22,8 @@ export class AppService {
         this.progressObs.next(boolVal);
     }
 
-    checkVersion() {
-        this.appDataService.getVersion().subscribe(data => {
+    checkVer() {
+        this.appDataService.version().subscribe(data => {
             if (localStorage.getItem(locStorItems.version) == null) {
                 localStorage.setItem(locStorItems.version, data.ver.toString());
                 this.notif.info(msgs.msgInfRefreshPage);

@@ -9,6 +9,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {environment} from '../../../environments/environment';
 import {AppDataService} from '../../data/app-data-service';
 import * as HttpStatus from 'http-status-codes';
+import {AppService} from '../../app.service';
 
 @Component({
     selector: 'app-login',
@@ -30,6 +31,7 @@ export class LoginComponent implements OnInit {
                 private dialogRef: MatDialogRef<LoginComponent>,
                 private logger: NGXLogger,
                 private notifService: NotificationsService,
+                private appService: AppService,
                 private appDataService: AppDataService) {
     }
 
@@ -51,6 +53,7 @@ export class LoginComponent implements OnInit {
         }
         this.appDataService.login(this.userName, this.userPassword).subscribe(
             data => {
+                this.appService.checkVer();
                 sessionStorage.setItem(locStorItems.userName, this.userName);
                 this.returnUrl == '/' ? this.router.navigate(['main']) : this.router.navigateByUrl(this.returnUrl);
                 this.dialogRef.close();

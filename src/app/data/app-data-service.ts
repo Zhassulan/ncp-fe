@@ -28,7 +28,7 @@ export class AppDataService {
         return this.http.post <RestResponse>(`${API_URL}/auth/authorization`, userObj, httpOptions);
     }
 
-    getVersion(): Observable<Version> {
+    version(): Observable<Version> {
         return this.http.get<Version>(`${API_URL}/ver`, httpOptions);
     }
 
