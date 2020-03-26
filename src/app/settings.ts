@@ -149,7 +149,8 @@ export const enum msgs {
     msgInfRefreshPage = 'Есть обновления, обновите кеш страницы [Ctrl]+[F5]',
     msgDataNotProvided = 'Данные не предоставлены',
     msgNotSelected = 'Не выбрано',
-    msgValid = 'Числится'
+    msgValid = 'Числится',
+    msgErrAPI = 'Сервис не доступен'
 }
 
 /**

@@ -42,23 +42,23 @@
     <div class="payments">
         <mat-table [dataSource]="dataSource" matSort>
             <ng-container matColumnDef="ID">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
                 <mat-cell *matCellDef="let paymentRow"> {{paymentRow.id}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="creationDate">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>Дата поступления</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Дата поступления </mat-header-cell>
                 <mat-cell *matCellDef="let paymentRow"> {{paymentRow.creationDate | date:"dd.MM.yy HH:mm" }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="nameSender">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>Отправитель</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Отправитель </mat-header-cell>
                 <mat-cell *matCellDef="let paymentRow"> {{paymentRow.nameSender}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="sum">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>Сумма</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Сумма </mat-header-cell>
                 <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.sum | currency : ' ' }} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="rnnSender">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>ИИН</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> ИИН </mat-header-cell>
                 <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.rnnSender }}</mat-cell>
             </ng-container>
             <!--
@@ -113,8 +113,7 @@
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="rowMenu">
-                <mat-header-cell *matHeaderCellDef>
-                </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
 
                 <mat-cell *matCellDef="let paymentRow">
                     <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Действия над платежом">

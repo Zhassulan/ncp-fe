@@ -21,7 +21,8 @@ export class AuthInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
             catchError((error: HttpErrorResponse) => {
-                if (error.status === HttpStatus.UNAUTHORIZED) {
+               if (error.status === HttpStatus.UNAUTHORIZED) {
+                    this.notifService.warn("Нет доступа");
                     this.authService.logout();
                     this.router.navigate(['login']);
                 }

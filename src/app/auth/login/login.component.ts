@@ -8,6 +8,7 @@ import {NGXLogger} from 'ngx-logger';
 import {NotificationsService} from 'angular2-notifications';
 import {environment} from '../../../environments/environment';
 import {AppDataService} from '../../data/app-data-service';
+import * as HttpStatus from 'http-status-codes';
 
 @Component({
     selector: 'app-login',
@@ -54,8 +55,10 @@ export class LoginComponent implements OnInit {
                 this.returnUrl == '/' ? this.router.navigate(['main']) : this.router.navigateByUrl(this.returnUrl);
                 this.dialogRef.close();
             },
-            error2 => {
-                this.notifService.error(msgs.msgErrLogin, error2);
+            error => {
+                if (error.status === HttpStatus.SERVICE_UNAVAILABLE) {
+                    this.notifService.error(msgs.msgErrAPI);
+                }
             });
     }
 

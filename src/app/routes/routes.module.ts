@@ -13,11 +13,12 @@ import {RegistriesComponent} from '../registry/registries/registries.component';
 import {RegistryComponent} from '../registry/registry/registry.component';
 import {PageNotFoundComponent} from '../page-not-found/page-not-found.component';
 import {ClientsComponent} from '../clients/clients.component';
+import {ClientPaymentsComponent} from '../clients/client-payments/client-payments.component';
 
 const routes: Routes = [
     {
         path: '',
-        redirectTo: 'payments',
+        redirectTo: 'clients',
         pathMatch: 'full'
     },
     {
@@ -58,6 +59,14 @@ const routes: Routes = [
         canActivate: [LoggedInGuard],
         data: {
             breadcrumb: 'Клиенты'
+        }
+    },
+    {
+        path: 'client-payments/:id',
+        component: ClientPaymentsComponent,
+        canActivate: [LoggedInGuard],
+        data: {
+            breadcrumb: 'Платежи'
         }
     },
     {
