@@ -58,6 +58,7 @@ import {PayDataService} from './data/pay-data-service';
 import {AppDataService} from './data/app-data-service';
 import {ClientDataService} from './data/client-data-service';
 import { ClientPaymentsComponent } from './clients/client-payments/client-payments.component';
+import { ClientPaymentsTableComponent } from './clients/client-payments-table/client-payments-table.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -89,7 +90,8 @@ registerLocaleData(localeRu, 'ru');
         CalendarDeferModalComponent,
         ClientsComponent,
         ListComponent,
-        ClientPaymentsComponent
+        ClientPaymentsComponent,
+        ClientPaymentsTableComponent
     ],
     entryComponents: [
         DialogReportComponent,

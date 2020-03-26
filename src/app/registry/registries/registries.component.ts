@@ -61,7 +61,7 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.appService.checkVersion();
+
     }
 
     getAll() {

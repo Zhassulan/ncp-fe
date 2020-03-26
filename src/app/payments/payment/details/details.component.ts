@@ -66,9 +66,7 @@ export class DetailsComponent implements OnInit {
 
     getTotal(): number {
         let total: number = 0;
-        this.paymentService.payment.details.forEach(detail => {
-            total += Number(detail.sum);
-        });
+        this.paymentService.payment.details.forEach(detail => { total += Number(detail.sum); });
         return total;
     }
 

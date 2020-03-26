@@ -101,7 +101,7 @@ export class PaymentService {
     }
 
     checkDocNum(): boolean {
-        return this.uploadFilePaymentService.filePayment ? this.uploadFilePaymentService.filePayment.filePaymentHeader.payment_docnum == this._payment.paymentDocnum : true;
+        return this.uploadFilePaymentService.filePayment ? this.uploadFilePaymentService.filePayment.filePaymentHeader.payment_docnum == this._payment.payDocnum : true;
     }
 
     addDetailsFromFilePayment() {
@@ -359,6 +359,7 @@ export class PaymentService {
     }
 
     loadPayment(id) {
+        this._payment = null;
         return new Observable <Payment>(observer => {
             this.payDataService.get(id).subscribe(
                 data => {

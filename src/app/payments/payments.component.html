@@ -47,11 +47,11 @@
             </ng-container>
             <ng-container matColumnDef="creationDate">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Дата поступления </mat-header-cell>
-                <mat-cell *matCellDef="let paymentRow"> {{paymentRow.creationDate | date:"dd.MM.yy HH:mm" }}</mat-cell>
+                <mat-cell *matCellDef="let paymentRow"> {{paymentRow.created | date:"dd.MM.yy HH:mm" }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="nameSender">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Отправитель </mat-header-cell>
-                <mat-cell *matCellDef="let paymentRow"> {{paymentRow.nameSender}}</mat-cell>
+                <mat-cell *matCellDef="let paymentRow"> {{paymentRow.sender}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="sum">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Сумма </mat-header-cell>
@@ -69,11 +69,11 @@
             -->
             <ng-container matColumnDef="accountSender">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Счёт отправителя</mat-header-cell>
-                <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.accountSender }}</mat-cell>
+                <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.accSender }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="accountRecipient">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Счёт получателя</mat-header-cell>
-                <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.accountRecipient }}</mat-cell>
+                <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.accRecipient }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="knp">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>КНП</mat-header-cell>
@@ -82,7 +82,7 @@
             <ng-container matColumnDef="paymentDetails">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Назначение платежа</mat-header-cell>
                 <mat-cell *matCellDef="let paymentRow">
-                    {{ paymentRow.paymentDetails }}
+                    {{ paymentRow.details }}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="statusRu">
@@ -92,7 +92,7 @@
             </ng-container>
             <ng-container matColumnDef="distributeDate">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Дата разнесения</mat-header-cell>
-                <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.distributeDate | date:"dd.MM.yy HH:mm" }}</mat-cell>
+                <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.distributed | date:"dd.MM.yy HH:mm" }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="managedBy">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Менеджер</mat-header-cell>

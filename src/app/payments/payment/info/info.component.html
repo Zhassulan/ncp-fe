@@ -3,13 +3,13 @@
         Создан:
     </div>
     <div class="value">
-        {{ payment.creationDate | date: 'short' }}
+        {{ payment.created | date: 'short' }}
     </div>
     <div class="title">
         Клиент:
     </div>
     <div class="value">
-        {{ payment.nameSender }}
+        {{ payment.sender }}
     </div>
     <div class="title">
         Статус:
@@ -33,7 +33,7 @@
         Номер платежа:
     </div>
     <div class="value">
-        {{ payment.paymentDocnum }}
+        {{ payment.payDocnum }}
     </div>
     <div class="title">
         Сумма платежа:

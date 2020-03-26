@@ -226,7 +226,7 @@ export class PaymentComponent implements OnInit {
             if (dt < today || result.getTime() == today.getTime())
                 this.notifService.warn(`Ошибка. Дата должна быть больше ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`);
             else if (dt.getDate() >= tomorrow.getDate() && dt.getMonth() >= tomorrow.getMonth() && dt.getFullYear() >= tomorrow.getFullYear()) {
-                this.payment.closeDate = dt.getTime().toString();
+                this.payment.closed = dt.getTime().toString();
                 this.notifService.info(`Установлена дата отложенной разноски ${dt.getDate()}/${dt.getMonth() + 1}/${dt.getFullYear()}`);
                 this.paymentService.defer().subscribe(
                     data => {

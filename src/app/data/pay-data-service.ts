@@ -42,7 +42,7 @@ export class PayDataService {
     }
 
     get(id: number) {
-        return this.http.get<Payment>(`${API_URL}/payment/${id}/`, httpOptions);
+        return this.http.get<Payment>(`${API_URL}/payments/${id}/`, httpOptions);
     }
 
     equipments(id: number): Observable<RestResponse> {

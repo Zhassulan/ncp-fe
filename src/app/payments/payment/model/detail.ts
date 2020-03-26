@@ -1,4 +1,3 @@
-import {NcpPaymentDetails} from '../../model/ncp-payment-details';
 import {Id} from './id';
 
 export class Detail extends Id {
@@ -7,8 +6,8 @@ export class Detail extends Id {
     account: number;
     sum: number;
     status: number;
-    err_message: string;
-    distribute_date: Date;
+    err: string;
+    distributed: Date;
     nomenclature: string;
     icc: string;
 

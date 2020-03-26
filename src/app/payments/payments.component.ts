@@ -78,7 +78,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.appService.checkVersion();
+
     }
 
     setPaginator() {
