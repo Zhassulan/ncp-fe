@@ -24,7 +24,6 @@ import {UploadComponent} from './payments/payment/equipment/upload.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {BreadcrumbModule} from 'angular-crumbs';
 import {DialogComponent} from './payments/payment/equipment/dialog/dialog.component';
-import {UploadFilePaymentService} from './payments/payment/equipment/upload-file-payment.service';
 import localeRu from '@angular/common/locales/ru';
 import {UserService} from './user/user.service';
 import {PaymentsService} from './payments/payments.service';
@@ -52,13 +51,14 @@ import {AuthInterceptor} from './auth/auth-interceptor';
 import {MaterialsModule} from './materials/materials.module';
 import {AddRegistryModalComponent} from './payments/payment/add-registry-modal/add-registry-modal.component';
 import {CalendarDeferModalComponent} from './payments/payment/calendar-defer-modal/calendar-defer-modal.component';
-import { ClientsComponent } from './clients/clients.component';
-import { ListComponent } from './clients/list/list.component';
+import {ClientsComponent} from './clients/clients.component';
+import {ListComponent} from './clients/list/list.component';
 import {PayDataService} from './data/pay-data-service';
 import {AppDataService} from './data/app-data-service';
 import {ClientDataService} from './data/client-data-service';
-import { ClientPaymentsComponent } from './clients/client-payments/client-payments.component';
-import { ClientPaymentsTableComponent } from './clients/client-payments-table/client-payments-table.component';
+import {ClientPaymentsComponent} from './clients/client-payments/client-payments.component';
+import {ClientPaymentsTableComponent} from './clients/client-payments-table/client-payments-table.component';
+import {RouterService} from './router/router.service';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -127,7 +127,7 @@ registerLocaleData(localeRu, 'ru');
         AppDataService,
         ClientDataService,
         AuthService,
-        UploadFilePaymentService,
+        RouterService,
         UserService,
         PaymentsService,
         PaymentService,

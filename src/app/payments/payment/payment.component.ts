@@ -132,7 +132,7 @@ export class PaymentComponent implements OnInit {
     }
 
     dlgImportEquipment() {
-        this.dialogRef = this.dlg.open(DialogComponent, {width: '30%', height: '30%'});
+        this.dialogRef = this.dlg.open(DialogComponent, {width: '40%', height: '30%'});
         this.dialogRef.afterClosed().subscribe(result => {
             if (result != 'cancel') {
             }

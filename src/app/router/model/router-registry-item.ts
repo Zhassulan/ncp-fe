@@ -1,4 +1,4 @@
-export class FilePaymentItem {
+export class RouterRegistryItem {
 
     num: number;
     nomenclature: string;

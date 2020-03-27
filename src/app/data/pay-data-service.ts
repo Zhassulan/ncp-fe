@@ -1,12 +1,14 @@
-import {HttpClient, HttpParams} from '@angular/common/http';
+
 import {environment} from '../../environments/environment';
 import {Payment} from '../payments/payment/model/payment';
-import {Observable} from 'rxjs';
+
 import {RestResponse} from './rest-response';
 import {RequestPostPayment} from './request-post-payment';
 import {httpOptions, PaymentActions} from '../settings';
-import {FilePayment} from '../payments/payment/equipment/model/file-payment';
+import {RouterRegistry} from '../router/model/router-registry';
 import {EquipmentCheckParam} from '../payments/model/equipment-check-param';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
 const API_URL = environment.apiUrl;
 
@@ -33,8 +35,8 @@ export class PayDataService {
         return this.http.delete <RestResponse>(API_URL + `/payment/${id}/transit`);
     }
 
-    postFile(formData: FormData): Observable<any> {
-        return this.http.post<FilePayment>(`${API_URL}/equipment/upload`, formData);
+    routerRegistry(formData: FormData): Observable<any> {
+        return this.http.post<RouterRegistry>(`${API_URL}/payments/router/registry`, formData);
     }
 
     distribute(id, details) {

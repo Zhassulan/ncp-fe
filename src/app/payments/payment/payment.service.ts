@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {PaymentsService} from '../payments.service';
-import {UploadFilePaymentService} from './equipment/upload-file-payment.service';
 import {msgs, PaymentStatus, rests, STATUSES} from '../../settings';
 import {NGXLogger} from 'ngx-logger';
 import {UserService} from '../../user/user.service';
@@ -19,6 +18,7 @@ import {Detail} from './model/detail';
 import {Phone} from './model/phone';
 import {ClientDataService} from '../../data/client-data-service';
 import {PayDataService} from '../../data/pay-data-service';
+import {RouterService} from '../../router/router.service';
 
 @Injectable({
     providedIn: 'root',
@@ -30,7 +30,7 @@ export class PaymentService {
     paymentAnnounced$ = this.paymentObs.asObservable();
 
     constructor(private paymentsService: PaymentsService,
-                private uploadFilePaymentService: UploadFilePaymentService,
+                private routerService: RouterService,
                 private logger: NGXLogger,
                 private userService: UserService,
                 private notifService: NotificationsService,
@@ -39,24 +39,11 @@ export class PaymentService {
                 private payDataService: PayDataService) {
     }
 
-    private _payment: Payment;
-
-    get payment() {
-        return this._payment;
-    }
-
-    private _phones: Phone [] = [];
-
-    get phones() {
-        return this._phones;
-    }
-
-    set phones(data) {
-        this._phones = data;
-    }
+    payment: Payment;
+    phones: Phone [] = [];
 
     get filePaymentItems() {
-        return this.uploadFilePaymentService.filePayment.filePaymentItems;
+        return this.routerService.routerRegistry.items;
     }
 
     get details() {
@@ -64,32 +51,32 @@ export class PaymentService {
     }
 
     delAll() {
-        this._payment.details = [];
-        this.uploadFilePaymentService.resetFilePayment();
+        this.payment.details = [];
+        this.routerService.resetFilePayment();
         this.announcePayment();
     }
 
     setPayment(data) {
-        this._payment = data;
+        this.payment = data;
         this.announcePayment();
     }
 
     addDetail(detail: Detail) {
-        this._payment.details.push(detail);
+        this.payment.details.push(detail);
         this.announcePayment();
     }
 
     delDetail(row) {
-        this._payment.details.splice(this._payment.details.indexOf(row), 1);
+        this.payment.details.splice(this.payment.details.indexOf(row), 1);
         this.announcePayment();
     }
 
     announcePayment() {
-        this.paymentObs.next(this._payment);
+        this.paymentObs.next(this.payment);
     }
 
     getDetailsSum(key) {
-        return this._payment.details.reduce((a, b) => Number(a) + Number((b[key] || 0)), 0);
+        return this.payment.details.reduce((a, b) => Number(a) + Number((b[key] || 0)), 0);
     }
 
     /**
@@ -97,11 +84,11 @@ export class PaymentService {
      * @returns {boolean} true - равны
      */
     checkTotalSum(): boolean {
-        return Number(this.getDetailsSum('sum')) == Number(this._payment.sum);
+        return Number(this.getDetailsSum('sum')) == Number(this.payment.sum);
     }
 
     checkDocNum(): boolean {
-        return this.uploadFilePaymentService.filePayment ? this.uploadFilePaymentService.filePayment.filePaymentHeader.payment_docnum == this._payment.payDocnum : true;
+        return this.routerService.routerRegistry ? this.routerService.routerRegistry.header.docnum == this.payment.payDocnum : true;
     }
 
     addDetailsFromFilePayment() {
@@ -116,34 +103,34 @@ export class PaymentService {
             detail.status = 0;
             details.push(detail);
         }
-        this._payment.details = details;
+        this.payment.details = details;
         this.announcePayment();
     }
 
     checkRnn(): boolean {
-        return this.uploadFilePaymentService.filePayment ? this.uploadFilePaymentService.filePayment.filePaymentHeader.iin_bin_sender == this._payment.rnnSender : true;
+        return this.routerService.routerRegistry ? this.routerService.routerRegistry.header.bin == this.payment.rnnSender : true;
     }
 
     distribute() {
-        return this.payDataService.distribute(this._payment.id, this._payment.details);
+        return this.payDataService.distribute(this.payment.id, this.payment.details);
     }
 
     setEquipments() {
         let details: Detail[] = [];
-        this._payment.details.forEach(item => {
+        this.payment.details.forEach(item => {
             let detail = new Detail();
             detail.icc = detail.icc;
             detail.msisdn = detail.msisdn;
             detail.nomenclature = detail.nomenclature;
             details.push(detail);
         });
-        this._payment.details = details;
+        this.payment.details = details;
         this.announcePayment();
     }
 
     setEquipmentsInDetails(equipments: Equipment []) {
         equipments.forEach(equipment => {
-            let detail = this._payment.details.find(x => x.id == equipment.paymentDetailId);
+            let detail = this.payment.details.find(x => x.id == equipment.paymentDetailId);
             detail.nomenclature = equipment.nomenclature;
             detail.msisdn = equipment.msisdn;
             detail.icc = equipment.icc;
@@ -172,17 +159,17 @@ export class PaymentService {
 
     isBlocked(): boolean {
         let b;
-        this._payment ?  b = this._payment.status == PaymentStatus.STATUS_DISTRIBUTED ||
-                this._payment.status == PaymentStatus.STATUS_EXPIRED ||
-                this._payment.status == PaymentStatus.STATUS_DELETED ||
-                this._payment.status == PaymentStatus.STATUS_DEFERRED ||
-                this._payment.status == PaymentStatus.STATUS_TRANSIT_DISTRIBUTED ||
-                this._payment.status != PaymentStatus.STATUS_TRANSIT : true;
+        this.payment ?  b = this.payment.status == PaymentStatus.STATUS_DISTRIBUTED ||
+                this.payment.status == PaymentStatus.STATUS_EXPIRED ||
+                this.payment.status == PaymentStatus.STATUS_DELETED ||
+                this.payment.status == PaymentStatus.STATUS_DEFERRED ||
+                this.payment.status == PaymentStatus.STATUS_TRANSIT_DISTRIBUTED ||
+                this.payment.status != PaymentStatus.STATUS_TRANSIT : true;
         return b;
     }
 
     isCurrentSumValid(): boolean {
-        return this.getDetailsSum('sum') == this._payment.sum;
+        return this.getDetailsSum('sum') == this.payment.sum;
     }
 
     getBercutEquipmentInfo(icc): Observable<any> {
@@ -233,7 +220,7 @@ export class PaymentService {
             this.notifService.warn(msgs.msgErrTotalSum);
             result = false;
         }
-        if (this.uploadFilePaymentService.filePayment)
+        if (this.routerService.routerRegistry)
             if (!this.checkDocNum()) {
                 this.notifService.warn(msgs.msgErrDocNum);
                 result = false;
@@ -267,8 +254,8 @@ export class PaymentService {
     async checkBercutEquipment(): Promise<boolean> {
         let result = true;
         let equipmentCheckParams = [];
-        if (this._payment.details.length > 0) {
-            this._payment.details.forEach(detail => {
+        if (this.payment.details.length > 0) {
+            this.payment.details.forEach(detail => {
                 console.log(detail.nomenclature);
                 if (detail.nomenclature) {
                     //if (!detail.nomenclature.toLowerCase().includes(dic.prepaid)) {
@@ -293,7 +280,7 @@ export class PaymentService {
 
     isNewDetailsExistsForDistribution(): boolean {
         let result = false;
-        this._payment.details.forEach(detail => {
+        this.payment.details.forEach(detail => {
             if (detail.status == this.paymentStatuses.STATUS_NEW) {
                 result = true;
             }
@@ -337,8 +324,8 @@ export class PaymentService {
         let apiCalls: Observable<any> [] = [];
         for (let registry of importedRegistry) {
             apiCalls.push(registry.account ?
-                this.validateAccount(this._payment.profileId, registry.account) :
-                this.validateMsisdn(this._payment.profileId, registry.msisdn));
+                this.validateAccount(this.payment.profileId, registry.account) :
+                this.validateMsisdn(this.payment.profileId, registry.msisdn));
         }
         const array$ = from(apiCalls);
         return array$.pipe(concatAll());
@@ -350,20 +337,20 @@ export class PaymentService {
             paymentDetail.status = PaymentStatus.STATUS_NEW;
             details.push(paymentDetail);
         }
-        this._payment.details = details;
+        this.payment.details = details;
         this.announcePayment();
     }
 
     defer(): Observable<any> {
-        return this.payDataService.defer(this._payment);
+        return this.payDataService.defer(this.payment);
     }
 
     loadPayment(id) {
-        this._payment = null;
+        this.payment = null;
         return new Observable <Payment>(observer => {
             this.payDataService.get(id).subscribe(
                 data => {
-                    this._payment = data;
+                    this.payment = data;
                     observer.next(data);
                 },
                 error => {

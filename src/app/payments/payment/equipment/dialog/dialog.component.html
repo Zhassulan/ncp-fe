@@ -11,9 +11,6 @@
     <div class="btnOpen">
         <button mat-raised-button color="primary" class="add-files-btn" (click)="addFile()"> Открыть файл </button>
     </div>
-    <div class="progress">
-        <mat-progress-spinner mode="indeterminate" color="accent" diameter = "25" *ngIf="isWait"></mat-progress-spinner>
-    </div>
     <div class="btnProcess">
         <button mat-raised-button color="primary" (click)="upload()" *ngIf="showUploadButton"> Обработка </button>
     </div>
