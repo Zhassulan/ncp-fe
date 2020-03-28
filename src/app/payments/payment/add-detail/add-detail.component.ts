@@ -31,7 +31,8 @@ export class AddDetailComponent implements OnInit {
             sumControl: new FormControl('',
                 [
                     Validators.min(1),
-                    //Validators.max(1000000)
+                    /*Validators.max(this.paymentService.detailsSum() < this.paymentService.payment.sum ?
+                        this.paymentService.payment.sum - this.paymentService.detailsSum() : 0  )*/
                 ])
         }
     );

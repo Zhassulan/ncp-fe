@@ -73,6 +73,8 @@ export class PaymentComponent implements OnInit {
 
     }
 
+
+
     menuOnSelected(selected: number) {
         switch (selected) {
             case this.paymentMenuItems.LOAD_EQUIPMENT: {
@@ -120,6 +122,7 @@ export class PaymentComponent implements OnInit {
                     if (item.msisdn) this._msisdns.push(item.msisdn);
                     if (item.account) this._accounts.push(item.account.toString());
                 }
+                console.log(`Загружено ${this._msisdns.length} номеров и ${this._accounts.length} счетов`);
             },
             error => {
                 this.appService.setProgress(false);

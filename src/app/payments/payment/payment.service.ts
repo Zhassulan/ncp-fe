@@ -26,6 +26,8 @@ import {RouterService} from '../../router/router.service';
 export class PaymentService {
 
     paymentStatuses = PaymentStatus;
+    payment: Payment;
+    phones: Phone [] = [];
     private paymentObs = new Subject<Payment>();
     paymentAnnounced$ = this.paymentObs.asObservable();
 
@@ -38,9 +40,6 @@ export class PaymentService {
                 private clientDataService: ClientDataService,
                 private payDataService: PayDataService) {
     }
-
-    payment: Payment;
-    phones: Phone [] = [];
 
     get filePaymentItems() {
         return this.routerService.routerRegistry.items;
@@ -158,14 +157,11 @@ export class PaymentService {
     }
 
     isBlocked(): boolean {
-        let b;
-        this.payment ?  b = this.payment.status == PaymentStatus.STATUS_DISTRIBUTED ||
-                this.payment.status == PaymentStatus.STATUS_EXPIRED ||
-                this.payment.status == PaymentStatus.STATUS_DELETED ||
-                this.payment.status == PaymentStatus.STATUS_DEFERRED ||
-                this.payment.status == PaymentStatus.STATUS_TRANSIT_DISTRIBUTED ||
-                this.payment.status != PaymentStatus.STATUS_TRANSIT : true;
-        return b;
+        return this.payment ? this.payment.status == PaymentStatus.STATUS_DISTRIBUTED ||
+            this.payment.status == PaymentStatus.STATUS_EXPIRED ||
+            this.payment.status == PaymentStatus.STATUS_DELETED ||
+            this.payment.status == PaymentStatus.STATUS_DEFERRED ||
+            this.payment.status == PaymentStatus.STATUS_TRANSIT_DISTRIBUTED : false;
     }
 
     isCurrentSumValid(): boolean {
@@ -346,8 +342,9 @@ export class PaymentService {
     }
 
     loadPayment(id) {
+        console.log(`Загрузка платежа ID ${id}`);
         this.payment = null;
-        return new Observable <Payment>(observer => {
+        return new Observable<Payment>(observer => {
             this.payDataService.get(id).subscribe(
                 data => {
                     this.payment = data;
@@ -364,7 +361,7 @@ export class PaymentService {
     }
 
     loadPhones(id) {
-        return new Observable <Phone []>(observer => {
+        return new Observable<Phone []>(observer => {
             this.clientDataService.phones(id).subscribe(
                 data => {
                     this.phones = data;
@@ -380,24 +377,30 @@ export class PaymentService {
         });
     }
 
-    validateAccount(profileId, account)   {
+    validateAccount(profileId, account) {
         return this.payDataService.validateAccount(profileId, account);
     }
 
-    validateMsisdn(profileId, msisdn)  {
+    validateMsisdn(profileId, msisdn) {
         return this.payDataService.validateMsisdn(profileId, msisdn);
     }
 
-    validateIcc(profileId, icc)   {
+    validateIcc(profileId, icc) {
 
     }
 
-    validateNomenclature(profileId, nomenclature)  {
+    validateNomenclature(profileId, nomenclature) {
 
     }
 
-    validateDetail(detail: Detail)    {
+    validateDetail(detail: Detail) {
 
+    }
+
+    detailsSum() {
+        let total = 0;
+        this.payment.details.forEach(detail => { total += Number(detail.sum); });
+        return total;
     }
 
 }

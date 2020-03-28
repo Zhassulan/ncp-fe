@@ -44,10 +44,6 @@ export class DetailsComponent implements OnInit {
             });
     }
 
-    ngAfterViewInit() {
-        this.paymentService.announcePayment();
-    }
-
     setPaginator() {
         this.paginatorResultsLength = this.dataSource.data.length;
         this.dataSource.paginator = this.paginator;
@@ -64,10 +60,8 @@ export class DetailsComponent implements OnInit {
         this.paginatorResultsLength = this.paymentService.payment.details.length;
     }
 
-    getTotal(): number {
-        let total: number = 0;
-        this.paymentService.payment.details.forEach(detail => { total += Number(detail.sum); });
-        return total;
+    detailsSum(): number {
+        return this.paymentService.detailsSum();
     }
 
 }

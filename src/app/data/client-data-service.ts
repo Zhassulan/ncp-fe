@@ -10,7 +10,7 @@ export class ClientDataService {
     constructor(private http: HttpClient) { }
 
     phones(id)   {
-        return this.http.get<Phone []>(`${API_URL}/client/${id}/phones`);
+        return this.http.get<Phone []>(`${API_URL}/clients/${id}/props`);
     }
 
     list() {

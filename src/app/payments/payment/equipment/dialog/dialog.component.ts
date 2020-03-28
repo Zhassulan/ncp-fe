@@ -23,6 +23,10 @@ export class DialogComponent implements OnInit {
 
     ngOnInit() {    }
 
+    addFile() {
+        this.file.nativeElement.click();
+    }
+
     onFileAdded() {
         const files: { [key: string]: File } = this.file.nativeElement.files;
         for (let key in files) {
