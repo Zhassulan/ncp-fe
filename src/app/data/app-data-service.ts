@@ -5,9 +5,13 @@ import {Observable} from 'rxjs';
 import {RestResponse} from './rest-response';
 import {httpOptions} from '../settings';
 import {Version} from '../version';
+import {Injectable} from '@angular/core';
 
 const API_URL = environment.apiUrl;
 
+@Injectable({
+    providedIn: 'root'
+})
 export class AppDataService {
 
     constructor(private http: HttpClient) { }

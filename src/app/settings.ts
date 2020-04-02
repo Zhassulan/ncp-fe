@@ -269,8 +269,8 @@ export const appTitle = 'NCP';
 
 export enum PaymentActions {
 
-    TO_TRANSIT,
-    FROM_TRANSIT,
+    TO_TRANSIT = 0,
+    FROM_TRANSIT = 1
 
 
 }

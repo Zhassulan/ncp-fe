@@ -12,6 +12,7 @@ import {RegistryReportItem} from '../model/registry-report-item';
 import {DateRangeComponent} from '../../date-range/date-range.component';
 import {FormControl, Validators} from '@angular/forms';
 import {PayDataService} from '../../data/pay-data-service';
+import {RegistryDataService} from '../../data/registry-data.service';
 
 @Component({
     selector: 'app-registries',
@@ -52,7 +53,7 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
                 private appService: AppService,
                 private excelService: ExcelService,
                 private router: Router,
-                private payDataService: PayDataService) {
+                private registryService: RegistryDataService) {
     }
 
     ngOnInit() {
@@ -66,7 +67,7 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
 
     getAll() {
         this.appService.setProgress(true);
-        this.payDataService.registries().subscribe(
+        this.registryService.all().subscribe(
             data => {
                 if (data.result = rests.restResultOk) {
                     this.dataSource.data = data.data;
@@ -87,7 +88,7 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
     getRange() {
         this.dateRangeComponent.setTimeBoundariesForDatePickers();
         this.appService.setProgress(true);
-        this.payDataService.registriesRange(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime(), this.binFormCtl.value).subscribe(
+        this.registryService.range(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime(), this.binFormCtl.value).subscribe(
             data => {
                 if (Array.isArray(data) && data.length)
                     this.dataSource.data = data;

@@ -41,7 +41,7 @@ import {AppService} from './app.service';
 import {ExcelService} from './excel/excel.service';
 import {FileSaverModule} from 'ngx-filesaver';
 import {RegistryComponent} from './registry/registry/registry.component';
-import {RegistryService} from './registry/registry.service';
+
 import {RegistryDetailsComponent} from './registry/registry/registry-details/registry-details.component';
 import {RegistryPropertiesComponent} from './registry/registry/registry-properties/registry-properties.component';
 import {SessionService} from './auth/session.service';
@@ -133,7 +133,7 @@ registerLocaleData(localeRu, 'ru');
         PaymentService,
         AppService,
         ExcelService,
-        RegistryService,
+
         SessionService,
         {
             provide: HTTP_INTERCEPTORS,

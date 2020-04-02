@@ -29,4 +29,12 @@ export class PaymentMenuComponent implements OnInit {
 
     isBlocked() { this.paymentService.isBlocked(); }
 
+    detailsSum() {
+        return this.paymentService.detailsSum();
+    }
+
+    paymentSum() {
+        return this.paymentService.payment.sum;
+    }
+
 }

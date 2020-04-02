@@ -9,9 +9,13 @@ import {RouterRegistry} from '../router/model/router-registry';
 import {EquipmentCheckParam} from '../payments/model/equipment-check-param';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {Injectable} from '@angular/core';
 
 const API_URL = environment.apiUrl;
 
+@Injectable({
+    providedIn: 'root'
+})
 export class PayDataService {
 
     constructor(private http: HttpClient) { }
@@ -57,22 +61,6 @@ export class PayDataService {
 
     checkEquipmentParams(iccList: EquipmentCheckParam []): Observable<RestResponse> {
         return this.http.post<RestResponse>(`${API_URL}/equipments/check`, iccList, httpOptions);
-    }
-
-    registries(): Observable<RestResponse> {
-        return this.http.post<RestResponse>(`${API_URL}/registry/all`, httpOptions);
-    }
-
-    getRegistry(id): Observable<RestResponse> {
-        return this.http.post<RestResponse>(`${API_URL}/registry/${id}`, httpOptions);
-    }
-
-    registriesRange(start, end, bin): Observable<any> {
-        const params = new HttpParams()
-            .set('start', start)
-            .set('end', end)
-            .set('bin', bin);
-        return this.http.get<RestResponse>(`${API_URL}/registry/range`, {params});
     }
 
     validateAccount(profileId, account) {

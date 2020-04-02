@@ -31,7 +31,7 @@ const routes: Routes = [
         redirectTo: 'payments',
         pathMatch: 'full'},
         */
-    //{path: 'payments', redirectTo: 'payment/230365'}, //для открытия конкретного платежа для отладки TODO убрать в проде
+    //{path: 'payments', redirectTo: 'payment/230365'}, //для открытия конкретного платежа для отладки
     {
         path: 'main',
         redirectTo: 'payments',

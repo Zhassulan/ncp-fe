@@ -1,13 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {Registry} from '../model/registry';
-import {RegistryService} from '../registry.service';
 import {ActivatedRoute} from '@angular/router';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
-import {msgs, rests} from '../../settings';
-import {NGXLogger} from 'ngx-logger';
-import {UserService} from '../../user/user.service';
-import {Subscription} from 'rxjs';
+import {rests} from '../../settings';
+import {RegistryDataService} from '../../data/registry-data.service';
 
 @Component({
     selector: 'app-registry',
@@ -16,49 +12,29 @@ import {Subscription} from 'rxjs';
 })
 export class RegistryComponent implements OnInit {
 
-    constructor(private registryService: RegistryService,
+    registry;
+
+    constructor(private registryService: RegistryDataService,
                 private route: ActivatedRoute,
                 private appService: AppService,
-                private notifService: NotificationsService,
-                private logger: NGXLogger,
-                private userService: UserService) {
-    }
-
-    get registry() {
-        return this.registryService.registry;
+                private notifService: NotificationsService) {
     }
 
     ngOnInit() {
         this.appService.setProgress(true);
         let id = this.route.snapshot.params['id'];
-        this.registryService.loadRegistry(id).subscribe(
-            data => {
-                //console.log(this.registry);
-                },
-            error2 => {
+        this.registryService.findById(id).subscribe(data => {
+                if (data.result == rests.restResultOk) {
+                    this.registry = data;
+                }
+            },
+            error => {
+                this.notifService.error(error);
                 this.appService.setProgress(false);
-                this.notifService.error(error2);
             },
             () => {
                 this.appService.setProgress(false);
             });
-    }
-
-    onSelected(selected: number) {
-        /*
-        switch (selected) {
-            case this.paymentMenuItems.LOAD_EQUIPMENT: {
-                this.dlgImportEquipment();
-            }
-                break;
-            case this.paymentMenuItems.DISTRIBUTE: {
-                this.dlgDistribute();
-            }
-                break;
-            default:
-
-        }
-        */
     }
 
 }

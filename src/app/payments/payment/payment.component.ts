@@ -38,7 +38,7 @@ export class PaymentComponent implements OnInit {
     isValidRegistry: boolean = false;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
     private _msisdns: String [] = [];
-    private _accounts: String [] = [];
+    private _accounts: String [] = []; //todo проверить на повторность счетов на Каспи, возможно заменить на Set
 
     constructor(private router: Router,
                 public paymentService: PaymentService,
