@@ -53,8 +53,8 @@ export class LoginComponent implements OnInit {
         }
         this.appDataService.login(this.userName, this.userPassword).subscribe(
             data => {
+                this.authService.setUser(this.userName);
                 this.appService.checkVer();
-                sessionStorage.setItem(locStorItems.userName, this.userName);
                 this.returnUrl == '/' ? this.router.navigate(['main']) : this.router.navigateByUrl(this.returnUrl);
                 this.dialogRef.close();
             },

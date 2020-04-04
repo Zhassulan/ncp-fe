@@ -18,7 +18,7 @@ import {ClientPaymentsComponent} from '../clients/client-payments/client-payment
 const routes: Routes = [
     {
         path: '',
-        redirectTo: 'clients',
+        redirectTo: 'main',
         pathMatch: 'full'
     },
     {
@@ -40,15 +40,15 @@ const routes: Routes = [
     {
         path: 'payments',
         component: PaymentsComponent,
-        canActivate: [LoggedInGuard],
+        /*canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Платежи'
         }
     },
     {
-        path: 'payment/:id',
+        path: 'payments/:id',
         component: PaymentComponent,
-        canActivate: [LoggedInGuard],
+        /*canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Платёж'
         }
@@ -56,7 +56,7 @@ const routes: Routes = [
     {
         path: 'clients',
         component: ClientsComponent,
-        canActivate: [LoggedInGuard],
+        /*canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Клиенты'
         }
@@ -64,7 +64,7 @@ const routes: Routes = [
     {
         path: 'client-payments/:id',
         component: ClientPaymentsComponent,
-        canActivate: [LoggedInGuard],
+      /*  canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Платежи'
         }
@@ -72,31 +72,23 @@ const routes: Routes = [
     {
         path: 'equipment',
         component: UploadComponent,
-        canActivate: [LoggedInGuard],
+       /* canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Оборудование'
         }
     },
     {
-        path: 'registry',
+        path: 'registries',
         component: RegistriesComponent,
-        canActivate: [LoggedInGuard],
+       /* canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Реестры'
         }
     },
     {
-        path: 'registry/all',
-        component: RegistriesComponent,
-        canActivate: [LoggedInGuard],
-        data: {
-            breadcrumb: 'Реестры'
-        }
-    },
-    {
-        path: 'registry/:id',
+        path: 'registries/:id',
         component: RegistryComponent,
-        canActivate: [LoggedInGuard],
+       /* canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Реестр'
         }

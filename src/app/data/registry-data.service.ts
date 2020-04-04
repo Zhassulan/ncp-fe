@@ -4,6 +4,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {RestResponse} from './rest-response';
 import {httpOptions} from '../settings';
+import {RegistryReportItem} from '../registry/model/registry-report-item';
 
 const API_URL = environment.apiUrl;
 
@@ -15,20 +16,20 @@ export class RegistryDataService {
     constructor(private http: HttpClient) {
     }
 
-    all(): Observable<RestResponse> {
-        return this.http.post<RestResponse>(`${API_URL}/registries`, httpOptions);
+    all() {
+        return this.http.get<RegistryReportItem []>(`${API_URL}/registries`, httpOptions);
     }
 
-    findById(id): Observable<RestResponse> {
-        return this.http.post<RestResponse>(`${API_URL}/registries/${id}`, httpOptions);
+    findById(id) {
+        return this.http.get(`${API_URL}/registries/${id}`, httpOptions);
     }
 
-    range(start, end, bin): Observable<any> {
+    range(start, end, bin) {
         const params = new HttpParams()
             .set('start', start)
             .set('end', end)
             .set('bin', bin);
-        return this.http.get<RestResponse>(`${API_URL}/registries/range`, {params});
+        return this.http.get<RegistryReportItem []>(`${API_URL}/registries/range`, {params});
     }
 
 }

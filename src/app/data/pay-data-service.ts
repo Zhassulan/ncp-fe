@@ -10,6 +10,7 @@ import {EquipmentCheckParam} from '../payments/model/equipment-check-param';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
+import {Equipment} from '../payments/model/equipment';
 
 const API_URL = environment.apiUrl;
 
@@ -27,19 +28,19 @@ export class PayDataService {
         return this.http.get<Payment []>(`${API_URL}/payments`, { params });
     }
 
-    public json(): Observable<any> {
-        return this.http.get('./assets/payments.json');
+    public json() {
+        return this.http.get<Payment []>('./assets/payments.json');
     }
 
-    toTransit(id): Observable<RestResponse> {
-        return this.http.post <RestResponse>(`${API_URL}/payment/${id}/transit`, new RequestPostPayment(PaymentActions.TO_TRANSIT), httpOptions);
+    transit(id) {
+        return this.http.post<Payment>(`${API_URL}/payments/${id}/transit`, new RequestPostPayment(PaymentActions.TO_TRANSIT), httpOptions);
     }
 
-    fromTransit(id, user): Observable<RestResponse> {
-        return this.http.delete <RestResponse>(API_URL + `/payment/${id}/transit`);
+    transitDel(id, user) {
+        return this.http.delete<Payment>(API_URL + `/payments/${id}/transit`);
     }
 
-    routerRegistry(formData: FormData): Observable<any> {
+    routerRegistry(formData: FormData) {
         return this.http.post<RouterRegistry>(`${API_URL}/payments/router/registry`, formData);
     }
 
@@ -51,16 +52,16 @@ export class PayDataService {
         return this.http.get<Payment>(`${API_URL}/payments/${id}/`, httpOptions);
     }
 
-    equipments(id: number): Observable<RestResponse> {
-        return this.http.get<RestResponse>(`${API_URL}/payment/${id}/equipments`, httpOptions);
+    equipments(id: number):Observable<any>{
+        return this.http.get<Equipment []>(`${API_URL}/payment/${id}/equipments`, httpOptions);
     }
 
-    bercutEquipmentInfoByIcc(icc: String): Observable<RestResponse> {
-        return this.http.post<RestResponse>(`${API_URL}/equipment/${icc}`, httpOptions);
+    bercutEquipmentInfoByIcc(icc: String) {
+        return this.http.post(`${API_URL}/equipment/${icc}`, httpOptions);
     }
 
-    checkEquipmentParams(iccList: EquipmentCheckParam []): Observable<RestResponse> {
-        return this.http.post<RestResponse>(`${API_URL}/equipments/check`, iccList, httpOptions);
+    checkEquipmentParams(iccList: EquipmentCheckParam []) {
+        return this.http.post(`${API_URL}/equipments/check`, iccList, httpOptions);
     }
 
     validateAccount(profileId, account) {

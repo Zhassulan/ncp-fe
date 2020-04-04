@@ -44,7 +44,6 @@ import {RegistryComponent} from './registry/registry/registry.component';
 
 import {RegistryDetailsComponent} from './registry/registry/registry-details/registry-details.component';
 import {RegistryPropertiesComponent} from './registry/registry/registry-properties/registry-properties.component';
-import {SessionService} from './auth/session.service';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {DateRangeComponent} from './date-range/date-range.component';
 import {AuthInterceptor} from './auth/auth-interceptor';
@@ -133,8 +132,6 @@ registerLocaleData(localeRu, 'ru');
         PaymentService,
         AppService,
         ExcelService,
-
-        SessionService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,

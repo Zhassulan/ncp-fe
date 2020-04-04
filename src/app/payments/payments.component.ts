@@ -2,14 +2,13 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-import {NGXLogger} from 'ngx-logger';
 import {DialogService} from '../dialog/dialog.service';
 import {PaymentsService} from './payments.service';
 import {PaymentService} from './payment/payment.service';
 import {UserService} from '../user/user.service';
 import {Router} from '@angular/router';
 import {SelectionModel} from '@angular/cdk/collections';
-import {msgs, PaymentStatus, rests} from '../settings';
+import {msgs, PaymentStatus} from '../settings';
 import {Subscription} from 'rxjs';
 import {AppService} from '../app.service';
 import {ExcelService} from '../excel/excel.service';
@@ -46,7 +45,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     //источник данных для таблицы
     dataSource = new MatTableDataSource<Payment>();
     //общее количество для пагинации
-    paginatorResultsLength: number;
+    paginatorResultsLength = 0;
     //выбранные в таблице модели
     selection = new SelectionModel<Payment>(true, []);
     sub: Subscription;
@@ -58,7 +57,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     private dateRangeComponent: DateRangeComponent;
 
     constructor(private dialogService: DialogService,
-                private logger: NGXLogger,
                 private paymentsService: PaymentsService,
                 private userService: UserService,
                 private router: Router,
@@ -73,7 +71,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.getData();
+        this.loadData();
         this.setPaginator();
     }
 
@@ -107,38 +105,30 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    getData() {
+    loadData() {
         //this.getFileData();
-        this.getServerData();
+        this.loadServerData();
     }
 
     /**
      * загрузка платежей с сервера
      */
-    getServerData() {
+    loadServerData() {
+        this.appService.setProgress(true);
         this.dateRangeComponent.setCalendarToDate('2019-12-31T00:00:00.000', '2019-12-31T23:59:59.999');
         this.dateRangeComponent.setTimeBoundariesForDatePickers();
-        this.appService.setProgress(true);
         this.dataSource.data = [];
         let stDt = this.dateRangeComponent.pickerStartDate.value.getTime();
         let enDt = this.dateRangeComponent.pickerEndDate.value.getTime();
-        console.log('Загрузка платежей за время ' + Utils.convertMillsToDate(stDt) + ' - ' + Utils.convertMillsToDate(enDt));
         this.sub = this.payDataService.all(stDt, enDt).subscribe(data => {
-                if (data)  {
-                    this.paymentsService.initStatusRu(data);
-                    this.dataSource.data = data;
-                }   else {
-                    this.notif.info(msgs.msgNoData);
-                }
+                this.paymentsService.initStatusRu(data);
+                this.dataSource.data = data;
             },
             error => {
                 this.appService.setProgress(false);
-                console.log(error.message);
-                this.notif.error(msgs.msgErrLoadData, error.message);
+                this.notif.error(error);
             },
-            () => {
-                this.appService.setProgress(false);
-            });
+            () => this.appService.setProgress(false));
     }
 
     /**
@@ -149,51 +139,38 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         this.dataSource.data = [];
         this.sub = this.payDataService.json().subscribe(data => {
             this.dataSource.data = data;
-        }, error2 => {
+        }, error => {
             this.notif.error(msgs.msgErrLoadData);
             this.appService.setProgress(false);
-        }, () => {
-            this.appService.setProgress(false);
-        });
+        }, () => this.appService.setProgress(false));
     }
 
     /**
      * перенос платежа на транзитный счёт NCP (TRANSIT_ACCOUNT = 163761406L)
      * @param payment
      */
-    toTransit(payment) {
+    transit(id) {
         let msg;
         this.appService.setProgress(true);
-        this.sub = this.paymentsService.toTransit(payment.id).subscribe(data => {
-                if (data.result == rests.restResultOk) {
-                    payment = data.data;
-                    msg = msgs.msgSuccessToTransit + ' ID платежа ' + payment.id + ' TRANSIT_PDOC_ID ' + data.data.transitPaymentDocNumId + this.userService.logUser();
-                    this.logger.info(msg);
-                    this.dialogService.addItem(msg);
-                } else {
-                    msg = msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')' + this.userService.logUser();
-                    this.logger.warn(msg);
-                    this.dialogService.addItem(msg);
-                }
-            },
-            error2 => {
-                msg = msgs.msgErrToTransit + ' ID платежа ' + payment.id + '. ' + error2 + this.userService.logUser();
-                this.logger.error(msg);
+        this.sub = this.paymentsService.toTransit(id).subscribe(data => {
+                this.dialogService.addItem(`ID ${id} OK - TRANSIT_PDOC_ID ${data.transitPaymentDocNumId}`);
                 this.dialogService.addItem(msg);
+            },
+            error => {
+                console.log(error);
+                this.dialogService.addItem(`ID ${id} Ошибка - ${error.error.errm}`);
                 this.appService.setProgress(false);
             },
-            () => {
-                this.appService.setProgress(false);
-            });
+            () => this.appService.setProgress(false));
     }
 
-    toTransitSelected() {
+    transitSelected() {
         if (this.selection.selected.length > 0) {
             this.dialogService.clear();
             this.dialogService.title = 'Перевод на транзитный счёт';
             this.dialogService.openDialog();
             this.selection.selected.forEach(payment => {
-                this.toTransit(payment);
+                this.transit(payment);
             });
         } else {
             this.notif.warn(msgs.msgNotSelected);
@@ -234,48 +211,37 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${this.selection.selected.length}`;
     }
 
-    menuOnRowToTransit(paymentRow) {
+    menuOnRowToTransit(payment) {
         this.dialogService.clear();
         this.dialogService.title = 'Перевод на транзитный счёт';
         this.dialogService.openDialog();
-        this.toTransit(paymentRow);
+        this.transit(payment.id);
     }
 
-    deleteTransit(payment) {
+    transitDel(payment) {
         let msg;
         this.appService.setProgress(true);
-        this.sub = this.paymentsService.deleteTransit(payment.id).subscribe(data => {
-                if (data.result == rests.restResultOk) {
-                    payment = data.data;
-                    msg = msgs.msgSuccessDelTransit + ' ID платежа ' + payment.id + this.userService.logUser();
-                    this.logger.info(msg);
-                    this.dialogService.addItem(msg);
-                } else {
-                    msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + data.data + ' (' + data.result + ')' + this.userService.logUser();
-                    this.logger.warn(msg);
-                    this.dialogService.addItem(msg);
-                }
+        this.sub = this.paymentsService.delTransit(payment.id).subscribe(data => {
+                payment = data;
+                this.dialogService.addItem(msgs.msgSuccessDelTransit + ' ID платежа ' + payment.id + this.userService.logUser());
             },
-            error2 => {
-                msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + error2 + this.userService.logUser();
-                this.logger.error(msg);
+            error => {
+                msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + error + this.userService.logUser();
                 this.dialogService.addItem(msg);
                 this.appService.setProgress(false);
             },
-            () => {
-                this.appService.setProgress(false);
-            });
+            () => this.appService.setProgress(false));
     }
 
     menuOnRowDeleteTransit(paymentRow) {
         this.dialogService.clear();
         this.dialogService.title = 'Удалнение с тразитного счёта';
         this.dialogService.openDialog();
-        this.deleteTransit(paymentRow);
+        this.transitDel(paymentRow);
     }
 
     menuOnRowOpenPayment(paymentRow) {
-        this.router.navigate(['payment/' + paymentRow.id]);
+        this.router.navigate(['payments/' + paymentRow.id]);
     }
 
 

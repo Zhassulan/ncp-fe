@@ -12,7 +12,8 @@ export class PaymentsService {
     payments = []; // платежи
     paginatorResultsLength: number;
 
-    constructor(private payDataService: PayDataService) {    }
+    constructor(private payDataService: PayDataService) {
+    }
 
     setStatusRu(payment) {
         payment.statusRu = PaymentStatusRu[payment.status];
@@ -35,48 +36,32 @@ export class PaymentsService {
         return payments;
     }
 
-    toTransit(paymentId): Observable<any> {
+    toTransit(id): Observable<any> {
         return new Observable(
             observer => {
-                this.payDataService.toTransit(paymentId).subscribe(data => {
-                        if (data.result == rests.restResultOk) {
-                            let payment = this.payments.find(x => x.id == paymentId);
-                            payment.status = data.data.status;
-                            this.setStatusRu(payment);
-                        }
+                this.payDataService.transit(id).subscribe(data => {
+                        let payment = this.payments.find(x => x.id == id);
+                        console.log(payment);
+                        payment.status = data.status;
+                        this.setStatusRu(payment);
                         observer.next(data);
                     },
-                    error2 => {
-                        observer.error(error2);
-                    },
-                    () => {
-                        observer.complete();
-                    });
+                    error => observer.error(error),
+                    () => observer.complete());
             });
     }
 
-    /**
-     *  Удаление платежа на транзитном счёте
-     * @param paymentId id платежа
-     * @returns {Observable<any>}
-     */
-    deleteTransit(paymentId): Observable<any> {
+    delTransit(id): Observable<any> {
         return new Observable<any>(
             observer => {
-                this.payDataService.fromTransit(paymentId, localStorage.getItem(locStorItems.userName)).subscribe(data => {
-                        if (data.result == rests.restResultOk) {
-                            let payment = this.payments.find(x => x.id == paymentId);
-                            payment.status = data.data.status;
-                            this.setStatusRu(payment);
-                        }
+                this.payDataService.transitDel(id, localStorage.getItem(locStorItems.user)).subscribe(data => {
+                        let payment = this.payments.find(x => x.id == id);
+                        payment.status = data.status;
+                        this.setStatusRu(payment);
                         observer.next(data);
                     },
-                    error2 => {
-                        observer.error(error2);
-                    },
-                    () => {
-                        observer.complete();
-                    });
+                    error => observer.error(error),
+                    () => observer.complete());
             });
     }
 

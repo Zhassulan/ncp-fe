@@ -19,7 +19,7 @@ import {RegistryDataService} from '../../data/registry-data.service';
     templateUrl: './registries.component.html',
     styleUrls: ['./registries.component.css']
 })
-export class RegistriesComponent implements OnInit, AfterViewInit {
+export class RegistriesComponent implements OnInit {
 
     displayedColumns = [
         'ID',
@@ -32,20 +32,16 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
         'amount',
         'rowMenu'
     ];
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
-    //источник данных для таблицы
+    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+    @ViewChild(MatSort, {static: true}) sort: MatSort;
     dataSource = new MatTableDataSource<RegistryReportItem>();
-    //общее количество для пагинации
     paginatorResultsLength: number;
-    excelServ = this.excelService;
-    // MatPaginator Inputs
     pageSize = 30;
     pageSizeOptions: number[] = [50, 100, 150, 250, 300];
     binFormCtl = new FormControl('', [
         Validators.pattern('\\d{12}'),
     ]);
-    @ViewChild(DateRangeComponent, { static: true })
+    @ViewChild(DateRangeComponent, {static: true})
     private dateRangeComponent: DateRangeComponent;
 
     constructor(private logger: NGXLogger,
@@ -57,52 +53,31 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.getAll();
+        this.all();
         this.setPaginator();
     }
 
-    ngAfterViewInit() {
-
-    }
-
-    getAll() {
+    all() {
         this.appService.setProgress(true);
         this.registryService.all().subscribe(
-            data => {
-                if (data.result = rests.restResultOk) {
-                    this.dataSource.data = data.data;
-                } else {
-                    this.logger.error(data.data);
-                }
-            },
-            error2 => {
-                this.logger.error(error2);
-                this.notifService.error(msgs.msgErrLoadData);
+            data => this.dataSource.data = data,
+            error => {
+                this.notifService.error(error);
                 this.appService.setProgress(false);
             },
-            () => {
-                this.appService.setProgress(false);
-            });
+            () => this.appService.setProgress(false));
     }
 
-    getRange() {
+    range() {
         this.dateRangeComponent.setTimeBoundariesForDatePickers();
         this.appService.setProgress(true);
         this.registryService.range(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime(), this.binFormCtl.value).subscribe(
-            data => {
-                if (Array.isArray(data) && data.length)
-                    this.dataSource.data = data;
-                else
-                    this.notifService.warn(msgs.msgNoData);
-            },
-            error2 => {
-                this.notifService.error(error2);
+            data => this.dataSource.data = data,
+            error => {
+                this.notifService.error(error);
                 this.appService.setProgress(false);
             },
-            () => {
-                this.appService.setProgress(false);
-            }
-        );
+            () => this.appService.setProgress(false));
     }
 
     setPaginator() {
@@ -121,7 +96,7 @@ export class RegistriesComponent implements OnInit, AfterViewInit {
     }
 
     menuOnRegistryOpen(registry) {
-        this.router.navigate(['registry/' + registry.registryId]);
+        this.router.navigate([`registries/${registry.id}`]);
     }
 
     applyFilter(filterValue: string) {

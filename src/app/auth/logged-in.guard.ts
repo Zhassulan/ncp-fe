@@ -16,8 +16,7 @@ export class LoggedInGuard implements CanActivate {
     constructor(private authService: AuthService, private router: Router) {   }
 
     canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-        const currentUser = this.authService.getUser();
-        if (currentUser) {
+        if (this.authService.isLogged()) {
             return true;
         }
         this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });

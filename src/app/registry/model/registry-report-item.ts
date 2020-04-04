@@ -1,7 +1,7 @@
 export class RegistryReportItem {
 
     id: number;
-    registryId: number;
+    detailId: number;
     created: string;
     bin: string;
     company: string;

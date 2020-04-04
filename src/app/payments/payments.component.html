@@ -6,13 +6,13 @@
                 <app-date-range></app-date-range>
             </div>
             <div ngClass="item">
-                <button mat-raised-button color="primary" (click)="getData()"
+                <button mat-raised-button color="primary" (click)="loadData()"
                         matTooltip="Загрузка данных за указанную дату">
                     Загрузка
                 </button>
             </div>
             <div ngClass="item">
-                <button mat-raised-button color="primary" (click)="toTransitSelected()"
+                <button mat-raised-button color="primary" (click)="transitSelected()"
                             matBadge="{{ selection.selected.length }}"
                             matBadgePosition="before"
                             matBadgeColor="accent"

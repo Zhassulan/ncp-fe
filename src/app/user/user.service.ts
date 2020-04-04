@@ -9,10 +9,10 @@ export class UserService {
   constructor() { }
 
     logUser(): string   {
-        return ' user ' + localStorage.getItem(locStorItems.userName);
+        return ' user ' + localStorage.getItem(locStorItems.user);
     }
 
     getUserName(): string {
-        return localStorage.getItem(locStorItems.userName);
+        return localStorage.getItem(locStorItems.user);
     }
 }

@@ -7,7 +7,7 @@ export class RegistryProperties {
     email: string;
     total: number;
     comment: string;
-    sendDt: string;
+    sent: string;
     created: string;
 
 }

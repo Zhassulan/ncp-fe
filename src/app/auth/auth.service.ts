@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {locStorItems} from '../settings';
-import {SessionService} from './session.service';
 import {CookieService} from 'ngx-cookie-service';
 
 @Injectable({
@@ -11,17 +10,22 @@ export class AuthService {
     constructor(private cookieService: CookieService) {
     }
 
-    logout() {
-        this.cookieService.deleteAll();
-        sessionStorage.removeItem(locStorItems.userName);
+    setUser(user) {
+        localStorage.setItem(locStorItems.user, user)
     }
 
-    getUser(): any {
-        return sessionStorage.getItem(locStorItems.userName);
+    logout() {
+        this.cookieService.deleteAll();
+        localStorage.removeItem(locStorItems.token)
+        localStorage.removeItem(locStorItems.user)
+    }
+
+    getUser() {
+        return localStorage.getItem(locStorItems.user)
     }
 
     isLogged(): boolean {
-        return sessionStorage.getItem("username") !== null;
+        return this.cookieService.get("JSESSIONID") == localStorage.getItem(locStorItems.token)
     }
 
 }
@@ -29,4 +33,4 @@ export class AuthService {
 export const AUTH_PROVIDERS: Array<any> = [{
     provide: AuthService, useClass: AuthService
 }
-];
+]

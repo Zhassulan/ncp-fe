@@ -157,9 +157,9 @@ export const enum msgs {
  * Данные локального storage (не куки)
  */
 export enum locStorItems {
-    tokenName = 'token',
-    userName = 'username',
-    version = 'ncp_version'
+    token = 'token',
+    user = 'username',
+    ver = 'ncp_version'
 }
 
 /**
@@ -184,33 +184,6 @@ export enum PaymentDetailDistrStrategy {
 export enum dic {
     prepaid = 'аванс',
 }
-
-/**
- * Колонки таблицы детали платежа
- * @type {string[]}
- */
-export const PaymentDetailsTableColumns = [
-    'num',
-    'nomenclature',
-    'msisdn',
-    'icc',
-    'account',
-    'sum',
-    'del'
-];
-
-/**
- * Заголовки колонок таблицы деталей платежа
- */
-export enum PaymentDetailTableColumnsDisplay {
-    num = '#',
-    nomenclature = 'Номенклатура',
-    msisdn = 'Номер',
-    icc = 'ICC',
-    account = 'Лицевой счёт',
-    sum = 'Сумма',
-    del = 'Удалить'
-};
 
 /**
  * Меню платежа
@@ -245,25 +218,6 @@ export enum TOOLTIPS {
  */
 export class Settings {
 }
-
-/**
- * Колонки таблицы детали реестра
- * @type {string[]}
- */
-export const RegistryDetailsTableCols = [
-    'num',
-    'msisdn',
-    'amount'
-];
-
-/**
- * Заголовки колонок таблицы деталей реестра
- */
-export enum RegistryDetailTableColsDisplay {
-    num = '#',
-    msisdn = 'Номер',
-    amount = 'Сумма'
-};
 
 export const appTitle = 'NCP';
 

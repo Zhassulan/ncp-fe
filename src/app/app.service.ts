@@ -23,13 +23,13 @@ export class AppService {
     }
 
     checkVer() {
-        this.appDataService.version().subscribe(data => {
-            if (localStorage.getItem(locStorItems.version) == null) {
-                localStorage.setItem(locStorItems.version, data.ver.toString());
+        this.appDataService.ver().subscribe(data => {
+            if (localStorage.getItem(locStorItems.ver) == null) {
+                localStorage.setItem(locStorItems.ver, data.ver.toString());
                 this.notif.info(msgs.msgInfRefreshPage);
             } else {
-                if (data.ver > Number.parseInt(localStorage.getItem(locStorItems.version))) {
-                    localStorage.setItem(locStorItems.version, data.ver.toString());
+                if (data.ver > Number.parseInt(localStorage.getItem(locStorItems.ver))) {
+                    localStorage.setItem(locStorItems.ver, data.ver.toString());
                     this.notif.info(msgs.msgInfRefreshPage);
                 }
             }

@@ -1,16 +1,8 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {
-    RegistryDetailsTableCols,
-    RegistryDetailTableColsDisplay
-} from '../../../settings';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {RegistryDetail} from '../../model/registry-detail';
-import {Subscription} from 'rxjs';
-import {Registry} from '../../model/registry';
-import {register} from 'ts-node';
-import {RegistryDataService} from '../../../data/registry-data.service';
 
 
 @Component({
@@ -21,23 +13,16 @@ import {RegistryDataService} from '../../../data/registry-data.service';
 export class RegistryDetailsComponent implements OnInit {
 
     dataSource = new MatTableDataSource<RegistryDetail>();
-    columnsDisplay = RegistryDetailTableColsDisplay;
-    columns: string[] = RegistryDetailsTableCols;
-    i: number = 0;
-    paginatorResultsLength: number = 0;
+    displayedColumns: string [] = [ 'num', 'msisdn', 'amount'];
+    paginatorResultsLength = 0;
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    @Input() detals;
+    @Input() details;
 
-    constructor(private registryService: RegistryDataService) {
-    }
+    constructor() { }
 
     ngOnInit() {
-        this.dataSource.data = this.detals;
-        this.setPaginator();
-    }
-
-    setPaginator() {
+        this.dataSource.data = this.details;
         this.paginatorResultsLength = this.dataSource.data.length;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

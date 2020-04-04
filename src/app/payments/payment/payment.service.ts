@@ -141,18 +141,8 @@ export class PaymentService {
             observer => {
                 this.payDataService.equipments(id).subscribe(
                     data => {
-                        if (data.result == rests.restResultOk) {
-                            this.setEquipmentsInDetails(data.data);
-                        }
-                        if (data.result == rests.restResultErr) {
-                            observer.error(data);
-                        }
-                    },
-                    error2 => {
-                    },
-                    () => {
-                    }
-                );
+                        this.setEquipmentsInDetails(data);
+                    });
             });
     }
 
@@ -172,29 +162,12 @@ export class PaymentService {
         console.log('Получение информации оборудования по ICC ' + icc + '..');
         return new Observable(
             observer => {
-                this.payDataService.bercutEquipmentInfoByIcc(icc).subscribe(
-                    data => {
-                        if (data.result == rests.restResultOk) {
-                            //console.log(data.data);
-                            observer.next(data.data);
-                        }
-                        if (data.result == rests.restResultErr) {
-                            observer.error(data);
-                        }
-                    },
-                    error2 => {
-                        observer.error(error2);
-                    },
-                    () => {
-                        observer.complete();
-                    }
-                );
+                this.payDataService.bercutEquipmentInfoByIcc(icc).subscribe( data => observer.next(data));
             });
     }
 
-    async checkEquipmentParams(equipmentParams) {
-        const response = await this.payDataService.checkEquipmentParams(equipmentParams).toPromise();
-        return response;
+    checkEquipmentParams(equipmentParams) {
+        return this.payDataService.checkEquipmentParams(equipmentParams);
     }
 
     async distributionCheckConditions(id): Promise<boolean> {
@@ -263,12 +236,11 @@ export class PaymentService {
         //console.log('equipmentCheckParams:\n');
         //this.utils.printObj(equipmentCheckParams);
         if (equipmentCheckParams.length > 0) {
-            let res = await this.checkEquipmentParams(equipmentCheckParams);
-            res.data.forEach(item => {
-                if (item.status != STATUSES.STATUS_VALID && item.status != STATUSES.STATUS_UNKNOWN) {
+            this.checkEquipmentParams(equipmentCheckParams).forEach(item => {
+                /*if (item.status != STATUSES.STATUS_VALID && item.status != STATUSES.STATUS_UNKNOWN) {
                     this.notifService.warn(item.icc + ' ' + item.info);
                     result = false;
-                }
+                }*/
             });
         }
         return result;
@@ -399,7 +371,9 @@ export class PaymentService {
 
     detailsSum() {
         let total = 0;
-        this.payment.details.forEach(detail => { total += Number(detail.sum); });
+        this.payment.details.forEach(detail => {
+            total += Number(detail.sum);
+        });
         return total;
     }
 

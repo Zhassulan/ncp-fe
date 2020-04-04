@@ -1,11 +1,31 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {PaymentDetailsTableColumns, PaymentDetailTableColumnsDisplay, PaymentStatus, TOOLTIPS} from '../../../settings';
+import {PaymentStatus, TOOLTIPS} from '../../../settings';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {Subscription} from 'rxjs';
 import {PaymentService} from '../payment.service';
 import {MatSort} from '@angular/material/sort';
 import {Detail} from '../model/detail';
+
+ const PaymentDetailsTableColumns = [
+    'num',
+    'nomenclature',
+    'msisdn',
+    'icc',
+    'account',
+    'sum',
+    'del'
+];
+
+enum PaymentDetailTableColumnsDisplay {
+    num = '#',
+    nomenclature = 'Номенклатура',
+    msisdn = 'Номер',
+    icc = 'ICC',
+    account = 'Лицевой счёт',
+    sum = 'Сумма',
+    del = 'Удалить'
+};
 
 @Component({
     selector: 'app-details',

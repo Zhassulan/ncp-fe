@@ -3,7 +3,7 @@ import {RegistryDetail} from './registry-detail';
 
 export class Registry {
 
-    properties: RegistryProperties;
+    props: RegistryProperties;
     details: RegistryDetail [];
 
 }

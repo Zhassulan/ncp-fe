@@ -34,7 +34,7 @@ export class MenuToolbarComponent implements AfterViewChecked {
         },
         {
             icon: 'assignment_ind',
-            route: 'registry/all',
+            route: 'registries',
             title: 'Реестры',
         }
     ];
@@ -60,7 +60,6 @@ export class MenuToolbarComponent implements AfterViewChecked {
 
     logout() {
         this.authService.logout();
-        localStorage.removeItem(locStorItems.userName);
         this.router.navigate(['login']);
     }
 
