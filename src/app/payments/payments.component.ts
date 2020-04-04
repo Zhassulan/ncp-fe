@@ -8,12 +8,11 @@ import {PaymentService} from './payment/payment.service';
 import {UserService} from '../user/user.service';
 import {Router} from '@angular/router';
 import {SelectionModel} from '@angular/cdk/collections';
-import {msgs, PaymentStatus} from '../settings';
+import {msgs, PaymentStatus, PaymentStatusRu} from '../settings';
 import {Subscription} from 'rxjs';
 import {AppService} from '../app.service';
 import {ExcelService} from '../excel/excel.service';
 import {DateRangeComponent} from '../date-range/date-range.component';
-import {Utils} from '../utils';
 import {NotificationsService} from 'angular2-notifications';
 import {Payment} from './payment/model/payment';
 import {PayDataService} from '../data/pay-data-service';
@@ -48,7 +47,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     paginatorResultsLength = 0;
     //выбранные в таблице модели
     selection = new SelectionModel<Payment>(true, []);
-    sub: Subscription;
     pageSize = 30;
     pageSizeOptions: number[] = [50, 100, 150, 250, 300];
     PaymentStatus = PaymentStatus;
@@ -87,7 +85,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnDestroy() {
-        //this.sub.unsubscribe();
+        //this.paymentSubscription.unsubscribe();
     }
 
     onRowClicked(paymentRow) {
@@ -120,7 +118,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         this.dataSource.data = [];
         let stDt = this.dateRangeComponent.pickerStartDate.value.getTime();
         let enDt = this.dateRangeComponent.pickerEndDate.value.getTime();
-        this.sub = this.payDataService.all(stDt, enDt).subscribe(data => {
+        this.payDataService.all(stDt, enDt).subscribe(data => {
                 this.paymentsService.initStatusRu(data);
                 this.dataSource.data = data;
             },
@@ -137,7 +135,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     getFileData() {
         this.appService.setProgress(true);
         this.dataSource.data = [];
-        this.sub = this.payDataService.json().subscribe(data => {
+        this.payDataService.json().subscribe(data => {
             this.dataSource.data = data;
         }, error => {
             this.notif.error(msgs.msgErrLoadData);
@@ -152,12 +150,14 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     transit(id) {
         let msg;
         this.appService.setProgress(true);
-        this.sub = this.paymentsService.toTransit(id).subscribe(data => {
-                this.dialogService.addItem(`ID ${id} OK - TRANSIT_PDOC_ID ${data.transitPaymentDocNumId}`);
+        this.payDataService.transit(id).subscribe(data => {
+                let payment = this.dataSource.data.find(x => x.id == id);
+                payment.status = data.status;
+                payment.statusRu = PaymentStatusRu[payment.status];
+                this.dialogService.addItem(`ID ${id} OK - TRANSIT_PDOC_ID ${data.transitPdocNumId}`);
                 this.dialogService.addItem(msg);
             },
             error => {
-                console.log(error);
                 this.dialogService.addItem(`ID ${id} Ошибка - ${error.error.errm}`);
                 this.appService.setProgress(false);
             },
@@ -218,26 +218,26 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         this.transit(payment.id);
     }
 
-    transitDel(payment) {
-        let msg;
+    transitDel(id) {
         this.appService.setProgress(true);
-        this.sub = this.paymentsService.delTransit(payment.id).subscribe(data => {
-                payment = data;
-                this.dialogService.addItem(msgs.msgSuccessDelTransit + ' ID платежа ' + payment.id + this.userService.logUser());
+        this.payDataService.transitDel(id).subscribe(data => {
+                let payment = this.dataSource.data.find(x => x.id == id);
+                payment.status = data.status;
+                payment.statusRu = PaymentStatusRu[payment.status];
+                this.dialogService.addItem(`ID ${id} OK - TRANSIT_PDOC_ID ${data.transitPdocNumId}`);
             },
             error => {
-                msg = msgs.msgErrDelTransit + ' ID платежа ' + payment.id + '. ' + error + this.userService.logUser();
-                this.dialogService.addItem(msg);
+                this.dialogService.addItem(`ID ${id} Ошибка - ${error.error.errm}`);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));
     }
 
-    menuOnRowDeleteTransit(paymentRow) {
+    menuOnRowDeleteTransit(payment) {
         this.dialogService.clear();
-        this.dialogService.title = 'Удалнение с тразитного счёта';
+        this.dialogService.title = 'Удаление с тразитного счёта';
         this.dialogService.openDialog();
-        this.transitDel(paymentRow);
+        this.transitDel(payment.id);
     }
 
     menuOnRowOpenPayment(paymentRow) {
@@ -247,6 +247,18 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
 
     export() {
         this.selection.selected.length > 0 ? this.excelService.save(this.selection.selected) : this.excelService.save(this.dataSource.data);
+    }
+
+    setStatusRu(payment) {
+        payment.statusRu = PaymentStatusRu[payment.status];
+    }
+
+    setStatusRuOrigin(payment) {
+        payment.status = PaymentStatusRu[payment.status];
+    }
+
+    initStatusRu(payments) {
+        payments.forEach(payment => this.setStatusRu(payment));
     }
 
 }

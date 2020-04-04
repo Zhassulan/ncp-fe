@@ -54,7 +54,7 @@ export class PaymentsService {
     delTransit(id): Observable<any> {
         return new Observable<any>(
             observer => {
-                this.payDataService.transitDel(id, localStorage.getItem(locStorItems.user)).subscribe(data => {
+                this.payDataService.transitDel(id).subscribe(data => {
                         let payment = this.payments.find(x => x.id == id);
                         payment.status = data.status;
                         this.setStatusRu(payment);

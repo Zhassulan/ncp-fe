@@ -36,7 +36,7 @@ export class PayDataService {
         return this.http.post<Payment>(`${API_URL}/payments/${id}/transit`, new RequestPostPayment(PaymentActions.TO_TRANSIT), httpOptions);
     }
 
-    transitDel(id, user) {
+    transitDel(id) {
         return this.http.delete<Payment>(API_URL + `/payments/${id}/transit`);
     }
 
