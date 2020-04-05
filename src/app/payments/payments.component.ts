@@ -3,13 +3,11 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {DialogService} from '../dialog/dialog.service';
-import {PaymentsService} from './payments.service';
 import {PaymentService} from './payment/payment.service';
 import {UserService} from '../user/user.service';
 import {Router} from '@angular/router';
 import {SelectionModel} from '@angular/cdk/collections';
 import {msgs, PaymentStatus, PaymentStatusRu} from '../settings';
-import {Subscription} from 'rxjs';
 import {AppService} from '../app.service';
 import {ExcelService} from '../excel/excel.service';
 import {DateRangeComponent} from '../date-range/date-range.component';
@@ -55,7 +53,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     private dateRangeComponent: DateRangeComponent;
 
     constructor(private dialogService: DialogService,
-                private paymentsService: PaymentsService,
                 private userService: UserService,
                 private router: Router,
                 private paymentService: PaymentService,
@@ -64,7 +61,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
                 private notif: NotificationsService,
                 private payDataService: PayDataService
     ) {
-        this.dataSource = new MatTableDataSource(this.paymentsService.payments);
+        this.dataSource = new MatTableDataSource<Payment>();
         this.paginatorResultsLength = 0;
     }
 
@@ -78,14 +75,10 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
     }
 
     setPaginator() {
-        this.paginatorResultsLength = this.paymentsService.paginatorResultsLength;
+        this.paginatorResultsLength = this.dataSource.data.length;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-    }
-
-    ngOnDestroy() {
-        //this.paymentSubscription.unsubscribe();
     }
 
     onRowClicked(paymentRow) {
@@ -108,9 +101,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         this.loadServerData();
     }
 
-    /**
-     * загрузка платежей с сервера
-     */
     loadServerData() {
         this.appService.setProgress(true);
         this.dateRangeComponent.setCalendarToDate('2019-12-31T00:00:00.000', '2019-12-31T23:59:59.999');
@@ -119,7 +109,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         let stDt = this.dateRangeComponent.pickerStartDate.value.getTime();
         let enDt = this.dateRangeComponent.pickerEndDate.value.getTime();
         this.payDataService.all(stDt, enDt).subscribe(data => {
-                this.paymentsService.initStatusRu(data);
+                this.initStatusRu(data);
                 this.dataSource.data = data;
             },
             error => {
@@ -169,11 +159,7 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
             this.dialogService.clear();
             this.dialogService.title = 'Перевод на транзитный счёт';
             this.dialogService.openDialog();
-            this.selection.selected.forEach(payment => {
-                this.transit(payment);
-            });
-        } else {
-            this.notif.warn(msgs.msgNotSelected);
+            this.selection.selected.forEach(payment => this.transit(payment.id));
         }
     }
 
@@ -198,17 +184,13 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
 
     selectAll() {
         let filteredData = this.dataSource.filteredData;
-        filteredData.forEach(row => {
-            this.selection.select(row);
-        });
+        filteredData.forEach(row => this.selection.select(row));
     }
 
     /** The statusLabel for the checkbox on the passed row */
     checkboxLabel(row?: Payment): string {
-        if (!row) {
-            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-        }
-        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${this.selection.selected.length}`;
+        return !row ? `${this.isAllSelected() ? 'select' : 'deselect'} all`
+            : `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${this.selection.selected.length}`;
     }
 
     menuOnRowToTransit(payment) {
@@ -220,7 +202,8 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
 
     transitDel(id) {
         this.appService.setProgress(true);
-        this.payDataService.transitDel(id).subscribe(data => {
+        this.payDataService.transitDel(id).subscribe(
+            data => {
                 let payment = this.dataSource.data.find(x => x.id == id);
                 payment.status = data.status;
                 payment.statusRu = PaymentStatusRu[payment.status];

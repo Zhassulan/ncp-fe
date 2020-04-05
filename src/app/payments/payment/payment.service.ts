@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import {PaymentsService} from '../payments.service';
-import {msgs, PaymentStatus, rests, STATUSES} from '../../settings';
+import {msgs, PaymentStatus} from '../../settings';
 import {NGXLogger} from 'ngx-logger';
 import {UserService} from '../../user/user.service';
 import {PaymentDetail} from '../model/payment-detail';
@@ -31,8 +30,7 @@ export class PaymentService {
     private paymentObs = new Subject<Payment>();
     paymentAnnounced$ = this.paymentObs.asObservable();
 
-    constructor(private paymentsService: PaymentsService,
-                private routerService: RouterService,
+    constructor(private routerService: RouterService,
                 private logger: NGXLogger,
                 private userService: UserService,
                 private notifService: NotificationsService,

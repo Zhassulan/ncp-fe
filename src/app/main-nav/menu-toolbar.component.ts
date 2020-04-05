@@ -1,8 +1,6 @@
 import {AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Output} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
-import {locStorItems} from '../settings';
-import {PaymentsService} from '../payments/payments.service';
 import {Subscription} from 'rxjs';
 import {AppService} from '../app.service';
 
@@ -43,7 +41,6 @@ export class MenuToolbarComponent implements AfterViewChecked {
 
     constructor(private authService: AuthService,
                 private router: Router,
-                private paymentsService: PaymentsService,
                 private cdRef:ChangeDetectorRef,
                 private appService: AppService) {
         this.progressSubscription = this.appService.progressAnnounced$.subscribe(

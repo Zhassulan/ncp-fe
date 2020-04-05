@@ -2,8 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {NGXLogger} from 'ngx-logger';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
-import {msgs, PaymentMenuItems, PaymentStatus} from '../../settings';
-import {PaymentsService} from '../payments.service';
+import {msgs, PaymentMenuItems} from '../../settings';
 import {PaymentService} from './payment.service';
 import {UserService} from '../../user/user.service';
 import {DialogComponent} from './equipment/dialog/dialog.component';
@@ -42,7 +41,6 @@ export class PaymentComponent implements OnInit {
 
     constructor(private router: Router,
                 public paymentService: PaymentService,
-                private paymentsService: PaymentsService,
                 private notifService: NotificationsService,
                 private route: ActivatedRoute,
                 private log: NGXLogger,

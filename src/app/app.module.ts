@@ -26,7 +26,6 @@ import {BreadcrumbModule} from 'angular-crumbs';
 import {DialogComponent} from './payments/payment/equipment/dialog/dialog.component';
 import localeRu from '@angular/common/locales/ru';
 import {UserService} from './user/user.service';
-import {PaymentsService} from './payments/payments.service';
 import {PhonePipe} from './payments/payment/phone-pipe';
 import {PaymentMenuComponent} from './payments/payment/menu/payment-menu.component';
 import {PaymentService} from './payments/payment/payment.service';
@@ -128,7 +127,6 @@ registerLocaleData(localeRu, 'ru');
         AuthService,
         RouterService,
         UserService,
-        PaymentsService,
         PaymentService,
         AppService,
         ExcelService,
