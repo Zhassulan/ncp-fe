@@ -42,7 +42,7 @@ export class DialogComponent implements OnInit {
         this.routerService.registryFromFile(this.fileObj).subscribe(
             data => {
                 if (this.paymentService.payment)
-                    this.paymentService.addDetailsFromFilePayment();
+                    this.paymentService.addDetailsFromRouterRegistry();
                 this.dialogRef.close();
             },
             error2 => {

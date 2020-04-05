@@ -19,7 +19,7 @@ import {RouterService} from '../../router/router.service';
 export class PaymentService {
 
     payment: Payment;
-    private paymentObs = new Subject<Payment>();
+    paymentObs = new Subject<Payment>();
     payAnnounced$ = this.paymentObs.asObservable();
 
     constructor(private routerService: RouterService,
@@ -27,7 +27,7 @@ export class PaymentService {
                 private payDataService: PayDataService) {
     }
 
-    get filePaymentItems() {
+    get routerRegistryItems() {
         return this.routerService.routerRegistry.items;
     }
 
@@ -57,16 +57,17 @@ export class PaymentService {
     }
 
     announcePayment() {
+        //console.log(`Announcing payment:\n ${ this.json_pretty(this.payment) }`);
         this.paymentObs.next(this.payment);
     }
 
-    checkDocNum(): boolean {
-        return this.routerService.routerRegistry ? this.routerService.routerRegistry.header.docnum == this.payment.payDocnum : true;
+    json_pretty(data) {
+        return JSON.stringify(data, undefined, 3);
     }
 
-    addDetailsFromFilePayment() {
+    addDetailsFromRouterRegistry() {
         let details: Detail [] = [];
-        for (let item of this.filePaymentItems.slice(0, this.filePaymentItems.length)) {
+        for (let item of this.routerRegistryItems.slice(0, this.routerRegistryItems.length)) {
             let detail = new Detail();
             detail.nomenclature = item.nomenclature;
             detail.msisdn = item.msisdn;
@@ -78,14 +79,6 @@ export class PaymentService {
         }
         this.payment.details = details;
         this.announcePayment();
-    }
-
-    checkRnn(): boolean {
-        return this.routerService.routerRegistry ? this.routerService.routerRegistry.header.bin == this.payment.rnnSender : true;
-    }
-
-    distribute() {
-        return this.payDataService.distribute(this.payment.id, this.payment.details);
     }
 
     setEquipments() {

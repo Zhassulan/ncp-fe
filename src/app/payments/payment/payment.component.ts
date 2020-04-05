@@ -116,7 +116,7 @@ export class PaymentComponent implements OnInit {
     dlgDistribute() {
         this.appService.setProgress(true);
         this.payDataService.distribute(this.payment.id, this.payment.details).subscribe(data => {
-            this.payService.payment = data;
+            this.payService.setPayment(data);
             this.notifService.info(msgs.msgSuccessDistributed);
         }, error => {
             this.notifService.error(error);
