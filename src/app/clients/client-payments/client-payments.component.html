@@ -1,0 +1,30 @@
+<div class="container">
+    <div></div>
+    <div>
+        <div class="content">
+            <div>
+                <mat-form-field>
+                    <mat-label> Клиент</mat-label>
+                    <input matInput disabled value="Клиент">
+                </mat-form-field>
+            </div>
+            <div>
+                <div class="search">
+                    <div>
+                        <app-date-range></app-date-range>
+                    </div>
+                    <div>
+                        <button mat-raised-button color="primary" (click)="null"
+                                matTooltip="Загрузка данных за указанную дату">
+                            Загрузка
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <app-client-payments-table></app-client-payments-table>
+            </div>
+        </div>
+    </div>
+    <div></div>
+</div>

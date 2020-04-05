@@ -1,0 +1,26 @@
+.container {
+    display: grid;
+    grid-template-areas:
+            ". . .";
+    grid-template-rows: auto;
+    grid-template-columns: 2%  auto 2%;
+}
+
+.content {
+    display: grid;
+    grid-template-areas:
+            "."
+            "."
+            ".";
+    grid-template-rows: auto auto auto;
+    grid-template-columns: auto;
+}
+
+.search {
+    display: grid;
+    grid-template-areas:
+            ". .";
+    grid-template-rows: auto;
+    grid-template-columns: min-content min-content;
+    grid-gap: 2%;
+}
