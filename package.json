@@ -36,7 +36,7 @@
     "ngx-cookie-service": "^2.4.0",
     "ngx-filesaver": "^2.2.1",
     "ngx-logger": "^3.4.6",
-    "rxjs": "^6.5.4",
+    "rxjs": "^7.0.0-beta.0",
     "ts-md5": "^1.2.7",
     "tslib": "^1.11.1",
     "web-animations-js": "^2.3.2",
