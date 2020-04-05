@@ -40,7 +40,6 @@ export class DetailsComponent implements OnInit {
     displayedColumns: string[] = PaymentDetailsTableColumns;
     detailTableColumnsDisplay = PaymentDetailTableColumnsDisplay;
     subscription: Subscription;
-
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
 
