@@ -46,22 +46,18 @@ export class DetailsComponent implements OnInit {
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-    constructor(private paymentService: PaymentService) { }
-
-    get details() {
-        return this.payment.details;
-    }
-
-    get payment() {
-        return this.paymentService.payment;
-    }
+    constructor(private payService: PaymentService) { }
 
     ngOnInit() {
-        this.subscription = this.paymentService.paymentAnnounced$.subscribe(
+        this.subscription = this.payService.payAnnounced$.subscribe(
             payment => {
                 this.dataSource.data = payment.details;
                 this.setPaginator();
             });
+    }
+
+    get payment() {
+        return this.payService.payment;
     }
 
     setPaginator() {
@@ -71,17 +67,17 @@ export class DetailsComponent implements OnInit {
     }
 
     delDetail(row) {
-        this.paymentService.delDetail(row);
+        this.payService.delDetail(row);
         this.paginatorResultsLength -= 1;
     }
 
     delAll() {
-        this.paymentService.delAll();
-        this.paginatorResultsLength = this.paymentService.payment.details.length;
+        this.payService.delAll();
+        this.paginatorResultsLength = this.payService.payment.details.length;
     }
 
-    detailsSum(): number {
-        return this.paymentService.detailsSum();
+    detailsSum() {
+        return this.payService.detailsSum();
     }
 
 }

@@ -1,18 +1,17 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {NGXLogger} from 'ngx-logger';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
 import {msgs, PaymentMenuItems} from '../../settings';
 import {PaymentService} from './payment.service';
-import {UserService} from '../../user/user.service';
 import {DialogComponent} from './equipment/dialog/dialog.component';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {DetailsComponent} from './details/details.component';
 import {AppService} from '../../app.service';
 import {AddRegistryModalComponent} from './add-registry-modal/add-registry-modal.component';
 import {CalendarDeferModalComponent} from './calendar-defer-modal/calendar-defer-modal.component';
-import {DialogService} from '../../dialog/dialog.service';
 import {MatSort} from '@angular/material/sort';
+import {PayDataService} from '../../data/pay-data-service';
+import {ClientDataService} from '../../data/client-data-service';
 
 export interface RegistryDialogData {
     registry: string;
@@ -36,42 +35,21 @@ export class PaymentComponent implements OnInit {
     deferDate = new Date();
     isValidRegistry: boolean = false;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
-    private _msisdns: String [] = [];
-    private _accounts: String [] = []; //todo проверить на повторность счетов на Каспи, возможно заменить на Set
+    msisdns: String [] = [];
+    accounts: String [] = [];
 
-    constructor(private router: Router,
-                public paymentService: PaymentService,
+    constructor(public payService: PaymentService,
                 private notifService: NotificationsService,
                 private route: ActivatedRoute,
-                private log: NGXLogger,
                 public dlg: MatDialog,
-                private userService: UserService,
                 private appService: AppService,
-                private dlgService: DialogService) {
-    }
-
-    get msisdns() {
-        return this._msisdns;
-    }
-
-    get accounts() {
-        return this._accounts;
-    }
-
-    get payment() {
-        return this.paymentService.payment;
-    }
-
-    get details() {
-        return this.paymentService.payment.details;
+                private payDataService: PayDataService,
+                private  clntDataService: ClientDataService) {
     }
 
     ngOnInit() {
         this.load(this.route.snapshot.params['id']);
-
     }
-
-
 
     menuOnSelected(selected: number) {
         switch (selected) {
@@ -95,41 +73,36 @@ export class PaymentComponent implements OnInit {
         }
     }
 
+    get payment() {
+        return this.payService.payment;
+    }
+
     load(id) {
         this.appService.setProgress(true);
-        this.paymentService.loadPayment(id).subscribe(
+        this.payDataService.findById(id).subscribe(
             data => {
-                if (!this.paymentService.isBlocked()) this.loadPhones(data.profileId);
+                if (!this.payService.isBlocked()) this.loadPhones(data.profileId);
+                this.payService.setPayment(data);
             },
             error => {
                 this.appService.setProgress(false);
                 this.notifService.error(error);
             },
-            () => {
-                this.appService.setProgress(false);
-            }
-        );
+            () => this.appService.setProgress(false));
     }
 
     loadPhones(id) {
-        this.paymentService.loadPhones(id).subscribe(
+        this.clntDataService.phones(id).subscribe(
             data => {
-                this._accounts = [];
-                this._msisdns = [];
-                for (let item of this.paymentService.phones) {
-                    if (item.msisdn) this._msisdns.push(item.msisdn);
-                    if (item.account) this._accounts.push(item.account.toString());
-                }
-                console.log(`Загружено ${this._msisdns.length} номеров и ${this._accounts.length} счетов`);
+                this.msisdns = data.filter(i => i.msisdn).map(i => i.msisdn);
+                this.accounts = data.filter(i => i.account).map(i => String(i.account));
+                console.log(`Загружено ${this.msisdns.length} номеров и ${this.accounts.length} счетов`);
             },
             error => {
                 this.appService.setProgress(false);
                 this.notifService.error(error);
             },
-            () => {
-                this.appService.setProgress(false);
-            }
-        );
+            () => this.appService.setProgress(false));
     }
 
     dlgImportEquipment() {
@@ -142,74 +115,25 @@ export class PaymentComponent implements OnInit {
 
     dlgDistribute() {
         this.appService.setProgress(true);
-        this.paymentService.distribute().subscribe( data => {
+        this.payDataService.distribute(this.payment.id, this.payment.details).subscribe(data => {
+            this.payService.payment = data;
             this.notifService.info(msgs.msgSuccessDistributed);
         }, error => {
             this.notifService.error(error);
             this.appService.setProgress(false);
-        }, () => {
-            this.appService.setProgress(false);
-        })
-    }
-
-    async dlgDistributeOld() {
-        /*let res = await this.paymentService.distributionCheckConditions(this.paymentService.payment.id);
-        res ? this.distribute() : this.notifService.error(msgs.msgDistributionFailed);*/
+        }, () => this.appService.setProgress(false));
     }
 
     dlgImportRegistry() {
-        let valids = 0;
-        let invalids = 0;
-        let i = 1;
-        let registrySum = 0;
         const dialogRef = this.dlg.open(AddRegistryModalComponent, {
             width: '50%',
             data: {registry: this.registry}
         });
-
         dialogRef.afterClosed().subscribe(result => {
-            if (!result) {
-                this.isValidRegistry = false;
-                return;
-            }
-            let data = this.paymentService.importRegistryData(result);
+            let data = this.payService.importRegistryData(result);
             if (data.broken.length) {
                 this.notifService.warn(`Есть ошибочные строки:\n ${data.broken}`);
-                return;
             }
-            for (let item of data.imported) {
-                registrySum += Number(item.sum);
-            }
-            this.appService.setProgress(true);
-            let sum = 0;
-            this.paymentService.registryValidation(this.dlgService, data.imported).subscribe(
-                data => {
-                    if (data.result) {
-                        this.dlgService.addItem(i++ + ') ' + data.data + ' - ' + msgs.msgValid);
-                        valids++;
-                    } else {
-                        this.dlgService.addItem(i++ + ') ' + data.data + ' - ' + msgs.msgNoData);
-                        invalids++;
-                    }
-                },
-                error => {
-                    this.notifService.error(error);
-                    console.log(error);
-                    this.appService.setProgress(false);
-                },
-                () => {
-                    let msg;
-                    this.dlgService.addItem(`Проверено ${valids + invalids} из ${data.imported.length} элементов, из них валидные ${valids} и ошибочных ${invalids}.`);
-                    if (invalids > 0) {
-                        this.dlgService.addItem(`Ошибка. Исправьте номера\\счета и попробуйте импортировать реестр снова.`);
-                    } else if (this.payment.sum != registrySum) {
-                        this.dlgService.addItem(`Ошибка. Сумма импортированного реестра ${registrySum} не совпадает с суммой платежа ${this.payment.sum}.`);
-                    } else {
-                        this.isValidRegistry = true;
-                        this.paymentService.addImportedRegistriesPayment(data.imported);
-                    }
-                    this.appService.setProgress(false);
-                });
         });
     }
 
@@ -229,7 +153,7 @@ export class PaymentComponent implements OnInit {
             else if (dt.getDate() >= tomorrow.getDate() && dt.getMonth() >= tomorrow.getMonth() && dt.getFullYear() >= tomorrow.getFullYear()) {
                 this.payment.closed = dt.getTime().toString();
                 this.notifService.info(`Установлена дата отложенной разноски ${dt.getDate()}/${dt.getMonth() + 1}/${dt.getFullYear()}`);
-                this.paymentService.defer().subscribe(
+                this.payService.defer().subscribe(
                     data => {
                         //todo Отложить платёж
                     },

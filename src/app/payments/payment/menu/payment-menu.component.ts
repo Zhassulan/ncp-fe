@@ -17,7 +17,7 @@ export class PaymentMenuComponent implements OnInit {
     details = [];
 
     constructor(private paymentService: PaymentService) {
-        this.subscription = this.paymentService.paymentAnnounced$.subscribe(
+        this.subscription = this.paymentService.payAnnounced$.subscribe(
             payment => {
                 this.details = payment.details;
             });

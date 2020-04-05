@@ -10,17 +10,17 @@
                                 <h1 class="mat-h1">{{ payment.paymentId }} от {{ payment.created | date }}</h1>
                             </div>
                         </div>
-                        <div class="item-top2">
+                        <div class="item-top2" *ngIf="payment">
                             <app-payment-menu (selectedItem)="menuOnSelected($event)" [isRegistriesValid]="isValidRegistry"></app-payment-menu>
                         </div>
                     </div>
                 </div>
-                <div class="item-c">
-                    <app-payment-info [payment]="payment" *ngIf="payment"></app-payment-info>
-                    <app-add-detail *ngIf="payment" [msisdns]="msisdns" [accounts]="accounts"></app-add-detail>
+                <div class="item-c" *ngIf="payment">
+                    <app-payment-info [payment]="payment"></app-payment-info>
+                    <app-add-detail [msisdns]="msisdns" [accounts]="accounts"></app-add-detail>
                 </div>
-                <div class="item-d">
-                    <app-details *ngIf="payment"></app-details>
+                <div class="item-d" *ngIf="payment">
+                    <app-details></app-details>
                 </div>
                 <!--<div class="item-e">footer</div>
                 <div class="item-footer1">footer1</div>

@@ -1,9 +1,8 @@
-import {Id} from './id';
-import {Action} from './action';
 import {Detail} from './detail';
 
-export class Payment  extends Id {
+export class Payment {
 
+    id: number;
     profileId: number;
     paymentId  : number;
     payDocnum  : string;
@@ -22,11 +21,11 @@ export class Payment  extends Id {
     mobipayPartner  : string;
     payDetails: string;
     transitPdocNumId  : number;
-    details  : Detail [];
-    actions  : Action [];
     managedBy  : string;
     mobipay  : boolean;
     isChecked: boolean;
     statusRu: string;
+
+    details  : Detail [];
 
 }

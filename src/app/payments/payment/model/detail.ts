@@ -1,7 +1,9 @@
 import {Id} from './id';
 
-export class Detail extends Id {
+export class Detail {
 
+    id: number;
+    paymentId: number;
     msisdn: string;
     account: number;
     sum: number;
