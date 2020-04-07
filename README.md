@@ -27,3 +27,13 @@
 ```
 Соответственно контекст приложения будет "/ncp/" ("index.html") и путь к API "http://localhost/api/v1/ncp"
 
+Сборка приложения:
+
+Тест
+ng build --configuration=staging
+
+Сборка для деплоймента
+ng build --configuration=production
+
+запуск локально в режиме прода
+ng serve --prod

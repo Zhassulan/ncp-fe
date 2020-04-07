@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, isDevMode} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
@@ -7,7 +7,7 @@ import {PaymentService} from './payment/payment.service';
 import {UserService} from '../user/user.service';
 import {Router} from '@angular/router';
 import {SelectionModel} from '@angular/cdk/collections';
-import {msgs, PaymentStatus, PaymentStatusRu} from '../settings';
+import {PaymentStatus, PaymentStatusRu} from '../settings';
 import {AppService} from '../app.service';
 import {ExcelService} from '../excel/excel.service';
 import {DateRangeComponent} from '../date-range/date-range.component';
@@ -20,7 +20,7 @@ import {PayDataService} from '../data/pay-data-service';
     templateUrl: './payments.component.html',
     styleUrls: ['./payments.component.css']
 })
-export class PaymentsComponent implements OnInit, AfterViewInit {
+export class PaymentsComponent implements OnInit {
 
     displayedColumns = [
         'ID',
@@ -70,10 +70,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         this.setPaginator();
     }
 
-    ngAfterViewInit() {
-
-    }
-
     setPaginator() {
         this.paginatorResultsLength = this.dataSource.data.length;
         this.dataSource.paginator = this.paginator;
@@ -103,9 +99,9 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
 
     loadServerData() {
         this.appService.setProgress(true);
-        this.dateRangeComponent.setCalendarToDate('2019-12-31T00:00:00.000', '2019-12-31T23:59:59.999');
+        if (isDevMode())
+            this.dateRangeComponent.setCalendarToDate('2019-12-31T00:00:00.000', '2019-12-31T23:59:59.999');
         this.dateRangeComponent.setTimeBoundariesForDatePickers();
-        this.dataSource.data = [];
         let stDt = this.dateRangeComponent.pickerStartDate.value.getTime();
         let enDt = this.dateRangeComponent.pickerEndDate.value.getTime();
         this.payDataService.all(stDt, enDt).subscribe(data => {
@@ -128,9 +124,10 @@ export class PaymentsComponent implements OnInit, AfterViewInit {
         this.payDataService.json().subscribe(data => {
             this.dataSource.data = data;
         }, error => {
-            this.notif.error(msgs.msgErrLoadData);
+            this.notif.error(error.error.errm);
             this.appService.setProgress(false);
-        }, () => this.appService.setProgress(false));
+        },
+            () => this.appService.setProgress(false));
     }
 
     /**

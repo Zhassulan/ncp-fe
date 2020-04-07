@@ -2,13 +2,19 @@
     <mat-icon>more_vert</mat-icon>
 </button>
 <mat-menu #menu="matMenu">
-    <button mat-menu-item [disabled]="isBlocked()" (click)="select(paymentMenuItems.REGISTRY)">
+    <button mat-menu-item [disabled]="canPasteRegistryFromBuffer()" (click)="select(paymentMenuItems.REGISTRY)">
         <span>Реестр</span>
     </button>
-    <button mat-menu-item [disabled]="isBlocked()" (click)="select(paymentMenuItems.LOAD_EQUIPMENT)">
+    <button mat-menu-item [disabled]="canLoadEquipment()" (click)="select(paymentMenuItems.LOAD_EQUIPMENT)">
         <span>Оборудование</span>
     </button>
-    <button mat-menu-item [disabled]="(details.length == 0 || !isRegistriesValid || isBlocked())" (click)="select(paymentMenuItems.DEFER)">
+    <button mat-menu-item [disabled]="canTransit()" (click)="select(paymentMenuItems.TRANSIT)">
+        <span>На транзит</span>
+    </button>
+    <!--<button mat-menu-item [disabled]="canDelTransit()" (click)="select(paymentMenuItems.DEL_TRANSIT)">
+        <span>Удалить с транзита</span>
+    </button> -->
+    <button mat-menu-item [disabled]="canDefer()" (click)="select(paymentMenuItems.DEFER)">
         <span>Отложить</span>
     </button>
     <button mat-menu-item [disabled]="details.length == 0

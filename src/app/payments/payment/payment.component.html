@@ -10,8 +10,8 @@
                                 <h1 class="mat-h1">{{ payment.paymentId }} от {{ payment.created | date }}</h1>
                             </div>
                         </div>
-                        <div class="item-top2" *ngIf="payment">
-                            <app-payment-menu (selectedItem)="menuOnSelected($event)" [isRegistriesValid]="isValidRegistry"></app-payment-menu>
+                        <div class="item-top2">
+                            <app-payment-menu (selectedItem)="menuOnSelected($event)"></app-payment-menu>
                         </div>
                     </div>
                 </div>

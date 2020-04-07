@@ -1,11 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {
-    Routes,
-    RouterModule
-} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {LoginPageComponent} from '../auth/login-page/login-page.component';
-import {LoggedInGuard} from '../auth/logged-in.guard';
 import {UploadComponent} from '../payments/payment/equipment/upload.component';
 import {PaymentComponent} from '../payments/payment/payment.component';
 import {PaymentsComponent} from '../payments/payments.component';
@@ -18,7 +14,7 @@ import {ClientPaymentsComponent} from '../clients/client-payments/client-payment
 const routes: Routes = [
     {
         path: '',
-        redirectTo: 'main',
+        redirectTo: 'payments',
         pathMatch: 'full'
     },
     {
@@ -32,11 +28,6 @@ const routes: Routes = [
         pathMatch: 'full'},
         */
     //{path: 'payments', redirectTo: 'payment/230365'}, //для открытия конкретного платежа для отладки
-    {
-        path: 'main',
-        redirectTo: 'payments',
-        pathMatch: 'full'
-    },
     {
         path: 'payments',
         component: PaymentsComponent,

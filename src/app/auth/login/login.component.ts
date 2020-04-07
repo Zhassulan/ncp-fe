@@ -1,12 +1,9 @@
-import {Component, enableProdMode, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import { MatDialogRef } from '@angular/material/dialog';
-import {User} from '../model/user';
-import {ldapGroups, rests, msgs, locStorItems} from '../../settings';
-import {NGXLogger} from 'ngx-logger';
+import {MatDialogRef} from '@angular/material/dialog';
+import {msgs} from '../../settings';
 import {NotificationsService} from 'angular2-notifications';
-import {environment} from '../../../environments/environment';
 import {AppDataService} from '../../data/app-data-service';
 import * as HttpStatus from 'http-status-codes';
 import {AppService} from '../../app.service';
@@ -29,7 +26,6 @@ export class LoginComponent implements OnInit {
                 private route: ActivatedRoute,
                 private router: Router,
                 private dialogRef: MatDialogRef<LoginComponent>,
-                private logger: NGXLogger,
                 private notifService: NotificationsService,
                 private appService: AppService,
                 private appDataService: AppDataService) {
@@ -55,13 +51,15 @@ export class LoginComponent implements OnInit {
             data => {
                 this.authService.setUser(this.userName);
                 this.appService.checkVer();
-                this.returnUrl == '/' ? this.router.navigate(['main']) : this.router.navigateByUrl(this.returnUrl);
+                this.returnUrl == '/' ? this.router.navigate(['payments']) : this.router.navigateByUrl(this.returnUrl);
                 this.dialogRef.close();
             },
             error => {
-                if (error.status === HttpStatus.SERVICE_UNAVAILABLE) {
-                    this.notifService.error(msgs.msgErrAPI);
-                }
+                if (error.status === HttpStatus.SERVICE_UNAVAILABLE)
+                    this.notifService.error(error.error.errm);
+                   else
+                    this.notifService.error('Ошибка доступа');
+
             });
     }
 

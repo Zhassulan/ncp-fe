@@ -71,10 +71,11 @@ export class AddDetailComponent implements OnInit {
 
     addDetail() {
         let detail = new Detail();
-        detail.msisdn = this.msisdnControl.value;
-        detail.account = this.accountControl.value;
+        detail.paymentId = this.paymentService.payment.id;
+        this.msisdnControl.value == "" || this.msisdnControl.value == null ? detail.msisdn = null : detail.msisdn = this.msisdnControl.value;
+        this.accountControl.value == "" || this.accountControl.value == null ? detail.account = null : detail.account = this.accountControl.value;
         detail.sum = Number(this.sumControl.value);
-        detail.status = PaymentStatus.STATUS_NEW;
+        detail.status = PaymentStatus.NEW;
         this.paymentService.addDetail(detail);
         this.clearFields();
     }
@@ -119,5 +120,7 @@ export class AddDetailComponent implements OnInit {
     paymentSum() {
         return this.paymentService.payment.sum;
     }
+
+
 
 }

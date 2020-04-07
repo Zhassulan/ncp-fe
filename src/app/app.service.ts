@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 import {locStorItems, msgs} from './settings';
 import {NotificationsService} from 'angular2-notifications';
-import {NGXLogger} from 'ngx-logger';
 import {AppDataService} from './data/app-data-service';
 
 @Injectable({
@@ -14,7 +13,6 @@ export class AppService {
     progressAnnounced$ = this.progressObs.asObservable();
 
     constructor(private notif: NotificationsService,
-                private logger: NGXLogger,
                 private appDataService: AppDataService) {
     }
 
@@ -33,9 +31,7 @@ export class AppService {
                     this.notif.info(msgs.msgInfRefreshPage);
                 }
             }
-        }, error2 => {
-            this.logger.error(error2);
-        });
+        }, error => this.notif.error(error.error.errm));
     }
 
 }

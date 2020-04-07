@@ -124,22 +124,16 @@
                             <span>Открыть</span>
                         </button>
                         <button mat-menu-item
-                                [disabled]="(paymentRow.status == PaymentStatus.STATUS_TRANSIT  ||
-                                            paymentRow.status == PaymentStatus.STATUS_TRANSIT_DISTRIBUTED ||
-                                            paymentRow.status == PaymentStatus.STATUS_DISTRIBUTED)"
+                                [disabled]="(paymentRow.status == PaymentStatus.TRANSIT  ||
+                                            paymentRow.status == PaymentStatus.TRANSIT_DISTRIBUTED ||
+                                            paymentRow.status == PaymentStatus.DISTRIBUTED)"
                                 (click)="menuOnRowToTransit(paymentRow)">
                             <!--<mat-icon>dialpad</mat-icon>-->
                             <span>На транзит</span>
                         </button>
-                        <button mat-menu-item [disabled]="!(paymentRow.status == PaymentStatus.STATUS_TRANSIT)"
+                        <button mat-menu-item [disabled]="!(paymentRow.status == PaymentStatus.TRANSIT)"
                                 (click)="menuOnRowDeleteTransit(paymentRow)">
                             <span>Удалить с транзита</span>
-                        </button>
-                        <button mat-menu-item [disabled]="!(paymentRow.status == PaymentStatus.STATUS_TRANSIT)">
-                            <span>Разнести с транзитного счёта</span>
-                        </button>
-                        <button mat-menu-item [disabled]>
-                            <span>Отменить</span>
                         </button>
                     </mat-menu>
                 </mat-cell>

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {PaymentStatus} from '../../settings';
+import {PaymentStatus, PaymentStatusRu} from '../../settings';
 import {PaymentDetail} from '../model/payment-detail';
 import {NcpPaymentDetails} from '../model/ncp-payment-details';
 import {Equipment} from '../model/equipment';
@@ -8,23 +8,22 @@ import {from, Observable, Subject} from 'rxjs';
 import {concatAll} from 'rxjs/operators';
 import {Payment} from './model/payment';
 import {Detail} from './model/detail';
-import {Phone} from './model/phone';
 import {ClientDataService} from '../../data/client-data-service';
 import {PayDataService} from '../../data/pay-data-service';
 import {RouterService} from '../../router/router.service';
+import {AppService} from '../../app.service';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class PaymentService {
 
-    payment: Payment;
+    payment;
     paymentObs = new Subject<Payment>();
     payAnnounced$ = this.paymentObs.asObservable();
 
     constructor(private routerService: RouterService,
                 private clientDataService: ClientDataService,
-                private payDataService: PayDataService) {
+                private payDataService: PayDataService,
+                private appService: AppService) {
     }
 
     get routerRegistryItems() {
@@ -36,14 +35,17 @@ export class PaymentService {
     }
 
     delAll() {
-        this.payment.details = [];
+        this.payment.details = this.payment.details.filter(i =>
+            i.status != PaymentStatus.NEW &&
+            i.status != PaymentStatus.ERROR &&
+            i.status != PaymentStatus.TRANSIT_ERROR);
         this.routerService.resetFilePayment();
         this.announcePayment();
     }
 
     setPayment(data) {
-        this.payment = data
-        this.announcePayment()
+        this.payment = data;
+        this.announcePayment();
     }
 
     addDetail(detail: Detail) {
@@ -57,7 +59,6 @@ export class PaymentService {
     }
 
     announcePayment() {
-        //console.log(`Announcing payment:\n ${ this.json_pretty(this.payment) }`);
         this.paymentObs.next(this.payment);
     }
 
@@ -114,11 +115,57 @@ export class PaymentService {
     }
 
     isBlocked(): boolean {
-        return this.payment ? this.payment.status == PaymentStatus.STATUS_DISTRIBUTED ||
-            this.payment.status == PaymentStatus.STATUS_EXPIRED ||
-            this.payment.status == PaymentStatus.STATUS_DELETED ||
-            this.payment.status == PaymentStatus.STATUS_DEFERRED ||
-            this.payment.status == PaymentStatus.STATUS_TRANSIT_DISTRIBUTED : false;
+        return this.payment.status == PaymentStatus.DISTRIBUTED ||
+            this.payment.status == PaymentStatus.EXPIRED ||
+            this.payment.status == PaymentStatus.DELETED ||
+            this.payment.status == PaymentStatus.DEFERRED ||
+            this.payment.status == PaymentStatus.TRANSIT_DISTRIBUTED ||
+            this.payment.status == PaymentStatus.TRANSIT;
+    }
+
+    canPasteRegistryFromBuffer() {
+        return this.payment ?
+            this.payment.status == PaymentStatus.DISTRIBUTED ||
+            this.payment.status == PaymentStatus.EXPIRED ||
+            this.payment.status == PaymentStatus.DELETED ||
+            this.payment.status == PaymentStatus.DEFERRED ||
+            this.payment.status == PaymentStatus.TRANSIT_DISTRIBUTED : false;
+    }
+
+    canLoadEquipment() {
+        return this.payment ?
+         this.payment.status == PaymentStatus.DISTRIBUTED ||
+            this.payment.status == PaymentStatus.EXPIRED ||
+            this.payment.status == PaymentStatus.DELETED ||
+            this.payment.status == PaymentStatus.DEFERRED ||
+            this.payment.status == PaymentStatus.TRANSIT_DISTRIBUTED : false;
+    }
+
+    canDelTransit() {
+        return this.payment.status != PaymentStatus.TRANSIT;
+    }
+
+    canTransit() {
+        return this.payment ? this.payment.status == PaymentStatus.TRANSIT ||
+            this.payment.status == PaymentStatus.DISTRIBUTED ||
+            this.payment.status == PaymentStatus.EXPIRED ||
+            this.payment.status == PaymentStatus.DELETED ||
+            this.payment.status == PaymentStatus.DEFERRED ||
+            this.payment.status == PaymentStatus.TRANSIT_DISTRIBUTED : false;
+    }
+
+    canDefer() {
+        return this.payment ?  this.payment.status == PaymentStatus.DISTRIBUTED ||
+            this.payment.status == PaymentStatus.EXPIRED ||
+            this.payment.status == PaymentStatus.DELETED ||
+            this.payment.status == PaymentStatus.DEFERRED ||
+            this.payment.status == PaymentStatus.TRANSIT_DISTRIBUTED : false;
+    }
+
+    canLoadPhones() {
+        return this.payment ? this.payment.status == PaymentStatus.NEW ||
+            this.payment.status == PaymentStatus.TRANSIT ||
+            this.payment.status == PaymentStatus.TRANSIT_CANCELLED : false;
     }
 
     importRegistryData(rawdata) {
@@ -167,7 +214,7 @@ export class PaymentService {
     addImportedRegistriesPayment(importedRegistry) {
         let details: Detail [] = [];
         for (let paymentDetail of importedRegistry) {
-            paymentDetail.status = PaymentStatus.STATUS_NEW;
+            paymentDetail.status = PaymentStatus.NEW;
             details.push(paymentDetail);
         }
         this.payment.details = details;
@@ -208,5 +255,10 @@ export class PaymentService {
     detailsSum() {
         return this.payment.details.reduce((prevVal, elem) => prevVal + Number(elem.sum), 0);
     }
+
+    canDelSome() {
+        return this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0 || this.payment.details.filter(i => i.status == PaymentStatus.ERROR || i.status == PaymentStatus.TRANSIT_ERROR).length > 0;
+    }
+
 
 }

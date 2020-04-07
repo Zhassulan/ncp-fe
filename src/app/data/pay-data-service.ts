@@ -45,7 +45,7 @@ export class PayDataService {
     }
 
     distribute(id, details) {
-        return this.http.post<Payment>(`${API_URL}/payment/${id}/distribute`, details, httpOptions);
+        return this.http.post(`${API_URL}/payments/${id}/distribution`, details, httpOptions);
     }
 
     findById(id: number) {

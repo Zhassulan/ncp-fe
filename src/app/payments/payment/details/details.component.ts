@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, OnDestroy} from '@angular/core';
 import {PaymentStatus, TOOLTIPS} from '../../../settings';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
@@ -14,6 +14,7 @@ const PaymentDetailsTableColumns = [
     'icc',
     'account',
     'sum',
+    'status',
     'del'
 ];
 
@@ -24,6 +25,7 @@ enum PaymentDetailTableColumnsDisplay {
     icc = 'ICC',
     account = 'Лицевой счёт',
     sum = 'Сумма',
+    status = 'Статус',
     del = 'Удалить'
 };
 
@@ -32,7 +34,11 @@ enum PaymentDetailTableColumnsDisplay {
     templateUrl: './details.component.html',
     styleUrls: ['./details.component.css']
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit,OnDestroy {
+
+    ngOnInit(): void {
+        this.payService.announcePayment();
+    }
 
     paymentStatuses = PaymentStatus;
     tooltips = TOOLTIPS;
@@ -43,14 +49,16 @@ export class DetailsComponent implements OnInit {
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-    constructor(private payService: PaymentService) { }
-
-    ngOnInit() {
+    constructor(private payService: PaymentService) {
         this.subscription = this.payService.payAnnounced$.subscribe(
             payment => {
                 this.dataSource.data = payment.details;
                 this.setPaginator();
-            })
+            });
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 
     get payment() {
@@ -72,6 +80,10 @@ export class DetailsComponent implements OnInit {
 
     sum() {
         return this.payService.detailsSum();
+    }
+
+    canDelSome() {
+        return this.payService.canDelSome();
     }
 
 }

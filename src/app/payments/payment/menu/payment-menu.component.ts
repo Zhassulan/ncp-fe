@@ -12,7 +12,6 @@ export class PaymentMenuComponent implements OnInit {
 
     paymentMenuItems = PaymentMenuItems;
     @Output() selectedItem = new EventEmitter<number>();
-    @Input() isRegistriesValid: boolean;
     subscription: Subscription;
     details = [];
 
@@ -35,6 +34,26 @@ export class PaymentMenuComponent implements OnInit {
 
     paymentSum() {
         return this.paymentService.payment.sum;
+    }
+
+    canPasteRegistryFromBuffer () {
+        return this.paymentService.canPasteRegistryFromBuffer();
+    }
+
+    canLoadEquipment() {
+        return this.paymentService.canLoadEquipment();
+    }
+
+    canDelTransit() {
+        return this.paymentService.canDelTransit();
+    }
+
+    canTransit() {
+        return this.paymentService.canTransit();
+    }
+
+    canDefer() {
+        return this.paymentService.canDefer();
     }
 
 }

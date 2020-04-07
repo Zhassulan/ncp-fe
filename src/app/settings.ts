@@ -4,17 +4,17 @@ import {HttpHeaders} from '@angular/common/http';
  * Платёж - числовые статусы
  */
 export enum PaymentStatus {
-    STATUS_NEW = 0,
-    STATUS_DISTRIBUTED = 1,
-    STATUS_ERROR = 2,
-    STATUS_EXPIRED = 3,
-    STATUS_DELETED = 4,
-    STATUS_SCHEDULED = 5,
-    STATUS_TRANSIT = 6,
-    STATUS_TRANSIT_DISTRIBUTED = 7,
-    STATUS_TRANSIT_CANCELLED = 8,
-    STATUS_TRANSIT_ERROR = 9,
-    STATUS_DEFERRED = 10
+    NEW = 0,
+    DISTRIBUTED = 1,
+    ERROR = 2,
+    EXPIRED = 3,
+    DELETED = 4,
+    SCHEDULED = 5,
+    TRANSIT = 6,
+    TRANSIT_DISTRIBUTED = 7,
+    TRANSIT_CANCELLED = 8,
+    TRANSIT_ERROR = 9,
+    DEFERRED = 10
 }
 
 /**
@@ -38,17 +38,17 @@ export enum PaymentStatusRu {
  * Платёж - маппинг английского статуса и русского
  */
 export enum PaymentStatusEnRu {
-    'STATUS_NEW' = 'Новый',
-    'STATUS_DISTRIBUTED' = 'Разнесён',
-    'STATUS_ERROR' = 'Ошибка',
-    'STATUS_EXPIRED' = 'Просрочен',
-    'STATUS_DELETED' = 'Удалён',
-    'STATUS_SCHEDULED' = 'Запланирован',
-    'STATUS_TRANSIT' = 'На транзитном счёте',
-    'STATUS_TRANSIT_DISTRIBUTED' = 'Разнесён с транзитного счёта',
-    'STATUS_TRANSIT_CANCELLED' = 'Удалён с транзитного счёта',
-    'STATUS_TRANSIT_ERROR' = 'Ошибка разнесения с тразитного счёта',
-    'STATUS_DEFERRED' = 'Отложен',
+    'NEW' = 'Новый',
+    'DISTRIBUTED' = 'Разнесён',
+    'ERROR' = 'Ошибка',
+    'EXPIRED' = 'Просрочен',
+    'DELETED' = 'Удалён',
+    'SCHEDULED' = 'Запланирован',
+    'TRANSIT' = 'На транзитном счёте',
+    'TRANSIT_DISTRIBUTED' = 'Разнесён с транзитного счёта',
+    'TRANSIT_CANCELLED' = 'Удалён с транзитного счёта',
+    'TRANSIT_ERROR' = 'Ошибка разнесения с тразитного счёта',
+    'DEFERRED' = 'Отложен',
 }
 
 /**
@@ -189,10 +189,12 @@ export enum dic {
  * Меню платежа
  */
 export enum PaymentMenuItems {
-    LOAD_EQUIPMENT = 1,
-    DISTRIBUTE = 2 ,
-    REGISTRY = 3,
-    DEFER = 4
+    LOAD_EQUIPMENT,
+    DISTRIBUTE ,
+    REGISTRY,
+    DEFER,
+    DEL_TRANSIT,
+    TRANSIT
 }
 
 /**

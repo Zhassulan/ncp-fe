@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
-import {msgs, PaymentMenuItems} from '../../settings';
+import {msgs, PaymentMenuItems, PaymentStatusRu} from '../../settings';
 import {PaymentService} from './payment.service';
 import {DialogComponent} from './equipment/dialog/dialog.component';
 import {ActivatedRoute} from '@angular/router';
@@ -33,7 +33,6 @@ export class PaymentComponent implements OnInit {
     dialogRef;
     registry: string;
     deferDate = new Date();
-    isValidRegistry: boolean = false;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
     msisdns: String [] = [];
     accounts: String [] = [];
@@ -45,6 +44,10 @@ export class PaymentComponent implements OnInit {
                 private appService: AppService,
                 private payDataService: PayDataService,
                 private  clntDataService: ClientDataService) {
+    }
+
+    get payment() {
+        return this.payService.payment;
     }
 
     ngOnInit() {
@@ -69,26 +72,34 @@ export class PaymentComponent implements OnInit {
                 this.dlgSetDeferDate();
             }
                 break;
+            case this.paymentMenuItems.DEL_TRANSIT: {
+                this.dlgDelTransit();
+            }
+                break;
+            case this.paymentMenuItems.TRANSIT: {
+                this.dlgTransit();
+            }
+                break;
             default:
         }
-    }
-
-    get payment() {
-        return this.payService.payment;
     }
 
     load(id) {
         this.appService.setProgress(true);
         this.payDataService.findById(id).subscribe(
             data => {
-                if (!this.payService.isBlocked()) this.loadPhones(data.profileId);
                 this.payService.setPayment(data);
+                if (this.canLoadPhones()) this.loadPhones(id);
             },
             error => {
                 this.appService.setProgress(false);
-                this.notifService.error(error);
+                this.notifService.error(error.error.errm);
             },
             () => this.appService.setProgress(false));
+    }
+
+    canLoadPhones() {
+        return this.payService.canLoadPhones();
     }
 
     loadPhones(id) {
@@ -100,7 +111,7 @@ export class PaymentComponent implements OnInit {
             },
             error => {
                 this.appService.setProgress(false);
-                this.notifService.error(error);
+                this.notifService.error(error.error.errm);
             },
             () => this.appService.setProgress(false));
     }
@@ -119,9 +130,36 @@ export class PaymentComponent implements OnInit {
             this.payService.setPayment(data);
             this.notifService.info(msgs.msgSuccessDistributed);
         }, error => {
-            this.notifService.error(error);
+            this.notifService.error(error.error.errm);
             this.appService.setProgress(false);
         }, () => this.appService.setProgress(false));
+    }
+
+    dlgDelTransit() {
+        this.appService.setProgress(true);
+        this.payDataService.transitDel(this.payment.id).subscribe(
+            data => {
+                this.payService.setPayment(data);
+                this.notifService.info(msgs.msgSuccessDelTransit);
+            },
+            error => {
+                this.notifService.error(error.error.errm);
+                this.appService.setProgress(false);
+            },
+            () => this.appService.setProgress(false));
+    }
+
+    dlgTransit() {
+        this.appService.setProgress(true);
+        this.payDataService.transit(this.payment.id).subscribe(data => {
+                this.payService.setPayment(data);
+                this.notifService.info(msgs.msgSuccessToTransit);
+            },
+            error => {
+                this.notifService.error(error.error.errm);
+                this.appService.setProgress(false);
+            },
+            () => this.appService.setProgress(false));
     }
 
     dlgImportRegistry() {
@@ -130,9 +168,11 @@ export class PaymentComponent implements OnInit {
             data: {registry: this.registry}
         });
         dialogRef.afterClosed().subscribe(result => {
-            let data = this.payService.importRegistryData(result);
-            if (data.broken.length) {
-                this.notifService.warn(`Есть ошибочные строки:\n ${data.broken}`);
+            if (result) {
+                let data = this.payService.importRegistryData(result);
+                if (data.broken.length) {
+                    this.notifService.warn(`Есть ошибочные строки:\n ${data.broken}`);
+                }
             }
         });
     }

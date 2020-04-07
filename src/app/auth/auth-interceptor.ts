@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {Router} from '@angular/router';
-import {catchError} from 'rxjs/internal/operators';
+import {catchError} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
 import {AuthService} from './auth.service';
 import * as HttpStatus from 'http-status-codes';
@@ -22,7 +22,7 @@ export class AuthInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             catchError((error: HttpErrorResponse) => {
                if (error.status === HttpStatus.UNAUTHORIZED) {
-                    this.notifService.warn("Нет доступа");
+                    //this.notifService.warn("Нет доступа");
                     this.authService.logout();
                     this.router.navigate(['login']);
                 }

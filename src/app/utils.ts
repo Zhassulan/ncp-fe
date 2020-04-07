@@ -1,11 +1,9 @@
 import {DatePipe} from '@angular/common';
-import {NGXLogger} from 'ngx-logger';
 import {Md5} from 'ts-md5';
 
 export class Utils {
 
-    constructor(private logger: NGXLogger) {
-    }
+    constructor() { }
 
     static dateToLocalString(dt: string): string {
         let pipe = new DatePipe('ru-RU');
@@ -15,19 +13,6 @@ export class Utils {
     static removeRepeatedSpaces(str): string {
         return str.replace(/\s\s+/g, ' ');
     }
-
-    /**
-     * Печать объекта в формате JSON
-     * @param obj
-     */
-    printObj(obj) {
-        this.logger.info(JSON.stringify(obj, undefined, 2));
-    }
-
-    static toJsonString(obj) {
-        return JSON.stringify(obj, undefined, 2);
-    }
-
 
     static getMd5(strVal) {
         let md5 = new Md5();

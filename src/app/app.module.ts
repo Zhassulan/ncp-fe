@@ -18,7 +18,6 @@ import {DialogReportComponent} from './dialog/dialog-report/dialog-report.compon
 import {DialogService} from './dialog/dialog.service';
 import {PaymentDetailsPipe} from './payments/payment-details-pipe';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
-import {LoggerModule} from 'ngx-logger';
 import {environment} from '../environments/environment';
 import {UploadComponent} from './payments/payment/equipment/upload.component';
 import {LayoutModule} from '@angular/cdk/layout';
@@ -107,7 +106,6 @@ registerLocaleData(localeRu, 'ru');
         BrowserAnimationsModule,
         RoutesModule,
         FlexLayoutModule,
-        LoggerModule.forRoot(environment.logging),
         LayoutModule,
         BreadcrumbModule,
         SimpleNotificationsModule.forRoot(),

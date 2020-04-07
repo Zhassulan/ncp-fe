@@ -28,7 +28,22 @@
 
     <ng-container matColumnDef="sum">
         <th mat-header-cell *matHeaderCellDef> {{ detailTableColumnsDisplay.sum }}</th>
-        <td mat-cell *matCellDef="let detail"> {{detail.sum | currency : ' тг.'}}</td>
+        <td mat-cell *matCellDef="let detail"> {{ detail.sum | currency : ' тг.' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> {{ detailTableColumnsDisplay.status }}</th>
+        <td mat-cell *matCellDef="let detail">
+            <button mat-mini-fab disabled *ngIf="(detail.status == paymentStatuses.DISTRIBUTED)">
+                <mat-icon>done</mat-icon>
+            </button>
+            <button mat-mini-fab *ngIf="detail.status == paymentStatuses.ERROR ||
+                detail.status == paymentStatuses.TRANSIT_ERROR ||
+                detail.status == paymentStatuses.DELETED"
+                    matTooltip="{{ detail.err }}">
+                <mat-icon>error</mat-icon>
+            </button>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="del">
@@ -36,19 +51,18 @@
             <button mat-mini-fab
                     color="primary"
                     (click)="delAll()"
-                    *ngIf="(payment.status == paymentStatuses.STATUS_NEW || payment.status == paymentStatuses.STATUS_ERROR) && payment.details > 0"
+                    *ngIf="canDelSome()"
                     matTooltip="{{ tooltips.delAll }}">
                 <mat-icon>clear</mat-icon>
             </button>
         </th>
         <td mat-cell *matCellDef="let detail">
             <button mat-mini-fab color="primary" (click)="del(detail)"
-                    *ngIf="(detail.status == paymentStatuses.STATUS_NEW || detail.status == paymentStatuses.STATUS_ERROR)"
+                    *ngIf="(detail.status == paymentStatuses.NEW ||
+                    detail.status == paymentStatuses.ERROR ||
+                    detail.status == paymentStatuses.TRANSIT_ERROR)"
                     matTooltip="{{ detailTableColumnsDisplay.del }}">
                 <mat-icon>clear</mat-icon>
-            </button>
-            <button mat-mini-fab disabled *ngIf="(detail.status == paymentStatuses.STATUS_DISTRIBUTED)">
-                <mat-icon>done</mat-icon>
             </button>
         </td>
     </ng-container>

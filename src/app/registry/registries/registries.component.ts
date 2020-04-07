@@ -1,17 +1,14 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-import {NGXLogger} from 'ngx-logger';
 import {NotificationsService} from 'angular2-notifications';
-import {msgs, rests} from '../../settings';
 import {AppService} from '../../app.service';
 import {ExcelService} from '../../excel/excel.service';
 import {Router} from '@angular/router';
 import {RegistryReportItem} from '../model/registry-report-item';
 import {DateRangeComponent} from '../../date-range/date-range.component';
 import {FormControl, Validators} from '@angular/forms';
-import {PayDataService} from '../../data/pay-data-service';
 import {RegistryDataService} from '../../data/registry-data.service';
 
 @Component({
@@ -44,8 +41,7 @@ export class RegistriesComponent implements OnInit {
     @ViewChild(DateRangeComponent, {static: true})
     private dateRangeComponent: DateRangeComponent;
 
-    constructor(private logger: NGXLogger,
-                private notifService: NotificationsService,
+    constructor(private notifService: NotificationsService,
                 private appService: AppService,
                 private excelService: ExcelService,
                 private router: Router,

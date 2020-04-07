@@ -1,12 +1,8 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {RouterRegistry} from './model/router-registry';
-import {Utils} from '../utils';
-import {NGXLogger} from 'ngx-logger';
 import {NotificationsService} from 'angular2-notifications';
 import {PayDataService} from '../data/pay-data-service';
 import {Observable} from 'rxjs';
-import {msgs} from '../settings';
-import {HttpErrorResponse} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
