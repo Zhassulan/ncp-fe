@@ -165,31 +165,57 @@ export class PaymentService {
     canLoadPhones() {
         return this.payment ? this.payment.status == PaymentStatus.NEW ||
             this.payment.status == PaymentStatus.TRANSIT ||
-            this.payment.status == PaymentStatus.TRANSIT_CANCELLED : false;
+            this.payment.status == PaymentStatus.TRANSIT_CANCELLED ||
+            this.payment.status == PaymentStatus.TRANSIT_ERROR : false;
+    }
+
+    canAddDetail() {
+        return this.payment ? this.payment.status == PaymentStatus.NEW ||
+            this.payment.status == PaymentStatus.TRANSIT ||
+            this.payment.status == PaymentStatus.ERROR ||
+            this.payment.status == PaymentStatus.TRANSIT_CANCELLED ||
+            this.payment.status == PaymentStatus.TRANSIT_ERROR : false;
+    }
+
+    canDistribute() {
+        return this.payment ?
+            this.payment.status == PaymentStatus.NEW ||
+            this.payment.status == PaymentStatus.TRANSIT ||
+            this.payment.status == PaymentStatus.ERROR ||
+            this.payment.status == PaymentStatus.TRANSIT_CANCELLED ||
+            this.payment.status == PaymentStatus.TRANSIT_ERROR ||
+            this.payment.details.filter(i => i.status == PaymentStatus.NEW) > 0 : false;
     }
 
     importRegistryData(rawdata) {
-        let importedRegistries = [];
+        let details = [];
         let rows = rawdata.split('\n');
         let brokenRows = [];
-        if (rows.length) importedRegistries = [];
+        if (rows.length) details = [];
         for (let row of rows) {
             if (row === '\n' || row === '' || row.trim() === '' || row.replace('\t', '') === '') continue;
             let parts = row.split('\t');
             if (parts.length === 2) {
-                let paymentDetail = new PaymentDetail();
+                let detail = new Detail();
+                detail.status = PaymentStatus.NEW;
                 let b = true;
-                if (isNaN(parts[0])) {
-                    b = false;
-                } else
-                    this.isMSISDN(parts[0]) ? paymentDetail.msisdn = parts[0] : paymentDetail.account = parts[0];
-                isNaN(parts[1]) ? b = false : paymentDetail.sum = parts[1];
-                !b ? brokenRows.push(row) : importedRegistries.push(paymentDetail);
+                /*console.log('parts[0] = ' + parts[0]);
+                console.log('parts[1] = ' + parts[1]);*/
+                isNaN(parts[0]) ? b = false : this.isMSISDN(parts[0]) ? detail.msisdn = parts[0] : detail.account = parts[0];
+                isNaN(parts[1]) ? b = false : detail.sum = parts[1];
+                //console.log(detail);
+                //console.log(details);
+                if (detail) {
+                    this.payment.details.push(detail);
+                    this.announcePayment();
+                }
+                !b ? brokenRows.push(row) : details.push(detail);
             } else {
                 brokenRows.push(row);
             }
         }
-        return {'broken': brokenRows, 'imported': importedRegistries};
+
+        return {'broken': brokenRows, 'imported': details};
     }
 
     isMSISDN(value) {

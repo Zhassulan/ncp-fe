@@ -36,7 +36,7 @@ export class AddDetailComponent implements OnInit {
         }
     );
 
-    constructor(private paymentService: PaymentService) {
+    constructor(private payService: PaymentService) {
         this.msisdnFilteredOptions = this.msisdnControl.valueChanges
             .pipe(
                 startWith(''),
@@ -71,13 +71,17 @@ export class AddDetailComponent implements OnInit {
 
     addDetail() {
         let detail = new Detail();
-        detail.paymentId = this.paymentService.payment.id;
+        detail.paymentId = this.payService.payment.id;
         this.msisdnControl.value == "" || this.msisdnControl.value == null ? detail.msisdn = null : detail.msisdn = this.msisdnControl.value;
         this.accountControl.value == "" || this.accountControl.value == null ? detail.account = null : detail.account = this.accountControl.value;
         detail.sum = Number(this.sumControl.value);
         detail.status = PaymentStatus.NEW;
-        this.paymentService.addDetail(detail);
+        this.payService.addDetail(detail);
         this.clearFields();
+    }
+    
+    canAddDetail() {
+        return this.payService.canAddDetail();
     }
 
     clearFields() {
@@ -107,18 +111,18 @@ export class AddDetailComponent implements OnInit {
     }
 
     isBlocked(): boolean {
-        return this.paymentService.isBlocked();
+        return this.payService.isBlocked();
     }
 
     ngOnInit(): void {
     }
 
     detailsTotal() {
-        return this.paymentService.detailsSum();
+        return this.payService.detailsSum();
     }
 
     paymentSum() {
-        return this.paymentService.payment.sum;
+        return this.payService.payment.sum;
     }
 
 

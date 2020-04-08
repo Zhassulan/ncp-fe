@@ -168,7 +168,9 @@ export class PaymentComponent implements OnInit {
             data: {registry: this.registry}
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result == null) return;
+            if (result == '') return;
+            if (result.length > 0) {
                 let data = this.payService.importRegistryData(result);
                 if (data.broken.length) {
                     this.notifService.warn(`Есть ошибочные строки:\n ${data.broken}`);

@@ -17,10 +17,7 @@
     <button mat-menu-item [disabled]="canDefer()" (click)="select(paymentMenuItems.DEFER)">
         <span>Отложить</span>
     </button>
-    <button mat-menu-item [disabled]="details.length == 0
-                                      || isBlocked()
-                                      || detailsSum() < paymentSum()
-                                      || detailsSum() > paymentSum()" (click)="select(paymentMenuItems.DISTRIBUTE)">
+    <button mat-menu-item [disabled]="!canDistribute()" (click)="select(paymentMenuItems.DISTRIBUTE)">
         <span>Разнести</span>
     </button>
 </mat-menu>

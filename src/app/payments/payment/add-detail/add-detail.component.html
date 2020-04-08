@@ -53,9 +53,10 @@
         </div>
         <div class="item4">
             <button mat-raised-button color="primary"
-                    [disabled]="!frmDetail.valid || isBlocked()"
+                    [disabled]="!frmDetail.valid || !canAddDetail()"
                     (click)="addDetail()"
-                    matTooltip="Добавить разноску">Добавить
+                    matTooltip="Добавить разноску">
+                Добавить
             </button>
         </div>
     </div>
