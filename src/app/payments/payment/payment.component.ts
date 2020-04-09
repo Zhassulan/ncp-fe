@@ -69,7 +69,7 @@ export class PaymentComponent implements OnInit {
             }
                 break;
             case this.paymentMenuItems.DEFER: {
-                this.dlgSetDeferDate();
+                this.dlgDefer();
             }
                 break;
             case this.paymentMenuItems.DEL_TRANSIT: {
@@ -179,7 +179,7 @@ export class PaymentComponent implements OnInit {
         });
     }
 
-    dlgSetDeferDate() {
+    dlgDefer() {
         const dialogRef = this.dlg.open(CalendarDeferModalComponent, {
             width: '30%',
             data: {date: this.deferDate},
