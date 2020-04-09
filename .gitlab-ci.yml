@@ -12,7 +12,7 @@ stages:
   - package
   - deploy
 
-angular-build:
+build:
   image: docker.tele2.kz/ncp/angular-cli:latest
   stage: build
   before_script:
