@@ -15,17 +15,17 @@ stages:
 build:
   image: docker.tele2.kz/ncp/angular-cli:latest
   stage: build
-  before_script:
-    - ssh-keyscan -H $SSH_SERVER_HOST >> ~/.ssh/known_hosts
+  #before_script:
+  #  - ssh-keyscan -H $SSH_SERVER_HOST >> ~/.ssh/known_hosts
 
-  #script:
-  #  - export SSHPASS=$USER_PASS
-   # - sshpass -e scp ncp-frontend-app-deployment.yaml kube@$SSH_SERVER_HOST:/home/kube/ncp-frontend-app-deployment.yaml
-   # - npm install
-   # - ng build --configuration=production --base-href /ncp-frontend/ --output-hashing=all --prod=true
-  #artifacts:
-  #  paths:
-   #   - dist/*
+  script:
+   # - export SSHPASS=$USER_PASS
+    #- sshpass -e scp ncp-frontend-app-deployment.yaml kube@$SSH_SERVER_HOST:/home/kube/ncp-frontend-app-deployment.yaml
+    - npm install
+    - ng build --configuration=production --prod=true
+  artifacts:
+    paths:
+      - dist/*
 
 docker-build:
   stage: package
