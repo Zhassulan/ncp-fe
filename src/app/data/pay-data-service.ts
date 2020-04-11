@@ -7,7 +7,7 @@ import {RequestPostPayment} from './request-post-payment';
 import {httpOptions, PaymentActions} from '../settings';
 import {RouterRegistry} from '../router/model/router-registry';
 import {EquipmentCheckParam} from '../payments/model/equipment-check-param';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Equipment} from '../payments/model/equipment';
@@ -72,8 +72,16 @@ export class PayDataService {
         return this.http.get(`${API_URL}/profile/${profileId}/msisdn/${msisdn}`, httpOptions);
     }
 
-    defer(payment)  {
-        return this.http.post(`${API_URL}/payment/defer`, payment, httpOptions);
+    defer(payment, deferDate)  {
+        const params = new HttpParams()
+            .set('dt', deferDate);
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+            }),
+            params: params
+        };
+        return this.http.post(`${API_URL}/payments/${payment.id}/defer`, payment.details, httpOptions);
     }
 
 }

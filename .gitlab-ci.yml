@@ -26,14 +26,16 @@ build:
   artifacts:
     paths:
       - dist/*
-
+  only:
+    - master
 docker-build:
   stage: package
   script:
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest .
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
     - docker push $CI_REGISTRY_IMAGE:latest
-
+  only:
+    - master
 docker-deploy:
   stage: deploy
   image: ubuntu

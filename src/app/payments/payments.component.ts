@@ -110,7 +110,12 @@ export class PaymentsComponent implements OnInit {
             },
             error => {
                 this.appService.setProgress(false);
-                this.notif.error(error);
+                if (error.status) {
+                    if (error.status == 503)
+                        this.notif.error(`Сервис не доступен`);
+                } else {
+                    this.notif.error(error);
+                }
             },
             () => this.appService.setProgress(false));
     }

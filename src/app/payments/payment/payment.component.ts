@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
-import {msgs, PaymentMenuItems, PaymentStatusRu} from '../../settings';
+import {msgs, PaymentMenuItems, PaymentStatus, PaymentStatusRu} from '../../settings';
 import {PaymentService} from './payment.service';
 import {DialogComponent} from './equipment/dialog/dialog.component';
 import {ActivatedRoute} from '@angular/router';
@@ -190,20 +190,26 @@ export class PaymentComponent implements OnInit {
             tomorrow.setDate(tomorrow.getDate() + 1);
             console.log(`tomorrow - ${tomorrow}`);
             let dt = new Date(result);
-            if (dt < today || result.getTime() == today.getTime())
-                this.notifService.warn(`Ошибка. Дата должна быть больше ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`);
-            else if (dt.getDate() >= tomorrow.getDate() && dt.getMonth() >= tomorrow.getMonth() && dt.getFullYear() >= tomorrow.getFullYear()) {
-                this.payment.closed = dt.getTime().toString();
-                this.notifService.info(`Установлена дата отложенной разноски ${dt.getDate()}/${dt.getMonth() + 1}/${dt.getFullYear()}`);
-                this.payService.defer().subscribe(
+            if (dt < today || result.getTime() == today.getTime()) {
+                this.notifService.warn(`Дата должна быть больше ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}. Установите дату.`);
+                return;
+            }
+            if (this.payment.details.filter(i => i.status == PaymentStatus.NEW) == 0) {
+                this.notifService.warn(`Нет новых разносок. Необходимо добавить.`);
+                return;
+            }
+            if (dt.getDate() >= tomorrow.getDate() && dt.getMonth() >= tomorrow.getMonth() && dt.getFullYear() >= tomorrow.getFullYear()) {
+                this.payDataService.defer(this.payment, dt.getTime()).subscribe(
                     data => {
-                        //todo Отложить платёж
+                        console.log(data);
+                        this.notifService.info(`Установлена дата отложенной разноски ${dt.getDate()}/${dt.getMonth() + 1}/${dt.getFullYear()}`);
                     },
                     error => {
-
+                        this.notifService.error(error.error.errm);
+                        this.appService.setProgress(false);
                     },
                     () => {
-
+                        this.appService.setProgress(false);
                     }
                 );
             }

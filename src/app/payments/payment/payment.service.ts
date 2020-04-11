@@ -247,10 +247,6 @@ export class PaymentService {
         this.announcePayment();
     }
 
-    defer(): Observable<any> {
-        return this.payDataService.defer(this.payment);
-    }
-
     loadPayment(id) {
         console.log(`Загрузка платежа ID ${id}`);
         this.payment = null;
