@@ -28,13 +28,12 @@ export class PaymentsComponent implements OnInit {
         'nameSender',
         'sum',
         'rnnSender',
+        'paymentDetails',
+        'statusRu',
+        'managedBy',
         'accountSender',
         'accountRecipient',
         'knp',
-        'paymentDetails',
-        'managedBy',
-        'statusRu',
-        'distributeDate',
         'select',
         'rowMenu'];
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
@@ -78,7 +77,7 @@ export class PaymentsComponent implements OnInit {
     }
 
     onRowClicked(paymentRow) {
-        //this.menuOnRowOpenPayment(paymentRow);
+        this.menuOnRowOpenPayment(paymentRow);
     }
 
     /**

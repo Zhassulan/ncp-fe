@@ -28,7 +28,7 @@
 
     <ng-container matColumnDef="sum">
         <th mat-header-cell *matHeaderCellDef> {{ detailTableColumnsDisplay.sum }}</th>
-        <td mat-cell *matCellDef="let detail"> {{ detail.sum | currency : ' тг.' }}</td>
+        <td mat-cell *matCellDef="let detail"> {{ detail.sum | currency : ' тг.' :'symbol':'0.0-6'}}</td>
     </ng-container>
 
     <ng-container matColumnDef="status">
@@ -76,6 +76,6 @@
 
 
 <div fxLayout="row" fxLayoutAlign="end center">
-    <p class="mat-h3">Итого: {{ sum() | currency : ' тг.' }}</p>
+    <p class="mat-h3">Итого: {{ sum() | currency : ' тг.' :'symbol':'0.0-6' }}</p>
 </div>
 

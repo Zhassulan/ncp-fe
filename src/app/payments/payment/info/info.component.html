@@ -1,10 +1,18 @@
 <div class="container">
+    <div class="paydocNum">
+        № п. поручения:
+    </div>
+    <div class="value">
+        {{ payment.payDocnum }}
+    </div>
+    <!--
     <div class="title">
         Создан:
     </div>
     <div class="value">
         {{ payment.created | date: 'short' }}
     </div>
+    -->
     <div class="title">
         Клиент:
     </div>
@@ -40,11 +48,5 @@
     </div>
     <div class="value">
         {{ payment.sum | currency : ' тг.' }}
-    </div>
-    <div class="title">
-        Дата отложенной разноски:
-    </div>
-    <div class="value">
-        {{ null | date }}
     </div>
 </div>

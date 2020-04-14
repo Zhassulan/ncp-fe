@@ -74,7 +74,10 @@ export class AddDetailComponent implements OnInit {
         detail.paymentId = this.payService.payment.id;
         this.msisdnControl.value == "" || this.msisdnControl.value == null ? detail.msisdn = null : detail.msisdn = this.msisdnControl.value;
         this.accountControl.value == "" || this.accountControl.value == null ? detail.account = null : detail.account = this.accountControl.value;
-        detail.sum = Number(this.sumControl.value);
+        let sum = this.sumControl.value;
+        sum = sum.replace(',', '.');
+        console.log(sum);
+        detail.sum = Number(sum);
         detail.status = PaymentStatus.NEW;
         this.payService.addDetail(detail);
         this.clearFields();
@@ -124,7 +127,5 @@ export class AddDetailComponent implements OnInit {
     paymentSum() {
         return this.payService.payment.sum;
     }
-
-
 
 }

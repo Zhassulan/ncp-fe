@@ -63,8 +63,8 @@
 }
 
 .mat-column-statusRu {
-    flex: 0 0 5% !important;
-    width: 5% !important;
+    flex: 0 0 10% !important;
+    width: 10% !important;
 }
 
 .mat-column-knp {
@@ -88,13 +88,15 @@
 }
 
 .mat-column-accountSender {
-    flex: 0 0 10% !important;
-    width: 10% !important;
+    flex: 0 0 12% !important;
+    width: 12% !important;
 }
 
 .mat-column-accountRecipient{
-    flex: 0 0 10% !important;
+    flex: 0 0 15% !important;
     width: 10% !important;
 }
 
-
+.mat-table .mat-row:hover {
+    background-color: #eeeeee;
+}
