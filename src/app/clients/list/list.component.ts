@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {Client} from './model/client';
+import {Client} from './client';
 import {MatPaginator} from '@angular/material/paginator';
 import {ClientDataService} from '../../data/client-data-service';
 import {NotificationsService} from 'angular2-notifications';
