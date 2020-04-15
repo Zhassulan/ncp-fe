@@ -16,6 +16,12 @@
                             Загрузка
                         </button>
                     </div>
+                    <div class="inpit_search">
+                        <mat-form-field>
+                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Быстрый поиск">
+                            <mat-icon matSuffix>search</mat-icon>
+                        </mat-form-field>
+                    </div>
                 </div>
             </div>
             <div>

@@ -57,7 +57,7 @@ const routes: Routes = [
         component: ClientPaymentsComponent,
       /*  canActivate: [LoggedInGuard],*/
         data: {
-            breadcrumb: 'Платежи'
+            breadcrumb: 'Платежи клиента'
         }
     },
     {

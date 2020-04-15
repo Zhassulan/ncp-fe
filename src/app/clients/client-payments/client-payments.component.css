@@ -19,8 +19,14 @@
 .search {
     display: grid;
     grid-template-areas:
-            ". .";
+            ". . inpit_search";
     grid-template-rows: auto;
-    grid-template-columns: min-content min-content;
+    grid-template-columns: min-content min-content auto;
     grid-gap: 2%;
+    align-items: center;
+}
+
+.inpit_search {
+    justify-self: end;
+    align-self: end;
 }
