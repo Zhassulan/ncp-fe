@@ -37,7 +37,7 @@
     <ng-container matColumnDef="payments">
         <th mat-header-cell *matHeaderCellDef> </th>
         <td mat-cell *matCellDef="let element">
-            <button mat-icon-button matTooltip="Платежи" [routerLink]="['/clients', element.id, 'payments']">
+            <button mat-icon-button matTooltip="Платежи" (click)="openClientPayments(element)">
                 <mat-icon>view_list</mat-icon>
             </button>
         </td>

@@ -1,15 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ClientService} from '../client.service';
+import {DateRangeComponent} from '../../date-range/date-range.component';
 
 @Component({
-  selector: 'app-client-payments',
-  templateUrl: './client-payments.component.html',
-  styleUrls: ['./client-payments.component.css']
+    selector: 'app-client-payments',
+    templateUrl: './client-payments.component.html',
+    styleUrls: ['./client-payments.component.css']
 })
 export class ClientPaymentsComponent implements OnInit {
 
-  constructor() { }
+    @ViewChild(DateRangeComponent)
+    private rangeComponent: DateRangeComponent;
 
-  ngOnInit(): void {
-  }
+    constructor(private clntService: ClientService) {
+    }
+
+    get client() {
+        return this.clntService.client;
+    }
+
+    ngOnInit(): void {
+    }
+
+    load() {
+        this.rangeComponent.setTimeBoundariesForDatePickers();
+        this.clntService.payments(this.client.id, this.rangeComponent.pickerStartDate.value.getTime(), this.rangeComponent.pickerEndDate.value.getTime());
+    }
 
 }

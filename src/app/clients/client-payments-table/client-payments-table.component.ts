@@ -6,6 +6,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ClientDataService} from '../../data/client-data-service';
 import {NotificationsService} from 'angular2-notifications';
 import {AppService} from '../../app.service';
+import {Subscription} from 'rxjs';
+import {PaymentService} from '../../payments/payment/payment.service';
+import {ClientService} from '../client.service';
 
 @Component({
     selector: 'app-client-payments-table',
@@ -17,28 +20,26 @@ export class ClientPaymentsTableComponent implements OnInit {
     displayedColumns: string[] = ['position', 'created', 'payDocNum', 'sum', 'agent', 'status'];
     dataSource = new MatTableDataSource<ClientPayment>();
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+    subscription: Subscription;
 
     constructor(private route: ActivatedRoute,
                 private clntDataService: ClientDataService,
                 private notifService: NotificationsService,
                 private appService: AppService,
-                private router: Router) {
+                private router: Router,
+                private clntService: ClientService) {
+        this.subscription = this.clntService.clntPayAnnounced$.subscribe(payments => {
+            this.dataSource.data = payments;
+            this.dataSource.paginator = this.paginator;
+        });
     }
 
     ngOnInit(): void {
-        this.dataSource.paginator = this.paginator;
         this.load(this.route.snapshot.params['id']);
     }
 
     load(id) {
-        this.appService.setProgress(true);
-        this.clntDataService.payments(id).subscribe(
-            data => this.dataSource.data = data,
-            error => {
-                this.notifService.error(error.error.errm);
-                this.appService.setProgress(false);
-            },
-            () => this.appService.setProgress(false));
+        this.clntService.payments(id);
     }
 
     onRowClicked(row) {

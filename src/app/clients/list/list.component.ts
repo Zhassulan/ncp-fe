@@ -6,6 +6,8 @@ import {ClientDataService} from '../../data/client-data-service';
 import {NotificationsService} from 'angular2-notifications';
 import {AppService} from '../../app.service';
 import {MatSort} from '@angular/material/sort';
+import {Router} from '@angular/router';
+import {ClientService} from '../client.service';
 
 @Component({
     selector: 'app-clents-list',
@@ -22,7 +24,9 @@ export class ListComponent implements OnInit {
 
     constructor(private clientDataService: ClientDataService,
                 private notifService: NotificationsService,
-                private appService: AppService) {
+                private appService: AppService,
+                private router: Router,
+                private clntService: ClientService) {
         this.loadData();
     }
 
@@ -52,6 +56,11 @@ export class ListComponent implements OnInit {
         if (this.dataSource.paginator) {
             this.dataSource.paginator.firstPage();
         }
+    }
+
+    openClientPayments(client) {
+        this.clntService.client = client;
+        this.router.navigate([`clients/${client.id}/payments/`]);
     }
 
 }
