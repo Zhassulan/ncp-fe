@@ -37,7 +37,9 @@ export class ListComponent implements OnInit {
 
     loadData() {
         this.appService.setProgress(true);
-        this.clientDataService.list().subscribe(
+        let req;
+        this.router.url == '/clients' ? req = this.clientDataService.all() : req = this.clientDataService.mobipay();
+        req.subscribe(
             data => {
                 this.clients = data;
                 this.dataSource.data = this.clients;

@@ -21,17 +21,9 @@ const routes: Routes = [
         path: 'login',
         component: LoginPageComponent
     },
-    /*
-    {
-        path: '',
-        redirectTo: 'payments',
-        pathMatch: 'full'},
-        */
-    //{path: 'payments', redirectTo: 'payment/230365'}, //для открытия конкретного платежа для отладки
     {
         path: 'payments',
         component: PaymentsComponent,
-        /*canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Платежи'
         }
@@ -39,7 +31,6 @@ const routes: Routes = [
     {
         path: 'payments/:id',
         component: PaymentComponent,
-        /*canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Платёж'
         }
@@ -47,15 +38,20 @@ const routes: Routes = [
     {
         path: 'clients',
         component: ClientsComponent,
-        /*canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Клиенты'
         }
     },
     {
+        path: 'mobipay',
+        component: ClientsComponent,
+        data: {
+            breadcrumb: 'Mobipay'
+        }
+    },
+    {
         path: 'clients/:id/payments',
         component: ClientPaymentsComponent,
-      /*  canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Платежи клиента'
         }
@@ -63,7 +59,6 @@ const routes: Routes = [
     {
         path: 'equipment',
         component: UploadComponent,
-       /* canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Оборудование'
         }
@@ -71,7 +66,6 @@ const routes: Routes = [
     {
         path: 'registries',
         component: RegistriesComponent,
-       /* canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Реестры'
         }
@@ -79,7 +73,6 @@ const routes: Routes = [
     {
         path: 'registries/:id',
         component: RegistryComponent,
-       /* canActivate: [LoggedInGuard],*/
         data: {
             breadcrumb: 'Реестр'
         }
