@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PaymentService} from '../payment.service';
-import {PaymentMenuItems} from '../../../settings';
+import {PaymentMenuItems, PaymentStatus} from '../../../settings';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -13,20 +13,25 @@ export class PaymentMenuComponent implements OnInit {
     paymentMenuItems = PaymentMenuItems;
     @Output() selectedItem = new EventEmitter<number>();
     subscription: Subscription;
-    details = [];
+    payment;
 
     constructor(private paymentService: PaymentService) {
         this.subscription = this.paymentService.payAnnounced$.subscribe(
             payment => {
-                this.details = payment.details;
+                this.payment = payment;
             });
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+    }
 
-    select(item: number) { this.selectedItem.emit(item); }
+    select(item: number) {
+        this.selectedItem.emit(item);
+    }
 
-    isBlocked() { this.paymentService.isBlocked(); }
+    isBlocked() {
+        this.paymentService.isBlocked();
+    }
 
     detailsSum() {
         return this.paymentService.detailsSum();
@@ -36,7 +41,7 @@ export class PaymentMenuComponent implements OnInit {
         return this.paymentService.payment.sum;
     }
 
-    canPasteRegistryFromBuffer () {
+    canPasteRegistryFromBuffer() {
         return this.paymentService.canPasteRegistryFromBuffer();
     }
 
@@ -44,12 +49,12 @@ export class PaymentMenuComponent implements OnInit {
         return this.paymentService.canLoadEquipment();
     }
 
-    canDelTransit() {
-        return this.paymentService.canDelTransit();
-    }
-
     canTransit() {
         return this.paymentService.canTransit();
+    }
+
+    canDelTransit() {
+        return this.paymentService.canDelTransit();
     }
 
     canDefer() {
