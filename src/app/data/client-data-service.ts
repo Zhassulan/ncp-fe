@@ -23,8 +23,12 @@ export class ClientDataService {
         return this.http.get<Phone []>(`${API_URL}/clients/${paymentId}/props/bin`);
     }
 
-    list() {
+    all() {
         return this.http.get<Client []> (`${API_URL}/clients`);
+    }
+
+    mobipay() {
+        return this.http.get<Client []> (`${API_URL}/clients/mobipay`);
     }
 
     payments(id) {

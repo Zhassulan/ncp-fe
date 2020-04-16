@@ -124,42 +124,37 @@ export class PaymentService {
     }
 
     canPasteRegistryFromBuffer() {
-        return this.payment ?
-            this.payment.status == PaymentStatus.DISTRIBUTED ||
-            this.payment.status == PaymentStatus.EXPIRED ||
-            this.payment.status == PaymentStatus.DELETED ||
-            this.payment.status == PaymentStatus.DEFERRED ||
-            this.payment.status == PaymentStatus.TRANSIT_DISTRIBUTED : false;
+        return this.payment.status == PaymentStatus.NEW ||
+            this.payment.status == PaymentStatus.TRANSIT ||
+            this.payment.status == PaymentStatus.ERROR ||
+            this.payment.status == PaymentStatus.TRANSIT_ERROR ||
+            this.payment.status == PaymentStatus.TRANSIT_CANCELLED ||
+            this.payment.mobipay == false;
     }
 
     canLoadEquipment() {
-        return this.payment ?
-         this.payment.status == PaymentStatus.DISTRIBUTED ||
-            this.payment.status == PaymentStatus.EXPIRED ||
-            this.payment.status == PaymentStatus.DELETED ||
-            this.payment.status == PaymentStatus.DEFERRED ||
-            this.payment.status == PaymentStatus.TRANSIT_DISTRIBUTED : false;
-    }
-
-    canDelTransit() {
-        return this.payment.status != PaymentStatus.TRANSIT;
+        return this.payment.status == PaymentStatus.NEW ||
+            this.payment.status == PaymentStatus.TRANSIT ||
+            this.payment.status == PaymentStatus.ERROR ||
+            this.payment.status == PaymentStatus.TRANSIT_ERROR ||
+            this.payment.status == PaymentStatus.TRANSIT_CANCELLED;
     }
 
     canTransit() {
-        return this.payment ? this.payment.status == PaymentStatus.TRANSIT ||
-            this.payment.status == PaymentStatus.DISTRIBUTED ||
-            this.payment.status == PaymentStatus.EXPIRED ||
-            this.payment.status == PaymentStatus.DELETED ||
-            this.payment.status == PaymentStatus.DEFERRED ||
-            this.payment.status == PaymentStatus.TRANSIT_DISTRIBUTED : false;
+        return this.payment.status == PaymentStatus.NEW ||
+            this.payment.status == PaymentStatus.TRANSIT_CANCELLED;
+    }
+
+    canDelTransit() {
+        return this.payment.status == PaymentStatus.TRANSIT;
     }
 
     canDefer() {
-        return this.payment ?  this.payment.status == PaymentStatus.DISTRIBUTED ||
-            this.payment.status == PaymentStatus.EXPIRED ||
-            this.payment.status == PaymentStatus.DELETED ||
-            this.payment.status == PaymentStatus.DEFERRED ||
-            this.payment.status == PaymentStatus.TRANSIT_DISTRIBUTED : false;
+        return this.payment.status == PaymentStatus.NEW ||
+            this.payment.status == PaymentStatus.ERROR ||
+            this.payment.status == PaymentStatus.TRANSIT ||
+            this.payment.status == PaymentStatus.TRANSIT_ERROR ||
+            this.payment.status == PaymentStatus.TRANSIT_CANCELLED;
     }
 
     canLoadPhones() {
@@ -178,13 +173,12 @@ export class PaymentService {
     }
 
     canDistribute() {
-        return this.payment ?
-            this.payment.status == PaymentStatus.NEW ||
+        return (this.payment.status == PaymentStatus.NEW ||
             this.payment.status == PaymentStatus.TRANSIT ||
             this.payment.status == PaymentStatus.ERROR ||
             this.payment.status == PaymentStatus.TRANSIT_CANCELLED ||
-            this.payment.status == PaymentStatus.TRANSIT_ERROR ||
-            this.payment.details.filter(i => i.status == PaymentStatus.NEW) > 0 : false;
+            this.payment.status == PaymentStatus.TRANSIT_ERROR) &&
+            this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0;
     }
 
     importRegistryData(rawdata) {

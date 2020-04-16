@@ -12,15 +12,10 @@ stages:
   - package
   - deploy
 
-build:
+build-review:
   image: docker.tele2.kz/ncp/angular-cli:latest
   stage: build
-  #before_script:
-  #  - ssh-keyscan -H $SSH_SERVER_HOST >> ~/.ssh/known_hosts
-
   script:
-   # - export SSHPASS=$USER_PASS
-    #- sshpass -e scp ncp-frontend-app-deployment.yaml kube@$SSH_SERVER_HOST:/home/kube/ncp-frontend-app-deployment.yaml
     - npm install
     - ng build --configuration=staging --prod=false
   artifacts:
@@ -28,6 +23,19 @@ build:
       - dist/*
   only:
     - test
+
+build-prod:
+  image: docker.tele2.kz/ncp/angular-cli:latest
+  stage: build
+  script:
+    - npm install
+    - ng build --configuration=production --prod=true
+  artifacts:
+    paths:
+      - dist/*
+  only:
+    - master
+
 docker-build:
   stage: package
   script:
@@ -35,16 +43,16 @@ docker-build:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
     - docker push $CI_REGISTRY_IMAGE:latest
   only:
+    - master
     - test
-docker-deploy:
+
+deploy-to-review:
   stage: deploy
   image: ubuntu
   environment:
     name: development
-    #kubernetes:
-     # namespace: ncp
   only:
-  - test
+    - test
   before_script:
     - apt update
     - apt install -y sshpass
@@ -56,15 +64,36 @@ docker-deploy:
     - chmod 700 ~/.ssh
     - ssh-keyscan "$SSH_SERVER_HOST22" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-  #script:
-  #  - export SSHPASS=$USER_PASS
-  #  - sshpass -e ssh -T kube@$SSH_SERVER_HOST kubectl scale --replicas=0 deployment.apps/frontend-app -n ncp
-  #  - sshpass -e ssh -T kube@$SSH_SERVER_HOST kubectl apply -f /home/kube/ncp-frontend-app-deployment.yaml
-  #allow_failure: true
   script:
     - export SSHPASS=$DOCKER_USER22
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 docker pull $CI_REGISTRY_IMAGE:latest
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME-test/docker-compose.yml down
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME-test/docker-compose.yml up -d
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker logout docker.tele2.kz
+
+deploy-to-production:
+  stage: deploy
+  image: ubuntu
+  environment:
+    name: development
+  only:
+  - master
+  before_script:
+    - apt update
+    - apt install -y sshpass
+    - sshpass -V
+    - uname -a
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY22" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan "$SSH_SERVER_HOST22" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - export SSHPASS=$DOCKER_USER22
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 docker pull $CI_REGISTRY_IMAGE:latest
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yml down
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yml up -d
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker logout docker.tele2.kz

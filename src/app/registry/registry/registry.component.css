@@ -38,7 +38,7 @@
 
 .menu {
     grid-area: menu;
-    align-self: right;
+    align-self: end;
     justify-self: right;
 }
 

@@ -77,7 +77,8 @@ export class PaymentsComponent implements OnInit {
     }
 
     onRowClicked(paymentRow) {
-        this.menuOnRowOpenPayment(paymentRow);
+        //нельзя использовать, т.к. не работает меню строки!
+        //this.menuOnRowOpenPayment(paymentRow);
     }
 
     /**

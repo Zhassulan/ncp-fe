@@ -25,10 +25,16 @@ export class MenuToolbarComponent implements AfterViewChecked {
             icon: 'credit_card',
             route: 'payments',
             title: 'Платежи',
-        }, {
+        },
+        {
             icon: 'dashboard',
             route: 'clients',
             title: 'Клиенты',
+        },
+        {
+            icon: 'dashboard',
+            route: 'mobipay',
+            title: 'Mobipay',
         },
         {
             icon: 'assignment_ind',
