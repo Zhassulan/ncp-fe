@@ -19,6 +19,10 @@ export class ClientDataService {
         return this.http.get<Phone []>(`${API_URL}/clients/${paymentId}/props`);
     }
 
+    propsBin(paymentId)   {
+        return this.http.get<Phone []>(`${API_URL}/clients/${paymentId}/props/bin`);
+    }
+
     list() {
         return this.http.get<Client []> (`${API_URL}/clients`);
     }

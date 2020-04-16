@@ -30,8 +30,7 @@ export class AddDetailComponent implements OnInit {
                 ]),
             sumControl: new FormControl('',
                 [
-                    Validators.min(1),
-                    Validators.max(this.paymentSum())
+                    Validators.min(1)
                 ])
         }
     );
@@ -76,7 +75,6 @@ export class AddDetailComponent implements OnInit {
         this.accountControl.value == "" || this.accountControl.value == null ? detail.account = null : detail.account = this.accountControl.value;
         let sum = this.sumControl.value;
         sum = sum.replace(',', '.');
-        console.log(sum);
         detail.sum = Number(sum);
         detail.status = PaymentStatus.NEW;
         this.payService.addDetail(detail);
