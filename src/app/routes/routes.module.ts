@@ -53,11 +53,11 @@ const routes: Routes = [
         }
     },
     {
-        path: 'client-payments/:id',
+        path: 'clients/:id/payments',
         component: ClientPaymentsComponent,
       /*  canActivate: [LoggedInGuard],*/
         data: {
-            breadcrumb: 'Платежи'
+            breadcrumb: 'Платежи клиента'
         }
     },
     {

@@ -103,7 +103,7 @@ export class PaymentComponent implements OnInit {
     }
 
     loadPhones(id) {
-        this.clntDataService.phones(id).subscribe(
+        this.clntDataService.propsBin(id).subscribe(
             data => {
                 this.msisdns = data.filter(i => i.msisdn).map(i => i.msisdn);
                 this.accounts = data.filter(i => i.account).map(i => String(i.account));

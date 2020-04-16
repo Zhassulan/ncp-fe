@@ -1,0 +1,8 @@
+table {
+    width: 100%;
+}
+
+.mat-table .mat-row:hover {
+    background-color: #eeeeee;
+}
+

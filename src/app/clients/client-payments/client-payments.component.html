@@ -3,10 +3,7 @@
     <div>
         <div class="content">
             <div>
-                <mat-form-field>
-                    <mat-label> Клиент</mat-label>
-                    <input matInput disabled value="Клиент">
-                </mat-form-field>
+                <h2 class="mat-h2" *ngIf="client">{{ client.name }}</h2>
             </div>
             <div>
                 <div class="search">
@@ -14,10 +11,16 @@
                         <app-date-range></app-date-range>
                     </div>
                     <div>
-                        <button mat-raised-button color="primary" (click)="null"
+                        <button mat-raised-button color="primary" (click)="load()"
                                 matTooltip="Загрузка данных за указанную дату">
                             Загрузка
                         </button>
+                    </div>
+                    <div class="inpit_search">
+                        <mat-form-field>
+                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Быстрый поиск">
+                            <mat-icon matSuffix>search</mat-icon>
+                        </mat-form-field>
                     </div>
                 </div>
             </div>
