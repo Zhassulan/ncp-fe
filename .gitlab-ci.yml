@@ -64,7 +64,7 @@ deploy-to-review:
     - chmod 700 ~/.ssh
     - ssh-keyscan "$SSH_SERVER_HOST22" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-    - apt install curl
+    - apt install -y curl
   script:
     - export SSHPASS=$DOCKER_USER22
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
@@ -92,7 +92,7 @@ deploy-to-production:
     - chmod 700 ~/.ssh
     - ssh-keyscan "$SSH_SERVER_HOST22" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-    - apt install curl
+    - apt install -y curl
   script:
     - export SSHPASS=$DOCKER_USER22
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
