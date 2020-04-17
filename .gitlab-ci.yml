@@ -72,7 +72,7 @@ deploy-to-review:
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME-test/docker-compose.yml down
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME-test/docker-compose.yml up -d
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker logout docker.tele2.kz
-    - curl -d https://b2b.tele2.kz/ncp/api-test/ver?pwd=RefreshVerPlease
+    - curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api-test/ver
 
 deploy-to-production:
   stage: deploy
@@ -100,4 +100,5 @@ deploy-to-production:
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yml down
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yml up -d
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker logout docker.tele2.kz
-    - curl -d https://b2b.tele2.kz/ncp/api/ver?pwd=RefreshVerPlease
+    - curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api/ver
+
