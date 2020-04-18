@@ -43,7 +43,7 @@ const routes: Routes = [
         }
     },
     {
-        path: 'mobipay',
+        path: 'mobipay/clients',
         component: ClientsComponent,
         data: {
             breadcrumb: 'Mobipay'

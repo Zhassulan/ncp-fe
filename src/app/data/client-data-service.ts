@@ -15,7 +15,7 @@ export class ClientDataService {
 
     constructor(private http: HttpClient) { }
 
-    phones(paymentId)   {
+    props(paymentId)   {
         return this.http.get<Phone []>(`${API_URL}/clients/${paymentId}/props`);
     }
 
@@ -25,10 +25,6 @@ export class ClientDataService {
 
     all() {
         return this.http.get<Client []> (`${API_URL}/clients`);
-    }
-
-    mobipay() {
-        return this.http.get<Client []> (`${API_URL}/clients/mobipay`);
     }
 
     payments(id) {

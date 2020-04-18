@@ -8,6 +8,7 @@ import {AppService} from '../../app.service';
 import {MatSort} from '@angular/material/sort';
 import {Router} from '@angular/router';
 import {ClientService} from '../client.service';
+import {MobipayDataService} from '../../data/mobipay-data.service';
 
 @Component({
     selector: 'app-clents-list',
@@ -26,7 +27,8 @@ export class ListComponent implements OnInit {
                 private notifService: NotificationsService,
                 private appService: AppService,
                 private router: Router,
-                private clntService: ClientService) {
+                private clntService: ClientService,
+                private mobipayDataService: MobipayDataService) {
         this.loadData();
     }
 
@@ -38,7 +40,7 @@ export class ListComponent implements OnInit {
     loadData() {
         this.appService.setProgress(true);
         let req;
-        this.router.url == '/clients' ? req = this.clientDataService.all() : req = this.clientDataService.mobipay();
+        this.router.url == '/mobipay/clients' ? req = this.mobipayDataService.clients() : req = this.clientDataService.all();
         req.subscribe(
             data => {
                 this.clients = data;
