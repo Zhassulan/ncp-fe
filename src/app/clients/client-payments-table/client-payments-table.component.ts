@@ -43,7 +43,7 @@ export class ClientPaymentsTableComponent implements OnInit {
     }
 
     onRowClicked(row) {
-        this.router.navigate(['payments/' + row.id]);
+        //this.router.navigate(['payments/' + row.id]);
     }
 
 }

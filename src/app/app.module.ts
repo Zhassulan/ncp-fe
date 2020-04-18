@@ -57,6 +57,7 @@ import {ClientPaymentsComponent} from './clients/client-payments/client-payments
 import {ClientPaymentsTableComponent} from './clients/client-payments-table/client-payments-table.component';
 import {RouterService} from './router/router.service';
 import { PaymentsTableComponent } from './payments/payments-table/payments-table.component';
+import { MobipayComponent } from './mobipay/mobipay.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -90,7 +91,8 @@ registerLocaleData(localeRu, 'ru');
         ListComponent,
         ClientPaymentsComponent,
         ClientPaymentsTableComponent,
-        PaymentsTableComponent
+        PaymentsTableComponent,
+        MobipayComponent,
     ],
     entryComponents: [
         DialogReportComponent,

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {Client} from './client';
 import {MatPaginator} from '@angular/material/paginator';
@@ -15,13 +15,14 @@ import {MobipayDataService} from '../../data/mobipay-data.service';
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.css']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, AfterViewInit{
 
     clients = [];
     displayedColumns: string[] = ['No', 'name', 'bin', 'managedBy', 'types', 'segments', 'payments'];
     dataSource = new MatTableDataSource<Client>(this.clients);
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
+    @Input() isMobipay;
 
     constructor(private clientDataService: ClientDataService,
                 private notifService: NotificationsService,
@@ -29,6 +30,9 @@ export class ListComponent implements OnInit {
                 private router: Router,
                 private clntService: ClientService,
                 private mobipayDataService: MobipayDataService) {
+    }
+
+    ngAfterViewInit() {
         this.loadData();
     }
 
@@ -40,7 +44,7 @@ export class ListComponent implements OnInit {
     loadData() {
         this.appService.setProgress(true);
         let req;
-        this.router.url == '/mobipay/clients' ? req = this.mobipayDataService.clients() : req = this.clientDataService.all();
+        this.isMobipay ? req = this.mobipayDataService.clients() : req = this.clientDataService.all();
         req.subscribe(
             data => {
                 this.clients = data;

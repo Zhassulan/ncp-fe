@@ -10,6 +10,7 @@ import {RegistryComponent} from '../registry/registry/registry.component';
 import {PageNotFoundComponent} from '../page-not-found/page-not-found.component';
 import {ClientsComponent} from '../clients/clients.component';
 import {ClientPaymentsComponent} from '../clients/client-payments/client-payments.component';
+import {MobipayComponent} from '../mobipay/mobipay.component';
 
 const routes: Routes = [
     {
@@ -43,8 +44,8 @@ const routes: Routes = [
         }
     },
     {
-        path: 'mobipay/clients',
-        component: ClientsComponent,
+        path: 'mobipay',
+        component: MobipayComponent,
         data: {
             breadcrumb: 'Mobipay'
         }
