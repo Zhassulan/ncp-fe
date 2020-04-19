@@ -1,4 +1,4 @@
-import {AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Output} from '@angular/core';
+import {AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, OnDestroy, Output} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
@@ -15,10 +15,10 @@ interface ROUTE {
     templateUrl: './menu-toolbar.component.html',
     styleUrls: ['./menu-toolbar.component.css']
 })
-export class MenuToolbarComponent implements AfterViewChecked {
+export class MenuToolbarComponent implements AfterViewChecked, OnDestroy {
 
     isWait: boolean;
-    progressSubscription: Subscription;
+    subscription: Subscription;
 
     routes: ROUTE[] = [
         {
@@ -49,7 +49,7 @@ export class MenuToolbarComponent implements AfterViewChecked {
                 private router: Router,
                 private cdRef:ChangeDetectorRef,
                 private appService: AppService) {
-        this.progressSubscription = this.appService.progressAnnounced$.subscribe(
+        this.subscription = this.appService.progressAnnounced$.subscribe(
             data => {
                 this.isWait = data;
             });
@@ -68,6 +68,10 @@ export class MenuToolbarComponent implements AfterViewChecked {
 
     getUser() {
         return this.authService.getUser();
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
 }

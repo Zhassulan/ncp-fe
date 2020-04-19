@@ -1,19 +1,21 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {PaymentService} from '../../payment.service';
 import {RouterService} from '../../../../router/router.service';
 import {AppService} from '../../../../app.service';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-dialog',
     templateUrl: './dialog.component.html',
     styleUrls: ['./dialog.component.css']
 })
-export class DialogComponent implements OnInit {
+export class DialogComponent implements OnInit, OnDestroy {
 
     @ViewChild('file', {static: true}) file;
     fileObj: File;
     showUploadButton: boolean = false;
+    private subscription: Subscription;
 
     constructor(public dialogRef: MatDialogRef<DialogComponent>,
                 private routerService: RouterService,
@@ -39,7 +41,7 @@ export class DialogComponent implements OnInit {
 
     upload() {
         this.appService.setProgress(true);
-        this.routerService.registryFromFile(this.fileObj).subscribe(
+        this.subscription = this.routerService.registryFromFile(this.fileObj).subscribe(
             data => {
                 if (this.paymentService.payment)
                     this.paymentService.addDetailsFromRouterRegistry();
@@ -51,6 +53,10 @@ export class DialogComponent implements OnInit {
             () => {
                 this.appService.setProgress(false);
             });
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
 }

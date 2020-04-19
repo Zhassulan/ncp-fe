@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {Client} from './client';
 import {MatPaginator} from '@angular/material/paginator';
@@ -9,13 +9,14 @@ import {MatSort} from '@angular/material/sort';
 import {Router} from '@angular/router';
 import {ClientService} from '../client.service';
 import {MobipayDataService} from '../../data/mobipay-data.service';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-clents-list',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.css']
 })
-export class ListComponent implements OnInit, AfterViewInit{
+export class ListComponent implements OnInit, AfterViewInit, OnDestroy{
 
     clients = [];
     displayedColumns: string[] = ['No', 'name', 'bin', 'managedBy', 'types', 'segments', 'payments'];
@@ -23,6 +24,7 @@ export class ListComponent implements OnInit, AfterViewInit{
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
     @Input() isMobipay;
+    private subscription: Subscription;
 
     constructor(private clientDataService: ClientDataService,
                 private notifService: NotificationsService,
@@ -45,7 +47,7 @@ export class ListComponent implements OnInit, AfterViewInit{
         this.appService.setProgress(true);
         let req;
         this.isMobipay ? req = this.mobipayDataService.clients() : req = this.clientDataService.all();
-        req.subscribe(
+        this.subscription = req.subscribe(
             data => {
                 this.clients = data;
                 this.dataSource.data = this.clients;
@@ -66,9 +68,13 @@ export class ListComponent implements OnInit, AfterViewInit{
         }
     }
 
-    openClientPayments(client) {
+    openClientPayments(client, isMobipay) {
         this.clntService.client = client;
-        this.router.navigate([`clients/${client.id}/payments/`]);
+        this.router.navigate([`clients/${client.id}/payments`, { isMobipay: isMobipay } ]);
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
 }

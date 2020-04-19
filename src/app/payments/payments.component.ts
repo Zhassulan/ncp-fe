@@ -24,7 +24,7 @@ import {PaymentsTableComponent} from './payments-table/payments-table.component'
 export class PaymentsComponent implements OnInit {
 
     @ViewChild(DateRangeComponent, {static: true})
-    private dateRangeComponent: DateRangeComponent;
+    dateRangeComponent: DateRangeComponent;
     @ViewChild(PaymentsTableComponent)
     private paymentsTableComponent: PaymentsTableComponent;
     selection = new SelectionModel<Payment>(true, []);

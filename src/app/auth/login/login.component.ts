@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -7,6 +7,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {AppDataService} from '../../data/app-data-service';
 import * as HttpStatus from 'http-status-codes';
 import {AppService} from '../../app.service';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-login',
@@ -14,13 +15,14 @@ import {AppService} from '../../app.service';
     styleUrls: ['./login.component.css']
 })
 
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
     userName: string;
     userPassword: string;
     isWait: boolean = true;
     returnUrl: string;
     keyVal: string = '';
+    private subscription: Subscription;
 
     constructor(public authService: AuthService,
                 private route: ActivatedRoute,
@@ -47,7 +49,7 @@ export class LoginComponent implements OnInit {
             this.notifService.warn(msgs.msgDataNotProvided);
             return;
         }
-        this.appDataService.login(this.userName, this.userPassword).subscribe(
+        this.subscription = this.appDataService.login(this.userName, this.userPassword).subscribe(
             data => {
                 this.authService.setUser(this.userName);
                 this.appService.checkVer();
@@ -61,6 +63,10 @@ export class LoginComponent implements OnInit {
                     this.notifService.error('Ошибка доступа');
 
             });
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
 }

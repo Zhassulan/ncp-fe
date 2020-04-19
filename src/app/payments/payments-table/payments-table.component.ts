@@ -1,4 +1,4 @@
-import {Component, Input, isDevMode, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, isDevMode, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
@@ -11,13 +11,14 @@ import {NotificationsService} from 'angular2-notifications';
 import {Router} from '@angular/router';
 import {DialogService} from '../../dialog/dialog.service';
 import {ExcelService} from '../../excel/excel.service';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-payments-table',
     templateUrl: './payments-table.component.html',
     styleUrls: ['./payments-table.component.css']
 })
-export class PaymentsTableComponent implements OnInit {
+export class PaymentsTableComponent implements OnInit, OnDestroy {
 
     displayedColumns = [
         'ID',
@@ -42,6 +43,7 @@ export class PaymentsTableComponent implements OnInit {
     PaymentStatus = PaymentStatus;
     @Input() dateRangeComponent;
     @Input() selection;
+    private subscription: Subscription;
 
     constructor(private payDataService: PayDataService,
                 private appService: AppService,
@@ -78,7 +80,7 @@ export class PaymentsTableComponent implements OnInit {
             this.dateRangeComponent.setCalendarToDate('2019-12-31T00:00:00.000', '2019-12-31T23:59:59.999');
         this.dateRangeComponent.setTimeBoundariesForDatePickers();
         this.appService.setProgress(true);
-        this.payDataService.all(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime()).subscribe(
+        this.subscription = this.payDataService.all(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime()).subscribe(
             data => {
                 this.initStatusRu(data);
                 this.dataSource.data = data;
@@ -182,6 +184,10 @@ export class PaymentsTableComponent implements OnInit {
             this.dialogService.openDialog();
             this.selection.selected.forEach(payment => this.transit(payment.id));
         }
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
 }

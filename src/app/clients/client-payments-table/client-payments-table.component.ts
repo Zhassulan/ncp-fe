@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {ClientPayment} from './client-payment';
 import {MatPaginator} from '@angular/material/paginator';
@@ -7,7 +7,6 @@ import {ClientDataService} from '../../data/client-data-service';
 import {NotificationsService} from 'angular2-notifications';
 import {AppService} from '../../app.service';
 import {Subscription} from 'rxjs';
-import {PaymentService} from '../../payments/payment/payment.service';
 import {ClientService} from '../client.service';
 
 @Component({
@@ -15,12 +14,20 @@ import {ClientService} from '../client.service';
     templateUrl: './client-payments-table.component.html',
     styleUrls: ['./client-payments-table.component.css']
 })
-export class ClientPaymentsTableComponent implements OnInit {
+export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
 
-    displayedColumns: string[] = ['position', 'created', 'payDocNum', 'sum', 'agent', 'status'];
+    displayedColumns: string[] = [
+        'position',
+        'created',
+        'payDocNum',
+        'sum',
+        'agent',
+        'status',
+        'menu'];
     dataSource = new MatTableDataSource<ClientPayment>();
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     subscription: Subscription;
+    isMobipay;
 
     constructor(private route: ActivatedRoute,
                 private clntDataService: ClientDataService,
@@ -35,6 +42,7 @@ export class ClientPaymentsTableComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.isMobipay = this.route.snapshot.params['isMobipay'];
         this.load(this.route.snapshot.params['id']);
     }
 
@@ -44,6 +52,10 @@ export class ClientPaymentsTableComponent implements OnInit {
 
     onRowClicked(row) {
         //this.router.navigate(['payments/' + row.id]);
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
 }
