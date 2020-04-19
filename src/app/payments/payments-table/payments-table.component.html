@@ -78,23 +78,16 @@
                 <button mat-menu-item (click)="menuOnRowOpenPayment(paymentRow)">
                     <span>Открыть</span>
                 </button>
-                <button mat-menu-item
-                        [disabled]="(paymentRow.status == PaymentStatus.TRANSIT  ||
-                                            paymentRow.status == PaymentStatus.TRANSIT_DISTRIBUTED ||
-                                            paymentRow.status == PaymentStatus.DISTRIBUTED)"
-                        (click)="menuOnRowToTransit(paymentRow)">
-                    <!--<mat-icon>dialpad</mat-icon>-->
+                <button mat-menu-item [disabled]="!canTransit(paymentRow)"  (click)="menuOnRowTransit(paymentRow)">
                     <span>На транзит</span>
                 </button>
-                <button mat-menu-item [disabled]="!(paymentRow.status == PaymentStatus.TRANSIT)"
-                        (click)="menuOnRowDeleteTransit(paymentRow)">
+                <button mat-menu-item [disabled]="!canDelTransit(paymentRow)" (click)="menuOnRowDeleteTransit(paymentRow)">
                     <span>Удалить с транзита</span>
                 </button>
             </mat-menu>
         </mat-cell>
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <!-- you can add to signature of mat-row for catch click on hole row: (click)="onRowClicked(paymentRow)"-->
     <!-- for Highlight: paymentRowHighlight [paymentStatus]="paymentRow.getStatus()"-->
     <mat-row *matRowDef="let paymentRow; columns: displayedColumns;" [ngClass]="{'row_highlight': paymentRow.status == 1 || paymentRow.status == 7 }"
              (click)="onRowClicked(paymentRow)"></mat-row>

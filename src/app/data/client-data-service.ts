@@ -3,8 +3,7 @@ import {environment} from '../../environments/environment';
 import {Client} from '../clients/list/client';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {ClientPayment} from '../clients/client-payments-table/client-payment';
-import {RegistryReportItem} from '../registry/model/registry-report-item';
+import {Payment} from '../payments/payment/model/payment';
 
 const API_URL = environment.apiUrl;
 
@@ -28,14 +27,14 @@ export class ClientDataService {
     }
 
     payments(id) {
-        return this.http.get<ClientPayment []> (`${API_URL}/clients/${id}/payments`);
+        return this.http.get<Payment []> (`${API_URL}/clients/${id}/payments`);
     }
 
     paymentsRange(id, start, end) {
         const params = new HttpParams()
             .set('start', start)
             .set('end', end);
-        return this.http.get<ClientPayment []> (`${API_URL}/clients/${id}/payments/range`, {params});
+        return this.http.get<Payment []> (`${API_URL}/clients/${id}/payments/range`, {params});
     }
 
 }

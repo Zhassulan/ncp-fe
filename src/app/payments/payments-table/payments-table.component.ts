@@ -12,6 +12,7 @@ import {Router} from '@angular/router';
 import {DialogService} from '../../dialog/dialog.service';
 import {ExcelService} from '../../excel/excel.service';
 import {Subscription} from 'rxjs';
+import {PaymentService} from '../payment/payment.service';
 
 @Component({
     selector: 'app-payments-table',
@@ -50,7 +51,8 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
                 private notif: NotificationsService,
                 private router: Router,
                 private dialogService: DialogService,
-                private excelService: ExcelService,) {
+                private excelService: ExcelService,
+                private payService: PaymentService) {
         this.dataSource = new MatTableDataSource<Payment>();
         this.paginatorResultsLength = 0;
     }
@@ -129,7 +131,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
         this.transitDel(payment.id);
     }
 
-    menuOnRowToTransit(payment) {
+    menuOnRowTransit(payment) {
         this.dialogService.clear();
         this.dialogService.title = 'Перевод на транзитный счёт';
         this.dialogService.openDialog();
@@ -188,6 +190,16 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+    }
+
+    canTransit(row) {
+        this.payService.setPayment(row);
+        return this.payService.canTransit();
+    }
+
+    canDelTransit(row) {
+        this.payService.setPayment(row);
+        return this.payService.canDelTransit();
     }
 
 }

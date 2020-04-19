@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Client} from './list/client';
 import {Subject} from 'rxjs';
-import {Payment} from '../payments/payment/model/payment';
 import {ClientDataService} from '../data/client-data-service';
 import {AppService} from '../app.service';
 import {NotificationsService} from 'angular2-notifications';
-import {ClientPayment} from './client-payments-table/client-payment';
+import {Payment} from '../payments/payment/model/payment';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +12,7 @@ import {ClientPayment} from './client-payments-table/client-payment';
 export class ClientService {
 
     clntPayments;
-    clntPaymentsObs = new Subject<ClientPayment []>();
+    clntPaymentsObs = new Subject<Payment []>();
     clntPayAnnounced$ = this.clntPaymentsObs.asObservable();
 
     constructor(private clntDataService: ClientDataService,
