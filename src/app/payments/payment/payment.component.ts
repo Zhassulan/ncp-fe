@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
 import {msgs, PaymentMenuItems, PaymentStatus, PaymentStatusRu} from '../../settings';
@@ -12,6 +12,7 @@ import {CalendarDeferModalComponent} from './calendar-defer-modal/calendar-defer
 import {MatSort} from '@angular/material/sort';
 import {PayDataService} from '../../data/pay-data-service';
 import {ClientDataService} from '../../data/client-data-service';
+import {Subscription} from 'rxjs';
 
 export interface RegistryDialogData {
     registry: string;
@@ -26,7 +27,7 @@ export interface CalendarDialogData {
     templateUrl: './payment.component.html',
     styleUrls: ['./payment.component.css']
 })
-export class PaymentComponent implements OnInit {
+export class PaymentComponent implements OnInit, OnDestroy {
 
     @ViewChild(DetailsComponent, {static: true}) childDetailsComponent: DetailsComponent;
     paymentMenuItems = PaymentMenuItems;
@@ -36,6 +37,7 @@ export class PaymentComponent implements OnInit {
     @ViewChild(MatSort, {static: true}) sort: MatSort;
     msisdns: String [] = [];
     accounts: String [] = [];
+    private subscription: Subscription;
 
     constructor(public payService: PaymentService,
                 private notifService: NotificationsService,
@@ -86,7 +88,7 @@ export class PaymentComponent implements OnInit {
 
     load(id) {
         this.appService.setProgress(true);
-        this.payDataService.findById(id).subscribe(
+        this.subscription = this.payDataService.findById(id).subscribe(
             data => {
                 this.payService.setPayment(data);
                 if (this.canLoadPhones()) this.loadPhones(id);
@@ -103,7 +105,7 @@ export class PaymentComponent implements OnInit {
     }
 
     loadPhones(id) {
-        this.clntDataService.propsBin(id).subscribe(
+        this.subscription = this.clntDataService.propsBin(id).subscribe(
             data => {
                 this.msisdns = data.filter(i => i.msisdn).map(i => i.msisdn);
                 this.accounts = data.filter(i => i.account).map(i => String(i.account));
@@ -126,7 +128,7 @@ export class PaymentComponent implements OnInit {
 
     dlgDistribute() {
         this.appService.setProgress(true);
-        this.payDataService.distribute(this.payment.id, this.payment.details).subscribe(data => {
+        this.subscription = this.payDataService.distribute(this.payment.id, this.payment.details).subscribe(data => {
             this.payService.setPayment(data);
             this.notifService.info(msgs.msgSuccessDistributed);
         }, error => {
@@ -137,7 +139,7 @@ export class PaymentComponent implements OnInit {
 
     dlgDelTransit() {
         this.appService.setProgress(true);
-        this.payDataService.transitDel(this.payment.id).subscribe(
+        this.subscription = this.payDataService.transitDel(this.payment.id).subscribe(
             data => {
                 this.payService.setPayment(data);
                 this.notifService.info(msgs.msgSuccessDelTransit);
@@ -151,7 +153,7 @@ export class PaymentComponent implements OnInit {
 
     dlgTransit() {
         this.appService.setProgress(true);
-        this.payDataService.transit(this.payment.id).subscribe(data => {
+        this.subscription = this.payDataService.transit(this.payment.id).subscribe(data => {
                 this.payService.setPayment(data);
                 this.notifService.info(msgs.msgSuccessToTransit);
             },
@@ -199,7 +201,7 @@ export class PaymentComponent implements OnInit {
                 return;
             }
             if (dt.getDate() >= tomorrow.getDate() && dt.getMonth() >= tomorrow.getMonth() && dt.getFullYear() >= tomorrow.getFullYear()) {
-                this.payDataService.defer(this.payment, dt.getTime()).subscribe(
+                this.subscription = this.payDataService.defer(this.payment, dt.getTime()).subscribe(
                     data => {
                         console.log(data);
                         this.notifService.info(`Установлена дата отложенной разноски ${dt.getDate()}/${dt.getMonth() + 1}/${dt.getFullYear()}`);
@@ -214,6 +216,10 @@ export class PaymentComponent implements OnInit {
                 );
             }
         });
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, OnDestroy} from '@angular/core';
+import {Component, OnInit, ViewChild, OnDestroy, AfterViewInit} from '@angular/core';
 import {PaymentStatus, TOOLTIPS} from '../../../settings';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
@@ -34,11 +34,7 @@ enum PaymentDetailTableColumnsDisplay {
     templateUrl: './details.component.html',
     styleUrls: ['./details.component.css']
 })
-export class DetailsComponent implements OnInit,OnDestroy {
-
-    ngOnInit(): void {
-        this.payService.announcePayment();
-    }
+export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     paymentStatuses = PaymentStatus;
     tooltips = TOOLTIPS;
@@ -55,6 +51,10 @@ export class DetailsComponent implements OnInit,OnDestroy {
                 this.dataSource.data = payment.details;
                 this.setPaginator();
             });
+    }
+
+    ngOnInit(): void {
+        //this.payService.announcePayment();
     }
 
     ngOnDestroy() {
@@ -84,6 +84,10 @@ export class DetailsComponent implements OnInit,OnDestroy {
 
     canDelSome() {
         return this.payService.canDelSome();
+    }
+
+    ngAfterViewInit(): void {
+        this.payService.announcePayment();
     }
 
 }

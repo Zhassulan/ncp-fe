@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
@@ -10,13 +10,14 @@ import {RegistryReportItem} from '../model/registry-report-item';
 import {DateRangeComponent} from '../../date-range/date-range.component';
 import {FormControl, Validators} from '@angular/forms';
 import {RegistryDataService} from '../../data/registry-data.service';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-registries',
     templateUrl: './registries.component.html',
     styleUrls: ['./registries.component.css']
 })
-export class RegistriesComponent implements OnInit {
+export class RegistriesComponent implements OnInit, OnDestroy {
 
     displayedColumns = [
         'ID',
@@ -40,6 +41,7 @@ export class RegistriesComponent implements OnInit {
     ]);
     @ViewChild(DateRangeComponent, {static: true})
     private dateRangeComponent: DateRangeComponent;
+    private subscription: Subscription;
 
     constructor(private notifService: NotificationsService,
                 private appService: AppService,
@@ -55,7 +57,7 @@ export class RegistriesComponent implements OnInit {
 
     all() {
         this.appService.setProgress(true);
-        this.registryService.all().subscribe(
+        this.subscription = this.registryService.all().subscribe(
             data => this.dataSource.data = data,
             error => {
                 this.notifService.error(error);
@@ -67,7 +69,7 @@ export class RegistriesComponent implements OnInit {
     range() {
         this.dateRangeComponent.setTimeBoundariesForDatePickers();
         this.appService.setProgress(true);
-        this.registryService.range(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime(), this.binFormCtl.value).subscribe(
+        this.subscription = this.registryService.range(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime(), this.binFormCtl.value).subscribe(
             data => this.dataSource.data = data,
             error => {
                 this.notifService.error(error);
@@ -104,6 +106,10 @@ export class RegistriesComponent implements OnInit {
 
     clearBin() {
         this.binFormCtl.setValue('');
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
 }
