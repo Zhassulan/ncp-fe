@@ -26,7 +26,7 @@ export class Utils {
         return md5.end().toString();
     }
 
-    static convertMillsToDate(mills)    {
+    static millsDate(mills)    {
         let options = {
             year: 'numeric',
             month: 'numeric',

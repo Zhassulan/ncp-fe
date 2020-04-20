@@ -5,6 +5,7 @@ import {ClientDataService} from '../data/client-data-service';
 import {AppService} from '../app.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Payment} from '../payments/payment/model/payment';
+import {Utils} from '../utils';
 
 @Injectable({
     providedIn: 'root'
@@ -35,6 +36,7 @@ export class ClientService {
     }
 
     payments(id, start?, end?) {
+        console.log(`'Загрузка данных за период ${Utils.millsDate(start)} - ${Utils.millsDate(end)}`);
         this.appService.setProgress(true);
         if (start && end) {
             this.clntDataService.paymentsRange(id, start, end).subscribe(

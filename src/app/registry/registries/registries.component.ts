@@ -11,6 +11,7 @@ import {DateRangeComponent} from '../../date-range/date-range.component';
 import {FormControl, Validators} from '@angular/forms';
 import {RegistryDataService} from '../../data/registry-data.service';
 import {Subscription} from 'rxjs';
+import {Utils} from '../../utils';
 
 @Component({
     selector: 'app-registries',
@@ -33,7 +34,7 @@ export class RegistriesComponent implements OnInit, OnDestroy {
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
     dataSource = new MatTableDataSource<RegistryReportItem>();
-    paginatorResultsLength: number;
+    paginatorResultsLength: number = 0;
     pageSize = 30;
     pageSizeOptions: number[] = [50, 100, 150, 250, 300];
     binFormCtl = new FormControl('', [
@@ -58,7 +59,10 @@ export class RegistriesComponent implements OnInit, OnDestroy {
     all() {
         this.appService.setProgress(true);
         this.subscription = this.registryService.all().subscribe(
-            data => this.dataSource.data = data,
+            data => {
+                this.dataSource.data = data;
+                this.setCalendar();
+            },
             error => {
                 this.notifService.error(error);
                 this.appService.setProgress(false);
@@ -66,11 +70,21 @@ export class RegistriesComponent implements OnInit, OnDestroy {
             () => this.appService.setProgress(false));
     }
 
+    setCalendar() {
+        let minDate = new Date(Math.min.apply(null, this.dataSource.data.map(i => i.created)));
+        let maxDate = new Date(Math.max.apply(null, this.dataSource.data.map(i => i.created)));
+        this.dateRangeComponent.start = minDate;
+        this.dateRangeComponent.end = maxDate;
+    }
+
     range() {
-        this.dateRangeComponent.setTimeBoundariesForDatePickers();
         this.appService.setProgress(true);
-        this.subscription = this.registryService.range(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime(), this.binFormCtl.value).subscribe(
-            data => this.dataSource.data = data,
+        console.log(`'Загрузка данных за период ${Utils.millsDate(this.dateRangeComponent.start)} - ${Utils.millsDate(this.dateRangeComponent.end)}`);
+        this.subscription = this.registryService.range(this.dateRangeComponent.start, this.dateRangeComponent.end, this.binFormCtl.value).subscribe(
+            data => {
+                this.dataSource.data = data;
+                this.setCalendar();
+            },
             error => {
                 this.notifService.error(error);
                 this.appService.setProgress(false);

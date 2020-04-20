@@ -181,6 +181,10 @@ export class PaymentService {
             this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0;
     }
 
+    canDelAll() {
+
+    }
+
     importRegistryData(rawdata) {
         let details = [];
         let rows = rawdata.split('\n');
@@ -214,21 +218,6 @@ export class PaymentService {
 
     isMSISDN(value) {
         return /^(707|747|708|700|727|701|702|705|777|756|7172|771)(\d{7}$)/i.test(value);
-    }
-
-    registryValidation(dlgService: DialogService, importedRegistry: NcpPaymentDetails []): Observable<any> {
-        dlgService.clear();
-        dlgService.title = 'Проверка импортированного реестра разносок';
-        dlgService.openDialog();
-        dlgService.addItem('Проверка ' + importedRegistry.length + ' элементов:');
-        let apiCalls: Observable<any> [] = [];
-        for (let registry of importedRegistry) {
-            apiCalls.push(registry.account ?
-                this.validateAccount(this.payment.profileId, registry.account) :
-                this.validateMsisdn(this.payment.profileId, registry.msisdn));
-        }
-        const array$ = from(apiCalls);
-        return array$.pipe(concatAll());
     }
 
     addImportedRegistriesPayment(importedRegistry) {
@@ -269,7 +258,7 @@ export class PaymentService {
     }
 
     detailsSum() {
-        return this.payment.details ? this.payment.details.map(detail => detail.sum).reduce((total,sum) => total + sum, 0) : 0;
+        return this.payment.details.reduce((total, detail) => total + detail.sum, 0);
     }
 
     canDelSome() {

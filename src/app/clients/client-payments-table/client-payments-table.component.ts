@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -12,13 +12,14 @@ import {DialogService} from '../../dialog/dialog.service';
 import {PaymentStatusRu} from '../../settings';
 import {PayDataService} from '../../data/pay-data-service';
 import {Payment} from '../../payments/payment/model/payment';
+import {DateRangeComponent} from '../../date-range/date-range.component';
 
 @Component({
     selector: 'app-client-payments-table',
     templateUrl: './client-payments-table.component.html',
     styleUrls: ['./client-payments-table.component.css']
 })
-export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
+export class ClientPaymentsTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
     displayedColumns: string[] = [
         'position',
@@ -32,6 +33,7 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     subscription: Subscription;
     isMobipay;
+    @Input() datesRange: DateRangeComponent;
 
     constructor(private route: ActivatedRoute,
                 private clntDataService: ClientDataService,
@@ -44,17 +46,32 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
                 private payDataService: PayDataService) {
         this.subscription = this.clntService.clntPayAnnounced$.subscribe(payments => {
             this.dataSource.data = payments;
-            this.dataSource.paginator = this.paginator;
         });
     }
 
     ngOnInit(): void {
+        this.dataSource.paginator = this.paginator;
         this.isMobipay = this.route.snapshot.params['isMobipay'];
         this.load(this.route.snapshot.params['id']);
     }
 
     load(id) {
-        this.clntService.payments(id);
+        this.appService.setProgress(true);
+        this.clntDataService.payments(id).subscribe(
+            data => {
+                this.dataSource.data = data;
+                let minDate = new Date(Math.min.apply(null, this.dataSource.data.map(i => i.created)));
+                let maxDate = new Date(Math.max.apply(null, this.dataSource.data.map(i => i.created)));
+                this.datesRange.start = minDate;
+                this.datesRange.end = maxDate;
+                },
+            error => {
+                this.appService.setProgress(false);
+                this.notifService.error(error.error.errm);
+                this.appService.setProgress(false);
+            },
+            () => this.appService.setProgress(false)
+        );
     }
 
     onRowClicked(row) {
@@ -126,6 +143,10 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
     }
 
     distributeMobipay(row) {
+
+    }
+
+    ngAfterViewInit(): void {
 
     }
 

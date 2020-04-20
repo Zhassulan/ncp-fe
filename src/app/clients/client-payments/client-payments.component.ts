@@ -11,9 +11,9 @@ import {ClientPaymentsTableComponent} from '../client-payments-table/client-paym
 export class ClientPaymentsComponent implements OnInit {
 
     @ViewChild(DateRangeComponent)
-    private rangeComponent: DateRangeComponent;
+    rangeComponent: DateRangeComponent;
     @ViewChild(ClientPaymentsTableComponent)
-    private clntPaymentsTableComponent;
+    clntPaymentsTableComponent;
 
     constructor(private clntService: ClientService) {
     }
@@ -26,8 +26,8 @@ export class ClientPaymentsComponent implements OnInit {
     }
 
     load() {
-        this.rangeComponent.setTimeBoundariesForDatePickers();
-        this.clntService.payments(this.client.id, this.rangeComponent.pickerStartDate.value.getTime(), this.rangeComponent.pickerEndDate.value.getTime());
+        //this.rangeComponent.setTime();
+        this.clntService.payments(this.client.id, this.rangeComponent.start, this.rangeComponent.end);
     }
 
     applyFilter(filterValue: string) {

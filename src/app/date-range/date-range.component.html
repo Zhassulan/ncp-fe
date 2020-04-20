@@ -8,9 +8,7 @@
     </div>
     <div ngClass="dr_item">
         <mat-form-field>
-            <input matInput [matDatepicker]="endDate" placeholder="Дата окончания" [formControl]="pickerEndDate"
-                   (dateInput)="catchEndDatePickerEvent('input', $event)"
-                   (dateChange)="catchEndDatePickerEvent('change', $event)">
+            <input matInput [matDatepicker]="endDate" placeholder="Дата окончания" [formControl]="pickerEndDate">
             <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
             <mat-datepicker #endDate></mat-datepicker>
         </mat-form-field>

@@ -29,11 +29,11 @@ export class ExcelService {
         //alert( date.toLocaleString("ru", options) ); // среда, 31 декабря 2014 г. н.э. 12:30:00
         data.forEach(item => {
             if (item.creationDate) {
-                item.creationDate = Utils.convertMillsToDate(item.creationDate);
-                item.distributeDate = Utils.convertMillsToDate(item.distributeDate);
+                item.creationDate = Utils.millsDate(item.creationDate);
+                item.distributeDate = Utils.millsDate(item.distributeDate);
             }
             if (item.created) {
-                item.created = Utils.convertMillsToDate(item.created);
+                item.created = Utils.millsDate(item.created);
             }
         });
     }

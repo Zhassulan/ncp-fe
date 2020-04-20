@@ -13,6 +13,7 @@ import {DialogService} from '../../dialog/dialog.service';
 import {ExcelService} from '../../excel/excel.service';
 import {Subscription} from 'rxjs';
 import {PaymentService} from '../payment/payment.service';
+import {Utils} from '../../utils';
 
 @Component({
     selector: 'app-payments-table',
@@ -78,11 +79,13 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
     }
 
     loadData() {
-        if (isDevMode())
-            this.dateRangeComponent.setCalendarToDate('2019-12-31T00:00:00.000', '2019-12-31T23:59:59.999');
-        this.dateRangeComponent.setTimeBoundariesForDatePickers();
+        if (isDevMode()) {
+            this.dateRangeComponent.start = '2019-12-31T00:00:00.000';
+            this.dateRangeComponent.end = '2019-12-31T23:59:59.999';
+        }
         this.appService.setProgress(true);
-        this.subscription = this.payDataService.all(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime()).subscribe(
+        console.log(`Загрузка данных за период ${Utils.millsDate(this.dateRangeComponent.start)} - ${Utils.millsDate(this.dateRangeComponent.end)}`);
+        this.subscription = this.payDataService.all(this.dateRangeComponent.start, this.dateRangeComponent.end).subscribe(
             data => {
                 this.initStatusRu(data);
                 this.dataSource.data = data;
