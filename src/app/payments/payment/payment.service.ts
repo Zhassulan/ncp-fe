@@ -269,7 +269,7 @@ export class PaymentService {
     }
 
     detailsSum() {
-        return this.payment.details.reduce((prevVal, elem) => prevVal + Number(elem.sum), 0);
+        return this.payment.details ? this.payment.details.map(detail => detail.sum).reduce((total,sum) => total + sum, 0) : 0;
     }
 
     canDelSome() {

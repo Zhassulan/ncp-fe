@@ -91,7 +91,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         this.subscription = this.payDataService.findById(id).subscribe(
             data => {
                 this.payService.setPayment(data);
-                if (this.canLoadPhones()) this.loadPhones(id);
+                if (this.canLoadPhones()) this.props(data.rnnSender);
             },
             error => {
                 this.appService.setProgress(false);
@@ -104,8 +104,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
         return this.payService.canLoadPhones();
     }
 
-    loadPhones(id) {
-        this.subscription = this.clntDataService.propsBin(id).subscribe(
+    props(bin) {
+        this.subscription = this.clntDataService.props(bin).subscribe(
             data => {
                 this.msisdns = data.filter(i => i.msisdn).map(i => i.msisdn);
                 this.accounts = data.filter(i => i.account).map(i => String(i.account));
