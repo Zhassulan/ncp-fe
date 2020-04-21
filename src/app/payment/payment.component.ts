@@ -1,17 +1,17 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
-import {msgs, PaymentMenuItems, PaymentStatus, PaymentStatusRu} from '../../settings';
+import {msgs, PaymentMenuItems, PaymentStatus, PaymentStatusRu} from '../settings';
 import {PaymentService} from './payment.service';
-import {DialogComponent} from './equipment/dialog/dialog.component';
+import {DialogComponent} from './dialog/dialog.component';
 import {ActivatedRoute} from '@angular/router';
 import {DetailsComponent} from './details/details.component';
-import {AppService} from '../../app.service';
+import {AppService} from '../app.service';
 import {AddRegistryModalComponent} from './add-registry-modal/add-registry-modal.component';
 import {CalendarDeferModalComponent} from './calendar-defer-modal/calendar-defer-modal.component';
 import {MatSort} from '@angular/material/sort';
-import {PayDataService} from '../../data/pay-data-service';
-import {ClientDataService} from '../../data/client-data-service';
+import {PayDataService} from '../data/pay-data-service';
+import {ClientDataService} from '../data/client-data-service';
 import {Subscription} from 'rxjs';
 
 export interface RegistryDialogData {

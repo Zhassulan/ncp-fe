@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NcpPayment} from '../../model/ncp-payment';
-import {PaymentStatusRuPipe} from '../../payment-status-ru-pipe';
+import {NcpPayment} from '../../payments/model/ncp-payment';
+import {PaymentStatusRuPipe} from '../../payments/payment-status-ru-pipe';
 import {Payment} from '../model/payment';
 
 @Component({

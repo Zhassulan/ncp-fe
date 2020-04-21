@@ -7,12 +7,15 @@ import {NotificationsService} from 'angular2-notifications';
 import {AppService} from '../../app.service';
 import {Subscription} from 'rxjs';
 import {ClientService} from '../client.service';
-import {PaymentService} from '../../payments/payment/payment.service';
+import {PaymentService} from '../../payment/payment.service';
 import {DialogService} from '../../dialog/dialog.service';
 import {PaymentStatusRu} from '../../settings';
 import {PayDataService} from '../../data/pay-data-service';
-import {Payment} from '../../payments/payment/model/payment';
+import {Payment} from '../../payment/model/payment';
 import {DateRangeComponent} from '../../date-range/date-range.component';
+import {DialogComponent} from '../../payment/dialog/dialog.component';
+import {MatDialog} from '@angular/material/dialog';
+import {PartnersComponent} from '../../mobipay/partners/partners.component';
 
 @Component({
     selector: 'app-client-payments-table',
@@ -34,6 +37,7 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy, AfterVie
     subscription: Subscription;
     isMobipay;
     @Input() datesRange: DateRangeComponent;
+    dialogRef;
 
     constructor(private route: ActivatedRoute,
                 private clntDataService: ClientDataService,
@@ -43,7 +47,8 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy, AfterVie
                 private clntService: ClientService,
                 private payService: PaymentService,
                 private dlgService: DialogService,
-                private payDataService: PayDataService) {
+                private payDataService: PayDataService,
+                private dlg: MatDialog) {
         this.subscription = this.clntService.clntPayAnnounced$.subscribe(payments => {
             this.dataSource.data = payments;
         });
@@ -143,7 +148,11 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy, AfterVie
     }
 
     distributeMobipay(row) {
-
+        this.dialogRef = this.dlg.open(PartnersComponent, {width: '60%', height: '30%'});
+        this.dialogRef.afterClosed().subscribe(result => {
+            if (result != 'cancel') {
+            }
+        });
     }
 
     ngAfterViewInit(): void {

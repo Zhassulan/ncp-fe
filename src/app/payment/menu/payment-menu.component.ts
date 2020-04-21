@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PaymentService} from '../payment.service';
-import {PaymentMenuItems, PaymentStatus} from '../../../settings';
+import {PaymentMenuItems, PaymentStatus} from '../../settings';
 import {Subscription} from 'rxjs';
 
 @Component({

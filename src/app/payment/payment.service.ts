@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
-import {PaymentStatus, PaymentStatusRu} from '../../settings';
-import {PaymentDetail} from '../model/payment-detail';
-import {NcpPaymentDetails} from '../model/ncp-payment-details';
-import {Equipment} from '../model/equipment';
-import {DialogService} from '../../dialog/dialog.service';
+import {PaymentStatus, PaymentStatusRu} from '../settings';
+import {PaymentDetail} from '../payments/model/payment-detail';
+import {NcpPaymentDetails} from '../payments/model/ncp-payment-details';
+import {Equipment} from '../payments/model/equipment';
+import {DialogService} from '../dialog/dialog.service';
 import {from, Observable, Subject} from 'rxjs';
 import {concatAll} from 'rxjs/operators';
 import {Payment} from './model/payment';
 import {Detail} from './model/detail';
-import {ClientDataService} from '../../data/client-data-service';
-import {PayDataService} from '../../data/pay-data-service';
-import {RouterService} from '../../router/router.service';
-import {AppService} from '../../app.service';
+import {ClientDataService} from '../data/client-data-service';
+import {PayDataService} from '../data/pay-data-service';
+import {RouterService} from '../router/router.service';
+import {AppService} from '../app.service';
 
 @Injectable()
 export class PaymentService {
@@ -258,7 +258,7 @@ export class PaymentService {
     }
 
     detailsSum() {
-        return this.payment.details.reduce((total, detail) => total + detail.sum, 0);
+        return this.payment.details.reduce((total, detail) => total + Number(detail.sum), 0);
     }
 
     canDelSome() {

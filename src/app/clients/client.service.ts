@@ -4,7 +4,7 @@ import {Subject} from 'rxjs';
 import {ClientDataService} from '../data/client-data-service';
 import {AppService} from '../app.service';
 import {NotificationsService} from 'angular2-notifications';
-import {Payment} from '../payments/payment/model/payment';
+import {Payment} from '../payment/model/payment';
 import {Utils} from '../utils';
 
 @Injectable({

@@ -1,10 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {msisdnLength, PaymentStatus} from '../../../settings';
 import {PaymentService} from '../payment.service';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {Detail} from '../model/detail';
+import {msisdnLength, PaymentStatus} from '../../settings';
 
 @Component({
     selector: 'app-add-detail',

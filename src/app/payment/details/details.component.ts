@@ -1,11 +1,12 @@
 import {Component, OnInit, ViewChild, OnDestroy, AfterViewInit} from '@angular/core';
-import {PaymentStatus, TOOLTIPS} from '../../../settings';
+
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {Subscription} from 'rxjs';
 import {PaymentService} from '../payment.service';
 import {MatSort} from '@angular/material/sort';
 import {Detail} from '../model/detail';
+import {PaymentStatus, TOOLTIPS} from '../../settings';
 
 const PaymentDetailsTableColumns = [
     'num',

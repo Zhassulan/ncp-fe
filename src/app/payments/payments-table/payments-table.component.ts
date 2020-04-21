@@ -2,7 +2,7 @@ import {Component, Input, isDevMode, OnDestroy, OnInit, ViewChild} from '@angula
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-import {Payment} from '../payment/model/payment';
+import {Payment} from '../../payment/model/payment';
 import {SelectionModel} from '@angular/cdk/collections';
 import {PaymentStatus, PaymentStatusRu} from '../../settings';
 import {PayDataService} from '../../data/pay-data-service';
@@ -12,7 +12,7 @@ import {Router} from '@angular/router';
 import {DialogService} from '../../dialog/dialog.service';
 import {ExcelService} from '../../excel/excel.service';
 import {Subscription} from 'rxjs';
-import {PaymentService} from '../payment/payment.service';
+import {PaymentService} from '../../payment/payment.service';
 import {Utils} from '../../utils';
 
 @Component({
@@ -93,7 +93,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
             error => {
                 this.appService.setProgress(false);
                 if (error.status) {
-                    if (error.status == 503)
+                    if (error.status == 503 || error.status == 502)
                         this.notif.error(`Сервис не доступен`);
                 } else this.notif.error(error);
             },

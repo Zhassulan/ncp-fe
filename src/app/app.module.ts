@@ -19,21 +19,19 @@ import {DialogService} from './dialog/dialog.service';
 import {PaymentDetailsPipe} from './payments/payment-details-pipe';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
 import {environment} from '../environments/environment';
-import {UploadComponent} from './payments/payment/equipment/upload.component';
+import {UploadComponent} from './payment/router/upload.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {BreadcrumbModule} from 'angular-crumbs';
-import {DialogComponent} from './payments/payment/equipment/dialog/dialog.component';
+import {DialogComponent} from './payment/dialog/dialog.component';
 import localeRu from '@angular/common/locales/ru';
 import {UserService} from './user/user.service';
-import {PhonePipe} from './payments/payment/phone-pipe';
-import {PaymentMenuComponent} from './payments/payment/menu/payment-menu.component';
-import {PaymentService} from './payments/payment/payment.service';
-import {InfoComponent} from './payments/payment/info/info.component';
+import {PhonePipe} from './payment/phone-pipe';
+import {PaymentMenuComponent} from './payment/menu/payment-menu.component';
+import {PaymentService} from './payment/payment.service';
+import {InfoComponent} from './payment/info/info.component';
 import {SimpleNotificationsModule} from 'angular2-notifications';
-import {DetailsComponent} from './payments/payment/details/details.component';
-import {PaymentComponent} from './payments/payment/payment.component';
+import {PaymentComponent} from './payment/payment.component';
 import {PaymentsComponent} from './payments/payments.component';
-import {AddDetailComponent} from './payments/payment/add-detail/add-detail.component';
 import {RegistriesComponent} from './registry/registries/registries.component';
 import {AppService} from './app.service';
 import {ExcelService} from './excel/excel.service';
@@ -46,8 +44,6 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {DateRangeComponent} from './date-range/date-range.component';
 import {AuthInterceptor} from './auth/auth-interceptor';
 import {MaterialsModule} from './materials/materials.module';
-import {AddRegistryModalComponent} from './payments/payment/add-registry-modal/add-registry-modal.component';
-import {CalendarDeferModalComponent} from './payments/payment/calendar-defer-modal/calendar-defer-modal.component';
 import {ClientsComponent} from './clients/clients.component';
 import {ListComponent} from './clients/list/list.component';
 import {PayDataService} from './data/pay-data-service';
@@ -59,9 +55,10 @@ import {RouterService} from './router/router.service';
 import {PaymentsTableComponent} from './payments/payments-table/payments-table.component';
 import {MobipayComponent} from './mobipay/mobipay.component';
 import {PartnersComponent} from './mobipay/partners/partners.component';
-
-
-
+import {DetailsComponent} from './payment/details/details.component';
+import {AddDetailComponent} from './payment/add-detail/add-detail.component';
+import {AddRegistryModalComponent} from './payment/add-registry-modal/add-registry-modal.component';
+import {CalendarDeferModalComponent} from './payment/calendar-defer-modal/calendar-defer-modal.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -104,7 +101,8 @@ registerLocaleData(localeRu, 'ru');
         LoginComponent,
         DialogComponent,
         AddRegistryModalComponent,
-        CalendarDeferModalComponent
+        CalendarDeferModalComponent,
+        PartnersComponent
     ],
     imports: [
         CommonModule,

@@ -1,6 +1,6 @@
 
 import {environment} from '../../environments/environment';
-import {Payment} from '../payments/payment/model/payment';
+import {Payment} from '../payment/model/payment';
 
 import {RestResponse} from './rest-response';
 import {RequestPostPayment} from './request-post-payment';

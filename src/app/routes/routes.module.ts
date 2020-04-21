@@ -2,8 +2,8 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import {LoginPageComponent} from '../auth/login-page/login-page.component';
-import {UploadComponent} from '../payments/payment/equipment/upload.component';
-import {PaymentComponent} from '../payments/payment/payment.component';
+import {UploadComponent} from '../payment/router/upload.component';
+import {PaymentComponent} from '../payment/payment.component';
 import {PaymentsComponent} from '../payments/payments.component';
 import {RegistriesComponent} from '../registry/registries/registries.component';
 import {RegistryComponent} from '../registry/registry/registry.component';
@@ -55,13 +55,6 @@ const routes: Routes = [
         component: ClientPaymentsComponent,
         data: {
             breadcrumb: 'Платежи клиента'
-        }
-    },
-    {
-        path: 'equipment',
-        component: UploadComponent,
-        data: {
-            breadcrumb: 'Оборудование'
         }
     },
     {

@@ -1,9 +1,9 @@
-import {Phone} from '../payments/payment/model/phone';
+import {Phone} from '../payment/model/phone';
 import {environment} from '../../environments/environment';
 import {Client} from '../clients/list/client';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Payment} from '../payments/payment/model/payment';
+import {Payment} from '../payment/model/payment';
 
 const API_URL = environment.apiUrl;
 

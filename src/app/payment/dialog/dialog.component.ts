@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
-import {PaymentService} from '../../payment.service';
-import {RouterService} from '../../../../router/router.service';
-import {AppService} from '../../../../app.service';
+import {PaymentService} from '../payment.service';
+import {RouterService} from '../../router/router.service';
+import {AppService} from '../../app.service';
 import {Subscription} from 'rxjs';
 
 @Component({

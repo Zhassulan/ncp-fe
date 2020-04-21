@@ -2,7 +2,7 @@
  * Модель NCP платёж, таблица ncp_payment
  */
 import {NcpPaymentDetails} from './ncp-payment-details';
-import {Action} from '../payment/model/action';
+import {Action} from '../../payment/model/action';
 
 export class NcpPayment {
 
