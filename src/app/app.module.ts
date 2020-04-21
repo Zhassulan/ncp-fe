@@ -18,8 +18,7 @@ import {DialogReportComponent} from './dialog/dialog-report/dialog-report.compon
 import {DialogService} from './dialog/dialog.service';
 import {PaymentDetailsPipe} from './payments/payment-details-pipe';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
-import {environment} from '../environments/environment';
-import {UploadComponent} from './payment/router/upload.component';
+
 import {LayoutModule} from '@angular/cdk/layout';
 import {BreadcrumbModule} from 'angular-crumbs';
 import {DialogComponent} from './payment/dialog/dialog.component';
@@ -57,8 +56,10 @@ import {MobipayComponent} from './mobipay/mobipay.component';
 import {PartnersComponent} from './mobipay/partners/partners.component';
 import {DetailsComponent} from './payment/details/details.component';
 import {AddDetailComponent} from './payment/add-detail/add-detail.component';
-import {AddRegistryModalComponent} from './payment/add-registry-modal/add-registry-modal.component';
 import {CalendarDeferModalComponent} from './payment/calendar-defer-modal/calendar-defer-modal.component';
+import {UploadComponent} from './payment/router/upload.component';
+import {AddRegistryModalComponent} from './payment/add-registry-modal/add-registry-modal.component';
+
 
 registerLocaleData(localeRu, 'ru');
 

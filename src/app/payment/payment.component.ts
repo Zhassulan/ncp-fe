@@ -7,12 +7,13 @@ import {DialogComponent} from './dialog/dialog.component';
 import {ActivatedRoute} from '@angular/router';
 import {DetailsComponent} from './details/details.component';
 import {AppService} from '../app.service';
-import {AddRegistryModalComponent} from './add-registry-modal/add-registry-modal.component';
+
 import {CalendarDeferModalComponent} from './calendar-defer-modal/calendar-defer-modal.component';
 import {MatSort} from '@angular/material/sort';
 import {PayDataService} from '../data/pay-data-service';
 import {ClientDataService} from '../data/client-data-service';
 import {Subscription} from 'rxjs';
+import {AddRegistryModalComponent} from './add-registry-modal/add-registry-modal.component';
 
 export interface RegistryDialogData {
     registry: string;
