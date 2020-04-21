@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, isDevMode} from '@angular/core';
 import {Subject} from 'rxjs';
 import {locStorItems, msgs} from './settings';
 import {NotificationsService} from 'angular2-notifications';
@@ -21,13 +21,14 @@ export class AppService {
     }
 
     checkVer() {
+        let storVal = isDevMode() ? locStorItems.ver_test : locStorItems.ver;
         this.appDataService.ver().subscribe(data => {
-            if (localStorage.getItem(locStorItems.ver) == null) {
-                localStorage.setItem(locStorItems.ver, data.ver.toString());
+            if (localStorage.getItem(storVal) == null) {
+                localStorage.setItem(storVal, data.ver.toString());
                 this.notif.info(msgs.msgInfRefreshPage);
             } else {
-                if (data.ver > Number.parseInt(localStorage.getItem(locStorItems.ver))) {
-                    localStorage.setItem(locStorItems.ver, data.ver.toString());
+                if (data.ver > Number.parseInt(localStorage.getItem(storVal))) {
+                    localStorage.setItem(storVal, data.ver.toString());
                     this.notif.info(msgs.msgInfRefreshPage);
                 }
             }
