@@ -4,12 +4,12 @@ import {CalendarDialogData} from '../payment.component';
 
 @Component({
   selector: 'app-calendar-defer-modal',
-  templateUrl: './calendar-defer-modal.component.html',
-  styleUrls: ['./calendar-defer-modal.component.css']
+  templateUrl: './dlg-defer.component.html',
+  styleUrls: ['./dlg-defer.component.css']
 })
-export class CalendarDeferModalComponent implements OnInit {
+export class DlgDeferComponent implements OnInit {
 
-  constructor( public dialogRef: MatDialogRef<CalendarDeferModalComponent>,
+  constructor( public dialogRef: MatDialogRef<DlgDeferComponent>,
                @Inject(MAT_DIALOG_DATA) public data: CalendarDialogData) { }
 
   ngOnInit(): void {

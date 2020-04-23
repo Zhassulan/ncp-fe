@@ -3,17 +3,17 @@ import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
 import {msgs, PaymentMenuItems, PaymentStatus, PaymentStatusRu} from '../settings';
 import {PaymentService} from './payment.service';
-import {DialogComponent} from './dialog/dialog.component';
+import {DlgImportRouterRegistryComponent} from './dialog/dlg-import-router-registry.component';
 import {ActivatedRoute} from '@angular/router';
 import {DetailsComponent} from './details/details.component';
 import {AppService} from '../app.service';
 
-import {CalendarDeferModalComponent} from './calendar-defer-modal/calendar-defer-modal.component';
+import {DlgDeferComponent} from './calendar-defer-modal/dlg-defer.component';
 import {MatSort} from '@angular/material/sort';
 import {PayDataService} from '../data/pay-data-service';
 import {ClientDataService} from '../data/client-data-service';
 import {Subscription} from 'rxjs';
-import {AddRegistryModalComponent} from './add-registry-modal/add-registry-modal.component';
+import {DlgRegistryBufferComponent} from './add-registry-modal/dlg-registry-buffer.component';
 
 export interface RegistryDialogData {
     registry: string;
@@ -120,7 +120,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     }
 
     dlgImportEquipment() {
-        this.dialogRef = this.dlg.open(DialogComponent, {width: '40%', height: '30%'});
+        this.dialogRef = this.dlg.open(DlgImportRouterRegistryComponent, {width: '40%', height: '30%'});
         this.dialogRef.afterClosed().subscribe(result => {
             if (result != 'cancel') {
             }
@@ -166,7 +166,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     }
 
     dlgImportRegistry() {
-        const dialogRef = this.dlg.open(AddRegistryModalComponent, {
+        const dialogRef = this.dlg.open(DlgRegistryBufferComponent, {
             width: '50%',
             data: {registry: this.registry}
         });
@@ -183,29 +183,25 @@ export class PaymentComponent implements OnInit, OnDestroy {
     }
 
     dlgDefer() {
-        const dialogRef = this.dlg.open(CalendarDeferModalComponent, {
+        const dialogRef = this.dlg.open(DlgDeferComponent, {
             width: '30%',
             data: {date: this.deferDate},
         });
         dialogRef.afterClosed().subscribe(result => {
-            let today = new Date();
-            let tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            console.log(`tomorrow - ${tomorrow}`);
-            let dt = new Date(result);
-            if (dt < today || result.getTime() == today.getTime()) {
-                this.notifService.warn(`Дата должна быть больше ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}. Установите дату.`);
-                return;
-            }
-            if (this.payment.details.filter(i => i.status == PaymentStatus.NEW) == 0) {
-                this.notifService.warn(`Нет новых разносок. Необходимо добавить.`);
-                return;
-            }
-            if (dt.getDate() >= tomorrow.getDate() && dt.getMonth() >= tomorrow.getMonth() && dt.getFullYear() >= tomorrow.getFullYear()) {
-                this.subscription = this.payDataService.defer(this.payment, dt.getTime()).subscribe(
+                let today = new Date();
+                let tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(0, 0, 0, 0);
+                console.log(tomorrow);
+                let futureDt = new Date(result);
+                if (futureDt.getTime() < tomorrow.getTime()) {
+                    this.notifService.warn(`Дата должна быть больше ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}. Установите дату.`);
+                    return;
+                }
+                this.subscription = this.payDataService.defer(this.payment, futureDt.getTime()).subscribe(
                     data => {
-                        console.log(data);
-                        this.notifService.info(`Установлена дата отложенной разноски ${dt.getDate()}/${dt.getMonth() + 1}/${dt.getFullYear()}`);
+                        this.payService.setPayment(data);
+                        this.notifService.info(`Установлена дата отложенной разноски ${futureDt.getDate()}/${futureDt.getMonth() + 1}/${futureDt.getFullYear()}`);
                     },
                     error => {
                         this.notifService.error(error.error.errm);
@@ -216,7 +212,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
                     }
                 );
             }
-        });
+        );
     }
 
     ngOnDestroy(): void {

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddRegistryModalComponent } from './add-registry-modal.component';
+import { DlgRegistryBufferComponent } from './dlg-registry-buffer.component';
 
 describe('AddRegistryModalComponent', () => {
-  let component: AddRegistryModalComponent;
-  let fixture: ComponentFixture<AddRegistryModalComponent>;
+  let component: DlgRegistryBufferComponent;
+  let fixture: ComponentFixture<DlgRegistryBufferComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddRegistryModalComponent ]
+      declarations: [ DlgRegistryBufferComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddRegistryModalComponent);
+    fixture = TestBed.createComponent(DlgRegistryBufferComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

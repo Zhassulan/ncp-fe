@@ -7,17 +7,17 @@ import {NotificationsService} from 'angular2-notifications';
 
 @Component({
     selector: 'app-partners',
-    templateUrl: './partners.component.html',
-    styleUrls: ['./partners.component.css']
+    templateUrl: './dlg-mobipay-partners.component.html',
+    styleUrls: ['./dlg-mobipay-partners.component.css']
 })
-export class PartnersComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DlgMobipayPartnersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     dataSource;
     displayedColumns: string[] = ['code', 'name', 'account', 'bin'];
     @Input() paymentId;
     subscription: Subscription;
 
-    constructor(private dlgRef: MatDialogRef<PartnersComponent>,
+    constructor(private dlgRef: MatDialogRef<DlgMobipayPartnersComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any,
                 private mobipayDataService: MobipayDataService,
                 private appService: AppService,

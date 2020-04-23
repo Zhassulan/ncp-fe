@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {LoginComponent} from '../login/login.component';
+import {DlgLoginComponent} from '../login/dlg-login.component';
 import {timeouts} from '../../settings';
 
 
@@ -13,7 +13,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         setTimeout(() => {
-            const dialogRef = this.dialog.open(LoginComponent);
+            const dialogRef = this.dialog.open(DlgLoginComponent);
         }, 0);
     }
 

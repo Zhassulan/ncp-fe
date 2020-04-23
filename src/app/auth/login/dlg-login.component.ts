@@ -11,11 +11,11 @@ import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css']
+    templateUrl: './dlg-login.component.html',
+    styleUrls: ['./dlg-login.component.css']
 })
 
-export class LoginComponent implements OnInit, OnDestroy {
+export class DlgLoginComponent implements OnInit, OnDestroy {
 
     userName: string;
     userPassword: string;
@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     constructor(public authService: AuthService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private dialogRef: MatDialogRef<LoginComponent>,
+                private dialogRef: MatDialogRef<DlgLoginComponent>,
                 private notifService: NotificationsService,
                 private appService: AppService,
                 private appDataService: AppDataService) {

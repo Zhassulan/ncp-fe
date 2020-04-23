@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CalendarDeferModalComponent } from './calendar-defer-modal.component';
+import { DlgMobipayPartnersComponent } from './dlg-mobipay-partners.component';
 
-describe('CalendarDeferModalComponent', () => {
-  let component: CalendarDeferModalComponent;
-  let fixture: ComponentFixture<CalendarDeferModalComponent>;
+describe('PartnersComponent', () => {
+  let component: DlgMobipayPartnersComponent;
+  let fixture: ComponentFixture<DlgMobipayPartnersComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CalendarDeferModalComponent ]
+      declarations: [ DlgMobipayPartnersComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CalendarDeferModalComponent);
+    fixture = TestBed.createComponent(DlgMobipayPartnersComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

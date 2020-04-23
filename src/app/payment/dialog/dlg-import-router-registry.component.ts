@@ -7,17 +7,17 @@ import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-dialog',
-    templateUrl: './dialog.component.html',
-    styleUrls: ['./dialog.component.css']
+    templateUrl: './dlg-import-router-registry.component.html',
+    styleUrls: ['./dlg-import-router-registry.component.css']
 })
-export class DialogComponent implements OnInit, OnDestroy {
+export class DlgImportRouterRegistryComponent implements OnInit, OnDestroy {
 
     @ViewChild('file', {static: true}) file;
     fileObj: File;
     showUploadButton: boolean = false;
     private subscription: Subscription;
 
-    constructor(public dialogRef: MatDialogRef<DialogComponent>,
+    constructor(public dialogRef: MatDialogRef<DlgImportRouterRegistryComponent>,
                 private routerService: RouterService,
                 private paymentService: PaymentService,
                 private appService: AppService) {

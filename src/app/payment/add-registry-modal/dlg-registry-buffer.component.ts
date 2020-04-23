@@ -4,13 +4,13 @@ import {RegistryDialogData} from '../payment.component';
 
 @Component({
     selector: 'app-add-registry-modal',
-    templateUrl: './add-registry-modal.component.html',
-    styleUrls: ['./add-registry-modal.component.css']
+    templateUrl: './dlg-registry-buffer.component.html',
+    styleUrls: ['./dlg-registry-buffer.component.css']
 })
-export class AddRegistryModalComponent implements OnInit {
+export class DlgRegistryBufferComponent implements OnInit {
 
     constructor(
-        public dialogRef: MatDialogRef<AddRegistryModalComponent>,
+        public dialogRef: MatDialogRef<DlgRegistryBufferComponent>,
         @Inject(MAT_DIALOG_DATA) public data: RegistryDialogData) {
     }
 

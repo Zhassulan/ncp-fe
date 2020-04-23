@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {DialogReportComponent} from './dialog-report/dialog-report.component';
+import {DlgResultComponent} from './dialog-report/dlg-result.component';
 import {DialogData} from './dialog-data';
 
 @Injectable({
     providedIn: 'root',
 })
-export class DialogService {
+export class DlgService {
 
     title: string = null;
     dialogData: DialogData[] = [];
@@ -15,7 +15,7 @@ export class DialogService {
     constructor(public dialog: MatDialog) { }
 
     openDialog(): void {
-        this.dialogRef = this.dialog.open(DialogReportComponent, {
+        this.dialogRef = this.dialog.open(DlgResultComponent, {
             width: '60%',
             data: {
                 title: this.title,
