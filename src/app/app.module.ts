@@ -5,7 +5,7 @@ import {AUTH_PROVIDERS, AuthService} from './auth/auth.service';
 import {LoggedInGuard} from './auth/logged-in.guard';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
-import {LoginComponent} from './auth/login/login.component';
+import {DlgLoginComponent} from './auth/login/dlg-login.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {CommonModule, registerLocaleData} from '@angular/common';
@@ -14,16 +14,15 @@ import {MenuToolbarComponent} from './main-nav/menu-toolbar.component';
 import {RoutesModule} from './routes/routes.module';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {PaymentStatusRuPipe} from './payments/payment-status-ru-pipe';
-import {DialogReportComponent} from './dialog/dialog-report/dialog-report.component';
-import {DialogService} from './dialog/dialog.service';
+import {DlgResultComponent} from './dialog/dialog-report/dlg-result.component';
+import {DlgService} from './dialog/dlg.service';
 import {PaymentDetailsPipe} from './payments/payment-details-pipe';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
 
 import {LayoutModule} from '@angular/cdk/layout';
 import {BreadcrumbModule} from 'angular-crumbs';
-import {DialogComponent} from './payment/dialog/dialog.component';
+import {DlgImportRouterRegistryComponent} from './payment/dialog/dlg-import-router-registry.component';
 import localeRu from '@angular/common/locales/ru';
-import {UserService} from './user/user.service';
 import {PhonePipe} from './payment/phone-pipe';
 import {PaymentMenuComponent} from './payment/menu/payment-menu.component';
 import {PaymentService} from './payment/payment.service';
@@ -53,12 +52,12 @@ import {ClientPaymentsTableComponent} from './clients/client-payments-table/clie
 import {RouterService} from './router/router.service';
 import {PaymentsTableComponent} from './payments/payments-table/payments-table.component';
 import {MobipayComponent} from './mobipay/mobipay.component';
-import {PartnersComponent} from './mobipay/partners/partners.component';
+import {DlgMobipayPartnersComponent} from './mobipay/partners/dlg-mobipay-partners.component';
 import {DetailsComponent} from './payment/details/details.component';
 import {AddDetailComponent} from './payment/add-detail/add-detail.component';
-import {CalendarDeferModalComponent} from './payment/calendar-defer-modal/calendar-defer-modal.component';
+import {DlgDeferComponent} from './payment/calendar-defer-modal/dlg-defer.component';
 import {UploadComponent} from './payment/router/upload.component';
-import {AddRegistryModalComponent} from './payment/add-registry-modal/add-registry-modal.component';
+import {DlgRegistryBufferComponent} from './payment/add-registry-modal/dlg-registry-buffer.component';
 
 
 registerLocaleData(localeRu, 'ru');
@@ -66,14 +65,14 @@ registerLocaleData(localeRu, 'ru');
 @NgModule({
     declarations: [
         AppComponent,
-        LoginComponent,
+        DlgLoginComponent,
         MenuToolbarComponent,
         PaymentStatusRuPipe,
-        DialogReportComponent,
+        DlgResultComponent,
         PaymentDetailsPipe,
         LoginPageComponent,
         UploadComponent,
-        DialogComponent,
+        DlgImportRouterRegistryComponent,
         PhonePipe,
         PaymentMenuComponent,
         InfoComponent,
@@ -87,23 +86,23 @@ registerLocaleData(localeRu, 'ru');
         RegistryPropertiesComponent,
         PageNotFoundComponent,
         DateRangeComponent,
-        AddRegistryModalComponent,
-        CalendarDeferModalComponent,
+        DlgRegistryBufferComponent,
+        DlgDeferComponent,
         ClientsComponent,
         ListComponent,
         ClientPaymentsComponent,
         ClientPaymentsTableComponent,
         PaymentsTableComponent,
         MobipayComponent,
-        PartnersComponent,
+        DlgMobipayPartnersComponent,
     ],
     entryComponents: [
-        DialogReportComponent,
-        LoginComponent,
-        DialogComponent,
-        AddRegistryModalComponent,
-        CalendarDeferModalComponent,
-        PartnersComponent
+        DlgResultComponent,
+        DlgLoginComponent,
+        DlgImportRouterRegistryComponent,
+        DlgRegistryBufferComponent,
+        DlgDeferComponent,
+        DlgMobipayPartnersComponent
     ],
     imports: [
         CommonModule,
@@ -126,13 +125,12 @@ registerLocaleData(localeRu, 'ru');
         CookieService,
         {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
         {provide: LOCALE_ID, useValue: 'ru-RU'},
-        DialogService,
+        DlgService,
         PayDataService,
         AppDataService,
         ClientDataService,
         AuthService,
         RouterService,
-        UserService,
         PaymentService,
         AppService,
         ExcelService,

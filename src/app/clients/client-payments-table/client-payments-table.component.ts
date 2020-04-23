@@ -8,14 +8,14 @@ import {AppService} from '../../app.service';
 import {Subscription} from 'rxjs';
 import {ClientService} from '../client.service';
 import {PaymentService} from '../../payment/payment.service';
-import {DialogService} from '../../dialog/dialog.service';
+import {DlgService} from '../../dialog/dlg.service';
 import {PaymentStatusRu} from '../../settings';
 import {PayDataService} from '../../data/pay-data-service';
 import {Payment} from '../../payment/model/payment';
 import {DateRangeComponent} from '../../date-range/date-range.component';
-import {DialogComponent} from '../../payment/dialog/dialog.component';
+import {DlgImportRouterRegistryComponent} from '../../payment/dialog/dlg-import-router-registry.component';
 import {MatDialog} from '@angular/material/dialog';
-import {PartnersComponent} from '../../mobipay/partners/partners.component';
+import {DlgMobipayPartnersComponent} from '../../mobipay/partners/dlg-mobipay-partners.component';
 
 @Component({
     selector: 'app-client-payments-table',
@@ -46,7 +46,7 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy, AfterVie
                 private router: Router,
                 private clntService: ClientService,
                 private payService: PaymentService,
-                private dlgService: DialogService,
+                private dlgService: DlgService,
                 private payDataService: PayDataService,
                 private dlg: MatDialog) {
         this.subscription = this.clntService.clntPayAnnounced$.subscribe(payments => {
@@ -148,7 +148,7 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy, AfterVie
     }
 
     distributeMobipay(row) {
-        this.dialogRef = this.dlg.open(PartnersComponent, {width: '60%', height: '30%'});
+        this.dialogRef = this.dlg.open(DlgMobipayPartnersComponent, {width: '60%', height: '30%'});
         this.dialogRef.afterClosed().subscribe(result => {
             if (result != 'cancel') {
             }
