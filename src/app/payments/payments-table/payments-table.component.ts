@@ -9,7 +9,7 @@ import {PayDataService} from '../../data/pay-data-service';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Router} from '@angular/router';
-import {DialogService} from '../../dialog/dialog.service';
+import {DlgService} from '../../dialog/dlg.service';
 import {ExcelService} from '../../excel/excel.service';
 import {Subscription} from 'rxjs';
 import {PaymentService} from '../../payment/payment.service';
@@ -51,7 +51,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
                 private appService: AppService,
                 private notif: NotificationsService,
                 private router: Router,
-                private dialogService: DialogService,
+                private dialogService: DlgService,
                 private excelService: ExcelService,
                 private payService: PaymentService) {
         this.dataSource = new MatTableDataSource<Payment>();

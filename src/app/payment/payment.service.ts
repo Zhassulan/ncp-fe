@@ -3,7 +3,7 @@ import {PaymentStatus, PaymentStatusRu} from '../settings';
 import {PaymentDetail} from '../payments/model/payment-detail';
 import {NcpPaymentDetails} from '../payments/model/ncp-payment-details';
 import {Equipment} from '../payments/model/equipment';
-import {DialogService} from '../dialog/dialog.service';
+import {DlgService} from '../dialog/dlg.service';
 import {from, Observable, Subject} from 'rxjs';
 import {concatAll} from 'rxjs/operators';
 import {Payment} from './model/payment';
@@ -150,11 +150,13 @@ export class PaymentService {
     }
 
     canDefer() {
-        return this.payment.status == PaymentStatus.NEW ||
+        return (this.payment.status == PaymentStatus.NEW ||
             this.payment.status == PaymentStatus.ERROR ||
             this.payment.status == PaymentStatus.TRANSIT ||
             this.payment.status == PaymentStatus.TRANSIT_ERROR ||
-            this.payment.status == PaymentStatus.TRANSIT_CANCELLED;
+            this.payment.status == PaymentStatus.TRANSIT_CANCELLED) &&
+            this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0 &&
+            this.detailsSum() == this.payment.sum;
     }
 
     canLoadPhones() {
@@ -178,7 +180,8 @@ export class PaymentService {
             this.payment.status == PaymentStatus.ERROR ||
             this.payment.status == PaymentStatus.TRANSIT_CANCELLED ||
             this.payment.status == PaymentStatus.TRANSIT_ERROR) &&
-            this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0;
+            this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0 &&
+            this.detailsSum() == this.payment.sum;
     }
 
     canDelAll() {

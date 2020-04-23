@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {DialogComponent} from '../dialog/dialog.component';
+import {DlgImportRouterRegistryComponent} from '../dialog/dlg-import-router-registry.component';
 
 @Component({
     selector: 'app-upload',
@@ -15,7 +15,7 @@ export class UploadComponent {
     }
 
     public openUploadDialog() {
-        this.dialogRef = this.dialog.open(DialogComponent);
+        this.dialogRef = this.dialog.open(DlgImportRouterRegistryComponent);
     }
 
 }
