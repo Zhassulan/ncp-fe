@@ -49,4 +49,10 @@
     <div class="value">
         {{ payment.sum | currency : ' тг.' }}
     </div>
+    <div class="title" *ngIf="payment.deferred">
+        Дата разноски:
+    </div>
+    <div class="value" *ngIf="payment.deferred">
+        {{ payment.deferred | date: 'shortDate' }}
+    </div>
 </div>

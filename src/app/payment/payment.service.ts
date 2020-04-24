@@ -1,11 +1,6 @@
 import {Injectable} from '@angular/core';
-import {PaymentStatus, PaymentStatusRu} from '../settings';
-import {PaymentDetail} from '../payments/model/payment-detail';
-import {NcpPaymentDetails} from '../payments/model/ncp-payment-details';
-import {Equipment} from '../payments/model/equipment';
-import {DlgService} from '../dialog/dlg.service';
-import {from, Observable, Subject} from 'rxjs';
-import {concatAll} from 'rxjs/operators';
+import {PaymentStatus} from '../settings';
+import {Observable, Subject} from 'rxjs';
 import {Payment} from './model/payment';
 import {Detail} from './model/detail';
 import {ClientDataService} from '../data/client-data-service';
@@ -93,25 +88,6 @@ export class PaymentService {
         });
         this.payment.details = details;
         this.announcePayment();
-    }
-
-    setEquipmentsInDetails(equipments: Equipment []) {
-        equipments.forEach(equipment => {
-            let detail = this.payment.details.find(x => x.id == equipment.paymentDetailId);
-            detail.nomenclature = equipment.nomenclature;
-            detail.msisdn = equipment.msisdn;
-            detail.icc = equipment.icc;
-        });
-    }
-
-    getPaymentEquipments(id: number): Observable<any> {
-        return new Observable(
-            observer => {
-                this.payDataService.equipments(id).subscribe(
-                    data => {
-                        this.setEquipmentsInDetails(data);
-                    });
-            });
     }
 
     isBlocked(): boolean {

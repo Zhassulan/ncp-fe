@@ -148,7 +148,10 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy, AfterVie
     }
 
     distributeMobipay(row) {
-        this.dialogRef = this.dlg.open(DlgMobipayPartnersComponent, {width: '60%', height: '30%'});
+        this.dialogRef = this.dlg.open(DlgMobipayPartnersComponent,
+            {
+                width: '60%', height: '30%',
+                data: { 'paymentId' : row.id }});
         this.dialogRef.afterClosed().subscribe(result => {
             if (result != 'cancel') {
             }

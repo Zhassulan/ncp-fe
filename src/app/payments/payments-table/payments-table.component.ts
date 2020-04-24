@@ -3,7 +3,6 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {Payment} from '../../payment/model/payment';
-import {SelectionModel} from '@angular/cdk/collections';
 import {PaymentStatus, PaymentStatusRu} from '../../settings';
 import {PayDataService} from '../../data/pay-data-service';
 import {AppService} from '../../app.service';
@@ -24,15 +23,13 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
 
     displayedColumns = [
         'ID',
-        'creationDate',
         'nameSender',
         'sum',
         'rnnSender',
         'paymentDetails',
         'statusRu',
         'managedBy',
-        'accountSender',
-        'accountRecipient',
+        'account',
         'knp',
         'select',
         'rowMenu'];

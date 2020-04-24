@@ -1,16 +1,10 @@
-
 import {environment} from '../../environments/environment';
 import {Payment} from '../payment/model/payment';
-
-import {RestResponse} from './rest-response';
 import {RequestPostPayment} from './request-post-payment';
 import {httpOptions, PaymentActions} from '../settings';
 import {RouterRegistry} from '../router/model/router-registry';
-import {EquipmentCheckParam} from '../payments/model/equipment-check-param';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {Equipment} from '../payments/model/equipment';
 
 const API_URL = environment.apiUrl;
 
@@ -50,18 +44,6 @@ export class PayDataService {
 
     findById(id: number) {
         return this.http.get<Payment>(`${API_URL}/payments/${id}/`, httpOptions);
-    }
-
-    equipments(id: number):Observable<any>{
-        return this.http.get<Equipment []>(`${API_URL}/payment/${id}/equipments`, httpOptions);
-    }
-
-    bercutEquipmentInfoByIcc(icc: String) {
-        return this.http.post(`${API_URL}/equipment/${icc}`, httpOptions);
-    }
-
-    checkEquipmentParams(iccList: EquipmentCheckParam []) {
-        return this.http.post(`${API_URL}/equipments/check`, iccList, httpOptions);
     }
 
     validateAccount(profileId, account) {
