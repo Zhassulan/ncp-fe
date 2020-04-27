@@ -39,7 +39,7 @@
                     <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="distributeMobipay(element)" *ngIf="isMobipay == 'true'">
+                    <button mat-menu-item [disabled]="!canMobipayDistribute(element)" (click)="distributeMobipay(element)" *ngIf="isMobipay == 'true'">
                         <span>Разнести</span>
                     </button>
                     <button mat-menu-item (click)="menuOnRowOpenPayment(element)" *ngIf="isMobipay == 'false'">

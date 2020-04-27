@@ -1,6 +1,6 @@
 .mat-column-ID {
-    flex: 0 0 3% !important;
-    width: 3% !important;
+    flex: 0 0 4% !important;
+    width: 4% !important;
 }
 
 .mat-column-select {
@@ -34,8 +34,8 @@
 }
 
 .mat-column-nameSender {
-    flex: 0 0 10% !important;
-    width: 10% !important;
+    flex: 0 0 20% !important;
+    width: 20% !important;
 }
 
 .mat-column-accountSender {

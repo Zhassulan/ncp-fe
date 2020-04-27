@@ -3,10 +3,6 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
         <mat-cell *matCellDef="let paymentRow"> {{paymentRow.id}}</mat-cell>
     </ng-container>
-    <ng-container matColumnDef="creationDate">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Дата поступления </mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow"> {{paymentRow.created | date:"dd.MM.yy HH:mm" }}</mat-cell>
-    </ng-container>
     <ng-container matColumnDef="nameSender">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Отправитель </mat-header-cell>
         <mat-cell *matCellDef="let paymentRow"> {{paymentRow.sender}}</mat-cell>
@@ -22,33 +18,28 @@
     <ng-container matColumnDef="paymentDetails">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Назначение платежа</mat-header-cell>
         <mat-cell *matCellDef="let paymentRow">
-            {{ paymentRow.details }}
+            {{ paymentRow.details ? paymentRow.details.substring(0, 100) : '' }}
         </mat-cell>
     </ng-container>
     <ng-container matColumnDef="statusRu">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Статус</mat-header-cell>
         <!--<td mat-cell *matCellDef="let paymentRow"> {{ paymentRow.status | paymentStatusRuPipe: paymentRow.status }} -->
         <mat-cell *matCellDef="let paymentRow">
-            {{ paymentRow.statusRu }} <br/> {{ paymentRow.distributed ? paymentRow.agent + ' ' + (paymentRow.distributed | date:"dd.MM.yy HH:mm") : '' }}
+            {{ paymentRow.statusRu }} <br/>
+            {{ paymentRow.distributed && (paymentRow.status == PaymentStatus.DISTRIBUTED || paymentRow.status == PaymentStatus.TRANSIT_DISTRIBUTED) ? paymentRow.agent : ''}} <br/>
+            {{ paymentRow.distributed && (paymentRow.status == PaymentStatus.DISTRIBUTED || paymentRow.status == PaymentStatus.TRANSIT_DISTRIBUTED)? (paymentRow.distributed | date:"dd.MM.yy HH:mm") : '' }}
         </mat-cell>
     </ng-container>
     <ng-container matColumnDef="managedBy">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Менеджер</mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.managedBy }}</mat-cell>
+        <mat-cell *matCellDef="let paymentRow">{{ paymentRow.managedBy ? paymentRow.managedBy.substring(0, 50) : '' }}</mat-cell>
     </ng-container>
-    <!--
-    <ng-container matColumnDef="accountSender">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Банковский счёт</mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow"> Отправитель {{paymentRow.accountSender}} Получатель: {{paymentRow.accountRecipient}}</mat-cell>
-    </ng-container>
-    -->
-    <ng-container matColumnDef="accountSender">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Счёт отправителя</mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.accSender }}</mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="accountRecipient">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Счёт получателя</mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.accRecipient }}</mat-cell>
+    <ng-container matColumnDef="account">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Счёт</mat-header-cell>
+        <mat-cell *matCellDef="let paymentRow">
+            Отправитель:<br/> {{ paymentRow.accSender }} <br/>
+            Получатель:<br/> {{ paymentRow.accRecipient }}
+        </mat-cell>
     </ng-container>
     <ng-container matColumnDef="knp">
         <mat-header-cell *matHeaderCellDef mat-sort-header>КНП</mat-header-cell>
@@ -77,6 +68,9 @@
             <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="menuOnRowOpenPayment(paymentRow)">
                     <span>Открыть</span>
+                </button>
+                <button mat-menu-item (click)="menuOnRowMobipay(paymentRow)">
+                    <span>Mobipay</span>
                 </button>
                 <button mat-menu-item [disabled]="!canTransit(paymentRow)"  (click)="menuOnRowTransit(paymentRow)">
                     <span>На транзит</span>

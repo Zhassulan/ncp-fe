@@ -16,8 +16,4 @@ export class DlgResultComponent implements  OnInit, AfterViewInit {
                 @Inject(MAT_DIALOG_DATA) public data: any) {
     }
 
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
-
 }

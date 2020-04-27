@@ -4,7 +4,8 @@ import {PaymentService} from '../payment.service';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {Detail} from '../model/detail';
-import {msisdnLength, PaymentStatus} from '../../settings';
+import {MSG, msisdnLength, PaymentStatus} from '../../settings';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
     selector: 'app-add-detail',
@@ -35,7 +36,8 @@ export class AddDetailComponent implements OnInit {
         }
     );
 
-    constructor(private payService: PaymentService) {
+    constructor(private payService: PaymentService,
+                private notifSerice: NotificationsService) {
         this.msisdnFilteredOptions = this.msisdnControl.valueChanges
             .pipe(
                 startWith(''),
@@ -46,14 +48,6 @@ export class AddDetailComponent implements OnInit {
                 startWith(''),
                 map(state => state ? this._filterAccount(state) : this.accounts.slice())
             );
-    }
-
-    private _filterMsisdn(value: string): String [] {
-        return this.msisdns.filter(item => item.indexOf(value) === 0);
-    }
-
-    private _filterAccount(value: string): String [] {
-        return this.accounts.filter(item => item.indexOf(value) === 0);
     }
 
     get msisdnControl() {
@@ -71,18 +65,25 @@ export class AddDetailComponent implements OnInit {
     addDetail() {
         let detail = new Detail();
         detail.paymentId = this.payService.payment.id;
-        this.msisdnControl.value == "" || this.msisdnControl.value == null ? detail.msisdn = null : detail.msisdn = this.msisdnControl.value;
-        this.accountControl.value == "" || this.accountControl.value == null ? detail.account = null : detail.account = this.accountControl.value;
+        this.msisdnControl.value == '' || this.msisdnControl.value == null ? detail.msisdn = null : detail.msisdn = this.msisdnControl.value;
+        this.accountControl.value == '' || this.accountControl.value == null ? detail.account = null : detail.account = this.accountControl.value;
         let sum = this.sumControl.value;
         sum = sum.replace(',', '.');
+        sum = sum.replace(/[\r\n\t\f\v ]/, '');
+        if (isNaN(Number(sum))) {
+            this.notifSerice.warn(MSG.inputNumber);
+            return;
+        }
         detail.sum = Number(sum);
         detail.status = PaymentStatus.NEW;
         this.payService.addDetail(detail);
         this.clearFields();
     }
-    
+
     canAddDetail() {
-        return this.payService.canAddDetail();
+        return (((this.msisdnControl.value != '' && this.msisdnControl.value != null) ||
+            (this.accountControl.value != '' && this.accountControl.value != null)) &&
+            this.payService.canAddDetail());
     }
 
     clearFields() {
@@ -124,6 +125,14 @@ export class AddDetailComponent implements OnInit {
 
     paymentSum() {
         return this.payService.payment.sum;
+    }
+
+    private _filterMsisdn(value: string): String [] {
+        return this.msisdns.filter(item => item.indexOf(value) === 0);
+    }
+
+    private _filterAccount(value: string): String [] {
+        return this.accounts.filter(item => item.indexOf(value) === 0);
     }
 
 }
