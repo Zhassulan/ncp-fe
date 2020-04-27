@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -9,11 +9,10 @@ import {Subscription} from 'rxjs';
 import {ClientService} from '../client.service';
 import {PaymentService} from '../../payment/payment.service';
 import {DlgService} from '../../dialog/dlg.service';
-import {PaymentStatusRu} from '../../settings';
+import {PaymentStatus, PaymentStatusRu} from '../../settings';
 import {PayDataService} from '../../data/pay-data-service';
 import {Payment} from '../../payment/model/payment';
 import {DateRangeComponent} from '../../date-range/date-range.component';
-import {DlgImportRouterRegistryComponent} from '../../payment/dialog/dlg-import-router-registry.component';
 import {MatDialog} from '@angular/material/dialog';
 import {DlgMobipayPartnersComponent} from '../../mobipay/partners/dlg-mobipay-partners.component';
 
@@ -22,7 +21,7 @@ import {DlgMobipayPartnersComponent} from '../../mobipay/partners/dlg-mobipay-pa
     templateUrl: './client-payments-table.component.html',
     styleUrls: ['./client-payments-table.component.css']
 })
-export class ClientPaymentsTableComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
 
     displayedColumns: string[] = [
         'position',
@@ -69,7 +68,7 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy, AfterVie
                 let maxDate = new Date(Math.max.apply(null, this.dataSource.data.map(i => i.created)));
                 this.datesRange.start = minDate;
                 this.datesRange.end = maxDate;
-                },
+            },
             error => {
                 this.appService.setProgress(false);
                 this.notifService.error(error.error.errm);
@@ -94,6 +93,14 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy, AfterVie
     canTransit(row) {
         this.payService.setPayment(row);
         return this.payService.canTransit();
+    }
+
+    canMobipayDistribute(row) {
+        return row.status == PaymentStatus.NEW ||
+            row.status == PaymentStatus.TRANSIT ||
+            row.status == PaymentStatus.ERROR ||
+            row.status == PaymentStatus.TRANSIT_CANCELLED ||
+            row.status == PaymentStatus.TRANSIT_ERROR;
     }
 
     canDelTransit(row) {
@@ -148,18 +155,10 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy, AfterVie
     }
 
     distributeMobipay(row) {
-        this.dialogRef = this.dlg.open(DlgMobipayPartnersComponent,
-            {
-                width: '60%', height: '30%',
-                data: { 'paymentId' : row.id }});
-        this.dialogRef.afterClosed().subscribe(result => {
-            if (result != 'cancel') {
-            }
+        this.dialogRef = this.dlg.open(DlgMobipayPartnersComponent, {
+            width: '60%', height: '30%',
+            data: {'paymentId': row.id}
         });
-    }
-
-    ngAfterViewInit(): void {
-
     }
 
 }

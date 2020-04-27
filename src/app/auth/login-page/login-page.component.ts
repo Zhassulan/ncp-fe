@@ -1,7 +1,6 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {DlgLoginComponent} from '../login/dlg-login.component';
-import {timeouts} from '../../settings';
 
 
 @Component({

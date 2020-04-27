@@ -22,7 +22,6 @@ export class AuthInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             catchError((error: HttpErrorResponse) => {
                if (error.status === HttpStatus.UNAUTHORIZED) {
-                    //this.notifService.warn("Нет доступа");
                     this.authService.logout();
                     this.router.navigate(['login']);
                 }

@@ -23,4 +23,11 @@ export class MobipayDataService {
         return this.http.get<Client []>(`${API_URL}/mobipay/partners`, {params});
     }
 
+    change(id, isMobipay) {
+        const params = new HttpParams()
+            .set('paymentId', id)
+            .set('isMobipay', isMobipay);
+        return this.http.post<Client []>(`${API_URL}/mobipay/change`, {params});
+    }
+
 }

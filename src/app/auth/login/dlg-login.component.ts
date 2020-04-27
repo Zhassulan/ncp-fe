@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialogRef} from '@angular/material/dialog';
-import {msgs} from '../../settings';
+import {MSG} from '../../settings';
 import {NotificationsService} from 'angular2-notifications';
 import {AppDataService} from '../../data/app-data-service';
 import * as HttpStatus from 'http-status-codes';
@@ -46,7 +46,7 @@ export class DlgLoginComponent implements OnInit, OnDestroy {
 
     login() {
         if (!(this.userName && this.userPassword))  {
-            this.notifService.warn(msgs.msgDataNotProvided);
+            this.notifService.warn(MSG.noData);
             return;
         }
         this.subscription = this.appDataService.login(this.userName, this.userPassword).subscribe(
@@ -60,7 +60,7 @@ export class DlgLoginComponent implements OnInit, OnDestroy {
                 if (error.status === HttpStatus.SERVICE_UNAVAILABLE)
                     this.notifService.error(error.error.errm);
                    else
-                    this.notifService.error('Ошибка доступа');
+                    this.notifService.error(MSG.accessDenied);
 
             });
     }

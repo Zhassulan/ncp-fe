@@ -1,13 +1,12 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
-import {msgs, PaymentMenuItems, PaymentStatus, PaymentStatusRu} from '../settings';
+import {MSG, PaymentMenuItems} from '../settings';
 import {PaymentService} from './payment.service';
 import {DlgImportRouterRegistryComponent} from './dialog/dlg-import-router-registry.component';
 import {ActivatedRoute} from '@angular/router';
 import {DetailsComponent} from './details/details.component';
 import {AppService} from '../app.service';
-
 import {DlgDeferComponent} from './calendar-defer-modal/dlg-defer.component';
 import {MatSort} from '@angular/material/sort';
 import {PayDataService} from '../data/pay-data-service';
@@ -121,17 +120,13 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
     dlgImportEquipment() {
         this.dialogRef = this.dlg.open(DlgImportRouterRegistryComponent, {width: '40%', height: '30%'});
-        this.dialogRef.afterClosed().subscribe(result => {
-            if (result != 'cancel') {
-            }
-        });
     }
 
     dlgDistribute() {
         this.appService.setProgress(true);
         this.subscription = this.payDataService.distribute(this.payment.id, this.payment.details).subscribe(data => {
             this.payService.setPayment(data);
-            this.notifService.info(msgs.msgSuccessDistributed);
+            this.notifService.info(MSG.distributeSuccess);
         }, error => {
             this.notifService.error(error.error.errm);
             this.appService.setProgress(false);
@@ -143,7 +138,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         this.subscription = this.payDataService.transitDel(this.payment.id).subscribe(
             data => {
                 this.payService.setPayment(data);
-                this.notifService.info(msgs.msgSuccessDelTransit);
+                this.notifService.info(MSG.transitDekSuccess);
             },
             error => {
                 this.notifService.error(error.error.errm);
@@ -156,7 +151,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         this.appService.setProgress(true);
         this.subscription = this.payDataService.transit(this.payment.id).subscribe(data => {
                 this.payService.setPayment(data);
-                this.notifService.info(msgs.msgSuccessToTransit);
+                this.notifService.info(MSG.transitSuccess);
             },
             error => {
                 this.notifService.error(error.error.errm);

@@ -3,7 +3,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {Payment} from '../../payment/model/payment';
-import {PaymentStatus, PaymentStatusRu} from '../../settings';
+import {MSG, PaymentStatus, PaymentStatusRu} from '../../settings';
 import {PayDataService} from '../../data/pay-data-service';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
@@ -13,6 +13,7 @@ import {ExcelService} from '../../excel/excel.service';
 import {Subscription} from 'rxjs';
 import {PaymentService} from '../../payment/payment.service';
 import {Utils} from '../../utils';
+import {MobipayDataService} from '../../data/mobipay-data.service';
 
 @Component({
     selector: 'app-payments-table',
@@ -50,7 +51,8 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private dialogService: DlgService,
                 private excelService: ExcelService,
-                private payService: PaymentService) {
+                private payService: PaymentService,
+                private mobipayDataService: MobipayDataService) {
         this.dataSource = new MatTableDataSource<Payment>();
         this.paginatorResultsLength = 0;
     }
@@ -91,7 +93,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
                 this.appService.setProgress(false);
                 if (error.status) {
                     if (error.status == 503 || error.status == 502)
-                        this.notif.error(`Сервис не доступен`);
+                        this.notif.error(MSG.serviceErr);
                 } else this.notif.error(error);
             },
             () => this.appService.setProgress(false));
@@ -122,6 +124,19 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
 
     menuOnRowOpenPayment(paymentRow) {
         this.router.navigate(['payments/' + paymentRow.id]);
+    }
+
+    menuOnRowMobipay(paymentRow) {
+        this.appService.setProgress(true);
+        this.mobipayDataService.change(paymentRow.id, true).subscribe(
+            data => {
+                this.notif.info(MSG.mobipayChanged);
+            },
+            error => {
+                error.status == 403 ? this.notif.warn(MSG.accessDenied) : this.notif.warn(error.error.errm);
+                this.appService.setProgress(false);
+            },
+            () => this.appService.setProgress(false));
     }
 
     menuOnRowDeleteTransit(payment) {

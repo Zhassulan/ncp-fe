@@ -1,7 +1,6 @@
 import {environment} from '../../environments/environment';
 import {Payment} from '../payment/model/payment';
-import {RequestPostPayment} from './request-post-payment';
-import {httpOptions, PaymentActions} from '../settings';
+import {httpOptions} from '../settings';
 import {RouterRegistry} from '../router/model/router-registry';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -27,7 +26,7 @@ export class PayDataService {
     }
 
     transit(id) {
-        return this.http.post<Payment>(`${API_URL}/payments/${id}/transit`, new RequestPostPayment(PaymentActions.TO_TRANSIT), httpOptions);
+        return this.http.post<Payment>(`${API_URL}/payments/${id}/transit`, httpOptions);
     }
 
     transitDel(id) {
