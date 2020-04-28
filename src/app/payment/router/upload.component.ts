@@ -15,7 +15,7 @@ export class UploadComponent {
     }
 
     public openUploadDialog() {
-        this.dialogRef = this.dialog.open(DlgImportRouterRegistryComponent);
+        this.dialogRef = this.dialog.open(DlgImportRouterRegistryComponent, {disableClose: true});
     }
 
 }

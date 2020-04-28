@@ -119,7 +119,10 @@ export class PaymentComponent implements OnInit, OnDestroy {
     }
 
     dlgImportEquipment() {
-        this.dialogRef = this.dlg.open(DlgImportRouterRegistryComponent, {width: '40%', height: '30%'});
+        this.dialogRef = this.dlg.open(DlgImportRouterRegistryComponent, {
+            width: '40%',
+            height: '30%',
+            disableClose: true});
     }
 
     dlgDistribute() {
@@ -163,8 +166,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
     dlgImportRegistry() {
         const dialogRef = this.dlg.open(DlgRegistryBufferComponent, {
             width: '50%',
-            data: {registry: this.registry}
-        });
+            data: {registry: this.registry},
+            disableClose: true});
         dialogRef.afterClosed().subscribe(result => {
             if (result == null) return;
             if (result == '') return;
@@ -181,7 +184,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         const dialogRef = this.dlg.open(DlgDeferComponent, {
             width: '30%',
             data: {date: this.deferDate},
-        });
+            disableClose: true});
         dialogRef.afterClosed().subscribe(result => {
                 let today = new Date();
                 let tomorrow = new Date(today);

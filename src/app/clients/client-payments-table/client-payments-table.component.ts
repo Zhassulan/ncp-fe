@@ -157,8 +157,8 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
     distributeMobipay(row) {
         this.dialogRef = this.dlg.open(DlgMobipayPartnersComponent, {
             width: '60%', height: '30%',
-            data: {'paymentId': row.id}
-        });
+            data: {'paymentId': row.id},
+            disableClose: true});
     }
 
 }

@@ -14,11 +14,11 @@
 
 	LogLevel debug
                                            
-	ProxyPass /api http://localhost:8080/api
+	ProxyPass /ncp/api http://localhost:8080/api
 	ProxyPassReverse /api http://localhost:8080/api
 	
-	ProxyPass /ncp http://localhost:4200
-	ProxyPassReverse /ncp http://localhost:4200
+	ProxyPass /ncp/ui http://localhost:4200
+	ProxyPassReverse /ncp/ui http://localhost:4200
                         		
 	ProxyPass /sockjs-node http://localhost:4200/sockjs-node
 	ProxyPassReverse /sockjs-node http://localhost:4200/sockjs-node
