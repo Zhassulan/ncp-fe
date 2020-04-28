@@ -186,6 +186,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
             data: {date: this.deferDate},
             disableClose: true});
         dialogRef.afterClosed().subscribe(result => {
+                this.appService.setProgress(true);
                 let today = new Date();
                 let tomorrow = new Date(today);
                 tomorrow.setDate(tomorrow.getDate() + 1);
