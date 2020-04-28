@@ -12,7 +12,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         setTimeout(() => {
-            const dialogRef = this.dialog.open(DlgLoginComponent);
+            const dialogRef = this.dialog.open(DlgLoginComponent, {disableClose: true});
         }, 0);
     }
 

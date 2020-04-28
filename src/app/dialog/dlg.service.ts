@@ -20,8 +20,8 @@ export class DlgService {
             data: {
                 title: this.title,
                 items: this.dialogData
-            }
-        });
+            },
+            disableClose: true});
     }
 
     setTitle(title) {
