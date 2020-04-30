@@ -36,7 +36,7 @@ export class RegistriesComponent implements OnInit, OnDestroy {
     dataSource = new MatTableDataSource<RegistryReportItem>();
     paginatorResultsLength: number = 0;
     pageSize = 30;
-    pageSizeOptions: number[] = [50, 100, 150, 250, 300];
+    pageSizeOptions: number[] = [30, 60, 100, 150, 250, 300];
     binFormCtl = new FormControl('', [
         Validators.pattern('\\d{12}'),
     ]);
