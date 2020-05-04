@@ -37,8 +37,8 @@
             <button mat-mini-fab disabled *ngIf="detail.status == paymentStatuses.DISTRIBUTED || detail.status == paymentStatuses.TRANSIT_DISTRIBUTED ">
                 <mat-icon>done</mat-icon>
             </button>
-            <button mat-mini-fab *ngIf="detail.status == paymentStatuses.ERROR ||
-                detail.status == paymentStatuses.TRANSIT_ERROR ||
+            <button mat-mini-fab *ngIf="detail.status == paymentStatuses.ERR ||
+                detail.status == paymentStatuses.TRANSIT_ERR ||
                 detail.status == paymentStatuses.DELETED"
                     matTooltip="{{ detail.err }}">
                 <mat-icon>error</mat-icon>

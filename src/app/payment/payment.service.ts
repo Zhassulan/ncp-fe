@@ -32,8 +32,8 @@ export class PaymentService {
     delAll() {
         this.payment.details = this.payment.details.filter(i =>
             i.status != PaymentStatus.NEW &&
-            i.status != PaymentStatus.ERROR &&
-            i.status != PaymentStatus.TRANSIT_ERROR);
+            i.status != PaymentStatus.ERR &&
+            i.status != PaymentStatus.TRANSIT_ERR);
         this.routerService.resetFilePayment();
         this.announcePayment();
     }
@@ -102,8 +102,8 @@ export class PaymentService {
     canPasteRegistryFromBuffer() {
         return this.payment.status == PaymentStatus.NEW ||
             this.payment.status == PaymentStatus.TRANSIT ||
-            this.payment.status == PaymentStatus.ERROR ||
-            this.payment.status == PaymentStatus.TRANSIT_ERROR ||
+            this.payment.status == PaymentStatus.ERR ||
+            this.payment.status == PaymentStatus.TRANSIT_ERR ||
             this.payment.status == PaymentStatus.TRANSIT_CANCELLED ||
             this.payment.mobipay == false;
     }
@@ -111,8 +111,8 @@ export class PaymentService {
     canLoadEquipment() {
         return this.payment.status == PaymentStatus.NEW ||
             this.payment.status == PaymentStatus.TRANSIT ||
-            this.payment.status == PaymentStatus.ERROR ||
-            this.payment.status == PaymentStatus.TRANSIT_ERROR ||
+            this.payment.status == PaymentStatus.ERR ||
+            this.payment.status == PaymentStatus.TRANSIT_ERR ||
             this.payment.status == PaymentStatus.TRANSIT_CANCELLED;
     }
 
@@ -127,36 +127,34 @@ export class PaymentService {
 
     canDefer() {
         return (this.payment.status == PaymentStatus.NEW ||
-            this.payment.status == PaymentStatus.ERROR ||
-            this.payment.status == PaymentStatus.TRANSIT ||
-            this.payment.status == PaymentStatus.TRANSIT_ERROR ||
+            this.payment.status == PaymentStatus.ERR ||
             this.payment.status == PaymentStatus.TRANSIT_CANCELLED) &&
-            this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0 &&
             this.detailsSum() == this.payment.sum;
     }
 
     canLoadPhones() {
         return this.payment ? this.payment.status == PaymentStatus.NEW ||
+            this.payment.status == PaymentStatus.ERR ||
             this.payment.status == PaymentStatus.TRANSIT ||
             this.payment.status == PaymentStatus.TRANSIT_CANCELLED ||
-            this.payment.status == PaymentStatus.TRANSIT_ERROR : false;
+            this.payment.status == PaymentStatus.TRANSIT_ERR : false;
     }
 
     canAddDetail() {
         return this.payment ? this.payment.status == PaymentStatus.NEW ||
             this.payment.status == PaymentStatus.TRANSIT ||
-            this.payment.status == PaymentStatus.ERROR ||
+            this.payment.status == PaymentStatus.ERR ||
             this.payment.status == PaymentStatus.TRANSIT_CANCELLED ||
-            this.payment.status == PaymentStatus.TRANSIT_ERROR : false;
+            this.payment.status == PaymentStatus.TRANSIT_ERR : false;
     }
 
     canDistribute() {
         return (this.payment.status == PaymentStatus.NEW ||
             this.payment.status == PaymentStatus.TRANSIT ||
-            this.payment.status == PaymentStatus.ERROR ||
+            this.payment.status == PaymentStatus.ERR ||
             this.payment.status == PaymentStatus.TRANSIT_CANCELLED ||
-            this.payment.status == PaymentStatus.TRANSIT_ERROR) &&
-            this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0 &&
+            this.payment.status == PaymentStatus.TRANSIT_ERR) &&
+            //this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0 &&
             this.detailsSum() == this.payment.sum;
     }
 
@@ -241,7 +239,7 @@ export class PaymentService {
     }
 
     canDelSome() {
-        return this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0 || this.payment.details.filter(i => i.status == PaymentStatus.ERROR || i.status == PaymentStatus.TRANSIT_ERROR).length > 0;
+        return this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0 || this.payment.details.filter(i => i.status == PaymentStatus.ERR || i.status == PaymentStatus.TRANSIT_ERR).length > 0;
     }
 
 

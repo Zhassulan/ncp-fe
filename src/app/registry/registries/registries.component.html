@@ -23,9 +23,9 @@
                 </button>
             </div>
             <div ngClass="item">
-                    <button mat-raised-button color="primary" (click)="save()" matTooltip="Экспорт в Excel">
-                        Экспорт
-                    </button>
+                <button mat-raised-button color="primary" (click)="save()" matTooltip="Экспорт в Excel">
+                    Экспорт
+                </button>
             </div>
             <div ngClass="search">
                 <mat-form-field>
@@ -40,23 +40,23 @@
 
         <mat-table [dataSource]="dataSource" matSort>
             <ng-container matColumnDef="ID">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> ID</mat-header-cell>
                 <mat-cell *matCellDef="let row"> {{ row.registryId }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="created">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> Дата </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Дата</mat-header-cell>
                 <mat-cell *matCellDef="let row"> {{ row.created | date : "dd.MM.yy HH:mm" }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="bin">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> БИН </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> БИН</mat-header-cell>
                 <mat-cell *matCellDef="let row"> {{ row.bin }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="company">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> Компания </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Компания</mat-header-cell>
                 <mat-cell *matCellDef="let row"> {{row.company}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="phone">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> Телефон </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Телефон</mat-header-cell>
                 <mat-cell *matCellDef="let row"> {{row.phone}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="email">
@@ -95,7 +95,8 @@
         <mat-paginator
                 [length]="paginatorResultsLength"
                 [pageSize]="pageSize"
-                [pageSizeOptions]="pageSizeOptions">
+                [pageSizeOptions]="pageSizeOptions"
+                showFirstLastButtons>
         </mat-paginator>
     </div>
 
