@@ -98,9 +98,9 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
     canMobipayDistribute(row) {
         return row.status == PaymentStatus.NEW ||
             row.status == PaymentStatus.TRANSIT ||
-            row.status == PaymentStatus.ERROR ||
+            row.status == PaymentStatus.ERR ||
             row.status == PaymentStatus.TRANSIT_CANCELLED ||
-            row.status == PaymentStatus.TRANSIT_ERROR;
+            row.status == PaymentStatus.TRANSIT_ERR;
     }
 
     canDelTransit(row) {

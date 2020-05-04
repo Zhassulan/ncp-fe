@@ -3,14 +3,14 @@ import {HttpHeaders} from '@angular/common/http';
 export enum PaymentStatus {
     NEW = 0,
     DISTRIBUTED = 1,
-    ERROR = 2,
+    ERR = 2,
     EXPIRED = 3,
     DELETED = 4,
     SCHEDULED = 5,
     TRANSIT = 6,
     TRANSIT_DISTRIBUTED = 7,
     TRANSIT_CANCELLED = 8,
-    TRANSIT_ERROR = 9,
+    TRANSIT_ERR = 9,
     DEFERRED = 10
 }
 
@@ -68,7 +68,7 @@ export const enum MSG {
     updateCache = 'Есть обновления, обновите кеш страницы [Ctrl]+[F5]',
     noData = 'Данные не предоставлены',
     mobipayChanged = 'Mobipay платёж изменён',
-    serviceErr = 'Ошибка сервиса',
+    serviceErr = 'Ошибка сервиса, повторите запрос',
     inputNumber = 'Введите сумму'
 }
 

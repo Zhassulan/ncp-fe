@@ -69,6 +69,7 @@ export class AddDetailComponent implements OnInit {
         this.accountControl.value == '' || this.accountControl.value == null ? detail.account = null : detail.account = this.accountControl.value;
         let sum = this.sumControl.value;
         sum = sum.replace(',', '.');
+        sum = sum.trim();
         sum = sum.replace(/[\r\n\t\f\v ]/, '');
         if (isNaN(Number(sum))) {
             this.notifSerice.warn(MSG.inputNumber);
