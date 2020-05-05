@@ -87,6 +87,10 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.payService.canDelSome();
     }
 
+    canDelDetail(detail) {
+        return this.payService.canDelDetail(detail);
+    }
+
     ngAfterViewInit(): void {
         this.payService.announcePayment();
     }

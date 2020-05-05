@@ -242,5 +242,10 @@ export class PaymentService {
         return this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0 || this.payment.details.filter(i => i.status == PaymentStatus.ERR || i.status == PaymentStatus.TRANSIT_ERR).length > 0;
     }
 
+    canDelDetail(detail) {
+        return detail.status == PaymentStatus.ERR ||
+            detail.status == PaymentStatus.TRANSIT_ERR;
+    }
+
 
 }
