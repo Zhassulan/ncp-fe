@@ -243,7 +243,8 @@ export class PaymentService {
     }
 
     canDelDetail(detail) {
-        return detail.status == PaymentStatus.ERR ||
+        return detail.status == PaymentStatus.NEW ||
+            detail.status == PaymentStatus.ERR ||
             detail.status == PaymentStatus.TRANSIT_ERR;
     }
 

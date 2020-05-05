@@ -34,13 +34,15 @@
     <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef> {{ detailTableColumnsDisplay.status }}</th>
         <td mat-cell *matCellDef="let detail">
-            <button mat-mini-fab disabled *ngIf="detail.status == paymentStatuses.DISTRIBUTED || detail.status == paymentStatuses.TRANSIT_DISTRIBUTED ">
+            <button mat-mini-fab disabled
+                    *ngIf="detail.status == PaymentStatus.DISTRIBUTED ||
+                    detail.status == PaymentStatus.TRANSIT_DISTRIBUTED ">
                 <mat-icon>done</mat-icon>
             </button>
-            <button mat-mini-fab *ngIf="detail.status == paymentStatuses.ERR ||
-                detail.status == paymentStatuses.TRANSIT_ERR ||
-                detail.status == paymentStatuses.DELETED"
-                    matTooltip="{{ detail.err }}">
+            <button mat-mini-fab
+                    *ngIf="detail.status == PaymentStatus.ERR ||
+                    detail.status == PaymentStatus.TRANSIT_ERR ||
+                    detail.status == PaymentStatus.DELETED" matTooltip="{{ detail.err }}">
                 <mat-icon>error</mat-icon>
             </button>
         </td>

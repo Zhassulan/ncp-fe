@@ -37,7 +37,7 @@ enum PaymentDetailTableColumnsDisplay {
 })
 export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
 
-    paymentStatuses = PaymentStatus;
+    PaymentStatus = PaymentStatus;
     tooltips = TOOLTIPS;
     dataSource = new MatTableDataSource<Detail>();
     displayedColumns: string[] = PaymentDetailsTableColumns;
