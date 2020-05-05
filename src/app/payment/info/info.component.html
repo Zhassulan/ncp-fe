@@ -25,6 +25,18 @@
     <div class="value">
         {{ payment.status | paymentStatusRuPipe: payment.status}}
     </div>
+    <div class="title" *ngIf="payment.status == PaymentStatus.DISTRIBUTED || payment.status == PaymentStatus.TRANSIT_DISTRIBUTED">
+        Разнесён:
+    </div>
+    <div class="value" *ngIf="payment.status == PaymentStatus.DISTRIBUTED || payment.status == PaymentStatus.TRANSIT_DISTRIBUTED">
+        {{ payment.distributed | date: 'short' }}
+    </div>
+    <div class="title" *ngIf="payment.status == PaymentStatus.DISTRIBUTED || payment.status == PaymentStatus.TRANSIT_DISTRIBUTED">
+        Пользователь:
+    </div>
+    <div class="value" *ngIf="payment.status == PaymentStatus.DISTRIBUTED || payment.status == PaymentStatus.TRANSIT_DISTRIBUTED">
+        {{ payment.agent }}
+    </div>
     <div class="title">
         БИН:
     </div>
@@ -50,7 +62,7 @@
         {{ payment.sum | currency : ' тг.' }}
     </div>
     <div class="title" *ngIf="payment.deferred">
-        Дата разноски:
+        Отложен на:
     </div>
     <div class="value" *ngIf="payment.deferred">
         {{ payment.deferred | date: 'shortDate' }}
