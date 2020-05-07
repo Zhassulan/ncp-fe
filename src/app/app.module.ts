@@ -12,7 +12,7 @@ import {CommonModule, registerLocaleData} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MenuToolbarComponent} from './main-nav/menu-toolbar.component';
 import {RoutesModule} from './routes/routes.module';
-import {MAT_DATE_LOCALE} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {PaymentStatusRuPipe} from './payments/payment-status-ru-pipe';
 import {DlgResultComponent} from './dialog/dialog-report/dlg-result.component';
 import {DlgService} from './dialog/dlg.service';
@@ -58,7 +58,7 @@ import {AddDetailComponent} from './payment/add-detail/add-detail.component';
 import {DlgDeferComponent} from './payment/calendar-defer-modal/dlg-defer.component';
 import {UploadComponent} from './payment/router/upload.component';
 import {DlgRegistryBufferComponent} from './payment/add-registry-modal/dlg-registry-buffer.component';
-
+import {MyDateAdapter} from './my-date-adapter';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -125,6 +125,7 @@ registerLocaleData(localeRu, 'ru');
         CookieService,
         {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
         {provide: LOCALE_ID, useValue: 'ru-RU'},
+        {provide: DateAdapter, useClass: MyDateAdapter},
         DlgService,
         PayDataService,
         AppDataService,
