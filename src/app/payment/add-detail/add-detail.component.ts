@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {PaymentService} from '../payment.service';
 import {Observable} from 'rxjs';
@@ -6,6 +6,7 @@ import {map, startWith} from 'rxjs/operators';
 import {Detail} from '../model/detail';
 import {MSG, msisdnLength, PaymentStatus} from '../../settings';
 import {NotificationsService} from 'angular2-notifications';
+import {ClientDataService} from '../../data/client-data-service';
 
 @Component({
     selector: 'app-add-detail',
@@ -14,13 +15,13 @@ import {NotificationsService} from 'angular2-notifications';
 })
 export class AddDetailComponent implements OnInit {
 
-    @Input() msisdns;
-    @Input() accounts;
-    msisdnFilteredOptions: Observable<string[]>;
-    accountFilteredOptions: Observable<string[]>;
+    phones: string[] = [];
+    accounts: string[] = [];
+    filteredPhones: Observable<string[]>;
+    filteredAccounts: Observable<string[]>;
     frmDetail: FormGroup = new FormGroup(
         {
-            msisdnControl: new FormControl('',
+            phoneControl: new FormControl('',
                 [
                     Validators.minLength(msisdnLength),
                     Validators.maxLength(msisdnLength),
@@ -37,21 +38,18 @@ export class AddDetailComponent implements OnInit {
     );
 
     constructor(private payService: PaymentService,
-                private notifSerice: NotificationsService) {
-        this.msisdnFilteredOptions = this.msisdnControl.valueChanges
-            .pipe(
-                startWith(''),
-                map(state => state ? this._filterMsisdn(state) : this.msisdns.slice())
-            );
-        this.accountFilteredOptions = this.accountControl.valueChanges
-            .pipe(
-                startWith(''),
-                map(state => state ? this._filterAccount(state) : this.accounts.slice())
-            );
+                private notifSerice: NotificationsService,
+                private clntDataService: ClientDataService) {
+        this.filteredPhones = this.phoneControl.valueChanges
+            .pipe(startWith(''),
+                map(state => state ? this._filterPhone(state) : this.phones.slice()));
+        this.filteredAccounts = this.accountControl.valueChanges
+            .pipe(startWith(''),
+                map(state => state ? this._filterAccount(state) : this.accounts.slice()));
     }
 
-    get msisdnControl() {
-        return this.frmDetail.get('msisdnControl');
+    get phoneControl() {
+        return this.frmDetail.get('phoneControl');
     }
 
     get accountControl() {
@@ -65,7 +63,7 @@ export class AddDetailComponent implements OnInit {
     addDetail() {
         let detail = new Detail();
         detail.paymentId = this.payService.payment.id;
-        this.msisdnControl.value == '' || this.msisdnControl.value == null ? detail.msisdn = null : detail.msisdn = this.msisdnControl.value;
+        this.phoneControl.value == '' || this.phoneControl.value == null ? detail.msisdn = null : detail.msisdn = this.phoneControl.value;
         this.accountControl.value == '' || this.accountControl.value == null ? detail.account = null : detail.account = this.accountControl.value;
         let sum = this.sumControl.value;
         sum = sum.replace(',', '.');
@@ -82,19 +80,19 @@ export class AddDetailComponent implements OnInit {
     }
 
     canAddDetail() {
-        return (((this.msisdnControl.value != '' && this.msisdnControl.value != null) ||
+        return (((this.phoneControl.value != '' && this.phoneControl.value != null) ||
             (this.accountControl.value != '' && this.accountControl.value != null)) &&
             this.payService.canAddDetail());
     }
 
     clearFields() {
         this.clearAccount();
-        this.clearMsisdn();
+        this.clearPhone();
         this.clearSum();
     }
 
-    clearMsisdn() {
-        this.msisdnControl.setValue('');
+    clearPhone() {
+        this.phoneControl.setValue('');
     }
 
     clearAccount() {
@@ -105,12 +103,23 @@ export class AddDetailComponent implements OnInit {
         this.sumControl.setValue('');
     }
 
-    msisdnChanged() {
+    phoneChanged() {
+        if (!this.payService.canLoadPhones()) return;
         this.clearAccount();
+        this.clntDataService.phones(this.phoneControl.value, 10).subscribe(
+            data => this.phones = data,
+            error => this.notifSerice.warn('Ошибка поиска номеров'));
     }
 
     accountChanged() {
-        this.clearMsisdn();
+        if (!this.payService.canLoadPhones()) return;
+        this.clearPhone();
+        this.clntDataService.accounts(this.accountControl.value, 10).subscribe(
+            data => {
+                this.accounts = [];
+                this.accounts = data
+            },
+            error => this.notifSerice.warn('Ошибка поиска счетов'));
     }
 
     isBlocked(): boolean {
@@ -128,11 +137,11 @@ export class AddDetailComponent implements OnInit {
         return this.payService.payment.sum;
     }
 
-    private _filterMsisdn(value: string): String [] {
-        return this.msisdns.filter(item => item.indexOf(value) === 0);
+    private _filterPhone(value: string): string [] {
+        return this.phones.filter(item => item.indexOf(value) === 0);
     }
 
-    private _filterAccount(value: string): String [] {
+    private _filterAccount(value: string): string [] {
         return this.accounts.filter(item => item.indexOf(value) === 0);
     }
 

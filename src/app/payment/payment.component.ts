@@ -91,7 +91,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         this.subscription = this.payDataService.findById(id).subscribe(
             data => {
                 this.payService.setPayment(data);
-                if (this.canLoadPhones()) this.props(data.rnnSender);
+                if (this.canLoadPhones()) this.props();
             },
             error => {
                 this.appService.setProgress(false);
@@ -104,12 +104,12 @@ export class PaymentComponent implements OnInit, OnDestroy {
         return this.payService.canLoadPhones();
     }
 
-    props(bin) {
-        this.subscription = this.clntDataService.props(bin).subscribe(
+    props() {
+        this.subscription = this.clntDataService.props().subscribe(
             data => {
-                this.msisdns = data.filter(i => i.msisdn).map(i => i.msisdn);
-                this.accounts = data.filter(i => i.account).map(i => String(i.account));
-                console.log(`Загружено ${this.msisdns.length} номеров и ${this.accounts.length} счетов`);
+                /*this.msisdns = data.filter(i => i.msisdn).map(i => i.msisdn);
+                this.accounts = data.filter(i => i.account).map(i => String(i.account));*/
+                console.log(`Загружено ${data} номеров/счетов`);
             },
             error => {
                 this.appService.setProgress(false);

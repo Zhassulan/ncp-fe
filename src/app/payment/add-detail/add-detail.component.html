@@ -7,19 +7,19 @@
             <mat-form-field>
                 <input matInput
                        placeholder="Номер телефона"
-                       [formControl]="msisdnControl"
-                       (input)="msisdnChanged()"
+                       [formControl]="phoneControl"
+                       (input)="phoneChanged()"
                        ngClass="inputWidth"
                        [matAutocomplete]="autoCompleteMsisdn">
                 <mat-autocomplete #autoCompleteMsisdn="matAutocomplete">
-                    <mat-option *ngFor="let msisdn of msisdnFilteredOptions | async" [value]="msisdn">
-                        {{ msisdn }}
+                    <mat-option *ngFor="let phone of filteredPhones | async" [value]="phone">
+                        {{ phone }}
                     </mat-option>
                 </mat-autocomplete>
-                <button mat-button *ngIf="msisdnControl.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearMsisdn()">
+                <button mat-button *ngIf="phoneControl.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearPhone()">
                     <mat-icon>close</mat-icon>
                 </button>
-                <mat-error *ngIf="msisdnControl.errors">
+                <mat-error *ngIf="phoneControl.errors">
                     количество цифр 10
                 </mat-error>
             </mat-form-field>
@@ -33,7 +33,7 @@
                        ngClass="inputWidth"
                        [matAutocomplete]="autoCompleteAccount">
                 <mat-autocomplete #autoCompleteAccount="matAutocomplete">
-                    <mat-option *ngFor="let account of accountFilteredOptions | async" [value]="account">
+                    <mat-option *ngFor="let account of filteredAccounts | async" [value]="account">
                         {{ account }}
                     </mat-option>
                 </mat-autocomplete>

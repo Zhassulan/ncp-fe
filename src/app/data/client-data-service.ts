@@ -14,11 +14,11 @@ export class ClientDataService {
 
     constructor(private http: HttpClient) { }
 
-    props(bin)   {
-        const params = new HttpParams()
+    props()   {
+        /*const params = new HttpParams()
             .set('bin', bin)
-            .set('limit', '1000');
-        return this.http.get<Phone []>(`${API_URL}/clients/props`, {params});
+            .set('limit', '1000');*/
+        return this.http.get<Phone []>(`${API_URL}/clients/props`);
     }
 
     all() {
@@ -34,6 +34,19 @@ export class ClientDataService {
             .set('start', start)
             .set('end', end);
         return this.http.get<Payment []> (`${API_URL}/clients/${id}/payments/range`, {params});
+    }
+
+
+    phones(value, limit)   {
+        const params = new HttpParams()
+            .set('limit', limit);
+        return this.http.get<string []>(`${API_URL}/clients/phones/${value}`, {params});
+    }
+
+    accounts(value, limit)   {
+        const params = new HttpParams()
+            .set('limit', limit);
+        return this.http.get<string []>(`${API_URL}/clients/accounts/${value}`, {params});
     }
 
 }
