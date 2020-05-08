@@ -80,7 +80,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     sum() {
-        return this.payService.detailsSum();
+       return this.payService.detailsSum();
     }
 
     canDelSome() {

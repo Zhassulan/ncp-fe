@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {PaymentService} from '../payment.service';
 import {Observable} from 'rxjs';
@@ -13,7 +13,7 @@ import {ClientDataService} from '../../data/client-data-service';
     templateUrl: './add-detail.component.html',
     styleUrls: ['./add-detail.component.css']
 })
-export class AddDetailComponent implements OnInit {
+export class AddDetailComponent implements OnInit, AfterViewInit {
 
     phones: string[] = [];
     accounts: string[] = [];
@@ -104,7 +104,7 @@ export class AddDetailComponent implements OnInit {
     }
 
     phoneChanged() {
-        if (!this.payService.canLoadPhones()) return;
+        if (!this.payService.canLoadPhones() || this.phoneControl.value.trim().length == 0) return;
         this.clearAccount();
         this.clntDataService.phones(this.phoneControl.value, 10).subscribe(
             data => this.phones = data,
@@ -112,13 +112,10 @@ export class AddDetailComponent implements OnInit {
     }
 
     accountChanged() {
-        if (!this.payService.canLoadPhones()) return;
+        if (!this.payService.canLoadPhones() || this.accountControl.value.trim().length == 0) return;
         this.clearPhone();
         this.clntDataService.accounts(this.accountControl.value, 10).subscribe(
-            data => {
-                this.accounts = [];
-                this.accounts = data
-            },
+            data => this.accounts = data,
             error => this.notifSerice.warn('Ошибка поиска счетов'));
     }
 
@@ -129,12 +126,13 @@ export class AddDetailComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    detailsTotal() {
-        return this.payService.detailsSum();
-    }
-
-    paymentSum() {
-        return this.payService.payment.sum;
+    ngAfterViewInit(): void {
+        this.clntDataService.accounts(null, 10).subscribe(
+            data => this.accounts = data,
+            error => this.notifSerice.warn('Ошибка поиска счетов'));
+        this.clntDataService.phones(null, 10).subscribe(
+            data => this.phones = data,
+            error => this.notifSerice.warn('Ошибка поиска номеров'));
     }
 
     private _filterPhone(value: string): string [] {
