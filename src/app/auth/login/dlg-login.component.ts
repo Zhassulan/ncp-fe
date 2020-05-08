@@ -52,7 +52,7 @@ export class DlgLoginComponent implements OnInit, OnDestroy {
         this.subscription = this.appDataService.login(this.userName, this.userPassword).subscribe(
             data => {
                 this.authService.setUser(this.userName);
-                this.appService.checkVer();
+                //this.appService.checkVer();
                 this.returnUrl == '/' ? this.router.navigate(['payments']) : this.router.navigateByUrl(this.returnUrl);
                 this.dialogRef.close();
             },

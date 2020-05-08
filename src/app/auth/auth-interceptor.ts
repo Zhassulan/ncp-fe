@@ -14,8 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     constructor(private router: Router,
                 private notifService: NotificationsService,
-                private authService: AuthService
-    ) {
+                private authService: AuthService) {
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

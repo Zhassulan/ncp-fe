@@ -3,6 +3,7 @@ import {Subject} from 'rxjs';
 import {locStorItems, MSG} from './settings';
 import {NotificationsService} from 'angular2-notifications';
 import {AppDataService} from './data/app-data-service';
+import {Router} from '@angular/router';
 
 @Injectable({
     providedIn: 'root',
@@ -13,7 +14,8 @@ export class AppService {
     progressAnnounced$ = this.progressObs.asObservable();
 
     constructor(private notif: NotificationsService,
-                private appDataService: AppDataService) {
+                private appDataService: AppDataService,
+                private router: Router) {
     }
 
     setProgress(boolVal: boolean) {
@@ -25,11 +27,11 @@ export class AppService {
         this.appDataService.ver().subscribe(data => {
             if (localStorage.getItem(storVal) == null) {
                 localStorage.setItem(storVal, data.ver.toString());
-                this.notif.info(MSG.updateCache);
+                location.reload();
             } else {
                 if (data.ver > Number.parseInt(localStorage.getItem(storVal))) {
                     localStorage.setItem(storVal, data.ver.toString());
-                    this.notif.info(MSG.updateCache);
+                    location.reload();
                 }
             }
         }, error => this.notif.error(error.error.errm));

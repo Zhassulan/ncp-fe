@@ -2,6 +2,7 @@ import {Title} from '@angular/platform-browser';
 import {Component, ViewEncapsulation, OnInit} from '@angular/core';
 import {appTitle} from './settings';
 import {AppService} from './app.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     selector: 'app-root',
@@ -17,7 +18,7 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
+        this.appService.checkVer();
     }
 
 }
