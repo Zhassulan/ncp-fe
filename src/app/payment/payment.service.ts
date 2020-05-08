@@ -6,7 +6,6 @@ import {Detail} from './model/detail';
 import {ClientDataService} from '../data/client-data-service';
 import {PayDataService} from '../data/pay-data-service';
 import {RouterService} from '../router/router.service';
-import {AppService} from '../app.service';
 
 @Injectable()
 export class PaymentService {
@@ -17,8 +16,7 @@ export class PaymentService {
 
     constructor(private routerService: RouterService,
                 private clientDataService: ClientDataService,
-                private payDataService: PayDataService,
-                private appService: AppService) {
+                private payDataService: PayDataService) {
     }
 
     get routerRegistryItems() {

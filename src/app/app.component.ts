@@ -1,8 +1,6 @@
 import {Title} from '@angular/platform-browser';
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
-import {appTitle} from './settings';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AppService} from './app.service';
-import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     selector: 'app-root',
@@ -12,9 +10,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class AppComponent implements OnInit {
 
-    constructor(private titleService: Title,
-                private appService: AppService) {
-        this.titleService.setTitle('NCP UI');
+    constructor(private appService: AppService) {
     }
 
     ngOnInit(): void {

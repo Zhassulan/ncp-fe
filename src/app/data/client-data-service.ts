@@ -37,16 +37,16 @@ export class ClientDataService {
     }
 
 
-    phones(value, limit)   {
+    phones(bin, value, limit)   {
         const params = new HttpParams()
             .set('limit', limit);
-        return this.http.get<string []>(`${API_URL}/clients/phones/${value}`, {params});
+        return this.http.get<string []>(`${API_URL}/clients/${bin}/phones/${value}`, {params});
     }
 
-    accounts(value, limit)   {
+    accounts(bin, value, limit)   {
         const params = new HttpParams()
             .set('limit', limit);
-        return this.http.get<string []>(`${API_URL}/clients/accounts/${value}`, {params});
+        return this.http.get<string []>(`${API_URL}/clients/${bin}/accounts/${value}`, {params});
     }
 
 }

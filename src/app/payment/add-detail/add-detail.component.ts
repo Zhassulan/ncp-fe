@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {PaymentService} from '../payment.service';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {Detail} from '../model/detail';
 import {MSG, msisdnLength, PaymentStatus} from '../../settings';
@@ -36,10 +36,13 @@ export class AddDetailComponent implements OnInit, AfterViewInit {
                 ])
         }
     );
+    paymentSubscription : Subscription;
+    payment;
 
     constructor(private payService: PaymentService,
                 private notifSerice: NotificationsService,
                 private clntDataService: ClientDataService) {
+        this.paymentSubscription = this.payService.payAnnounced$.subscribe(payment => this.payment = payment);
         this.filteredPhones = this.phoneControl.valueChanges
             .pipe(startWith(''),
                 map(state => state ? this._filterPhone(state) : this.phones.slice()));
@@ -106,7 +109,7 @@ export class AddDetailComponent implements OnInit, AfterViewInit {
     phoneChanged() {
         if (!this.payService.canLoadPhones() || this.phoneControl.value.trim().length == 0) return;
         this.clearAccount();
-        this.clntDataService.phones(this.phoneControl.value, 10).subscribe(
+        this.clntDataService.phones(this.payment.rnnSender, this.phoneControl.value, 10).subscribe(
             data => this.phones = data,
             error => this.notifSerice.warn('Ошибка поиска номеров'));
     }
@@ -114,7 +117,7 @@ export class AddDetailComponent implements OnInit, AfterViewInit {
     accountChanged() {
         if (!this.payService.canLoadPhones() || this.accountControl.value.trim().length == 0) return;
         this.clearPhone();
-        this.clntDataService.accounts(this.accountControl.value, 10).subscribe(
+        this.clntDataService.accounts(this.payment.rnnSender, this.accountControl.value, 10).subscribe(
             data => this.accounts = data,
             error => this.notifSerice.warn('Ошибка поиска счетов'));
     }
@@ -127,10 +130,11 @@ export class AddDetailComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.clntDataService.accounts(null, 10).subscribe(
+        this.payService.announcePayment();
+        this.clntDataService.accounts(this.payment.rnnSender,null, 10).subscribe(
             data => this.accounts = data,
             error => this.notifSerice.warn('Ошибка поиска счетов'));
-        this.clntDataService.phones(null, 10).subscribe(
+        this.clntDataService.phones(this.payment.rnnSender,null, 10).subscribe(
             data => this.phones = data,
             error => this.notifSerice.warn('Ошибка поиска номеров'));
     }

@@ -17,15 +17,11 @@
                 </div>
                 <div class="item-c" *ngIf="payment">
                     <app-payment-info [payment]="payment"></app-payment-info>
-                   <!-- <app-add-detail [msisdns$]="msisdns$" [accounts$]="accounts$"></app-add-detail> -->
-                    <app-add-detail></app-add-detail>
+                    <app-add-detail ></app-add-detail>
                 </div>
                 <div class="item-d" *ngIf="payment">
                     <app-details></app-details>
                 </div>
-                <!--<div class="item-e">footer</div>
-                <div class="item-footer1">footer1</div>
-                -->
             </div>
         </mat-card>
     </div>
