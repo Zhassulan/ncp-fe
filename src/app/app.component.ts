@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
 
     constructor(private titleService: Title,
                 private appService: AppService) {
-        this.titleService.setTitle(appTitle);
+        this.titleService.setTitle('NCP UI');
     }
 
     ngOnInit(): void {
