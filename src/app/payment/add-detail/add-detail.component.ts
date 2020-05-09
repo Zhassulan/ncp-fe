@@ -76,7 +76,7 @@ export class AddDetailComponent implements OnInit, OnDestroy {
         let detail = new Detail();
         detail.paymentId = this.payService.payment.id;
         this.phoneControl.value == '' || this.phoneControl.value == null ? detail.msisdn = null : detail.msisdn = this.phoneControl.value;
-        this.accountControl.value == '' || this.accountControl.value == null ? detail.account = null : detail.account = this.accountControl.value;
+        this.accountControl.value == '' || this.accountControl.value == null ? detail.account = null : detail.account = Number(this.accountControl.value);
         let sum = this.sumControl.value;
         sum = sum.replace(',', '.');
         sum = sum.trim();
