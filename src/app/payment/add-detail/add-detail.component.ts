@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {PaymentService} from '../payment.service';
 import {Observable, Subscription} from 'rxjs';
@@ -13,7 +13,7 @@ import {ClientDataService} from '../../data/client-data-service';
     templateUrl: './add-detail.component.html',
     styleUrls: ['./add-detail.component.css']
 })
-export class AddDetailComponent implements OnInit, AfterViewInit {
+export class AddDetailComponent implements OnInit, OnDestroy {
 
     phones: string[] = [];
     accounts: string[] = [];
@@ -36,13 +36,22 @@ export class AddDetailComponent implements OnInit, AfterViewInit {
                 ])
         }
     );
-    paymentSubscription : Subscription;
-    payment;
+    @Input() bin;
+    subscription: Subscription;
 
     constructor(private payService: PaymentService,
                 private notifSerice: NotificationsService,
                 private clntDataService: ClientDataService) {
-        this.paymentSubscription = this.payService.payAnnounced$.subscribe(payment => this.payment = payment);
+        this.subscription = this.payService.propsAnnounced$.subscribe(props => {
+            if (props.count > 0) {
+                this.clntDataService.accounts(this.bin, null, 10).subscribe(
+                    data => this.accounts = data,
+                    error => this.notifSerice.warn('Ошибка поиска счетов'));
+                this.clntDataService.phones(this.bin, null, 10).subscribe(
+                    data => this.phones = data,
+                    error => this.notifSerice.warn('Ошибка поиска номеров'));
+            }
+        });
         this.filteredPhones = this.phoneControl.valueChanges
             .pipe(startWith(''),
                 map(state => state ? this._filterPhone(state) : this.phones.slice()));
@@ -109,7 +118,7 @@ export class AddDetailComponent implements OnInit, AfterViewInit {
     phoneChanged() {
         if (!this.payService.canLoadPhones() || this.phoneControl.value.trim().length == 0) return;
         this.clearAccount();
-        this.clntDataService.phones(this.payment.rnnSender, this.phoneControl.value, 10).subscribe(
+        this.clntDataService.phones(this.bin, this.phoneControl.value, 10).subscribe(
             data => this.phones = data,
             error => this.notifSerice.warn('Ошибка поиска номеров'));
     }
@@ -117,7 +126,7 @@ export class AddDetailComponent implements OnInit, AfterViewInit {
     accountChanged() {
         if (!this.payService.canLoadPhones() || this.accountControl.value.trim().length == 0) return;
         this.clearPhone();
-        this.clntDataService.accounts(this.payment.rnnSender, this.accountControl.value, 10).subscribe(
+        this.clntDataService.accounts(this.bin, this.accountControl.value, 10).subscribe(
             data => this.accounts = data,
             error => this.notifSerice.warn('Ошибка поиска счетов'));
     }
@@ -129,22 +138,16 @@ export class AddDetailComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
     }
 
-    ngAfterViewInit(): void {
-        this.payService.announcePayment();
-        this.clntDataService.accounts(this.payment.rnnSender,null, 10).subscribe(
-            data => this.accounts = data,
-            error => this.notifSerice.warn('Ошибка поиска счетов'));
-        this.clntDataService.phones(this.payment.rnnSender,null, 10).subscribe(
-            data => this.phones = data,
-            error => this.notifSerice.warn('Ошибка поиска номеров'));
-    }
-
     private _filterPhone(value: string): string [] {
         return this.phones.filter(item => item.indexOf(value) === 0);
     }
 
     private _filterAccount(value: string): string [] {
         return this.accounts.filter(item => item.indexOf(value) === 0);
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
 }

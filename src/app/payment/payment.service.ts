@@ -7,12 +7,24 @@ import {ClientDataService} from '../data/client-data-service';
 import {PayDataService} from '../data/pay-data-service';
 import {RouterService} from '../router/router.service';
 
+class Props {
+
+    count: number;
+
+    constructor(count: number) {
+        this.count = count;
+    }
+}
+
 @Injectable()
 export class PaymentService {
 
     payment;
     paymentObs = new Subject<Payment>();
     payAnnounced$ = this.paymentObs.asObservable();
+    props = new Props(0);
+    propsObs = new Subject<Props>();
+    propsAnnounced$ = this.propsObs.asObservable();
 
     constructor(private routerService: RouterService,
                 private clientDataService: ClientDataService,
@@ -53,6 +65,10 @@ export class PaymentService {
 
     announcePayment() {
         this.paymentObs.next(this.payment);
+    }
+
+    announceProps() {
+        this.propsObs.next(this.props);
     }
 
     json_pretty(data) {

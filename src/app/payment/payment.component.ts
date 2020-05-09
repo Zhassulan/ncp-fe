@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
 import {MSG, PaymentMenuItems} from '../settings';
@@ -105,10 +105,10 @@ export class PaymentComponent implements OnInit, OnDestroy {
     }
 
     props() {
-        this.subscription = this.clntDataService.props().subscribe(
+        this.subscription = this.clntDataService.props(this.payment.rnnSender).subscribe(
             data => {
-                /*this.msisdns = data.filter(i => i.msisdn).map(i => i.msisdn);
-                this.accounts = data.filter(i => i.account).map(i => String(i.account));*/
+                this.payService.props.count = data;
+                this.payService.announceProps();
                 console.log(`Загружено ${data} номеров/счетов`);
             },
             error => {
@@ -217,5 +217,6 @@ export class PaymentComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
     }
+
 
 }
