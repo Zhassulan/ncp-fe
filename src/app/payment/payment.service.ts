@@ -143,6 +143,7 @@ export class PaymentService {
         return (this.payment.status == PaymentStatus.NEW ||
             this.payment.status == PaymentStatus.ERR ||
             this.payment.status == PaymentStatus.TRANSIT_CANCELLED) &&
+            this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0 &&
             this.detailsSum() == this.payment.sum;
     }
 
