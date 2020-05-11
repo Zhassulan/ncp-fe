@@ -92,6 +92,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     sum() {
+        console.log('phh');
         return this.payService.detailsSum();
     }
 
