@@ -1,6 +1,7 @@
 import {Title} from '@angular/platform-browser';
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, isDevMode, OnInit, ViewEncapsulation} from '@angular/core';
 import {AppService} from './app.service';
+import {environment} from '../environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -10,11 +11,17 @@ import {AppService} from './app.service';
 })
 export class AppComponent implements OnInit {
 
-    constructor(private appService: AppService) {
+    constructor(private titleService: Title,
+        private appService: AppService) {
     }
 
     ngOnInit(): void {
         this.appService.checkVer();
+        this.setTitle(isDevMode() ? `Тест ${environment.apiUrl}` : 'NCP');
+    }
+
+    public setTitle( newTitle: string) {
+        this.titleService.setTitle( newTitle );
     }
 
 }

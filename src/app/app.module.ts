@@ -1,4 +1,4 @@
-import {BrowserModule} from '@angular/platform-browser';
+import {BrowserModule, Title} from '@angular/platform-browser';
 import {LOCALE_ID, NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {AUTH_PROVIDERS, AuthService} from './auth/auth.service';
@@ -139,7 +139,8 @@ registerLocaleData(localeRu, 'ru');
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
             multi: true
-        }
+        },
+        Title
     ],
     bootstrap: [AppComponent]
 })
