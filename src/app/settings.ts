@@ -76,7 +76,8 @@ export enum locStorItems {
     token = 'token',
     user = 'username',
     ver = 'ncp_version',
-    ver_test = 'ncp_version_test'
+    ver_test = 'ncp_version_test',
+    updated = 'updated'
 }
 
 /**

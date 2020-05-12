@@ -14,11 +14,10 @@ export class ClientDataService {
 
     constructor(private http: HttpClient) { }
 
-    props(bin)   {
-        /*const params = new HttpParams()
-            .set('bin', bin)
-            .set('limit', '1000');*/
-        return this.http.get<number>(`${API_URL}/clients/${bin}/props`);
+    props(bin, profileId)   {
+        const params = new HttpParams()
+            .set('profileId', profileId);
+        return this.http.get<number>(`${API_URL}/clients/${bin}/props`, {params});
     }
 
     all() {

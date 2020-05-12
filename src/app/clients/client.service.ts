@@ -36,7 +36,7 @@ export class ClientService {
     }
 
     payments(id, start?, end?) {
-        console.log(`'Загрузка данных за период ${Utils.millsDate(start)} - ${Utils.millsDate(end)}`);
+        console.log(`'Загрузка данных за период ${Utils.millsToDateStr(start)} - ${Utils.millsToDateStr(end)}`);
         this.appService.setProgress(true);
         if (start && end) {
             this.clntDataService.paymentsRange(id, start, end).subscribe(

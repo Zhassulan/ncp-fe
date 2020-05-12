@@ -83,7 +83,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
             this.dateRangeComponent.end = '2019-12-31T23:59:59.999';
         }
         this.appService.setProgress(true);
-        console.log(`Загрузка данных за период ${Utils.millsDate(this.dateRangeComponent.start)} - ${Utils.millsDate(this.dateRangeComponent.end)}`);
+        console.log(`Загрузка данных за период ${Utils.millsToDateStr(this.dateRangeComponent.start)} - ${Utils.millsToDateStr(this.dateRangeComponent.end)}`);
         this.subscription = this.payDataService.all(this.dateRangeComponent.start, this.dateRangeComponent.end).subscribe(
             data => {
                 this.initStatusRu(data);

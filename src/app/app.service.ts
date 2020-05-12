@@ -4,6 +4,7 @@ import {locStorItems, MSG} from './settings';
 import {NotificationsService} from 'angular2-notifications';
 import {AppDataService} from './data/app-data-service';
 import {Router} from '@angular/router';
+import {Utils} from './utils';
 
 @Injectable({
     providedIn: 'root',
@@ -27,10 +28,12 @@ export class AppService {
         this.appDataService.ver().subscribe(data => {
             if (localStorage.getItem(storVal) == null) {
                 localStorage.setItem(storVal, data.ver.toString());
+                localStorage.setItem(locStorItems.updated, Utils.millsToDateStr(Date.now()));
                 location.reload();
             } else {
                 if (data.ver > Number.parseInt(localStorage.getItem(storVal))) {
                     localStorage.setItem(storVal, data.ver.toString());
+                    localStorage.setItem(locStorItems.updated, Utils.millsToDateStr(Date.now()));
                     location.reload();
                 }
             }

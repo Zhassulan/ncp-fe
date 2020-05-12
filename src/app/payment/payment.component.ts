@@ -105,7 +105,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     }
 
     private props() {
-        this.subscription = this.clntDataService.props(this.payment.rnnSender).subscribe(
+        this.subscription = this.clntDataService.props(this.payment.rnnSender, this.payment.profileId).subscribe(
             data => {
                 this.payService.props.count = data;
                 this.payService.announceProps();

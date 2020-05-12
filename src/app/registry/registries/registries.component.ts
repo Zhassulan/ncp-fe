@@ -79,7 +79,7 @@ export class RegistriesComponent implements OnInit, OnDestroy {
 
     range() {
         this.appService.setProgress(true);
-        console.log(`'Загрузка данных за период ${Utils.millsDate(this.dateRangeComponent.start)} - ${Utils.millsDate(this.dateRangeComponent.end)}`);
+        console.log(`'Загрузка данных за период ${Utils.millsToDateStr(this.dateRangeComponent.start)} - ${Utils.millsToDateStr(this.dateRangeComponent.end)}`);
         this.subscription = this.registryService.range(this.dateRangeComponent.start, this.dateRangeComponent.end, this.binFormCtl.value).subscribe(
             data => {
                 this.dataSource.data = data;
