@@ -43,13 +43,13 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     public detailTableColumnsDisplay = PaymentDetailTableColumnsDisplay;
     @ViewChild(MatPaginator, {static: true}) public paginator: MatPaginator;
     @ViewChild(MatSort, {static: true}) public sort: MatSort;
-    subPayment$: Subscription;
+    subPayment: Subscription;
 
     constructor(private payService: PaymentService) {
     }
 
     ngOnInit(): void {
-        this.subPayment$ = this.payService.payAnnounced$.subscribe(
+        this.subPayment = this.payService.payAnnounced$.subscribe(
             payment => {
                 this.detailsDS.sort = this.sort;
                 this.detailsDS.paginator = this.paginator;
@@ -78,7 +78,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy(): void {
-        this.subPayment$.unsubscribe();
+        this.subPayment.unsubscribe();
     }
 
     ngAfterViewInit(): void {
