@@ -11,13 +11,13 @@
                             </div>
                         </div>
                         <div class="item-top2">
-                            <app-payment-menu (selectedItem)="menuOnSelected($event)"></app-payment-menu>
+                            <app-payment-menu [payment]="payment" (selectedMenuItem)="menuOnSelected($event)"></app-payment-menu>
                         </div>
                     </div>
                 </div>
                 <div class="item-c" *ngIf="payment">
                     <app-payment-info [payment]="payment"></app-payment-info>
-                    <app-add-detail [bin]="payment.rnnSender"></app-add-detail>
+                    <app-add-detail [payment]="payment"></app-add-detail>
                 </div>
                 <div class="item-d" *ngIf="payment">
                     <app-details></app-details>

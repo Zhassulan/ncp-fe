@@ -1,12 +1,12 @@
-import {Component, OnInit, ViewChild, OnDestroy, AfterViewInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-import {Subscription} from 'rxjs';
 import {PaymentService} from '../payment.service';
 import {MatSort} from '@angular/material/sort';
 import {Detail} from '../model/detail';
-import {PaymentStatus, TOOLTIPS} from '../../settings';
+import {PaymentStatus} from '../../settings';
+import {Subscription} from 'rxjs';
 
 const PaymentDetailsTableColumns = [
     'num',
@@ -37,38 +37,24 @@ enum PaymentDetailTableColumnsDisplay {
 })
 export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
 
-    PaymentStatus = PaymentStatus;
-    tooltips = TOOLTIPS;
-    dataSource = new MatTableDataSource<Detail>();
-    displayedColumns: string[] = PaymentDetailsTableColumns;
-    detailTableColumnsDisplay = PaymentDetailTableColumnsDisplay;
-    subscription: Subscription;
-    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-    @ViewChild(MatSort, {static: true}) sort: MatSort;
+    public PaymentStatus = PaymentStatus;
+    public detailsDS = new MatTableDataSource<Detail>();
+    public displayedColumns: string[] = PaymentDetailsTableColumns;
+    public detailTableColumnsDisplay = PaymentDetailTableColumnsDisplay;
+    @ViewChild(MatPaginator, {static: true}) public paginator: MatPaginator;
+    @ViewChild(MatSort, {static: true}) public sort: MatSort;
+    subPayment$: Subscription;
 
     constructor(private payService: PaymentService) {
-        this.subscription = this.payService.payAnnounced$.subscribe(
-            payment => {
-                this.dataSource.data = payment.details;
-                this.setPaginator();
-            });
     }
 
     ngOnInit(): void {
-        //this.payService.announcePayment();
-    }
-
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
-    }
-
-    get payment() {
-        return this.payService.payment;
-    }
-
-    setPaginator() {
-        this.dataSource.paginator = this.paginator;
-        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+        this.subPayment$ = this.payService.payAnnounced$.subscribe(
+            payment => {
+                this.detailsDS.sort = this.sort;
+                this.detailsDS.paginator = this.paginator;
+                this.detailsDS.data = payment.details;
+            });
     }
 
     del(row) {
@@ -83,16 +69,20 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.payService.canDelDetail(detail);
     }
 
-    ngAfterViewInit(): void {
-        this.payService.announcePayment();
-    }
-
     canDelSome() {
         return this.payService.canDelSome();
     }
 
     sum() {
         return this.payService.detailsSum();
+    }
+
+    ngOnDestroy(): void {
+        this.subPayment$.unsubscribe();
+    }
+
+    ngAfterViewInit(): void {
+        this.payService.announcePayment();
     }
 
 }

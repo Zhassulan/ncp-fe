@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
-import {PaymentStatus} from '../settings';
+import {MSG, PaymentStatus} from '../settings';
 import {Observable, Subject} from 'rxjs';
 import {Payment} from './model/payment';
 import {Detail} from './model/detail';
 import {ClientDataService} from '../data/client-data-service';
 import {PayDataService} from '../data/pay-data-service';
 import {RouterService} from '../router/router.service';
+import {NotificationsService} from 'angular2-notifications';
 
 class Props {
 
@@ -27,8 +28,9 @@ export class PaymentService {
     propsAnnounced$ = this.propsObs.asObservable();
 
     constructor(private routerService: RouterService,
-                private clientDataService: ClientDataService,
-                private payDataService: PayDataService) {
+                private clntDataService: ClientDataService,
+                private payDataService: PayDataService,
+                private notifSerice: NotificationsService) {
     }
 
     get routerRegistryItems() {
@@ -53,7 +55,25 @@ export class PaymentService {
         this.announcePayment();
     }
 
-    addDetail(detail: Detail) {
+    /*addDetail(detail: Detail) {
+        this.payment.details.push(detail);
+        this.announcePayment();
+    }*/
+
+    addDetail(phone, account, sum) {
+        let detail = new Detail();
+        detail.paymentId = this.payment.id;
+        phone == '' || phone == null ? detail.msisdn = null : detail.msisdn = phone;
+        account == '' || account == null ? detail.account = null : detail.account = Number(account);
+        sum = sum.replace(',', '.');
+        sum = sum.trim();
+        sum = sum.replace(/[\r\n\t\f\v ]/, '');
+        if (isNaN(Number(sum))) {
+            this.notifSerice.warn(MSG.inputNumber);
+            return;
+        }
+        detail.sum = Number(sum);
+        detail.status = PaymentStatus.NEW;
         this.payment.details.push(detail);
         this.announcePayment();
     }
@@ -147,12 +167,12 @@ export class PaymentService {
             this.detailsSum() == this.payment.sum;
     }
 
-    canLoadPhones() {
-        return this.payment ? this.payment.status == PaymentStatus.NEW ||
-            this.payment.status == PaymentStatus.ERR ||
-            this.payment.status == PaymentStatus.TRANSIT ||
-            this.payment.status == PaymentStatus.TRANSIT_CANCELLED ||
-            this.payment.status == PaymentStatus.TRANSIT_ERR : false;
+    canLoadPhones(payment) {
+        return payment ? payment.status == PaymentStatus.NEW ||
+            payment.status == PaymentStatus.ERR ||
+            payment.status == PaymentStatus.TRANSIT ||
+            payment.status == PaymentStatus.TRANSIT_CANCELLED ||
+            payment.status == PaymentStatus.TRANSIT_ERR : false;
     }
 
     canAddDetail() {
@@ -171,10 +191,6 @@ export class PaymentService {
             this.payment.status == PaymentStatus.TRANSIT_ERR) &&
             this.payment.details.filter(i => i.status == PaymentStatus.NEW).length > 0 &&
             this.detailsSum() == this.payment.sum;
-    }
-
-    canDelAll() {
-
     }
 
     importRegistryData(rawdata) {
@@ -251,6 +267,10 @@ export class PaymentService {
 
     detailsSum() {
         return this.payment.details.reduce((total, detail) => total + Number(detail.sum), 0);
+    }
+
+    sumByDetails(details) {
+        return details.reduce((total, detail) => total + Number(detail.sum), 0);
     }
 
     canDelSome() {

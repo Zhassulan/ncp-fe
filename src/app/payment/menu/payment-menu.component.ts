@@ -11,22 +11,17 @@ import {Subscription} from 'rxjs';
 export class PaymentMenuComponent implements OnInit {
 
     paymentMenuItems = PaymentMenuItems;
-    @Output() selectedItem = new EventEmitter<number>();
-    subscription: Subscription;
-    payment;
+    @Output() selectedMenuItem = new EventEmitter<number>();
+    @Input() payment;
 
     constructor(private paymentService: PaymentService) {
-        this.subscription = this.paymentService.payAnnounced$.subscribe(
-            payment => {
-                this.payment = payment;
-            });
     }
 
     ngOnInit() {
     }
 
     select(item: number) {
-        this.selectedItem.emit(item);
+        this.selectedMenuItem.emit(item);
     }
 
     isBlocked() {
@@ -34,11 +29,7 @@ export class PaymentMenuComponent implements OnInit {
     }
 
     detailsSum() {
-        return this.paymentService.detailsSum();
-    }
-
-    paymentSum() {
-        return this.paymentService.payment.sum;
+        return this.paymentService.sumByDetails(this.payment.details);
     }
 
     canPasteRegistryFromBuffer() {

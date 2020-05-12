@@ -36,18 +36,19 @@ export class AddDetailComponent implements OnInit, OnDestroy {
                 ])
         }
     );
-    @Input() bin;
-    subscription: Subscription;
+    @Input() payment;
+    isPropsLoaded$: Subscription;
 
     constructor(private payService: PaymentService,
                 private notifSerice: NotificationsService,
                 private clntDataService: ClientDataService) {
-        this.subscription = this.payService.propsAnnounced$.subscribe(props => {
+        this.isPropsLoaded$ = this.payService.propsAnnounced$.subscribe(props => {
+            // if props loaded, fill once accounts and phones for the first time
             if (props.count > 0) {
-                this.clntDataService.accounts(this.bin, null, 10).subscribe(
+                this.clntDataService.accounts(this.payment.rnnSender, null, 10).subscribe(
                     data => this.accounts = data,
                     error => this.notifSerice.warn('Ошибка поиска счетов'));
-                this.clntDataService.phones(this.bin, null, 10).subscribe(
+                this.clntDataService.phones(this.payment.rnnSender, null, 10).subscribe(
                     data => this.phones = data,
                     error => this.notifSerice.warn('Ошибка поиска номеров'));
             }
@@ -73,21 +74,7 @@ export class AddDetailComponent implements OnInit, OnDestroy {
     }
 
     addDetail() {
-        let detail = new Detail();
-        detail.paymentId = this.payService.payment.id;
-        this.phoneControl.value == '' || this.phoneControl.value == null ? detail.msisdn = null : detail.msisdn = this.phoneControl.value;
-        this.accountControl.value == '' || this.accountControl.value == null ? detail.account = null : detail.account = Number(this.accountControl.value);
-        let sum = this.sumControl.value;
-        sum = sum.replace(',', '.');
-        sum = sum.trim();
-        sum = sum.replace(/[\r\n\t\f\v ]/, '');
-        if (isNaN(Number(sum))) {
-            this.notifSerice.warn(MSG.inputNumber);
-            return;
-        }
-        detail.sum = Number(sum);
-        detail.status = PaymentStatus.NEW;
-        this.payService.addDetail(detail);
+        this.payService.addDetail(this.phoneControl.value, this.accountControl.value, this.sumControl.value);
         this.clearFields();
     }
 
@@ -116,17 +103,17 @@ export class AddDetailComponent implements OnInit, OnDestroy {
     }
 
     phoneChanged() {
-        if (!this.payService.canLoadPhones() || this.phoneControl.value.trim().length == 0) return;
+        if (!this.payService.canLoadPhones(this.payment) || this.phoneControl.value.trim().length == 0) return;
         this.clearAccount();
-        this.clntDataService.phones(this.bin, this.phoneControl.value, 10).subscribe(
+        this.clntDataService.phones(this.payment.rnnSender, this.phoneControl.value, 10).subscribe(
             data => this.phones = data,
             error => this.notifSerice.warn('Ошибка поиска номеров'));
     }
 
     accountChanged() {
-        if (!this.payService.canLoadPhones() || this.accountControl.value.trim().length == 0) return;
+        if (!this.payService.canLoadPhones(this.payment) || this.accountControl.value.trim().length == 0) return;
         this.clearPhone();
-        this.clntDataService.accounts(this.bin, this.accountControl.value, 10).subscribe(
+        this.clntDataService.accounts(this.payment.rnnSender, this.accountControl.value, 10).subscribe(
             data => this.accounts = data,
             error => this.notifSerice.warn('Ошибка поиска счетов'));
     }
@@ -147,7 +134,7 @@ export class AddDetailComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        this.isPropsLoaded$.unsubscribe();
     }
 
 }

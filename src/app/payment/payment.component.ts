@@ -13,6 +13,7 @@ import {PayDataService} from '../data/pay-data-service';
 import {ClientDataService} from '../data/client-data-service';
 import {Subscription} from 'rxjs';
 import {DlgRegistryBufferComponent} from './add-registry-modal/dlg-registry-buffer.component';
+import {Payment} from './model/payment';
 
 export interface RegistryDialogData {
     registry: string;
@@ -29,15 +30,13 @@ export interface CalendarDialogData {
 })
 export class PaymentComponent implements OnInit, OnDestroy {
 
-    @ViewChild(DetailsComponent, {static: true}) childDetailsComponent: DetailsComponent;
-    paymentMenuItems = PaymentMenuItems;
-    dialogRef;
-    registry: string;
-    deferDate = new Date();
-    @ViewChild(MatSort, {static: true}) sort: MatSort;
-    msisdns: String [] = [];
-    accounts: String [] = [];
+    payment: Payment;
+    private paymentMenuItems = PaymentMenuItems;
+    private dialogRef;
+    private registry: string;
+    private deferDate = new Date();
     private subscription: Subscription;
+    @ViewChild(DetailsComponent, {static: true}) private childDetailsComponent: DetailsComponent;
 
     constructor(public payService: PaymentService,
                 private notifService: NotificationsService,
@@ -48,16 +47,12 @@ export class PaymentComponent implements OnInit, OnDestroy {
                 private  clntDataService: ClientDataService) {
     }
 
-    get payment() {
-        return this.payService.payment;
-    }
-
     ngOnInit() {
         this.load(this.route.snapshot.params['id']);
     }
 
-    menuOnSelected(selected: number) {
-        switch (selected) {
+    public menuOnSelected(selectedMenuItem: number) {
+        switch (selectedMenuItem) {
             case this.paymentMenuItems.LOAD_EQUIPMENT: {
                 this.dlgImportEquipment();
             }
@@ -86,12 +81,13 @@ export class PaymentComponent implements OnInit, OnDestroy {
         }
     }
 
-    load(id) {
+    private load(id) {
         this.appService.setProgress(true);
         this.subscription = this.payDataService.findById(id).subscribe(
             data => {
+                this.payment = data;
                 this.payService.setPayment(data);
-                if (this.canLoadPhones()) this.props();
+                if (this.canLoadPhones(data)) this.props();
             },
             error => {
                 this.appService.setProgress(false);
@@ -100,11 +96,15 @@ export class PaymentComponent implements OnInit, OnDestroy {
             () => this.appService.setProgress(false));
     }
 
-    canLoadPhones() {
+   /* canLoadPhones() {
         return this.payService.canLoadPhones();
+    }*/
+
+    private canLoadPhones(payment) {
+        return this.payService.canLoadPhones(payment);
     }
 
-    props() {
+    private props() {
         this.subscription = this.clntDataService.props(this.payment.rnnSender).subscribe(
             data => {
                 this.payService.props.count = data;
@@ -118,14 +118,14 @@ export class PaymentComponent implements OnInit, OnDestroy {
             () => this.appService.setProgress(false));
     }
 
-    dlgImportEquipment() {
+    private dlgImportEquipment() {
         this.dialogRef = this.dlg.open(DlgImportRouterRegistryComponent, {
             width: '40%',
             height: '30%',
             disableClose: true});
     }
 
-    dlgDistribute() {
+    private dlgDistribute() {
         this.appService.setProgress(true);
         this.subscription = this.payDataService.distribute(this.payment.id, this.payment.details).subscribe(data => {
             this.payService.setPayment(data);
@@ -136,7 +136,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         }, () => this.appService.setProgress(false));
     }
 
-    dlgDelTransit() {
+    private dlgDelTransit() {
         this.appService.setProgress(true);
         this.subscription = this.payDataService.transitDel(this.payment.id).subscribe(
             data => {
@@ -150,7 +150,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
             () => this.appService.setProgress(false));
     }
 
-    dlgTransit() {
+    private dlgTransit() {
         this.appService.setProgress(true);
         this.subscription = this.payDataService.transit(this.payment.id).subscribe(data => {
                 this.payService.setPayment(data);
@@ -163,7 +163,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
             () => this.appService.setProgress(false));
     }
 
-    dlgImportRegistry() {
+    private dlgImportRegistry() {
         const dialogRef = this.dlg.open(DlgRegistryBufferComponent, {
             width: '50%',
             data: {registry: this.registry},
@@ -180,7 +180,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         });
     }
 
-    dlgDefer() {
+    private dlgDefer() {
         const dialogRef = this.dlg.open(DlgDeferComponent, {
             width: '30%',
             data: {date: this.deferDate},
