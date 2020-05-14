@@ -193,6 +193,11 @@ export class PaymentService {
             this.detailsSum() == this.payment.sum;
     }
 
+    canDel() {
+        return this.payment ? this.payment.status == PaymentStatus.DISTRIBUTED ||
+            this.payment.status == PaymentStatus.TRANSIT_DISTRIBUTED: false;
+    }
+
     importRegistryData(rawdata) {
         let details = [];
         let rows = rawdata.split('\n');

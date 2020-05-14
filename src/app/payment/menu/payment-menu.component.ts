@@ -56,4 +56,8 @@ export class PaymentMenuComponent implements OnInit {
         return this.paymentService.canDistribute();
     }
 
+    canDel() {
+        return this.paymentService.canDel();
+    }
+
 }

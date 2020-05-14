@@ -15,7 +15,7 @@ import {Subscription} from 'rxjs';
     styleUrls: ['./dlg-login.component.css']
 })
 
-export class DlgLoginComponent implements OnInit, OnDestroy {
+export class DlgLoginComponent implements OnInit {
 
     userName: string;
     userPassword: string;
@@ -63,10 +63,6 @@ export class DlgLoginComponent implements OnInit, OnDestroy {
                     this.notifService.error(MSG.accessDenied);
 
             });
-    }
-
-    ngOnDestroy(): void {
-        this.subscription.unsubscribe();
     }
 
 }

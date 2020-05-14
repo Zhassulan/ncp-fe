@@ -21,5 +21,8 @@
         <button mat-menu-item [disabled]="!canDistribute()" (click)="select(paymentMenuItems.DISTRIBUTE)">
             <span>Разнести</span>
         </button>
+        <button mat-menu-item [disabled]="!canDel()" (click)="select(paymentMenuItems.DEL)">
+            <span>Отменить</span>
+        </button>
     </mat-menu>
 </div>
