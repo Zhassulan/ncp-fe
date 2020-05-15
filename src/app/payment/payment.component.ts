@@ -78,7 +78,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
             }
                 break;
             case this.paymentMenuItems.DEL: {
-                this.dlgDelete();
+                this.dlgDel();
             }
                 break;
             default:
@@ -167,11 +167,11 @@ export class PaymentComponent implements OnInit, OnDestroy {
             () => this.appService.setProgress(false));
     }
 
-    private dlgDelete() {
+    private dlgDel() {
         this.appService.setProgress(true);
-        this.subscription = this.payDataService.transit(this.payment.id).subscribe(data => {
+        this.subscription = this.payDataService.del(this.payment.id).subscribe(data => {
                 this.payService.setPayment(data);
-                this.notifService.info(MSG.transitSuccess);
+                this.notifService.info(MSG.delSuccess);
             },
             error => {
                 this.notifService.error(error.error.errm);

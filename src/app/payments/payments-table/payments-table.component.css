@@ -52,6 +52,10 @@
     background-color: #eeeeee;
 }
 
-.row_highlight {
+.row_highlight_green {
     background: #ccffe6;
+}
+
+.row_highlight_red {
+    background: #ffd8d5;
 }

@@ -1,4 +1,4 @@
-<table mat-table matSort [dataSource]="detailsDS" >
+<table mat-table matSort [dataSource]="detailsDS">
 
     <ng-container matColumnDef="num">
         <th mat-header-cell *matHeaderCellDef> {{ detailTableColumnsDisplay.num }}</th>
@@ -36,13 +36,13 @@
         <td mat-cell *matCellDef="let detail">
             <button mat-mini-fab disabled
                     *ngIf="detail.status == PaymentStatus.DISTRIBUTED ||
-                    detail.status == PaymentStatus.TRANSIT_DISTRIBUTED ">
+                    detail.status == PaymentStatus.TRANSIT_DISTRIBUTED ||
+                    detail.status == PaymentStatus.DELETED">
                 <mat-icon>done</mat-icon>
             </button>
             <button mat-mini-fab
                     *ngIf="detail.status == PaymentStatus.ERR ||
-                    detail.status == PaymentStatus.TRANSIT_ERR ||
-                    detail.status == PaymentStatus.DELETED" matTooltip="{{ detail.err }}">
+                    detail.status == PaymentStatus.TRANSIT_ERR" matTooltip="{{ detail.err }}">
                 <mat-icon>error</mat-icon>
             </button>
         </td>

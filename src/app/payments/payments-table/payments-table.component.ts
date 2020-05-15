@@ -14,6 +14,7 @@ import {Subscription} from 'rxjs';
 import {PaymentService} from '../../payment/payment.service';
 import {Utils} from '../../utils';
 import {MobipayDataService} from '../../data/mobipay-data.service';
+import * as HttpStatus from 'http-status-codes';
 
 @Component({
     selector: 'app-payments-table',
@@ -91,10 +92,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
             },
             error => {
                 this.appService.setProgress(false);
-                if (error.status) {
-                    if (error.status == 503 || error.status == 502)
-                        this.notif.error(MSG.serviceErr);
-                } else this.notif.error(error);
+                this.notif.error(error);
             },
             () => this.appService.setProgress(false));
     }
@@ -133,7 +131,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
                 this.notif.info(MSG.mobipayChanged);
             },
             error => {
-                error.status == 403 ? this.notif.warn(MSG.accessDenied) : this.notif.warn(error.error.errm);
+                error.status == HttpStatus.FORBIDDEN ? this.notif.warn(MSG.accessDenied) : this.notif.warn(error.error.errm);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));

@@ -27,7 +27,7 @@
     "@types/jasmine": "2.8.8",
     "@types/jasminewd2": "2.0.3",
     "angular-crumbs": "^3.0.1",
-    "angular2-notifications": "^2.0.0",
+    "angular2-notifications": "^9.0.0",
     "backoff-rxjs": "^6.3.3",
     "core-js": "^2.6.11",
     "file-saver": "^2.0.2",

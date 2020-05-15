@@ -195,7 +195,7 @@ export class PaymentService {
 
     canDel() {
         return this.payment ? this.payment.status == PaymentStatus.DISTRIBUTED ||
-            this.payment.status == PaymentStatus.TRANSIT_DISTRIBUTED: false;
+            this.payment.status == PaymentStatus.TRANSIT: false;
     }
 
     importRegistryData(rawdata) {

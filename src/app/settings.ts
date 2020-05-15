@@ -68,8 +68,9 @@ export const enum MSG {
     updateCache = 'Есть обновления, обновите кеш страницы [Ctrl]+[F5]',
     noData = 'Данные не предоставлены',
     mobipayChanged = 'Mobipay платёж изменён',
-    serviceErr = 'Ошибка сервиса, повторите запрос',
-    inputNumber = 'Введите сумму'
+    serviceErr = 'Ошибка сервиса, повторите позже',
+    inputNumber = 'Введите сумму',
+    delSuccess = 'Платёж успешно удалён'
 }
 
 export enum locStorItems {
