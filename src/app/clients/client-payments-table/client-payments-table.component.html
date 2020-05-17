@@ -39,18 +39,25 @@
                     <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item [disabled]="!canMobipayDistribute(element)" (click)="distributeMobipay(element)" *ngIf="isMobipay == 'true'">
-                        <span>Разнести</span>
-                    </button>
-                    <button mat-menu-item (click)="menuOnRowOpenPayment(element)" *ngIf="isMobipay == 'false'">
-                        <span>Открыть</span>
-                    </button>
-                    <button mat-menu-item [disabled]="!canTransit(element)" (click)="menuOnRowToTransit(element)" *ngIf="isMobipay == 'false'">
-                        <span>На транзит</span>
-                    </button>
-                    <button mat-menu-item [disabled]="!canDelTransit(element)" (click)="menuOnRowDeleteTransit(element)" *ngIf="isMobipay == 'false'">
-                        <span>Удалить с транзита</span>
-                    </button>
+                    <div *ngIf="isMobipay == 'true'">
+                        <button mat-menu-item (click)="distributeMobipay(element)" *ngIf="isMobipay == 'true' && canMobipayDistribute(element)">
+                            <span>Разнести</span>
+                        </button>
+                        <button mat-menu-item (click)="distributeMobipay(element)" *ngIf="isMobipay == 'true' && canMobipayCancel(element)">
+                            <span>Отменить</span>
+                        </button>
+                    </div>
+                    <div *ngIf="isMobipay == 'false'">
+                        <button mat-menu-item (click)="menuOnRowOpenPayment(element)">
+                            <span>Открыть</span>
+                        </button>
+                        <button mat-menu-item [disabled]="!canTransit(element)" (click)="menuOnRowToTransit(element)">
+                            <span>На транзит</span>
+                        </button>
+                        <button mat-menu-item [disabled]="!canDelTransit(element)" (click)="menuOnRowDeleteTransit(element)">
+                            <span>Удалить с транзита</span>
+                        </button>
+                    </div>
                 </mat-menu>
             </td>
         </ng-container>

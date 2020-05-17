@@ -11,9 +11,10 @@ import {DlgDeferComponent} from './calendar-defer-modal/dlg-defer.component';
 import {MatSort} from '@angular/material/sort';
 import {PayDataService} from '../data/pay-data-service';
 import {ClientDataService} from '../data/client-data-service';
-import {Subscription} from 'rxjs';
+import {Subscription, throwError} from 'rxjs';
 import {DlgRegistryBufferComponent} from './add-registry-modal/dlg-registry-buffer.component';
 import {Payment} from './model/payment';
+import * as HttpStatus from 'http-status-codes';
 
 export interface RegistryDialogData {
     registry: string;
@@ -85,6 +86,14 @@ export class PaymentComponent implements OnInit, OnDestroy {
         }
     }
 
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+    }
+
+    /* canLoadPhones() {
+         return this.payService.canLoadPhones();
+     }*/
+
     private load(id) {
         this.appService.setProgress(true);
         this.subscription = this.payDataService.findById(id).subscribe(
@@ -99,10 +108,6 @@ export class PaymentComponent implements OnInit, OnDestroy {
             },
             () => this.appService.setProgress(false));
     }
-
-   /* canLoadPhones() {
-        return this.payService.canLoadPhones();
-    }*/
 
     private canLoadPhones(payment) {
         return this.payService.canLoadPhones(payment);
@@ -126,7 +131,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
         this.dialogRef = this.dlg.open(DlgImportRouterRegistryComponent, {
             width: '40%',
             height: '30%',
-            disableClose: true});
+            disableClose: true
+        });
     }
 
     private dlgDistribute() {
@@ -174,7 +180,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
                 this.notifService.info(MSG.delSuccess);
             },
             error => {
-                this.notifService.error(error.error.errm);
+                this.notifService.error(error.status == HttpStatus.FORBIDDEN ? MSG.accessDenied : error.error.errm);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));
@@ -184,7 +190,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
         const dialogRef = this.dlg.open(DlgRegistryBufferComponent, {
             width: '50%',
             data: {registry: this.registry},
-            disableClose: true});
+            disableClose: true
+        });
         dialogRef.afterClosed().subscribe(result => {
             if (result == null) return;
             if (result == '') return;
@@ -201,7 +208,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
         const dialogRef = this.dlg.open(DlgDeferComponent, {
             width: '30%',
             data: {date: this.deferDate},
-            disableClose: true});
+            disableClose: true
+        });
         dialogRef.afterClosed().subscribe(result => {
                 this.appService.setProgress(true);
                 let today = new Date();
@@ -229,10 +237,6 @@ export class PaymentComponent implements OnInit, OnDestroy {
                 );
             }
         );
-    }
-
-    ngOnDestroy(): void {
-        this.subscription.unsubscribe();
     }
 
 

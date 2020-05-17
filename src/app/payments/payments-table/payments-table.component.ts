@@ -48,7 +48,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
 
     constructor(private payDataService: PayDataService,
                 private appService: AppService,
-                private notif: NotificationsService,
+                private notifService: NotificationsService,
                 private router: Router,
                 private dialogService: DlgService,
                 private excelService: ExcelService,
@@ -92,7 +92,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
             },
             error => {
                 this.appService.setProgress(false);
-                this.notif.error(error);
+                this.notifService.error(error);
             },
             () => this.appService.setProgress(false));
     }
@@ -103,7 +103,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
         this.payDataService.json().subscribe(data => {
                 this.dataSource.data = data;
             }, error => {
-                this.notif.error(error.error.errm);
+                this.notifService.error(error.error.errm);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));
@@ -128,10 +128,10 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
         this.appService.setProgress(true);
         this.mobipayDataService.change(paymentRow.id, true).subscribe(
             data => {
-                this.notif.info(MSG.mobipayChanged);
+                this.notifService.info(MSG.mobipayChanged);
             },
             error => {
-                error.status == HttpStatus.FORBIDDEN ? this.notif.warn(MSG.accessDenied) : this.notif.warn(error.error.errm);
+                this.notifService.error(error.status == HttpStatus.FORBIDDEN ? MSG.accessDenied : error.error.errm);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));

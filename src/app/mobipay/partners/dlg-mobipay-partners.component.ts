@@ -24,12 +24,7 @@ export class DlgMobipayPartnersComponent implements OnInit, AfterViewInit, OnDes
                 private notifService: NotificationsService) {
     }
 
-    close(): void {
-        this.dlgRef.close();
-    }
-
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {    }
 
     ngAfterViewInit(): void {
         this.appService.setProgress(true);
@@ -47,8 +42,7 @@ export class DlgMobipayPartnersComponent implements OnInit, AfterViewInit, OnDes
     }
 
     onRowClick(row) {
-        console.log(row);
-        this.close();
+        this.dlgRef.close(row);
     }
 
 }

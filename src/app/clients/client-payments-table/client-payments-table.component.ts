@@ -96,11 +96,11 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
     }
 
     canMobipayDistribute(row) {
-        return row.status == PaymentStatus.NEW ||
-            row.status == PaymentStatus.TRANSIT ||
-            row.status == PaymentStatus.ERR ||
-            row.status == PaymentStatus.TRANSIT_CANCELLED ||
-            row.status == PaymentStatus.TRANSIT_ERR;
+        return row.status == PaymentStatus.NEW;
+    }
+
+    canMobipayCancel(row) {
+        return row.status == PaymentStatus.DISTRIBUTED;
     }
 
     canDelTransit(row) {
@@ -157,8 +157,15 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
     distributeMobipay(row) {
         this.dialogRef = this.dlg.open(DlgMobipayPartnersComponent, {
             width: '60%', height: '30%',
-            data: {'paymentId': row.id},
+            data: {'paymentId': row.id, 'partner': null},
             disableClose: true});
+        this.dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+
+            } else {
+                this.notifService.warn('Выберите партнера');
+            }
+        });
     }
 
 }
