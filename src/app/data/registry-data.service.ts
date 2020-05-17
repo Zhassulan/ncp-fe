@@ -25,10 +25,16 @@ export class RegistryDataService {
     }
 
     range(start, end, bin) {
-        const params = new HttpParams()
-            .set('start', start)
-            .set('end', end)
-            .set('bin', bin);
+        let params;
+        if (bin)
+            params = new HttpParams()
+                .set('start', start)
+                .set('end', end)
+                .set('bin', bin);
+        else
+            params = new HttpParams()
+                .set('start', start)
+                .set('end', end);
         return this.http.get<RegistryReportItem []>(`${API_URL}/registries/range`, {params}).pipe(catchError(HandleErr.handleError));
     }
 

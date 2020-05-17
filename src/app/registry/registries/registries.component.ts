@@ -83,7 +83,7 @@ export class RegistriesComponent implements OnInit, OnDestroy {
         this.subscription = this.registryService.range(this.dateRangeComponent.start, this.dateRangeComponent.end, this.binFormCtl.value).subscribe(
             data => {
                 this.dataSource.data = data;
-                this.setCalendar();
+                if (data.length > 0) this.setCalendar();
             },
             error => {
                 this.notifService.error(error);
