@@ -14,8 +14,10 @@ export class ClientPaymentsComponent implements OnInit {
     rangeComponent: DateRangeComponent;
     @ViewChild(ClientPaymentsTableComponent)
     clntPaymentsTableComponent;
+    clientId;
 
     constructor(private clntService: ClientService) {
+        //this.route.snapshot.params['id'];
     }
 
     get client() {
@@ -23,6 +25,7 @@ export class ClientPaymentsComponent implements OnInit {
     }
 
     ngOnInit(): void {
+
     }
 
     load() {

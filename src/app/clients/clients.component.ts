@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ClientDataService} from '../data/client-data-service';
+import {NotifOptions} from '../settings';
 
 @Component({
     selector: 'app-clients',
@@ -7,6 +7,8 @@ import {ClientDataService} from '../data/client-data-service';
     styleUrls: ['./clients.component.css']
 })
 export class ClientsComponent implements OnInit {
+
+    options = NotifOptions;
 
     constructor() {
     }

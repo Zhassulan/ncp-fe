@@ -16,11 +16,12 @@ const API_URL = environment.apiUrl;
 })
 export class PayDataService {
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+    }
 
-    handleError(error: HttpErrorResponse){
+    handleError(error: HttpErrorResponse) {
         if (error.status == HttpStatus.NOT_FOUND ||
-            error.status == HttpStatus.SERVICE_UNAVAILABLE) return throwError(MSG.serviceErr);
+            error.status == HttpStatus.SERVICE_UNAVAILABLE) return throwError(MSG.errService);
         return throwError(error);
     }
 
@@ -28,7 +29,7 @@ export class PayDataService {
         const params = new HttpParams()
             .set('start', start)
             .set('end', end);
-        return this.http.get<Payment []>(`${API_URL}/payments`, { params }).pipe(catchError(HandleErr.handleError));
+        return this.http.get<Payment []>(`${API_URL}/payments`, {params}).pipe(catchError(HandleErr.handleError));
     }
 
     public json() {
@@ -63,7 +64,7 @@ export class PayDataService {
         return this.http.get(`${API_URL}/profile/${profileId}/msisdn/${msisdn}`, httpOptions).pipe(catchError(HandleErr.handleError));
     }
 
-    defer(payment, deferDate)  {
+    defer(payment, deferDate) {
         const params = new HttpParams()
             .set('dt', deferDate);
         const httpOptions = {
@@ -78,5 +79,7 @@ export class PayDataService {
     del(id) {
         return this.http.delete<Payment>(API_URL + `/payments/${id}`).pipe(catchError(HandleErr.handleError));
     }
+
+
 
 }

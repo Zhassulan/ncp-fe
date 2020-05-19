@@ -1,5 +1,6 @@
 import {HttpHeaders} from '@angular/common/http';
 
+
 export enum PaymentStatus {
     NEW = 0,
     DISTRIBUTED = 1,
@@ -63,14 +64,17 @@ export const roles = {
 export const enum MSG {
     accessDenied = 'Нет доступа',
     transitSuccess = 'Платёж успешно перенесён на тразнитный счёт',
-    transitDekSuccess = 'Успешно удалён с транзитного счёта',
+    transitDelSuccess = 'Успешно удалён с транзитного счёта',
     distributeSuccess = 'Платёж успешно разнесён',
     updateCache = 'Есть обновления, обновите кеш страницы [Ctrl]+[F5]',
     noData = 'Данные не предоставлены',
     mobipayChanged = 'Mobipay платёж изменён',
-    serviceErr = 'Ошибка сервиса, повторите позже',
+    errService = 'Ошибка сервиса, повторите позже',
+    errMobipayDistribution = 'Ошибка обработки Mobipay платежа',
     inputNumber = 'Введите сумму',
-    delSuccess = 'Платёж успешно удалён'
+    delSuccess = 'Платёж успешно удалён',
+    distributionMobipaySuccess = 'Платёж Mobipay успешно разнесён',
+    distributionCancelMobipaySuccess = 'Платёж Mobipay успешно отменен'
 }
 
 export enum locStorItems {
@@ -132,4 +136,8 @@ export class Settings {
 }
 
 export const appTitle = 'NCP';
+
+export const NotifOptions = {
+    maxLength : 500
+}
 

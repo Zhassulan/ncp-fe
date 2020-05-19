@@ -21,7 +21,7 @@ export class ClientDataService {
 
     handleError(error: HttpErrorResponse){
         if (error.status == HttpStatus.NOT_FOUND ||
-            error.status == HttpStatus.SERVICE_UNAVAILABLE) return throwError(MSG.serviceErr);
+            error.status == HttpStatus.SERVICE_UNAVAILABLE) return throwError(MSG.errService);
         return throwError(error);
     }
 

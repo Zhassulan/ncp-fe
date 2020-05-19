@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {Client} from '../clients/list/client';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {HandleErr} from './handle-err';
 import {catchError} from 'rxjs/operators';
+import {Payment} from '../payment/model/payment';
 
 const API_URL = environment.apiUrl;
 
@@ -30,6 +31,13 @@ export class MobipayDataService {
             .set('paymentId', id)
             .set('isMobipay', isMobipay);
         return this.http.post<Client []>(`${API_URL}/mobipay/change`, {params}).pipe(catchError(HandleErr.handleError));
+    }
+
+    distribute(id, cancel, partnerCode) {
+        const params = new HttpParams()
+            .set('cancel', cancel)
+            .set('partnerCode', partnerCode);
+        return this.http.post<Payment>(`${API_URL}/mobipay/distribute/${id}`, null, {params}).pipe(catchError(HandleErr.handleError));
     }
 
 }

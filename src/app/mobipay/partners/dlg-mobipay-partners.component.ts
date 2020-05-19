@@ -42,6 +42,8 @@ export class DlgMobipayPartnersComponent implements OnInit, AfterViewInit, OnDes
     }
 
     onRowClick(row) {
+        row.paymentId = this.data.paymentId;
+        row.cancel = this.data.cancel;
         this.dlgRef.close(row);
     }
 

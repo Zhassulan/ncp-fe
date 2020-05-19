@@ -9,12 +9,15 @@ import {Subscription} from 'rxjs';
 import {ClientService} from '../client.service';
 import {PaymentService} from '../../payment/payment.service';
 import {DlgService} from '../../dialog/dlg.service';
-import {PaymentStatus, PaymentStatusRu} from '../../settings';
+import {MSG, PaymentStatus, PaymentStatusRu} from '../../settings';
 import {PayDataService} from '../../data/pay-data-service';
 import {Payment} from '../../payment/model/payment';
 import {DateRangeComponent} from '../../date-range/date-range.component';
 import {MatDialog} from '@angular/material/dialog';
 import {DlgMobipayPartnersComponent} from '../../mobipay/partners/dlg-mobipay-partners.component';
+import {MobipayDataService} from '../../data/mobipay-data.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import * as HttpStatus from 'http-status-codes';
 
 @Component({
     selector: 'app-client-payments-table',
@@ -45,9 +48,11 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private clntService: ClientService,
                 private payService: PaymentService,
+                private mobipayService: MobipayDataService,
                 private dlgService: DlgService,
                 private payDataService: PayDataService,
-                private dlg: MatDialog) {
+                private dlg: MatDialog,
+                private snackBar: MatSnackBar) {
         this.subscription = this.clntService.clntPayAnnounced$.subscribe(payments => {
             this.dataSource.data = payments;
         });
@@ -157,11 +162,28 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
     distributeMobipay(row) {
         this.dialogRef = this.dlg.open(DlgMobipayPartnersComponent, {
             width: '60%', height: '30%',
-            data: {'paymentId': row.id, 'partner': null},
+            data: {'paymentId': row.id,
+                'partner': null,
+                'cancel': row.status == PaymentStatus.NEW ? false : true },
             disableClose: true});
         this.dialogRef.afterClosed().subscribe(result => {
             if (result) {
-
+                this.appService.setProgress(true);
+                this.mobipayService.distribute(result.paymentId, result.cancel, result.code).subscribe(
+                    data => {
+                        this.notifService.info(data.status == PaymentStatus.DISTRIBUTED ?
+                            MSG.distributionMobipaySuccess : data.status == PaymentStatus.NEW ?
+                                MSG.distributionCancelMobipaySuccess : `Успешно обработан`);
+                        row.status = data.status;
+                        row.statusRu = PaymentStatusRu[data.status];
+                    },
+                    error => {
+                        //this.snackBar.open(error.error.errm ? error.error.errm : error.message);
+                        this.notifService.error( error.error.errm ? error.error.errm :
+                            error.status == HttpStatus.FORBIDDEN ? MSG.accessDenied : error.message);
+                        this.appService.setProgress(false);
+                    },
+                    () => this.appService.setProgress(false));
             } else {
                 this.notifService.warn('Выберите партнера');
             }

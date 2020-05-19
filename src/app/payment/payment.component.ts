@@ -151,7 +151,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         this.subscription = this.payDataService.transitDel(this.payment.id).subscribe(
             data => {
                 this.payService.setPayment(data);
-                this.notifService.info(MSG.transitDekSuccess);
+                this.notifService.info(MSG.transitDelSuccess);
             },
             error => {
                 this.notifService.error(error.error.errm);
