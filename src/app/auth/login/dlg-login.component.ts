@@ -58,7 +58,7 @@ export class DlgLoginComponent implements OnInit {
             },
             error => {
                 if (error.status === HttpStatus.SERVICE_UNAVAILABLE)
-                    this.notifService.error(error.error.errm);
+                    this.notifService.error(error.message);
                    else
                     this.notifService.error(MSG.accessDenied);
 

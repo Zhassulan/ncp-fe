@@ -17,8 +17,4 @@ export class DlgRegistryBufferComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    onCloseClick(): void {
-        this.dialogRef.close();
-    }
-
 }

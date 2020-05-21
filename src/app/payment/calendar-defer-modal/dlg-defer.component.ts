@@ -15,8 +15,4 @@ export class DlgDeferComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onCloseClick(): void {
-    this.dialogRef.close();
-  }
-
 }

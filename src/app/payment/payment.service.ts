@@ -210,12 +210,8 @@ export class PaymentService {
                 let detail = new Detail();
                 detail.status = PaymentStatus.NEW;
                 let b = true;
-                /*console.log('parts[0] = ' + parts[0]);
-                console.log('parts[1] = ' + parts[1]);*/
                 isNaN(parts[0]) ? b = false : this.isMSISDN(parts[0]) ? detail.msisdn = parts[0] : detail.account = parts[0];
                 isNaN(parts[1]) ? b = false : detail.sum = parts[1];
-                //console.log(detail);
-                //console.log(details);
                 if (detail) {
                     this.payment.details.push(detail);
                     this.announcePayment();
@@ -244,7 +240,6 @@ export class PaymentService {
     }
 
     loadPayment(id) {
-        console.log(`Загрузка платежа ID ${id}`);
         this.payment = null;
         return new Observable<Payment>(observer => {
             this.payDataService.findById(id).subscribe(

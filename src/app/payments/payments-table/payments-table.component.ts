@@ -12,9 +12,7 @@ import {DlgService} from '../../dialog/dlg.service';
 import {ExcelService} from '../../excel/excel.service';
 import {Subscription} from 'rxjs';
 import {PaymentService} from '../../payment/payment.service';
-import {Utils} from '../../utils';
 import {MobipayDataService} from '../../data/mobipay-data.service';
-import * as HttpStatus from 'http-status-codes';
 
 @Component({
     selector: 'app-payments-table',
@@ -54,8 +52,6 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
                 private excelService: ExcelService,
                 private payService: PaymentService,
                 private mobipayDataService: MobipayDataService) {
-        this.dataSource = new MatTableDataSource<Payment>();
-        this.paginatorResultsLength = 0;
     }
 
     ngOnInit(): void {
@@ -84,15 +80,14 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
             this.dateRangeComponent.end = '2019-12-31T23:59:59.999';
         }
         this.appService.setProgress(true);
-        console.log(`Загрузка данных за период ${Utils.millsToDateStr(this.dateRangeComponent.start)} - ${Utils.millsToDateStr(this.dateRangeComponent.end)}`);
-        this.subscription = this.payDataService.all(this.dateRangeComponent.start, this.dateRangeComponent.end).subscribe(
+        this.subscription = this.payDataService.range(this.dateRangeComponent.start, this.dateRangeComponent.end).subscribe(
             data => {
                 this.initStatusRu(data);
                 this.dataSource.data = data;
             },
             error => {
                 this.appService.setProgress(false);
-                this.notifService.error(error);
+                this.notifService.error(error.message);
             },
             () => this.appService.setProgress(false));
     }
@@ -103,7 +98,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
         this.payDataService.json().subscribe(data => {
                 this.dataSource.data = data;
             }, error => {
-                this.notifService.error(error.error.errm);
+                this.notifService.error(error.message);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));
@@ -131,7 +126,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
                 this.notifService.info(MSG.mobipayChanged);
             },
             error => {
-                this.notifService.error(error.status == HttpStatus.FORBIDDEN ? MSG.accessDenied : error.error.errm);
+                this.notifService.error(error.message);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));
@@ -161,7 +156,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
                 this.dialogService.addItem(`ID ${id} OK - TRANSIT_PDOC_ID ${data.transitPdocNumId}`);
             },
             error => {
-                this.dialogService.addItem(`ID ${id} Ошибка - ${error.error.errm}`);
+                this.dialogService.addItem(`ID ${id} Ошибка - ${error.message}`);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));
@@ -177,7 +172,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
                 this.dialogService.addItem(`ID ${id} OK - TRANSIT_PDOC_ID ${data.transitPdocNumId}`);
             },
             error => {
-                this.dialogService.addItem(`ID ${id} Ошибка - ${error.error.errm}`);
+                this.dialogService.addItem(`ID ${id} Ошибка - ${error}`);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));

@@ -36,7 +36,6 @@ export class ClientService {
     }
 
     payments(id, start?, end?) {
-        console.log(`'Загрузка данных за период ${Utils.millsToDateStr(start)} - ${Utils.millsToDateStr(end)}`);
         this.appService.setProgress(true);
         if (start && end) {
             this.clntDataService.paymentsRange(id, start, end).subscribe(
@@ -45,7 +44,7 @@ export class ClientService {
                     this.announceClntPayments(); },
                 error => {
                     this.appService.setProgress(false);
-                    this.notifService.error(error.error.errm);
+                    this.notifService.error(error.message);
                     this.appService.setProgress(false);
                 },
                 () => this.appService.setProgress(false)
@@ -57,7 +56,7 @@ export class ClientService {
                     this.announceClntPayments(); },
                 error => {
                     this.appService.setProgress(false);
-                    this.notifService.error(error.error.errm);
+                    this.notifService.error(error.message);
                     this.appService.setProgress(false);
                 },
                 () => this.appService.setProgress(false)

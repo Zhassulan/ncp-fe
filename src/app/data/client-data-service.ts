@@ -28,22 +28,22 @@ export class ClientDataService {
     props(bin, profileId)   {
         const params = new HttpParams()
             .set('profileId', profileId);
-        return this.http.get<number>(`${API_URL}/clients/${bin}/props`, {params}).pipe(catchError(HandleErr.handleError));
+        return this.http.get<number>(`${API_URL}/clients/${bin}/props`, {params}).pipe(catchError(HandleErr.intercept));
     }
 
     all() {
-        return this.http.get<Client []> (`${API_URL}/clients`).pipe(catchError(HandleErr.handleError));
+        return this.http.get<Client []> (`${API_URL}/clients`).pipe(catchError(HandleErr.intercept));
     }
 
     payments(id) {
-        return this.http.get<Payment []> (`${API_URL}/clients/${id}/payments`).pipe(catchError(HandleErr.handleError));
+        return this.http.get<Payment []> (`${API_URL}/clients/${id}/payments`).pipe(catchError(HandleErr.intercept));
     }
 
     paymentsRange(id, start, end) {
         const params = new HttpParams()
             .set('start', start)
             .set('end', end);
-        return this.http.get<Payment []> (`${API_URL}/clients/${id}/payments/range`, {params}).pipe(catchError(HandleErr.handleError));
+        return this.http.get<Payment []> (`${API_URL}/clients/${id}/payments/range`, {params}).pipe(catchError(HandleErr.intercept));
     }
 
 

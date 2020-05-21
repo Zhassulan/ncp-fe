@@ -26,7 +26,7 @@ export class RouterService {
                 observer.next(true);
               },
               error => {
-                this.notifService.error(error);
+                this.notifService.error(error.message);
                 observer.error(false);
               },
               () => {

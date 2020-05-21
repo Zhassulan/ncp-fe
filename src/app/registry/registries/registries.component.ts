@@ -64,7 +64,7 @@ export class RegistriesComponent implements OnInit, OnDestroy {
                 this.setCalendar();
             },
             error => {
-                this.notifService.error(error);
+                this.notifService.error(error.message);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));
@@ -79,14 +79,13 @@ export class RegistriesComponent implements OnInit, OnDestroy {
 
     range() {
         this.appService.setProgress(true);
-        console.log(`'Загрузка данных за период ${Utils.millsToDateStr(this.dateRangeComponent.start)} - ${Utils.millsToDateStr(this.dateRangeComponent.end)}`);
         this.subscription = this.registryService.range(this.dateRangeComponent.start, this.dateRangeComponent.end, this.binFormCtl.value).subscribe(
             data => {
                 this.dataSource.data = data;
                 if (data.length > 0) this.setCalendar();
             },
             error => {
-                this.notifService.error(error);
+                this.notifService.error(error.message);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));

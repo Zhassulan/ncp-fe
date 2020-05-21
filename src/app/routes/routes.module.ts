@@ -11,6 +11,7 @@ import {PageNotFoundComponent} from '../page-not-found/page-not-found.component'
 import {ClientsComponent} from '../clients/clients.component';
 import {ClientPaymentsComponent} from '../clients/client-payments/client-payments.component';
 import {MobipayComponent} from '../mobipay/mobipay.component';
+import {RawComponent} from '../raw/raw.component';
 
 const routes: Routes = [
     {
@@ -27,6 +28,13 @@ const routes: Routes = [
         component: PaymentsComponent,
         data: {
             breadcrumb: 'Платежи'
+        }
+    },
+    {
+        path: 'raw',
+        component: RawComponent,
+        data: {
+            breadcrumb: 'Неизвестные платежи'
         }
     },
     {

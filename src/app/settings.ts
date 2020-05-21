@@ -70,11 +70,14 @@ export const enum MSG {
     noData = 'Данные не предоставлены',
     mobipayChanged = 'Mobipay платёж изменён',
     errService = 'Ошибка сервиса, повторите позже',
+    notFound = 'Не найден путь запроса',
     errMobipayDistribution = 'Ошибка обработки Mobipay платежа',
     inputNumber = 'Введите сумму',
     delSuccess = 'Платёж успешно удалён',
     distributionMobipaySuccess = 'Платёж Mobipay успешно разнесён',
-    distributionCancelMobipaySuccess = 'Платёж Mobipay успешно отменен'
+    distributionCancelMobipaySuccess = 'Платёж Mobipay успешно отменен',
+    processedSuccess = 'Успешно обработан',
+    choosePartner = 'Выберите партнера',
 }
 
 export enum locStorItems {

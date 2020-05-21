@@ -17,11 +17,11 @@ export class RegistryDataService {
     }
 
     all() {
-        return this.http.get<RegistryReportItem []>(`${API_URL}/registries`, httpOptions).pipe(catchError(HandleErr.handleError));
+        return this.http.get<RegistryReportItem []>(`${API_URL}/registries`, httpOptions).pipe(catchError(HandleErr.intercept));
     }
 
     findById(id) {
-        return this.http.get(`${API_URL}/registries/${id}`, httpOptions).pipe(catchError(HandleErr.handleError));
+        return this.http.get(`${API_URL}/registries/${id}`, httpOptions).pipe(catchError(HandleErr.intercept));
     }
 
     range(start, end, bin) {
@@ -35,7 +35,7 @@ export class RegistryDataService {
             params = new HttpParams()
                 .set('start', start)
                 .set('end', end);
-        return this.http.get<RegistryReportItem []>(`${API_URL}/registries/range`, {params}).pipe(catchError(HandleErr.handleError));
+        return this.http.get<RegistryReportItem []>(`${API_URL}/registries/range`, {params}).pipe(catchError(HandleErr.intercept));
     }
 
 }

@@ -24,7 +24,7 @@ export class RegistryComponent implements OnInit {
         this.registryService.findById(this.route.snapshot.params['id']).subscribe(
             data => this.registry = data,
             error => {
-                this.notifService.error(error)
+                this.notifService.error(error.message)
                 this.appService.setProgress(false)
             },
             () => this.appService.setProgress(false))

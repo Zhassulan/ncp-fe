@@ -104,7 +104,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
             },
             error => {
                 this.appService.setProgress(false);
-                this.notifService.error(error.error.errm);
+                this.notifService.error(error.message);
             },
             () => this.appService.setProgress(false));
     }
@@ -118,11 +118,10 @@ export class PaymentComponent implements OnInit, OnDestroy {
             data => {
                 this.payService.props.count = data;
                 this.payService.announceProps();
-                console.log(`Загружено ${data} номеров/счетов`);
             },
             error => {
                 this.appService.setProgress(false);
-                this.notifService.error(error.error.errm);
+                this.notifService.error(error.message);
             },
             () => this.appService.setProgress(false));
     }
@@ -141,7 +140,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
             this.payService.setPayment(data);
             this.notifService.info(MSG.distributeSuccess);
         }, error => {
-            this.notifService.error(error.error.errm);
+            this.notifService.error(error.message);
             this.appService.setProgress(false);
         }, () => this.appService.setProgress(false));
     }
@@ -154,7 +153,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
                 this.notifService.info(MSG.transitDelSuccess);
             },
             error => {
-                this.notifService.error(error.error.errm);
+                this.notifService.error(error.message);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));
@@ -167,7 +166,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
                 this.notifService.info(MSG.transitSuccess);
             },
             error => {
-                this.notifService.error(error.error.errm);
+                this.notifService.error(error.message);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));
@@ -180,7 +179,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
                 this.notifService.info(MSG.delSuccess);
             },
             error => {
-                this.notifService.error(error.status == HttpStatus.FORBIDDEN ? MSG.accessDenied : error.error.errm);
+                this.notifService.error(error.message);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));
@@ -211,24 +210,24 @@ export class PaymentComponent implements OnInit, OnDestroy {
             disableClose: true
         });
         dialogRef.afterClosed().subscribe(result => {
-                this.appService.setProgress(true);
+                if (!result) return;
                 let today = new Date();
                 let tomorrow = new Date(today);
                 tomorrow.setDate(tomorrow.getDate() + 1);
                 tomorrow.setHours(0, 0, 0, 0);
-                console.log(tomorrow);
                 let futureDt = new Date(result);
                 if (futureDt.getTime() < tomorrow.getTime()) {
                     this.notifService.warn(`Дата должна быть больше ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}. Установите дату.`);
                     return;
                 }
+                this.appService.setProgress(true);
                 this.subscription = this.payDataService.defer(this.payment, futureDt.getTime()).subscribe(
                     data => {
                         this.payService.setPayment(data);
                         this.notifService.info(`Установлена дата отложенной разноски ${futureDt.getDate()}/${futureDt.getMonth() + 1}/${futureDt.getFullYear()}`);
                     },
                     error => {
-                        this.notifService.error(error.error.errm);
+                        this.notifService.error(error.message);
                         this.appService.setProgress(false);
                     },
                     () => {

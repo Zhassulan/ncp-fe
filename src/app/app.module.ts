@@ -59,6 +59,8 @@ import {DlgDeferComponent} from './payment/calendar-defer-modal/dlg-defer.compon
 import {UploadComponent} from './payment/router/upload.component';
 import {DlgRegistryBufferComponent} from './payment/add-registry-modal/dlg-registry-buffer.component';
 import {MyDateAdapter} from './my-date-adapter';
+import { RawComponent } from './raw/raw.component';
+import { RawTableComponent } from './raw/raw-table/raw-table.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -95,6 +97,8 @@ registerLocaleData(localeRu, 'ru');
         PaymentsTableComponent,
         MobipayComponent,
         DlgMobipayPartnersComponent,
+        RawComponent,
+        RawTableComponent,
     ],
     entryComponents: [
         DlgResultComponent,

@@ -31,7 +31,7 @@ export class DlgMobipayPartnersComponent implements OnInit, AfterViewInit, OnDes
         this.subscription = this.mobipayDataService.partners(this.data.paymentId).subscribe(
             data => this.dataSource = data,
             error => {
-                this.notifService.error(error.error.errm);
+                this.notifService.error(error.message);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));

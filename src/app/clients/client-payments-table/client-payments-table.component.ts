@@ -16,8 +16,6 @@ import {DateRangeComponent} from '../../date-range/date-range.component';
 import {MatDialog} from '@angular/material/dialog';
 import {DlgMobipayPartnersComponent} from '../../mobipay/partners/dlg-mobipay-partners.component';
 import {MobipayDataService} from '../../data/mobipay-data.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import * as HttpStatus from 'http-status-codes';
 
 @Component({
     selector: 'app-client-payments-table',
@@ -51,8 +49,7 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
                 private mobipayService: MobipayDataService,
                 private dlgService: DlgService,
                 private payDataService: PayDataService,
-                private dlg: MatDialog,
-                private snackBar: MatSnackBar) {
+                private dlg: MatDialog) {
         this.subscription = this.clntService.clntPayAnnounced$.subscribe(payments => {
             this.dataSource.data = payments;
         });
@@ -76,7 +73,7 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
             },
             error => {
                 this.appService.setProgress(false);
-                this.notifService.error(error.error.errm);
+                this.notifService.error(error.message);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false)
@@ -137,7 +134,7 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
                 this.dlgService.addItem(`ID ${id} OK - TRANSIT_PDOC_ID ${data.transitPdocNumId}`);
             },
             error => {
-                this.dlgService.addItem(`ID ${id} Ошибка - ${error.error.errm}`);
+                this.dlgService.addItem(`ID ${id} Ошибка - ${error.message}`);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));
@@ -153,7 +150,7 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
                 this.dlgService.addItem(`ID ${id} OK - TRANSIT_PDOC_ID ${data.transitPdocNumId}`);
             },
             error => {
-                this.dlgService.addItem(`ID ${id} Ошибка - ${error.error.errm}`);
+                this.dlgService.addItem(`ID ${id} Ошибка - ${error.message}`);
                 this.appService.setProgress(false);
             },
             () => this.appService.setProgress(false));
@@ -162,31 +159,32 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
     distributeMobipay(row) {
         this.dialogRef = this.dlg.open(DlgMobipayPartnersComponent, {
             width: '60%', height: '30%',
-            data: {'paymentId': row.id,
+            data: {
+                'paymentId': row.id,
                 'partner': null,
-                'cancel': row.status == PaymentStatus.NEW ? false : true },
-            disableClose: true});
+                'cancel': row.status == PaymentStatus.NEW ? false : true
+            },
+            disableClose: true
+        });
         this.dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.appService.setProgress(true);
-                this.mobipayService.distribute(result.paymentId, result.cancel, result.code).subscribe(
-                    data => {
-                        this.notifService.info(data.status == PaymentStatus.DISTRIBUTED ?
-                            MSG.distributionMobipaySuccess : data.status == PaymentStatus.NEW ?
-                                MSG.distributionCancelMobipaySuccess : `Успешно обработан`);
-                        row.status = data.status;
-                        row.statusRu = PaymentStatusRu[data.status];
-                    },
-                    error => {
-                        //this.snackBar.open(error.error.errm ? error.error.errm : error.message);
-                        this.notifService.error( error.error.errm ? error.error.errm :
-                            error.status == HttpStatus.FORBIDDEN ? MSG.accessDenied : error.message);
-                        this.appService.setProgress(false);
-                    },
-                    () => this.appService.setProgress(false));
-            } else {
-                this.notifService.warn('Выберите партнера');
+            if (!result) {
+                this.notifService.warn(MSG.choosePartner);
+                return;
             }
+            this.appService.setProgress(true);
+            this.mobipayService.distribute(result.paymentId, result.cancel, result.code).subscribe(
+                data => {
+                    this.notifService.info(data.status == PaymentStatus.DISTRIBUTED ?
+                        MSG.distributionMobipaySuccess : data.status == PaymentStatus.NEW ?
+                            MSG.distributionCancelMobipaySuccess : MSG.processedSuccess);
+                    row.status = data.status;
+                    row.statusRu = PaymentStatusRu[data.status];
+                },
+                error => {
+                    this.notifService.error(error.message);
+                    this.appService.setProgress(false);
+                },
+                () => this.appService.setProgress(false));
         });
     }
 

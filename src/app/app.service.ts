@@ -38,7 +38,7 @@ export class AppService {
                     location.reload();
                 }
             }
-        }, error => this.notif.error(error.error.errm));
+        }, error => this.notif.error(error.message));
     }
 
 }

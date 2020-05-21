@@ -70,9 +70,9 @@
                 <button mat-menu-item (click)="menuOnRowOpenPayment(paymentRow)">
                     <span>Открыть</span>
                 </button>
-                <button mat-menu-item (click)="menuOnRowMobipay(paymentRow)">
+                <!--<button mat-menu-item (click)="menuOnRowMobipay(paymentRow)">
                     <span>Mobipay</span>
-                </button>
+                </button>-->
                 <button mat-menu-item [disabled]="!canTransit(paymentRow)" (click)="menuOnRowTransit(paymentRow)">
                     <span>На транзит</span>
                 </button>

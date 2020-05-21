@@ -5,10 +5,26 @@ import {MSG} from '../settings';
 
 export class HandleErr {
 
-    static handleError(error: HttpErrorResponse){
-        if (error.status == HttpStatus.NOT_FOUND ||
-            error.status == HttpStatus.SERVICE_UNAVAILABLE) return throwError(MSG.errService);
-        return throwError(error);
+    static intercept(error: HttpErrorResponse){
+        let errCpy = JSON.parse(JSON.stringify(error));
+        switch (error.status) {
+            case HttpStatus.NOT_FOUND:
+                errCpy.message = MSG.notFound;
+                return throwError(errCpy);
+                break;
+            case HttpStatus.SERVICE_UNAVAILABLE:
+                errCpy.message = MSG.errService;
+                return throwError(errCpy);
+                break;
+            case HttpStatus.FORBIDDEN:
+                errCpy.message = MSG.accessDenied;
+                return throwError(errCpy);
+                break;
+            default:
+                errCpy.message = error.error;
+                break;
+        }
+        return throwError(errCpy);
     }
 
 }

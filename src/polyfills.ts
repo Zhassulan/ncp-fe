@@ -33,7 +33,7 @@ import '@angular/localize/init';
 // import 'web-animations-js';  // Run `npm install --save web-animations-js`.
 
 /**
- * By default, zone.js will patch all possible macroTask and DomEvents
+ * By default, zone.js will patch range possible macroTask and DomEvents
  * user can disable parts of macroTask/DomEvents patch by setting following flags
  * because those flags need to be set before `zone.js` being loaded, and webpack
  * will put import in the top of bundle, so user need to create a separate file
@@ -43,7 +43,7 @@ import '@angular/localize/init';
  *
  * The flags allowed in zone-flags.ts are listed here.
  *
- * The following flags will work for all browsers.
+ * The following flags will work for range browsers.
  *
  * (window as any).__Zone_disable_requestAnimationFrame = true; // disable patch requestAnimationFrame
  * (window as any).__Zone_disable_on_property = true; // disable patch onProperty such as onclick

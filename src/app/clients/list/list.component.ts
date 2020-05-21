@@ -53,7 +53,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy{
                 this.dataSource.data = this.clients;
             },
             error => {
-                this.notifService.error(error);
+                this.notifService.error(error.message);
               this.appService.setProgress(false);
             },
             () => {

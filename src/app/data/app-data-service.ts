@@ -25,11 +25,11 @@ export class AppDataService {
     }
 
     authorize(userObj: User) {
-        return this.http.post(`${API_URL}/auth/authorization`, userObj, httpOptions).pipe(catchError(HandleErr.handleError));
+        return this.http.post(`${API_URL}/auth/authorization`, userObj, httpOptions).pipe(catchError(HandleErr.intercept));
     }
 
     ver() {
-        return this.http.get<Version>(`${API_URL}/ver`, httpOptions).pipe(catchError(HandleErr.handleError));
+        return this.http.get<Version>(`${API_URL}/ver`, httpOptions).pipe(catchError(HandleErr.intercept));
     }
 
 }
