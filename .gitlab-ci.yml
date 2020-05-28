@@ -69,8 +69,10 @@ deploy-to-review:
     - export SSHPASS=$DOCKER_USER22
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 docker pull $CI_REGISTRY_IMAGE:latest
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME-test/docker-compose.yml down
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME-test/docker-compose.yml up -d
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 chmod o+x /data/docker-compose/$CI_PROJECT_NAME-test/down.sh
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 chmod o+x /data/docker-compose/$CI_PROJECT_NAME-test/up.sh
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash /data/docker-compose/$CI_PROJECT_NAME-test/down.sh
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash /data/docker-compose/$CI_PROJECT_NAME-test/up.sh
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker logout docker.tele2.kz
     - curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api-test/ver
 
@@ -97,8 +99,10 @@ deploy-to-production:
     - export SSHPASS=$DOCKER_USER22
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 docker pull $CI_REGISTRY_IMAGE:latest
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yml down
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/local/bin/docker-compose -f /data/docker-compose/$CI_PROJECT_NAME/docker-compose.yml up -d
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 chmod o+x /data/docker-compose/$CI_PROJECT_NAME/down.sh
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 chmod o+x /data/docker-compose/$CI_PROJECT_NAME/up.sh
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash /data/docker-compose/$CI_PROJECT_NAME/down.sh
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash /data/docker-compose/$CI_PROJECT_NAME/up.sh
     - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker logout docker.tele2.kz
     - curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api/ver
 
