@@ -1,0 +1,44 @@
+.mainContainer {
+    display: grid;
+    grid-template-areas:
+            "top"
+            "payments";
+    grid-template-rows: auto auto;
+    grid-template-columns: auto;
+    justify-items: stretch;
+    padding: 0.5em;
+}
+
+.top {
+    grid-area: top;
+}
+
+.item {
+    justify-self: center;
+    align-self: center;
+}
+
+.search {
+    grid-area: search;
+    justify-self: end;
+}
+
+.header {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns:
+            minmax(max-content, max-content)
+            minmax(max-content, max-content)
+            minmax(max-content, max-content)
+            minmax(max-content, max-content)
+            minmax(max-content, max-content)
+            minmax(max-content, auto);
+    grid-template-areas:
+            "item item item item item item search"
+            "payments payments payments payments payments payments payments";
+    gap: 5px;
+}
+
+.payments {
+    grid-area: payments;
+}

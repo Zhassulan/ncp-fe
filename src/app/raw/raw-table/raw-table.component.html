@@ -1,0 +1,44 @@
+<mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="ID">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> ID</mat-header-cell>
+        <mat-cell *matCellDef="let paymentRow"> {{paymentRow.id}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="nameSender">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Отправитель</mat-header-cell>
+        <mat-cell *matCellDef="let paymentRow"> {{paymentRow.sender}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="sum">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Сумма</mat-header-cell>
+        <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.sum | currency : ' ' }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="rnnSender">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> ИИН</mat-header-cell>
+        <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.rnnSender }}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="paymentDetails">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Назначение платежа</mat-header-cell>
+        <mat-cell *matCellDef="let paymentRow">
+            {{ paymentRow.details ? paymentRow.details.substring(0, 100) : '' }}
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="account">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Счёт</mat-header-cell>
+        <mat-cell *matCellDef="let paymentRow">
+            Отправитель:<br/> {{ paymentRow.accSender }} <br/>
+            Получатель:<br/> {{ paymentRow.accRecipient }}
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="knp">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>КНП</mat-header-cell>
+        <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.knp }}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <!-- for Highlight: paymentRowHighlight [paymentStatus]="paymentRow.getStatus()"-->
+    <mat-row *matRowDef="let paymentRow; columns: displayedColumns;"></mat-row>
+</mat-table>
+<mat-paginator
+        [length]="!paginatorResultsLength"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        showFirstLastButtons></mat-paginator>
