@@ -1,4 +1,4 @@
-import {AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, OnDestroy, Output} from '@angular/core';
+import {AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, isDevMode, OnDestroy, Output} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
@@ -77,6 +77,10 @@ export class MenuToolbarComponent implements AfterViewChecked, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+    }
+
+    isDevMode() {
+        return isDevMode() ;
     }
 
 }
