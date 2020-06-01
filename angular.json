@@ -61,7 +61,12 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.staging.ts"
+                },
+                {
+                  "replace": "src/style.css",
+                  "with": "src/style1.css"
                 }
+
               ],
               "optimization": true,
               "outputHashing": "all",
