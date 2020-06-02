@@ -15,10 +15,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         private appService: AppService) {
     }
 
-    ngOnInit(): void {
-
-        this.setTitle(isDevMode() ? `Тест ${environment.apiUrl}` : 'NCP');
-    }
+    ngOnInit(): void {    }
 
     public setTitle( newTitle: string) {
         this.titleService.setTitle( newTitle );
