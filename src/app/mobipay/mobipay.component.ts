@@ -13,4 +13,8 @@ export class MobipayComponent implements OnInit {
     ngOnInit(): void {
     }
 
+    updateLimits() {
+
+    }
+
 }
