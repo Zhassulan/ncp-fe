@@ -8,7 +8,7 @@ import {RegistryDetail} from '../../model/registry-detail';
 @Component({
     selector: 'app-registry-details',
     templateUrl: './registry-details.component.html',
-    styleUrls: ['./registry-details.component.css']
+    styleUrls: ['./registry-details.component.scss']
 })
 export class RegistryDetailsComponent implements OnInit {
 

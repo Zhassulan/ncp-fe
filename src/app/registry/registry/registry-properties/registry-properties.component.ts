@@ -4,7 +4,7 @@ import {Registry} from '../../model/registry';
 @Component({
     selector: 'app-registry-properties',
     templateUrl: './registry-properties.component.html',
-    styleUrls: ['./registry-properties.component.css']
+    styleUrls: ['./registry-properties.component.scss']
 })
 export class RegistryPropertiesComponent implements OnInit {
 

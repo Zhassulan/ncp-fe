@@ -5,7 +5,7 @@ import {CalendarDialogData} from '../payment.component';
 @Component({
   selector: 'app-calendar-defer-modal',
   templateUrl: './dlg-defer.component.html',
-  styleUrls: ['./dlg-defer.component.css']
+  styleUrls: ['./dlg-defer.component.scss']
 })
 export class DlgDeferComponent implements OnInit {
 

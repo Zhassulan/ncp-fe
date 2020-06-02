@@ -6,7 +6,7 @@ import {ClientPaymentsTableComponent} from '../client-payments-table/client-paym
 @Component({
     selector: 'app-client-payments',
     templateUrl: './client-payments.component.html',
-    styleUrls: ['./client-payments.component.css']
+    styleUrls: ['./client-payments.component.scss']
 })
 export class ClientPaymentsComponent implements OnInit {
 

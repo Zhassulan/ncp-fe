@@ -13,7 +13,7 @@ interface ROUTE {
 @Component({
     selector: 'app-menu-toolbar',
     templateUrl: './menu-toolbar.component.html',
-    styleUrls: ['./menu-toolbar.component.css']
+    styleUrls: ['./menu-toolbar.component.scss']
 })
 export class MenuToolbarComponent implements AfterViewChecked, OnDestroy {
 
@@ -79,8 +79,12 @@ export class MenuToolbarComponent implements AfterViewChecked, OnDestroy {
         this.subscription.unsubscribe();
     }
 
+    color() {
+        return isDevMode() ? "{'background-color': #3F51B5;}" : "{'background-color': #46BD4E;}" ;
+    }
+
     isDevMode() {
-        return isDevMode() ;
+        return isDevMode();
     }
 
 }

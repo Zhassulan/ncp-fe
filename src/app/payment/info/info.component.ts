@@ -7,7 +7,7 @@ import {PaymentService} from '../payment.service';
 @Component({
     selector: 'app-payment-info',
     templateUrl: './info.component.html',
-    styleUrls: ['./info.component.css']
+    styleUrls: ['./info.component.scss']
 })
 export class InfoComponent implements OnInit, AfterViewInit {
 

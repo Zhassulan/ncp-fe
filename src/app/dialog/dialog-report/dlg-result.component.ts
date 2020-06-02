@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 @Component({
     selector: 'app-dialog-report',
     templateUrl: './dlg-result.component.html',
-    styleUrls: ['./dlg-result.component.css']
+    styleUrls: ['./dlg-result.component.scss']
 })
 export class DlgResultComponent implements  OnInit, AfterViewInit {
 

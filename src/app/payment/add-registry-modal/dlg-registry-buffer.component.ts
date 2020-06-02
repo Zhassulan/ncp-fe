@@ -5,7 +5,7 @@ import {RegistryDialogData} from '../payment.component';
 @Component({
     selector: 'app-add-registry-modal',
     templateUrl: './dlg-registry-buffer.component.html',
-    styleUrls: ['./dlg-registry-buffer.component.css']
+    styleUrls: ['./dlg-registry-buffer.component.scss']
 })
 export class DlgRegistryBufferComponent implements OnInit {
 

@@ -16,7 +16,7 @@ import {Utils} from '../../utils';
 @Component({
     selector: 'app-registries',
     templateUrl: './registries.component.html',
-    styleUrls: ['./registries.component.css']
+    styleUrls: ['./registries.component.scss']
 })
 export class RegistriesComponent implements OnInit, OnDestroy {
 

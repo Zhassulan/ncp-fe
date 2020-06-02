@@ -8,7 +8,7 @@ import {NotificationsService} from 'angular2-notifications';
 @Component({
     selector: 'app-partners',
     templateUrl: './dlg-mobipay-partners.component.html',
-    styleUrls: ['./dlg-mobipay-partners.component.css']
+    styleUrls: ['./dlg-mobipay-partners.component.scss']
 })
 export class DlgMobipayPartnersComponent implements OnInit, AfterViewInit, OnDestroy {
 

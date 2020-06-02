@@ -14,7 +14,7 @@ import {PaymentStatus} from '../../settings';
 @Component({
     selector: 'app-raw-table',
     templateUrl: './raw-table.component.html',
-    styleUrls: ['./raw-table.component.css']
+    styleUrls: ['./raw-table.component.scss']
 })
 export class RawTableComponent implements OnInit {
 

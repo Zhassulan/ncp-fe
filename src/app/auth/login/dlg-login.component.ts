@@ -12,7 +12,7 @@ import {Subscription} from 'rxjs';
 @Component({
     selector: 'app-login',
     templateUrl: './dlg-login.component.html',
-    styleUrls: ['./dlg-login.component.css']
+    styleUrls: ['./dlg-login.component.scss']
 })
 
 export class DlgLoginComponent implements OnInit {

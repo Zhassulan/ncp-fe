@@ -1,7 +1,7 @@
 <mat-sidenav-container>
     <mat-sidenav #sidenav mode="over">
 
-        <mat-toolbar>Меню</mat-toolbar>
+        <mat-toolbar [ngStyle]="{'background-color': isDevMode() ? '#9FFFA5' : '#3F51B5'}">Меню</mat-toolbar>
 
         <mat-nav-list>
 
@@ -22,7 +22,7 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-        <mat-toolbar>
+        <mat-toolbar [ngStyle]="{'background-color': isDevMode() ? '#00AC0B' : '#3F51B5'}">
             <mat-toolbar-row>
                 <button mat-icon-button id="menu" matTooltip="Меню" (click)="sidenav.toggle()">
                     <mat-icon>menu</mat-icon>

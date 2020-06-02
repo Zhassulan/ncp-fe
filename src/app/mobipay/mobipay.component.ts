@@ -3,7 +3,7 @@ import {Component, OnInit} from '@angular/core';
 @Component({
     selector: 'app-mobipay',
     templateUrl: './mobipay.component.html',
-    styleUrls: ['./mobipay.component.css']
+    styleUrls: ['./mobipay.component.scss']
 })
 export class MobipayComponent implements OnInit {
 

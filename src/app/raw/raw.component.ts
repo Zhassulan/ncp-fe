@@ -7,7 +7,7 @@ import {RawTableComponent} from './raw-table/raw-table.component';
 @Component({
     selector: 'app-raw',
     templateUrl: './raw.component.html',
-    styleUrls: ['./raw.component.css']
+    styleUrls: ['./raw.component.scss']
 })
 export class RawComponent implements OnInit {
 

@@ -17,7 +17,7 @@ import {MobipayDataService} from '../../data/mobipay-data.service';
 @Component({
     selector: 'app-payments-table',
     templateUrl: './payments-table.component.html',
-    styleUrls: ['./payments-table.component.css']
+    styleUrls: ['./payments-table.component.scss']
 })
 export class PaymentsTableComponent implements OnInit, OnDestroy {
 

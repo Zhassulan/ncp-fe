@@ -6,7 +6,7 @@ import {Subscription} from 'rxjs';
 @Component({
     selector: 'app-payment-menu',
     templateUrl: './payment-menu.component.html',
-    styleUrls: ['./payment-menu.component.css']
+    styleUrls: ['./payment-menu.component.scss']
 })
 export class PaymentMenuComponent implements OnInit {
 

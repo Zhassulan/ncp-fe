@@ -11,7 +11,7 @@ import {ClientDataService} from '../../data/client-data-service';
 @Component({
     selector: 'app-add-detail',
     templateUrl: './add-detail.component.html',
-    styleUrls: ['./add-detail.component.css']
+    styleUrls: ['./add-detail.component.scss']
 })
 export class AddDetailComponent implements OnInit, OnDestroy {
 

@@ -8,7 +8,7 @@ import {Subscription} from 'rxjs';
 @Component({
     selector: 'app-dialog',
     templateUrl: './dlg-import-router-registry.component.html',
-    styleUrls: ['./dlg-import-router-registry.component.css']
+    styleUrls: ['./dlg-import-router-registry.component.scss']
 })
 export class DlgImportRouterRegistryComponent implements OnInit, OnDestroy {
 
