@@ -39,4 +39,5 @@ export class RouterService {
   resetFilePayment()  {
     this.routerRegistry = null;
   }
+
 }
