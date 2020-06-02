@@ -1,50 +1,52 @@
-<mat-form-field>
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Поиск...">
-    <mat-icon matSuffix>search</mat-icon>
-</mat-form-field>
-<table mat-table [dataSource]="dataSource" matSort>
-
-    <ng-container matColumnDef="No">
-        <th mat-header-cell *matHeaderCellDef> #</th>
-        <td mat-cell *matCellDef="let detail; let i = index;"> {{ paginator.pageIndex < 1 ? i + 1 : (i + 1) + (paginator.pageIndex * 10) }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Название</th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="bin">
-        <th mat-header-cell *matHeaderCellDef> ИИН/БИН</th>
-        <td mat-cell *matCellDef="let element"> {{element.bin}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="managedBy">
-        <th mat-header-cell *matHeaderCellDef> Менеджер</th>
-        <td mat-cell *matCellDef="let element"> {{element.managedBy}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="types">
-        <th mat-header-cell *matHeaderCellDef> Тип</th>
-        <td mat-cell *matCellDef="let element"> {{element.types}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="segments">
-        <th mat-header-cell *matHeaderCellDef> Сегмент</th>
-        <td mat-cell *matCellDef="let element"> {{element.segments}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="payments">
-        <th mat-header-cell *matHeaderCellDef> </th>
-        <td mat-cell *matCellDef="let element">
-            <button mat-icon-button matTooltip="Платежи" (click)="openClientPayments(element, isMobipay)">
-                <mat-icon>view_list</mat-icon>
-            </button>
-        </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-
-<mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+<div class="container">
+    <div class="search">
+        <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Поиск...">
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+    </div>
+    <div class="update">
+        <div *ngIf="isMobipay">
+            <button mat-raised-button color="primary" (click)="updateLimits()">Обновить лимиты</button>
+        </div>
+    </div>
+    <div class="clients">
+        <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="No">
+                <th mat-header-cell *matHeaderCellDef> #</th>
+                <td mat-cell *matCellDef="let detail; let i = index;"> {{ paginator.pageIndex < 1 ? i + 1 : (i + 1) + (paginator.pageIndex * 10) }} </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Название</th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="bin">
+                <th mat-header-cell *matHeaderCellDef> ИИН/БИН</th>
+                <td mat-cell *matCellDef="let element"> {{element.bin}} </td>
+            </ng-container>
+            <ng-container matColumnDef="managedBy">
+                <th mat-header-cell *matHeaderCellDef> Менеджер</th>
+                <td mat-cell *matCellDef="let element"> {{element.managedBy}} </td>
+            </ng-container>
+            <ng-container matColumnDef="types">
+                <th mat-header-cell *matHeaderCellDef> Тип</th>
+                <td mat-cell *matCellDef="let element"> {{element.types}} </td>
+            </ng-container>
+            <ng-container matColumnDef="segments">
+                <th mat-header-cell *matHeaderCellDef> Сегмент</th>
+                <td mat-cell *matCellDef="let element"> {{element.segments}} </td>
+            </ng-container>
+            <ng-container matColumnDef="payments">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button matTooltip="Платежи" (click)="openClientPayments(element, isMobipay)">
+                        <mat-icon>view_list</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

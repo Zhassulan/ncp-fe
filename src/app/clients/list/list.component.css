@@ -1,3 +1,27 @@
+.container {
+    display: grid;
+    grid-template-areas:
+            "search update"
+            "clients clients";
+    grid-template-rows: auto;
+    grid-template-columns: auto auto;
+}
+
+.search {
+    grid-area: search;
+    justify-self: start;
+}
+
+.update {
+    grid-area: update;
+    justify-self: end;
+    align-self: center;
+}
+
+.clients {
+    grid-area: clients;
+}
+
 table {
     width: 100%;
 }

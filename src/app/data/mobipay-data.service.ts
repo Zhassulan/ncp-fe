@@ -40,4 +40,8 @@ export class MobipayDataService {
         return this.http.post<Payment>(`${API_URL}/mobipay/distribute/${id}`, null, {params}).pipe(catchError(HandleErr.intercept));
     }
 
+    updateLimits() {
+
+    }
+
 }

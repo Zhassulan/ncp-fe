@@ -64,7 +64,7 @@
                 },
                 {
                   "replace": "src/style.css",
-                  "with": "src/style1.css"
+                  "with": "assets/style1.css"
                 }
 
               ],
