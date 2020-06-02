@@ -61,12 +61,7 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.staging.ts"
-                },
-                {
-                  "replace": "src/styles.css",
-                  "with": "src/assets/styles.css"
                 }
-
               ],
               "optimization": true,
               "outputHashing": "all",
@@ -171,5 +166,10 @@
   "defaultProject": "ncp-frontend-app",
   "cli": {
     "analytics": "c9ef5467-3014-4c1e-9777-5b9ea3fd296d"
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
   }
 }
