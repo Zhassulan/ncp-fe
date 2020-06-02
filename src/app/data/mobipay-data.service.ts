@@ -5,6 +5,8 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {HandleErr} from './handle-err';
 import {catchError} from 'rxjs/operators';
 import {Payment} from '../payment/model/payment';
+import {RouterRegistry} from '../router/model/router-registry';
+import {LimitsUpdateResponse} from '../mobipay/model/limits-update-response';
 
 const API_URL = environment.apiUrl;
 
@@ -40,8 +42,8 @@ export class MobipayDataService {
         return this.http.post<Payment>(`${API_URL}/mobipay/distribute/${id}`, null, {params}).pipe(catchError(HandleErr.intercept));
     }
 
-    updateLimits() {
-
+    updateLimits(formData: FormData) {
+        return this.http.post<LimitsUpdateResponse []>(`${API_URL}/mobipay/limits`, formData).pipe(catchError(HandleErr.intercept));
     }
 
 }

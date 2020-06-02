@@ -61,7 +61,7 @@ import {DlgRegistryBufferComponent} from './payment/add-registry-modal/dlg-regis
 import {MyDateAdapter} from './my-date-adapter';
 import { RawComponent } from './raw/raw.component';
 import { RawTableComponent } from './raw/raw-table/raw-table.component';
-import { DialogComponent } from './mobipay/limits/dialog/dialog.component';
+import { DlgImportLimits } from './mobipay/limits/dialog/dlg-import-limits.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -100,7 +100,7 @@ registerLocaleData(localeRu, 'ru');
         DlgMobipayPartnersComponent,
         RawComponent,
         RawTableComponent,
-        DialogComponent,
+        DlgImportLimits,
     ],
     entryComponents: [
         DlgResultComponent,
@@ -108,7 +108,8 @@ registerLocaleData(localeRu, 'ru');
         DlgImportRouterRegistryComponent,
         DlgRegistryBufferComponent,
         DlgDeferComponent,
-        DlgMobipayPartnersComponent
+        DlgMobipayPartnersComponent,
+        DlgImportLimits
     ],
     imports: [
         CommonModule,

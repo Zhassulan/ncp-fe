@@ -10,14 +10,21 @@ import {Router} from '@angular/router';
 import {ClientService} from '../client.service';
 import {MobipayDataService} from '../../data/mobipay-data.service';
 import {Subscription} from 'rxjs';
+import {DlgRegistryBufferComponent} from '../../payment/add-registry-modal/dlg-registry-buffer.component';
+import {MatDialog} from '@angular/material/dialog';
+import {DlgImportLimits} from '../../mobipay/limits/dialog/dlg-import-limits.component';
+import {DetailsComponent} from '../../payment/details/details.component';
+import {DlgService} from '../../dialog/dlg.service';
+import {MobipayService} from '../../mobipay/mobipay.service';
 
 @Component({
     selector: 'app-clents-list',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit, AfterViewInit, OnDestroy{
+export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
+    limits;
     clients = [];
     displayedColumns: string[] = ['No', 'name', 'bin', 'managedBy', 'types', 'segments', 'payments'];
     dataSource = new MatTableDataSource<Client>(this.clients);
@@ -31,7 +38,10 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy{
                 private appService: AppService,
                 private router: Router,
                 private clntService: ClientService,
-                private mobipayDataService: MobipayDataService) {
+                private mobipayDataService: MobipayDataService,
+                public dlg: MatDialog,
+                private dlgService: DlgService,
+                private mobipayService: MobipayService) {
     }
 
     ngAfterViewInit() {
@@ -54,10 +64,10 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy{
             },
             error => {
                 this.notifService.error(error.message);
-              this.appService.setProgress(false);
+                this.appService.setProgress(false);
             },
             () => {
-              this.appService.setProgress(false);
+                this.appService.setProgress(false);
             });
     }
 
@@ -70,15 +80,32 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy{
 
     openClientPayments(client, isMobipay) {
         this.clntService.client = client;
-        this.router.navigate([`clients/${client.id}/payments`, { isMobipay: isMobipay } ]);
+        this.router.navigate([`clients/${client.id}/payments`, {isMobipay: isMobipay}]);
     }
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
     }
 
-    updateLimits() {
-
+    dlgUpdateLimits() {
+        const dialogRef = this.dlg.open(DlgImportLimits, {
+            width: '50%',
+            data: {limits: this.limits},
+            disableClose: true
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(this.mobipayService.limits);
+            this.dlgService.clear();
+            this.mobipayService.limits.forEach(i => {
+                this.dlgService.addItem(`код партнера: ${i.partnerCode}`);
+                this.dlgService.addItem(`код результата: ${i.resultCode}`);
+                this.dlgService.addItem(`результат: ${i.resultMessage}`);
+                this.dlgService.addItem(`новый лимит: ${i.newLimitValue}`);
+                this.dlgService.addItem(`старый лимит: ${i.newLimitValue}`);
+                this.dlgService.addItem('');
+            })
+            this.dlgService.openDialog();
+        });
     }
 
 }
