@@ -63,8 +63,8 @@
                   "with": "src/environments/environment.staging.ts"
                 },
                 {
-                  "replace": "src/style.css",
-                  "with": "assets/style1.css"
+                  "replace": "src/styles.css",
+                  "with": "src/assets/styles.css"
                 }
 
               ],
