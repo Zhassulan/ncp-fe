@@ -66,6 +66,7 @@ export const enum MSG {
     transitSuccess = 'Платёж успешно перенесён на тразнитный счёт',
     transitDelSuccess = 'Успешно удалён с транзитного счёта',
     distributeSuccess = 'Платёж успешно разнесён',
+    distritbutionErrInvalidRegistry = 'Ошибочные разноски',
     updateCache = 'Есть обновления, обновите кеш страницы [Ctrl]+[F5]',
     noData = 'Данные не предоставлены',
     mobipayChanged = 'Mobipay платёж изменён',
@@ -78,6 +79,7 @@ export const enum MSG {
     distributionCancelMobipaySuccess = 'Платёж Mobipay успешно отменен',
     processedSuccess = 'Успешно обработан',
     choosePartner = 'Выберите партнера',
+
 }
 
 export enum locStorItems {
