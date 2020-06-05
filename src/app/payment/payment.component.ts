@@ -15,6 +15,7 @@ import {Subscription, throwError} from 'rxjs';
 import {DlgRegistryBufferComponent} from './add-registry-modal/dlg-registry-buffer.component';
 import {Payment} from './model/payment';
 import * as HttpStatus from 'http-status-codes';
+import {DlgService} from '../dialog/dlg.service';
 
 export interface RegistryDialogData {
     registry: string;
@@ -45,7 +46,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
                 public dlg: MatDialog,
                 private appService: AppService,
                 private payDataService: PayDataService,
-                private  clntDataService: ClientDataService) {
+                private  clntDataService: ClientDataService,
+                private dlgService: DlgService) {
     }
 
     ngOnInit() {
@@ -140,7 +142,11 @@ export class PaymentComponent implements OnInit, OnDestroy {
             this.payService.setPayment(data);
             this.notifService.info(MSG.distributeSuccess);
         }, error => {
-            this.notifService.error(error.message);
+            this.dlgService.clear();
+            this.notifService.error(MSG.distritbutionErrInvalidRegistry)
+            this.dlgService.addItem(`${MSG.distritbutionErrInvalidRegistry} в количестве ${error.message.length}`);
+            error.message.forEach(i => this.dlgService.addItem(i.msisdn ? i.msisdn : i.account));
+            this.dlgService.openDialog();
             this.appService.setProgress(false);
         }, () => this.appService.setProgress(false));
     }

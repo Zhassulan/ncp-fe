@@ -81,7 +81,7 @@ export class AddDetailComponent implements OnInit, OnDestroy {
     canAddDetail() {
         return (((this.phoneControl.value != '' && this.phoneControl.value != null) ||
             (this.accountControl.value != '' && this.accountControl.value != null)) &&
-            this.payService.canAddDetail());
+            this.payService.canAddDetail() && Number(this.sumControl.value) > 0);
     }
 
     clearFields() {
