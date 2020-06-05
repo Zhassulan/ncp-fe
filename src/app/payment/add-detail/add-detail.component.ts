@@ -106,16 +106,25 @@ export class AddDetailComponent implements OnInit, OnDestroy {
         if (!this.payService.canLoadPhones(this.payment) || this.phoneControl.value.trim().length == 0) return;
         this.clearAccount();
         this.clntDataService.phones(this.payment.rnnSender, this.phoneControl.value, 10).subscribe(
-            data => this.phones = data,
-            error => this.notifSerice.warn('Ошибка поиска номеров'));
+            data => {
+                this.phones = data;
+                this.filteredPhones = this.phoneControl.valueChanges
+                    .pipe(startWith(''),
+                        map(state => state ? this._filterPhone(state) : this.phones.slice()));
+
+            });
     }
 
     accountChanged() {
         if (!this.payService.canLoadPhones(this.payment) || this.accountControl.value.trim().length == 0) return;
         this.clearPhone();
         this.clntDataService.accounts(this.payment.rnnSender, this.accountControl.value, 10).subscribe(
-            data => this.accounts = data,
-            error => this.notifSerice.warn('Ошибка поиска счетов'));
+            data => {
+                this.accounts = data;
+                this.filteredAccounts = this.accountControl.valueChanges
+                    .pipe(startWith(''),
+                        map(state => state ? this._filterAccount(state) : this.accounts.slice()));
+            });
     }
 
     isBlocked(): boolean {
@@ -125,16 +134,16 @@ export class AddDetailComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
     }
 
+    ngOnDestroy(): void {
+        this.isPropsLoaded$.unsubscribe();
+    }
+
     private _filterPhone(value: string): string [] {
         return this.phones.filter(item => item.indexOf(value) === 0);
     }
 
     private _filterAccount(value: string): string [] {
         return this.accounts.filter(item => item.indexOf(value) === 0);
-    }
-
-    ngOnDestroy(): void {
-        this.isPropsLoaded$.unsubscribe();
     }
 
 }
