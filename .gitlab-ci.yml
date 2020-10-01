@@ -1,4 +1,13 @@
 image: docker:latest
+
+variables:
+  IMAGE_TEST: $CI_REGISTRY_IMAGE/test
+  IMAGE_PROD: $CI_REGISTRY_IMAGE/prod
+  FOLDER_TEST: /data/docker-compose/$CI_PROJECT_NAME-test
+  FOLDER_PROD: /data/docker-compose/$CI_PROJECT_NAME
+  COMPOSER: /usr/local/bin/docker-compose
+  DOCKER: /usr/bin/docker
+
 services:
   - docker:dind
 cache:
@@ -12,7 +21,7 @@ stages:
   - package
   - deploy
 
-build-review:
+build-test:
   image: docker.tele2.kz/ncp/angular-cli:latest
   stage: build
   script:
@@ -36,17 +45,25 @@ build-prod:
   only:
     - master
 
-docker-build:
+docker-build-test:
   stage: package
   script:
-    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest .
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $IMAGE_TEST:latest .
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker push $IMAGE_TEST:latest
+  only:
+    - test
+
+docker-build-prod:
+  stage: package
+  script:
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $IMAGE_PROD:latest .
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
+    - docker push $IMAGE_PROD:latest
   only:
     - master
-    - test
 
-deploy-to-review:
+deploy-test:
   stage: deploy
   image: ubuntu
   environment:
@@ -66,23 +83,22 @@ deploy-to-review:
     - chmod 644 ~/.ssh/known_hosts
     - apt install -y curl
   script:
-    - export SSHPASS=$DOCKER_USER22
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 docker pull $CI_REGISTRY_IMAGE:latest
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 chmod o+x /data/docker-compose/$CI_PROJECT_NAME-test/down.sh
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 chmod o+x /data/docker-compose/$CI_PROJECT_NAME-test/up.sh
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash /data/docker-compose/$CI_PROJECT_NAME-test/down.sh
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash /data/docker-compose/$CI_PROJECT_NAME-test/up.sh
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker logout docker.tele2.kz
-    - curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api-test/ver
+    - export SSHPASS=$SERVER22_PASS
+    - sshpass -e ssh -T root@$SERVER22 "
+      bash $FOLDER_TEST/down.sh &&
+      $DOCKER login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz &&
+      $COMPOSER -f $FOLDER_TEST/docker-compose.yml pull &&
+      bash $FOLDER_TEST/up.sh &&
+      $DOCKER logout docker.tele2.kz &&
+      curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api-test/ver"
 
-deploy-to-production:
+deploy-prod:
   stage: deploy
   image: ubuntu
   environment:
     name: development
   only:
-  - master
+    - master
   before_script:
     - apt update
     - apt install -y sshpass
@@ -97,12 +113,10 @@ deploy-to-production:
     - apt install -y curl
   script:
     - export SSHPASS=$DOCKER_USER22
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 docker pull $CI_REGISTRY_IMAGE:latest
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 chmod o+x /data/docker-compose/$CI_PROJECT_NAME/down.sh
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 chmod o+x /data/docker-compose/$CI_PROJECT_NAME/up.sh
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash /data/docker-compose/$CI_PROJECT_NAME/down.sh
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash /data/docker-compose/$CI_PROJECT_NAME/up.sh
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 /usr/bin/docker logout docker.tele2.kz
-    - curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api/ver
-
+    - sshpass -e ssh -T root@$SERVER22 "
+      bash $FOLDER_TEST/down.sh &&
+      $DOCKER login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz &&
+      $COMPOSER -f $FOLDER_PROD/docker-compose.yml pull &&
+      bash $FOLDER_PROD/up.sh &&
+      $DOCKER logout docker.tele2.kz &&
+      curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api/ver"
