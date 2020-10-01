@@ -89,8 +89,8 @@ deploy-test:
       $DOCKER login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz &&
       $COMPOSER -f $FOLDER_TEST/docker-compose.yml pull &&
       bash $FOLDER_TEST/up.sh &&
-      $DOCKER logout docker.tele2.kz &&
-      curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api-test/ver"
+      $DOCKER logout docker.tele2.kz"
+      curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api-test/ver
 
 deploy-prod:
   stage: deploy
@@ -118,5 +118,5 @@ deploy-prod:
       $DOCKER login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz &&
       $COMPOSER -f $FOLDER_PROD/docker-compose.yml pull &&
       bash $FOLDER_PROD/up.sh &&
-      $DOCKER logout docker.tele2.kz &&
-      curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api/ver"
+      $DOCKER logout docker.tele2.kz"
+    - curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api/ver
