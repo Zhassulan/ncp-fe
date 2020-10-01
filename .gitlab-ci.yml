@@ -90,7 +90,7 @@ deploy-test:
       $COMPOSER -f $FOLDER_TEST/docker-compose.yml pull &&
       bash $FOLDER_TEST/up.sh &&
       $DOCKER logout docker.tele2.kz"
-      curl -d "pwd=RefreshVerPlease" https://10.200.200.22/ncp/api-test/ver
+    - curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api-test/ver
 
 deploy-prod:
   stage: deploy
