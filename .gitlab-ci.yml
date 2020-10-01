@@ -112,10 +112,9 @@ deploy-prod:
     - apt install -y curl
   script:
     - export SSHPASS=$DOCKER_USER22
-    - sshpass -e ssh -T root@$SERVER22 "
-      bash $FOLDER_TEST/down.sh &&
-      $DOCKER login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz &&
-      $COMPOSER -f $FOLDER_PROD/docker-compose.yml pull &&
-      bash $FOLDER_PROD/up.sh &&
-      $DOCKER logout docker.tele2.kz"
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash $FOLDER_PROD/down.sh
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 $DOCKER login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 $COMPOSER -f $FOLDER_PROD/docker-compose.yml pull
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash $FOLDER_PROD/up.sh
+    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 $DOCKER logout docker.tele2.kz
     - curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api/ver
