@@ -1,66 +1,28 @@
-.payment {
-    display: grid;
-    grid-template-areas:
-            "topGap"
-            "paymentItem";
-    grid-template-rows: 10px auto;
-    grid-template-columns: auto;
-    grid-gap: 5px;
-    justify-items: center;
-}
-
-.topGap {
-    grid-area: topGap;
-}
-
-.paymentItem {
-    grid-area: paymentItem;
-    width: 95%;
-    background-color: white;
-    border-radius: 5px;
-}
-
 .container {
     display: grid;
-    grid-template-columns: 17% 17% 30% 35%;
-    grid-template-rows: calc(100vh - 90vh) auto auto;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    grid-template-areas: ".";
+}
+
+.payment {
+    display: grid;
+    grid-template-columns: 99%;
+    grid-template-rows: auto;
     grid-template-areas:
-            "header header header header"
-            "leftSide leftSide rightSide rightSide"
-            "footer footer footer footer";
-    justify-items: stretch;
-    align-self: start;
-    grid-column-gap: 10px;
-}
-
-.item-header {
-    grid-area: header;
-}
-
-.item-b {
-    grid-area: main;
-}
-
-.item-c {
-    grid-area: leftSide;
-}
-
-.item-d {
-    grid-area: rightSide;
-}
-
-.item-e {
-    grid-area: footer;
-}
-
-.item-footer1 {
-    grid-area: footer1;
+            "header"
+            "info"
+            "add-detail"
+            "details";
+    width: 99%;
+    justify-content: center;
+    grid-row-gap: 15px;
 }
 
 .top {
     display: grid;
     grid-template-columns: 97% 3%;
-    grid-template-areas: "top1 top2"
+    grid-template-areas: "top1 top2";
 }
 
 .item-top1 {
@@ -73,4 +35,18 @@
     grid-area: top2;
 }
 
+.header {
+    grid-area: header;
+}
 
+.info {
+    grid-area: info;
+}
+
+.add-detail {
+    grid-area: add-detail;
+}
+
+.details {
+    grid-area: details;
+}

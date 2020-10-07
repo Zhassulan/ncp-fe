@@ -1,6 +1,6 @@
 .container {
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 20% 70%;
     grid-template-rows: 60px auto;
     grid-template-areas:
             "gridItem1 gridItem2"
@@ -21,6 +21,4 @@
 
 .item4 {
     grid-area: gridItem4;
-    align-self: center;
-    justify-self: end;
 }

@@ -1,29 +1,35 @@
-<div class="payment">
-    <div class="topGap"></div>
-    <div class="paymentItem">
-        <mat-card>
-            <div class="container">
-                <div class="item-header">
-                    <div class="top">
-                        <div class="item-top1">
-                            <div *ngIf="payment">
-                                <h1 class="mat-h1">{{ payment.paymentId }} от {{ payment.created | date }}</h1>
-                            </div>
-                        </div>
-                        <div class="item-top2">
-                            <app-payment-menu [payment]="payment" (selectedMenuItem)="menuOnSelected($event)"></app-payment-menu>
-                        </div>
+<div class="container">
+
+    <div style="height: 10px"></div>
+
+    <div class="payment">
+        <div class="header">
+            <div class="top">
+                <div class="item-top1">
+                    <div *ngIf="payment">
+                        <h1 class="mat-h1">{{ payment.paymentId }} от {{ payment.created | date }}</h1>
                     </div>
                 </div>
-                <div class="item-c" *ngIf="payment">
-                    <app-payment-info></app-payment-info>
-                    <app-add-detail [payment]="payment"></app-add-detail>
-                </div>
-                <div class="item-d" *ngIf="payment">
-                    <app-details></app-details>
+                <div class="item-top2">
+                    <app-payment-menu [payment]="payment" (selectedMenuItem)="menuOnSelected($event)"></app-payment-menu>
                 </div>
             </div>
-        </mat-card>
+        </div>
+
+        <div class="info" *ngIf="payment">
+            <app-payment-info></app-payment-info>
+        </div>
+
+        <div class="add-detail" *ngIf="payment.status == 0">
+            <app-add-detail [payment]="payment"></app-add-detail>
+        </div>
+
+        <div class="details" *ngIf="payment">
+            <p class="mat-h3">Разноски:</p>
+            <app-details></app-details>
+        </div>
     </div>
 </div>
+
 <simple-notifications></simple-notifications>
+
