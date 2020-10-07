@@ -7,14 +7,12 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
     templateUrl: './date-range.component.html',
     styleUrls: ['./date-range.component.scss']
 })
-export class DateRangeComponent implements OnInit {
+export class DateRangeComponent {
 
     public pickerStartDate = new FormControl(new Date());
     public pickerEndDate = new FormControl(new Date());
 
     constructor() {    }
-
-    ngOnInit() {    }
 
     public setTime() {
         let st = new Date(this.pickerStartDate.value.getTime());
@@ -28,6 +26,8 @@ export class DateRangeComponent implements OnInit {
     setDates(startDate, endDate) {
         this.start = startDate;
         this.end = endDate;
+        this.pickerStartDate.setValue(startDate);
+        this.pickerEndDate.setValue(endDate);
     }
 
     set start(start) {

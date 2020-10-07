@@ -52,16 +52,18 @@ export class RegistriesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.all();
+        this.dateRangeComponent.setTime();
+        this.registries();
         this.setPaginator();
     }
 
-    all() {
+    registries() {
         this.appService.setProgress(true);
-        this.subscription = this.registryService.all().subscribe(
+        this.subscription = this.registryService.range(this.dateRangeComponent.pickerStartDate.value.getTime(), this.dateRangeComponent.pickerEndDate.value.getTime(), null).subscribe(
             data => {
                 this.dataSource.data = data;
-                this.setCalendar();
+                if (data.length > 0)
+                    this.setCalendar(new Date(Math.min.apply(null, this.dataSource.data.map(i => i.created))), new Date(Math.max.apply(null, this.dataSource.data.map(i => i.created))));
             },
             error => {
                 this.notifService.error(error.message);
@@ -70,11 +72,8 @@ export class RegistriesComponent implements OnInit, OnDestroy {
             () => this.appService.setProgress(false));
     }
 
-    setCalendar() {
-        let minDate = new Date(Math.min.apply(null, this.dataSource.data.map(i => i.created)));
-        let maxDate = new Date(Math.max.apply(null, this.dataSource.data.map(i => i.created)));
-        this.dateRangeComponent.start = minDate;
-        this.dateRangeComponent.end = maxDate;
+    setCalendar(start, end) {
+        this.dateRangeComponent.setDates(start, end);
     }
 
     range() {
@@ -82,7 +81,7 @@ export class RegistriesComponent implements OnInit, OnDestroy {
         this.subscription = this.registryService.range(this.dateRangeComponent.start, this.dateRangeComponent.end, this.binFormCtl.value).subscribe(
             data => {
                 this.dataSource.data = data;
-                if (data.length > 0) this.setCalendar();
+                //this.setCalendar(new Date(Math.min.apply(null, this.dataSource.data.map(i => i.created))), new Date(Math.max.apply(null, this.dataSource.data.map(i => i.created))));
             },
             error => {
                 this.notifService.error(error.message);
