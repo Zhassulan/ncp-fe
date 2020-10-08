@@ -1,8 +1,7 @@
 <div class="container">
-
     <div style="height: 10px"></div>
-
     <div class="payment">
+
         <div class="header">
             <div class="top">
                 <div class="item-top1">
@@ -20,16 +19,14 @@
             <app-payment-info></app-payment-info>
         </div>
 
-        <div class="add-detail" *ngIf="payment.status == 0">
-            <app-add-detail [payment]="payment"></app-add-detail>
+        <div class="add-detail" *ngIf="payment">
+            <app-add-detail [payment]="payment" *ngIf="payService.canAddDetail()"></app-add-detail>
         </div>
 
         <div class="details" *ngIf="payment">
-            <p class="mat-h3">Разноски:</p>
             <app-details></app-details>
         </div>
     </div>
 </div>
-
 <simple-notifications></simple-notifications>
 

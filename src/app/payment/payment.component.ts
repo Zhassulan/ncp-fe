@@ -1,20 +1,17 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
-import {MSG, PaymentMenuItems} from '../settings';
+import {MSG, PaymentMenuItems, PaymentStatus} from '../settings';
 import {PaymentService} from './payment.service';
 import {DlgImportRouterRegistryComponent} from './dialog/dlg-import-router-registry.component';
 import {ActivatedRoute} from '@angular/router';
 import {DetailsComponent} from './details/details.component';
 import {AppService} from '../app.service';
 import {DlgDeferComponent} from './calendar-defer-modal/dlg-defer.component';
-import {MatSort} from '@angular/material/sort';
 import {PayDataService} from '../data/pay-data-service';
 import {ClientDataService} from '../data/client-data-service';
-import {Subscription, throwError} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {DlgRegistryBufferComponent} from './add-registry-modal/dlg-registry-buffer.component';
-import {Payment} from './model/payment';
-import * as HttpStatus from 'http-status-codes';
 import {DlgService} from '../dialog/dlg.service';
 
 export interface RegistryDialogData {
@@ -32,13 +29,17 @@ export interface CalendarDialogData {
 })
 export class PaymentComponent implements OnInit, OnDestroy {
 
-    payment: Payment;
     private paymentMenuItems = PaymentMenuItems;
     private dialogRef;
     private registry: string;
     private deferDate = new Date();
     private subscription: Subscription;
     @ViewChild(DetailsComponent, {static: true}) private childDetailsComponent: DetailsComponent;
+    paymentStatus = PaymentStatus;
+
+    get payment() {
+        return this.payService.payment;
+    }
 
     constructor(public payService: PaymentService,
                 private notifService: NotificationsService,
@@ -92,15 +93,11 @@ export class PaymentComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    /* canLoadPhones() {
-         return this.payService.canLoadPhones();
-     }*/
-
     private load(id) {
+        this.payService.payment = null;
         this.appService.setProgress(true);
         this.subscription = this.payDataService.findById(id).subscribe(
             data => {
-                this.payment = data;
                 this.payService.setPayment(data);
                 if (this.canLoadPhones(data)) this.props();
             },

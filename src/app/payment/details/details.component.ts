@@ -37,16 +37,15 @@ enum PaymentDetailTableColumnsDisplay {
 })
 export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
 
-    public PaymentStatus = PaymentStatus;
-    public detailsDS = new MatTableDataSource<Detail>();
-    public displayedColumns: string[] = PaymentDetailsTableColumns;
-    public detailTableColumnsDisplay = PaymentDetailTableColumnsDisplay;
+    paymentStatus = PaymentStatus;
+    detailsDS = new MatTableDataSource<Detail>();
+    displayedColumns: string[] = PaymentDetailsTableColumns;
+    detailTableColumnsDisplay = PaymentDetailTableColumnsDisplay;
     @ViewChild(MatPaginator, {static: true}) public paginator: MatPaginator;
     @ViewChild(MatSort, {static: true}) public sort: MatSort;
     subPayment: Subscription;
 
-    constructor(private payService: PaymentService) {
-    }
+    constructor(private payService: PaymentService) {    }
 
     ngOnInit(): void {
         this.subPayment = this.payService.payAnnounced$.subscribe(
@@ -74,7 +73,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     sum() {
-        return this.payService.detailsSum();
+        return this.payService.payment.details.length > 0 ? this.payService.detailsSum() : 0;
     }
 
     ngOnDestroy(): void {
