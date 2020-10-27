@@ -12,6 +12,8 @@ import {ClientsComponent} from '../clients/clients.component';
 import {ClientPaymentsComponent} from '../clients/client-payments/client-payments.component';
 import {MobipayComponent} from '../mobipay/mobipay.component';
 import {RawComponent} from '../raw/raw.component';
+import {TemplatesComponent} from '../template/templates/templates.component';
+import {TemplatesTableComponent} from '../template/templates-table/templates-table.component';
 
 const routes: Routes = [
     {
@@ -28,6 +30,13 @@ const routes: Routes = [
         component: PaymentsComponent,
         data: {
             breadcrumb: 'Платежи'
+        }
+    },
+    {
+        path: 'templates',
+        component: TemplatesComponent,
+        data: {
+            breadcrumb: 'Шаблоны'
         }
     },
     {
@@ -77,6 +86,13 @@ const routes: Routes = [
         component: RegistryComponent,
         data: {
             breadcrumb: 'Реестр'
+        }
+    },
+    {
+        path: 'templates/company/:id',
+        component: TemplatesComponent,
+        data: {
+            breadcrumb: 'Шаблоны'
         }
     },
     {

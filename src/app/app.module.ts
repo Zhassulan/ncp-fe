@@ -62,6 +62,8 @@ import {MyDateAdapter} from './my-date-adapter';
 import { RawComponent } from './raw/raw.component';
 import { RawTableComponent } from './raw/raw-table/raw-table.component';
 import { DlgImportLimits } from './mobipay/limits/dialog/dlg-import-limits.component';
+import { TemplatesComponent } from './template/templates/templates.component';
+import { TemplatesTableComponent } from './template/templates-table/templates-table.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -101,6 +103,8 @@ registerLocaleData(localeRu, 'ru');
         RawComponent,
         RawTableComponent,
         DlgImportLimits,
+        TemplatesComponent,
+        TemplatesTableComponent,
     ],
     entryComponents: [
         DlgResultComponent,

@@ -27,6 +27,11 @@ export class MenuToolbarComponent implements AfterViewChecked, OnDestroy {
             title: 'Платежи',
         },
         {
+            icon: 'description',
+            route: 'templates',
+            title: 'Шаблоны',
+        },
+        {
             icon: 'credit_card',
             route: 'raw',
             title: 'Неизвестные платежи',
