@@ -9,6 +9,7 @@ import {throwError} from 'rxjs';
 import {MSG} from '../settings';
 import {catchError} from 'rxjs/operators';
 import {HandleErr} from './handle-err';
+import {ClientProfile} from '../clients/clientProfile';
 
 const API_URL = environment.apiUrl;
 
@@ -57,6 +58,10 @@ export class ClientDataService {
         const params = new HttpParams()
             .set('limit', limit);
         return this.http.get<string []>(`${API_URL}/clients/${bin}/accounts/${value}`, {params});
+    }
+
+    profile(profileId)   {
+        return this.http.get<ClientProfile>(`${API_URL}/clients/profile/${profileId}`);
     }
 
 }
