@@ -156,13 +156,16 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
             () => this.appService.setProgress(false));
     }
 
+    dummy(row) {
+
+    }
+
     distributeMobipay(row) {
         this.dialogRef = this.dlg.open(DlgMobipayPartnersComponent, {
             width: '60%', height: '30%',
             data: {
                 'paymentId': row.id,
-                'partner': null,
-                'cancel': row.status == PaymentStatus.NEW ? false : true
+                'partner': null
             },
             disableClose: true
         });
@@ -172,7 +175,13 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
                 return;
             }
             this.appService.setProgress(true);
-            this.mobipayService.distribute(result.paymentId, result.cancel, result.code).subscribe(
+            let request = {
+                id: row.id,
+                status: row.status == PaymentStatus.DISTRIBUTED,
+                code: result.code
+            }
+            console.log(request);
+            this.mobipayService.distribute(row.id, row.status == PaymentStatus.DISTRIBUTED, result.code).subscribe(
                 data => {
                     this.notifService.info(data.status == PaymentStatus.DISTRIBUTED ?
                         MSG.distributionMobipaySuccess : data.status == PaymentStatus.NEW ?

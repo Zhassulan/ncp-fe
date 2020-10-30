@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {RouterRegistry} from '../router/model/router-registry';
 import {NotificationsService} from 'angular2-notifications';
-import {PayDataService} from '../data/pay-data-service';
 import {MobipayDataService} from '../data/mobipay-data.service';
 import {LimitsUpdateResponse} from './model/limits-update-response';
 
