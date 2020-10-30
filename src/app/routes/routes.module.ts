@@ -14,6 +14,7 @@ import {MobipayComponent} from '../mobipay/mobipay.component';
 import {RawComponent} from '../raw/raw.component';
 import {TemplatesComponent} from '../template/templates/templates.component';
 import {TemplatesTableComponent} from '../template/templates-table/templates-table.component';
+import {TemplateComponent} from '../template/template/template.component';
 
 const routes: Routes = [
     {
@@ -93,6 +94,13 @@ const routes: Routes = [
         component: TemplatesComponent,
         data: {
             breadcrumb: 'Шаблоны'
+        }
+    },
+    {
+        path: 'templates/:id',
+        component: TemplateComponent,
+        data: {
+            breadcrumb: 'Шаблон'
         }
     },
     {

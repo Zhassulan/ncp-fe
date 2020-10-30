@@ -164,8 +164,7 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
         this.dialogRef = this.dlg.open(DlgMobipayPartnersComponent, {
             width: '60%', height: '30%',
             data: {
-                'paymentId': row.id,
-                'partner': null
+                'paymentId': row.id
             },
             disableClose: true
         });
@@ -180,7 +179,6 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
                 status: row.status == PaymentStatus.DISTRIBUTED,
                 code: result.code
             }
-            console.log(request);
             this.mobipayService.distribute(row.id, row.status == PaymentStatus.DISTRIBUTED, result.code).subscribe(
                 data => {
                     this.notifService.info(data.status == PaymentStatus.DISTRIBUTED ?
