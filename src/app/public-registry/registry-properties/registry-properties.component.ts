@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Registry} from '../../model/registry';
+import {Registry} from '../model/registry';
 
 @Component({
     selector: 'app-registry-properties',

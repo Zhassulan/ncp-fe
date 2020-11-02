@@ -3,6 +3,7 @@ import {Template} from './model/template';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
+import {TemplateRepository} from './template-repository.service';
 
 const API_URL = environment.apiUrl;
 
@@ -13,11 +14,12 @@ export class TemplateService {
 
     private _templates : Template [];
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient,
+                private repository: TemplateRepository) {
     }
 
-    findAllByCompany(profileId): Observable<Template []> {
-        return this.http.get<Template []>(`${API_URL}/templates/company/${profileId}`);
+    findAllById(profileId): Observable<Template []> {
+        return this.repository.findAllByCompany(profileId);
     }
 
     get templates(): Template[] {

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
-import {RegistryDataService} from '../../data/registry-data.service';
+import {PublicRegistryRepo} from '../public-registry-repo.service';
 
 @Component({
     selector: 'app-registry',
@@ -13,7 +13,7 @@ export class RegistryComponent implements OnInit {
 
     registry
 
-    constructor(private registryService: RegistryDataService,
+    constructor(private registryService: PublicRegistryRepo,
                 private route: ActivatedRoute,
                 private appService: AppService,
                 private notifService: NotificationsService) {

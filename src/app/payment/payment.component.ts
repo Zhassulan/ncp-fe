@@ -8,8 +8,8 @@ import {ActivatedRoute} from '@angular/router';
 import {DetailsComponent} from './details/details.component';
 import {AppService} from '../app.service';
 import {DlgDeferComponent} from './calendar-defer-modal/dlg-defer.component';
-import {PayDataService} from '../data/pay-data-service';
-import {ClientDataService} from '../data/client-data-service';
+import {PaymetRepo} from '../data/paymet-repo.service';
+import {ClientRepo} from '../clients/client-repo.service';
 import {Subscription} from 'rxjs';
 import {DlgRegistryBufferComponent} from './add-registry-modal/dlg-registry-buffer.component';
 import {DlgService} from '../dialog/dlg.service';
@@ -46,8 +46,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
                 private route: ActivatedRoute,
                 public dlg: MatDialog,
                 private appService: AppService,
-                private payDataService: PayDataService,
-                private  clntDataService: ClientDataService,
+                private payDataService: PaymetRepo,
+                private  clntDataService: ClientRepo,
                 private dlgService: DlgService) {
     }
 

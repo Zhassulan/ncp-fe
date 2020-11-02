@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialogRef} from '@angular/material/dialog';
 import {MSG} from '../../settings';
 import {NotificationsService} from 'angular2-notifications';
-import {AppDataService} from '../../data/app-data-service';
+import {AppDataService} from '../../app-data-service';
 import * as HttpStatus from 'http-status-codes';
 import {AppService} from '../../app.service';
 import {Subscription} from 'rxjs';

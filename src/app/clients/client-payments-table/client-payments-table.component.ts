@@ -2,7 +2,7 @@ import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ClientDataService} from '../../data/client-data-service';
+import {ClientRepo} from '../client-repo.service';
 import {NotificationsService} from 'angular2-notifications';
 import {AppService} from '../../app.service';
 import {Subscription} from 'rxjs';
@@ -10,12 +10,12 @@ import {ClientService} from '../client.service';
 import {PaymentService} from '../../payment/payment.service';
 import {DlgService} from '../../dialog/dlg.service';
 import {MSG, PaymentStatus, PaymentStatusRu} from '../../settings';
-import {PayDataService} from '../../data/pay-data-service';
+import {PaymetRepo} from '../../data/paymet-repo.service';
 import {Payment} from '../../payment/model/payment';
 import {DateRangeComponent} from '../../date-range/date-range.component';
 import {MatDialog} from '@angular/material/dialog';
 import {DlgMobipayPartnersComponent} from '../../mobipay/partners/dlg-mobipay-partners.component';
-import {MobipayDataService} from '../../data/mobipay-data.service';
+import {MobipayRepo} from '../../mobipay/mobipay-repo.service';
 
 @Component({
     selector: 'app-client-payments-table',
@@ -40,15 +40,15 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
     dialogRef;
 
     constructor(private route: ActivatedRoute,
-                private clntDataService: ClientDataService,
+                private clntDataService: ClientRepo,
                 private notifService: NotificationsService,
                 private appService: AppService,
                 private router: Router,
                 private clntService: ClientService,
                 private payService: PaymentService,
-                private mobipayService: MobipayDataService,
+                private mobipayService: MobipayRepo,
                 private dlgService: DlgService,
-                private payDataService: PayDataService,
+                private payDataService: PaymetRepo,
                 private dlg: MatDialog) {
         this.subscription = this.clntService.clntPayAnnounced$.subscribe(payments => {
             this.dataSource.data = payments;

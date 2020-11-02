@@ -6,7 +6,7 @@ import {map, startWith} from 'rxjs/operators';
 import {Detail} from '../model/detail';
 import {MSG, msisdnLength, PaymentStatus} from '../../settings';
 import {NotificationsService} from 'angular2-notifications';
-import {ClientDataService} from '../../data/client-data-service';
+import {ClientRepo} from '../../clients/client-repo.service';
 
 @Component({
     selector: 'app-add-detail',
@@ -41,7 +41,7 @@ export class AddDetailComponent implements OnInit, OnDestroy {
 
     constructor(private payService: PaymentService,
                 private notifSerice: NotificationsService,
-                private clntDataService: ClientDataService) {
+                private clntDataService: ClientRepo) {
         this.isPropsLoaded$ = this.payService.propsAnnounced$.subscribe(props => {
             // if props loaded, fill once accounts and phones for the first time
             if (props.count > 0) {

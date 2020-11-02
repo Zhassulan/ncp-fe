@@ -3,8 +3,8 @@ import {MSG, PaymentStatus} from '../settings';
 import {Observable, Subject} from 'rxjs';
 import {Payment} from './model/payment';
 import {Detail} from './model/detail';
-import {ClientDataService} from '../data/client-data-service';
-import {PayDataService} from '../data/pay-data-service';
+import {ClientRepo} from '../clients/client-repo.service';
+import {PaymetRepo} from '../data/paymet-repo.service';
 import {RouterService} from '../router/router.service';
 import {NotificationsService} from 'angular2-notifications';
 
@@ -28,8 +28,8 @@ export class PaymentService {
     propsAnnounced$ = this.propsObs.asObservable();
 
     constructor(private routerService: RouterService,
-                private clntDataService: ClientDataService,
-                private payDataService: PayDataService,
+                private clntDataService: ClientRepo,
+                private payDataService: PaymetRepo,
                 private notifSerice: NotificationsService) {
     }
 

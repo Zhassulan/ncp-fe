@@ -34,19 +34,19 @@ import {RegistriesComponent} from './registry/registries/registries.component';
 import {AppService} from './app.service';
 import {ExcelService} from './excel/excel.service';
 import {FileSaverModule} from 'ngx-filesaver';
-import {RegistryComponent} from './registry/registry/registry.component';
+import {RegistryComponent} from './public-registry/registry/registry.component';
 
-import {RegistryDetailsComponent} from './registry/registry/registry-details/registry-details.component';
-import {RegistryPropertiesComponent} from './registry/registry/registry-properties/registry-properties.component';
+import {RegistryDetailsComponent} from './public-registry/registry-details/registry-details.component';
+import {RegistryPropertiesComponent} from './public-registry/registry-properties/registry-properties.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {DateRangeComponent} from './date-range/date-range.component';
 import {AuthInterceptor} from './auth/auth-interceptor';
 import {MaterialsModule} from './materials/materials.module';
 import {ClientsComponent} from './clients/clients.component';
 import {ListComponent} from './clients/list/list.component';
-import {PayDataService} from './data/pay-data-service';
-import {AppDataService} from './data/app-data-service';
-import {ClientDataService} from './data/client-data-service';
+import {PaymetRepo} from './data/paymet-repo.service';
+import {AppDataService} from './app-data-service';
+import {ClientRepo} from './clients/client-repo.service';
 import {ClientPaymentsComponent} from './clients/client-payments/client-payments.component';
 import {ClientPaymentsTableComponent} from './clients/client-payments-table/client-payments-table.component';
 import {RouterService} from './router/router.service';
@@ -140,9 +140,9 @@ registerLocaleData(localeRu, 'ru');
         {provide: LOCALE_ID, useValue: 'ru-RU'},
         {provide: DateAdapter, useClass: MyDateAdapter},
         DlgService,
-        PayDataService,
+        PaymetRepo,
         AppDataService,
-        ClientDataService,
+        ClientRepo,
         AuthService,
         RouterService,
         PaymentService,

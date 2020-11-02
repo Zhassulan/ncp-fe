@@ -4,7 +4,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {Payment} from '../../payment/model/payment';
 import {MSG, PaymentStatus, PaymentStatusRu} from '../../settings';
-import {PayDataService} from '../../data/pay-data-service';
+import {PaymetRepo} from '../../data/paymet-repo.service';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Router} from '@angular/router';
@@ -12,7 +12,7 @@ import {DlgService} from '../../dialog/dlg.service';
 import {ExcelService} from '../../excel/excel.service';
 import {Subscription} from 'rxjs';
 import {PaymentService} from '../../payment/payment.service';
-import {MobipayDataService} from '../../data/mobipay-data.service';
+import {MobipayRepo} from '../../mobipay/mobipay-repo.service';
 
 @Component({
     selector: 'app-payments-table',
@@ -44,14 +44,14 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
     @Input() selection;
     private subscription: Subscription;
 
-    constructor(private payDataService: PayDataService,
+    constructor(private payDataService: PaymetRepo,
                 private appService: AppService,
                 private notifService: NotificationsService,
                 private router: Router,
                 private dialogService: DlgService,
                 private excelService: ExcelService,
                 private payService: PaymentService,
-                private mobipayDataService: MobipayDataService) {
+                private mobipayDataService: MobipayRepo) {
     }
 
     ngOnInit(): void {

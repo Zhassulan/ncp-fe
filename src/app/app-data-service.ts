@@ -1,11 +1,11 @@
-import {environment} from '../../environments/environment';
+import {environment} from '../environments/environment';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {User} from '../auth/model/user';
-import {httpOptions} from '../settings';
-import {Version} from '../version';
+import {User} from './auth/model/user';
+import {httpOptions} from './settings';
+import {Version} from './version';
 import {Injectable} from '@angular/core';
 import {catchError} from 'rxjs/operators';
-import {HandleErr} from './handle-err';
+import {HttpErrHandler} from './http-err-handler';
 
 const API_URL = environment.apiUrl;
 
@@ -25,11 +25,11 @@ export class AppDataService {
     }
 
     authorize(userObj: User) {
-        return this.http.post(`${API_URL}/auth/authorization`, userObj, httpOptions).pipe(catchError(HandleErr.intercept));
+        return this.http.post(`${API_URL}/auth/authorization`, userObj, httpOptions).pipe(catchError(HttpErrHandler.handleError));
     }
 
     ver() {
-        return this.http.get<Version>(`${API_URL}/ver`, httpOptions).pipe(catchError(HandleErr.intercept));
+        return this.http.get<Version>(`${API_URL}/ver`, httpOptions).pipe(catchError(HttpErrHandler.handleError));
     }
 
 }
