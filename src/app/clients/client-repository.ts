@@ -12,7 +12,7 @@ const API_URL = environment.apiUrl;
 @Injectable({
     providedIn: 'root'
 })
-export class ClientRepo {
+export class ClientRepository {
 
     constructor(private http: HttpClient) { }
 

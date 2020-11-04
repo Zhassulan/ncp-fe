@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {NotificationsService} from 'angular2-notifications';
-import {MobipayRepo} from './mobipay-repo.service';
+import {MobipayRepository} from './mobipay-repository';
 import {LimitsUpdateResponse} from './model/limits-update-response';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class MobipayService {
     limits: LimitsUpdateResponse [];
 
     constructor(private notifService: NotificationsService,
-                private mobipayDataService: MobipayRepo) {
+                private mobipayDataService: MobipayRepository) {
     }
 
     updateLimits(file: File): Observable<any> {

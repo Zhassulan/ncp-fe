@@ -12,7 +12,7 @@ const API_URL = environment.apiUrl;
 @Injectable({
     providedIn: 'root'
 })
-export class MobipayRepo {
+export class MobipayRepository {
 
     constructor(private http: HttpClient) {
     }

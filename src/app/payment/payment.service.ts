@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
-import {MSG, PaymentStatus} from '../settings';
+import {PaymentStatus} from '../settings';
 import {Observable, Subject} from 'rxjs';
 import {Payment} from './model/payment';
 import {Detail} from './model/detail';
-import {ClientRepo} from '../clients/client-repo.service';
-import {PaymetRepo} from '../data/paymet-repo.service';
+import {ClientRepository} from '../clients/client-repository';
+import {PaymentRepository} from './paymet-repository';
 import {RouterService} from '../router/router.service';
 import {NotificationsService} from 'angular2-notifications';
+import {Message} from '../message';
 
 class Props {
 
@@ -28,8 +29,8 @@ export class PaymentService {
     propsAnnounced$ = this.propsObs.asObservable();
 
     constructor(private routerService: RouterService,
-                private clntDataService: ClientRepo,
-                private payDataService: PaymetRepo,
+                private clntDataService: ClientRepository,
+                private payDataService: PaymentRepository,
                 private notifSerice: NotificationsService) {
     }
 
@@ -69,7 +70,7 @@ export class PaymentService {
         sum = sum.trim();
         sum = sum.replace(/[\r\n\t\f\v ]/, '');
         if (isNaN(Number(sum))) {
-            this.notifSerice.warn(MSG.inputNumber);
+            this.notifSerice.warn(Message.WAR.INPUT_NUMBER);
             return;
         }
         detail.sum = Number(sum);

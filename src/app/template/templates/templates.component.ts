@@ -5,7 +5,7 @@ import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
 import {DlgService} from '../../dialog/dlg.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {ClientRepo} from '../../clients/client-repo.service';
+import {ClientRepository} from '../../clients/client-repository';
 
 @Component({
     selector: 'app-templates',
@@ -22,7 +22,7 @@ export class TemplatesComponent implements OnInit {
                 private router: Router,
                 private dlgService: DlgService,
                 private snackBar: MatSnackBar,
-                private clntService: ClientRepo) {
+                private clntService: ClientRepository) {
     }
 
     ngOnInit(): void {

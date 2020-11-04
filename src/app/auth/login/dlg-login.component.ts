@@ -1,13 +1,13 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialogRef} from '@angular/material/dialog';
-import {MSG} from '../../settings';
 import {NotificationsService} from 'angular2-notifications';
 import {AppDataService} from '../../app-data-service';
 import * as HttpStatus from 'http-status-codes';
 import {AppService} from '../../app.service';
 import {Subscription} from 'rxjs';
+import {Message} from '../../message';
 
 @Component({
     selector: 'app-login',
@@ -46,7 +46,7 @@ export class DlgLoginComponent implements OnInit {
 
     login() {
         if (!(this.userName && this.userPassword))  {
-            this.notifService.warn(MSG.noData);
+            this.notifService.warn(Message.WAR.ENTER_LOGIN_PASSWORD);
             return;
         }
         this.subscription = this.appDataService.login(this.userName, this.userPassword).subscribe(
@@ -60,7 +60,7 @@ export class DlgLoginComponent implements OnInit {
                 if (error.status === HttpStatus.SERVICE_UNAVAILABLE)
                     this.notifService.error(error.message);
                    else
-                    this.notifService.error(MSG.accessDenied);
+                    this.notifService.error(Message.ERR.ACCESS_DENIED);
 
             });
     }

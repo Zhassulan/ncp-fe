@@ -8,22 +8,24 @@ export class Message {
         PAYMENT_DELETED: 'Платёж успешно удалён',
         MOBIPAY_DISTR: 'Платёж Mobipay успешно разнесён',
         MOBIPAY_CANCELED: 'Платёж Mobipay успешно отменен',
-        PROCESSED: 'Успешно обработан'
+        PROCESSED: 'Запрос успешно обработан'
     };
 
     static ERR = {
         ACCESS_DENIED : 'Нет доступа',
-        NO_DATA : 'Данные не предоставлены',
         INVALID_REGISTRY : 'Ошибочные разноски',
         SERVICE : 'Ошибка сервиса',
         NOT_FOUND : 'Запрос не найден',
         MOBIPAY_DISTRIBUTION : 'Ошибка обработки Mobipay платежа',
-        CLIENT : 'Ошибка на вашем компьютере'
+        CLIENT : 'Ошибка на вашем компьютере',
+        AUTH : 'Ошибка входа'
     };
 
-    static INFO = {
+    static WAR = {
         MOBIPAY_PICK_PARTNER : 'Выберите партнера',
-        INPUT_NUMBER : 'Введите сумму'
+        INPUT_NUMBER : 'Введите сумму',
+        ENTER_LOGIN_PASSWORD : 'Введите логин и пароль',
+        DATA_NOT_FOUND : 'Данные не найдены',
     };
 
 }

@@ -2,20 +2,21 @@ import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ClientRepo} from '../client-repo.service';
+import {ClientRepository} from '../client-repository';
 import {NotificationsService} from 'angular2-notifications';
 import {AppService} from '../../app.service';
 import {Subscription} from 'rxjs';
 import {ClientService} from '../client.service';
 import {PaymentService} from '../../payment/payment.service';
 import {DlgService} from '../../dialog/dlg.service';
-import {MSG, PaymentStatus, PaymentStatusRu} from '../../settings';
-import {PaymetRepo} from '../../data/paymet-repo.service';
+import {PaymentStatus, PaymentStatusRu} from '../../settings';
+import {PaymentRepository} from '../../payment/paymet-repository';
 import {Payment} from '../../payment/model/payment';
 import {DateRangeComponent} from '../../date-range/date-range.component';
 import {MatDialog} from '@angular/material/dialog';
 import {DlgMobipayPartnersComponent} from '../../mobipay/partners/dlg-mobipay-partners.component';
-import {MobipayRepo} from '../../mobipay/mobipay-repo.service';
+import {MobipayRepository} from '../../mobipay/mobipay-repository';
+import {Message} from '../../message';
 
 @Component({
     selector: 'app-client-payments-table',
@@ -40,15 +41,15 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
     dialogRef;
 
     constructor(private route: ActivatedRoute,
-                private clntDataService: ClientRepo,
+                private clntDataService: ClientRepository,
                 private notifService: NotificationsService,
                 private appService: AppService,
                 private router: Router,
                 private clntService: ClientService,
                 private payService: PaymentService,
-                private mobipayService: MobipayRepo,
+                private mobipayService: MobipayRepository,
                 private dlgService: DlgService,
-                private payDataService: PaymetRepo,
+                private payDataService: PaymentRepository,
                 private dlg: MatDialog) {
         this.subscription = this.clntService.clntPayAnnounced$.subscribe(payments => {
             this.dataSource.data = payments;
@@ -170,7 +171,7 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
         });
         this.dialogRef.afterClosed().subscribe(result => {
             if (!result) {
-                this.notifService.warn(MSG.choosePartner);
+                this.notifService.warn(Message.WAR.MOBIPAY_PICK_PARTNER);
                 return;
             }
             this.appService.setProgress(true);
@@ -182,8 +183,8 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
             this.mobipayService.distribute(row.id, row.status == PaymentStatus.DISTRIBUTED, result.code).subscribe(
                 data => {
                     this.notifService.info(data.status == PaymentStatus.DISTRIBUTED ?
-                        MSG.distributionMobipaySuccess : data.status == PaymentStatus.NEW ?
-                            MSG.distributionCancelMobipaySuccess : MSG.processedSuccess);
+                        Message.OK.MOBIPAY_DISTR : data.status == PaymentStatus.NEW ?
+                            Message.OK.MOBIPAY_CANCELED : Message.OK.PROCESSED);
                     row.status = data.status;
                     row.statusRu = PaymentStatusRu[data.status];
                 },

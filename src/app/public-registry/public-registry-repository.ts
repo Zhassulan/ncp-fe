@@ -11,7 +11,7 @@ const API_URL = environment.apiUrl;
 @Injectable({
     providedIn: 'root'
 })
-export class PublicRegistryRepo {
+export class PublicRegistryRepository {
 
     constructor(private http: HttpClient) {
     }

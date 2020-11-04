@@ -2,13 +2,13 @@ import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@an
 import {MatTableDataSource} from '@angular/material/table';
 import {Client} from './client';
 import {MatPaginator} from '@angular/material/paginator';
-import {ClientRepo} from '../client-repo.service';
+import {ClientRepository} from '../client-repository';
 import {NotificationsService} from 'angular2-notifications';
 import {AppService} from '../../app.service';
 import {MatSort} from '@angular/material/sort';
 import {Router} from '@angular/router';
 import {ClientService} from '../client.service';
-import {MobipayRepo} from '../../mobipay/mobipay-repo.service';
+import {MobipayRepository} from '../../mobipay/mobipay-repository';
 import {Subscription} from 'rxjs';
 import {DlgRegistryBufferComponent} from '../../payment/add-registry-modal/dlg-registry-buffer.component';
 import {MatDialog} from '@angular/material/dialog';
@@ -33,12 +33,12 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() isMobipay;
     private subscription: Subscription;
 
-    constructor(private clientDataService: ClientRepo,
+    constructor(private clientDataService: ClientRepository,
                 private notifService: NotificationsService,
                 private appService: AppService,
                 private router: Router,
                 private clntService: ClientService,
-                private mobipayDataService: MobipayRepo,
+                private mobipayDataService: MobipayRepository,
                 public dlg: MatDialog,
                 private dlgService: DlgService,
                 private mobipayService: MobipayService) {

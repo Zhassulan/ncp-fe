@@ -30,6 +30,9 @@ export class HttpErrHandler {
                 case HttpStatus.FORBIDDEN:
                     errorMessage = Message.ERR.ACCESS_DENIED;
                     break;
+                case HttpStatus.UNAUTHORIZED:
+                    errorMessage = Message.ERR.AUTH;
+                    break;
                 default:
                     errorMessage = error.error;
                     break;

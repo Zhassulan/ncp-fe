@@ -9,7 +9,7 @@ import {Router} from '@angular/router';
 import {RegistryReportItem} from '../model/registry-report-item';
 import {DateRangeComponent} from '../../date-range/date-range.component';
 import {FormControl, Validators} from '@angular/forms';
-import {PublicRegistryRepo} from '../../public-registry/public-registry-repo.service';
+import {PublicRegistryRepository} from '../public-registry-repository';
 import {Subscription} from 'rxjs';
 import {Utils} from '../../utils';
 
@@ -48,7 +48,7 @@ export class RegistriesComponent implements OnInit, OnDestroy {
                 private appService: AppService,
                 private excelService: ExcelService,
                 private router: Router,
-                private registryService: PublicRegistryRepo) {
+                private registryService: PublicRegistryRepository) {
     }
 
     ngOnInit() {

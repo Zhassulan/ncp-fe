@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Client} from './list/client';
 import {Subject} from 'rxjs';
-import {ClientRepo} from './client-repo.service';
+import {ClientRepository} from './client-repository';
 import {AppService} from '../app.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Payment} from '../payment/model/payment';
@@ -16,7 +16,7 @@ export class ClientService {
     clntPaymentsObs = new Subject<Payment []>();
     clntPayAnnounced$ = this.clntPaymentsObs.asObservable();
 
-    constructor(private clntDataService: ClientRepo,
+    constructor(private clntDataService: ClientRepository,
                 private appService: AppService,
                 private notifService: NotificationsService) {
     }

@@ -1,6 +1,6 @@
 import {environment} from '../../environments/environment';
-import {Payment} from '../payment/model/payment';
-import {httpOptions, MSG} from '../settings';
+import {Payment} from './model/payment';
+import {httpOptions} from '../settings';
 import {RouterRegistry} from '../router/model/router-registry';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -8,20 +8,21 @@ import {throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import * as HttpStatus from 'http-status-codes';
 import {HttpErrHandler} from '../http-err-handler';
+import {Message} from '../message';
 
 const API_URL = environment.apiUrl;
 
 @Injectable({
     providedIn: 'root'
 })
-export class PaymetRepo {
+export class PaymentRepository {
 
     constructor(private http: HttpClient) {
     }
 
     handleError(error: HttpErrorResponse) {
         if (error.status == HttpStatus.NOT_FOUND ||
-            error.status == HttpStatus.SERVICE_UNAVAILABLE) return throwError(MSG.errService);
+            error.status == HttpStatus.SERVICE_UNAVAILABLE) return throwError(Message.ERR.SERVICE);
         return throwError(error);
     }
 

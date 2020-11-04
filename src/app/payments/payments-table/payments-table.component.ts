@@ -3,8 +3,8 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {Payment} from '../../payment/model/payment';
-import {MSG, PaymentStatus, PaymentStatusRu} from '../../settings';
-import {PaymetRepo} from '../../data/paymet-repo.service';
+import {PaymentStatus, PaymentStatusRu} from '../../settings';
+import {PaymentRepository} from '../../payment/paymet-repository';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Router} from '@angular/router';
@@ -12,7 +12,8 @@ import {DlgService} from '../../dialog/dlg.service';
 import {ExcelService} from '../../excel/excel.service';
 import {Subscription} from 'rxjs';
 import {PaymentService} from '../../payment/payment.service';
-import {MobipayRepo} from '../../mobipay/mobipay-repo.service';
+import {MobipayRepository} from '../../mobipay/mobipay-repository';
+import {Message} from '../../message';
 
 @Component({
     selector: 'app-payments-table',
@@ -44,14 +45,14 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
     @Input() selection;
     private subscription: Subscription;
 
-    constructor(private payDataService: PaymetRepo,
+    constructor(private payDataService: PaymentRepository,
                 private appService: AppService,
                 private notifService: NotificationsService,
                 private router: Router,
                 private dialogService: DlgService,
                 private excelService: ExcelService,
                 private payService: PaymentService,
-                private mobipayDataService: MobipayRepo) {
+                private mobipayDataService: MobipayRepository) {
     }
 
     ngOnInit(): void {
@@ -123,7 +124,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
         this.appService.setProgress(true);
         this.mobipayDataService.change(paymentRow.id, true).subscribe(
             data => {
-                this.notifService.info(MSG.mobipayChanged);
+                this.notifService.info(Message.OK.MOBIPAY_CHANGED);
             },
             error => {
                 this.notifService.error(error.message);

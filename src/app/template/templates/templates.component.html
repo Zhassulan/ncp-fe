@@ -1,2 +1,5 @@
-<app-templates-table [profile]="clientProfile"></app-templates-table>
+<div *ngIf="clientProfile">
+    <app-templates-table [profile]="clientProfile"></app-templates-table>
+</div>
+
 

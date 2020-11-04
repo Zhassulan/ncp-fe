@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {MobipayRepo} from '../mobipay-repo.service';
+import {MobipayRepository} from '../mobipay-repository';
 import {Subscription} from 'rxjs';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
@@ -19,7 +19,7 @@ export class DlgMobipayPartnersComponent implements OnInit, AfterViewInit, OnDes
 
     constructor(private dlgRef: MatDialogRef<DlgMobipayPartnersComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any,
-                private mobipayDataService: MobipayRepo,
+                private mobipayDataService: MobipayRepository,
                 private appService: AppService,
                 private notifService: NotificationsService) {
     }

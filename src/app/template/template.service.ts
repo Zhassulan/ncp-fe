@@ -3,9 +3,7 @@ import {Template} from './model/template';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
-import {TemplateRepository} from './template-repository.service';
-
-const API_URL = environment.apiUrl;
+import {TemplateRepository} from './template-repository';
 
 @Injectable({
     providedIn: 'root'

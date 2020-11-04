@@ -3,7 +3,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {Subscription} from 'rxjs';
-import {PaymetRepo} from '../../data/paymet-repo.service';
+import {PaymentRepository} from '../../payment/paymet-repository';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Router} from '@angular/router';
@@ -37,7 +37,7 @@ export class RawTableComponent implements OnInit {
     @Input() selection;
     private subscription: Subscription;
 
-    constructor(private payDataService: PaymetRepo,
+    constructor(private payDataService: PaymentRepository,
                 private appService: AppService,
                 private notifService: NotificationsService,
                 private router: Router,

@@ -1,18 +1,19 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
-import {MSG, PaymentMenuItems, PaymentStatus} from '../settings';
+import {PaymentMenuItems, PaymentStatus} from '../settings';
 import {PaymentService} from './payment.service';
 import {DlgImportRouterRegistryComponent} from './dialog/dlg-import-router-registry.component';
 import {ActivatedRoute} from '@angular/router';
 import {DetailsComponent} from './details/details.component';
 import {AppService} from '../app.service';
 import {DlgDeferComponent} from './calendar-defer-modal/dlg-defer.component';
-import {PaymetRepo} from '../data/paymet-repo.service';
-import {ClientRepo} from '../clients/client-repo.service';
+import {PaymentRepository} from './paymet-repository';
+import {ClientRepository} from '../clients/client-repository';
 import {Subscription} from 'rxjs';
 import {DlgRegistryBufferComponent} from './add-registry-modal/dlg-registry-buffer.component';
 import {DlgService} from '../dialog/dlg.service';
+import {Message} from '../message';
 
 export interface RegistryDialogData {
     registry: string;
@@ -46,8 +47,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
                 private route: ActivatedRoute,
                 public dlg: MatDialog,
                 private appService: AppService,
-                private payDataService: PaymetRepo,
-                private  clntDataService: ClientRepo,
+                private payDataService: PaymentRepository,
+                private  clntDataService: ClientRepository,
                 private dlgService: DlgService) {
     }
 
@@ -137,11 +138,11 @@ export class PaymentComponent implements OnInit, OnDestroy {
         this.appService.setProgress(true);
         this.subscription = this.payDataService.distribute(this.payment.id, this.payment.details).subscribe(data => {
             this.payService.setPayment(data);
-            this.notifService.info(MSG.distributeSuccess);
+            this.notifService.info(Message.OK.DISTRIBUTED);
         }, error => {
             this.dlgService.clear();
-            this.notifService.error(MSG.distritbutionErrInvalidRegistry)
-            this.dlgService.addItem(`${MSG.distritbutionErrInvalidRegistry} в количестве ${error.message.length}`);
+            this.notifService.error(Message.ERR.INVALID_REGISTRY)
+            this.dlgService.addItem(`${Message.ERR.INVALID_REGISTRY} в количестве ${error.message.length}`);
             error.message.forEach(i => this.dlgService.addItem(i.msisdn ? i.msisdn : i.account));
             this.dlgService.openDialog();
             this.appService.setProgress(false);
@@ -153,7 +154,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         this.subscription = this.payDataService.transitDel(this.payment.id).subscribe(
             data => {
                 this.payService.setPayment(data);
-                this.notifService.info(MSG.transitDelSuccess);
+                this.notifService.info(Message.OK.TRANSIT_DELETED);
             },
             error => {
                 this.notifService.error(error.message);
@@ -166,7 +167,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         this.appService.setProgress(true);
         this.subscription = this.payDataService.transit(this.payment.id).subscribe(data => {
                 this.payService.setPayment(data);
-                this.notifService.info(MSG.transitSuccess);
+                this.notifService.info(Message.OK.TRANSIT);
             },
             error => {
                 this.notifService.error(error.message);
@@ -179,7 +180,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         this.appService.setProgress(true);
         this.subscription = this.payDataService.del(this.payment.id).subscribe(data => {
                 this.payService.setPayment(data);
-                this.notifService.info(MSG.delSuccess);
+                this.notifService.info(Message.OK.PAYMENT_DELETED);
             },
             error => {
                 this.notifService.error(error.message);

@@ -30,7 +30,6 @@ import {InfoComponent} from './payment/info/info.component';
 import {SimpleNotificationsModule} from 'angular2-notifications';
 import {PaymentComponent} from './payment/payment.component';
 import {PaymentsComponent} from './payments/payments.component';
-import {RegistriesComponent} from './registry/registries/registries.component';
 import {AppService} from './app.service';
 import {ExcelService} from './excel/excel.service';
 import {FileSaverModule} from 'ngx-filesaver';
@@ -44,9 +43,9 @@ import {AuthInterceptor} from './auth/auth-interceptor';
 import {MaterialsModule} from './materials/materials.module';
 import {ClientsComponent} from './clients/clients.component';
 import {ListComponent} from './clients/list/list.component';
-import {PaymetRepo} from './data/paymet-repo.service';
+import {PaymentRepository} from './payment/paymet-repository';
 import {AppDataService} from './app-data-service';
-import {ClientRepo} from './clients/client-repo.service';
+import {ClientRepository} from './clients/client-repository';
 import {ClientPaymentsComponent} from './clients/client-payments/client-payments.component';
 import {ClientPaymentsTableComponent} from './clients/client-payments-table/client-payments-table.component';
 import {RouterService} from './router/router.service';
@@ -65,6 +64,7 @@ import { DlgImportLimits } from './mobipay/limits/dialog/dlg-import-limits.compo
 import { TemplatesComponent } from './template/templates/templates.component';
 import { TemplatesTableComponent } from './template/templates-table/templates-table.component';
 import { TemplateComponent } from './template/template/template.component';
+import {RegistriesComponent} from './public-registry/registries/registries.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -140,9 +140,9 @@ registerLocaleData(localeRu, 'ru');
         {provide: LOCALE_ID, useValue: 'ru-RU'},
         {provide: DateAdapter, useClass: MyDateAdapter},
         DlgService,
-        PaymetRepo,
+        PaymentRepository,
         AppDataService,
-        ClientRepo,
+        ClientRepository,
         AuthService,
         RouterService,
         PaymentService,

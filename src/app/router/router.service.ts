@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {RouterRegistry} from './model/router-registry';
 import {NotificationsService} from 'angular2-notifications';
-import {PaymetRepo} from '../data/paymet-repo.service';
+import {PaymentRepository} from '../payment/paymet-repository';
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class RouterService {
   routerRegistry: RouterRegistry;
 
   constructor(private notifService: NotificationsService,
-              private payDataService: PaymetRepo) {
+              private payDataService: PaymentRepository) {
   }
 
   registryFromFile(file: File): Observable<any> {
