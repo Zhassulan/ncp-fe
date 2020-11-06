@@ -25,6 +25,8 @@ build-test:
   image: docker.tele2.kz/ncp/angular-cli:latest
   stage: build
   script:
+    - npm install -g npm-install-peers
+    - npm-install-peers
     - npm install
     - ng build --configuration=staging --prod=false
   artifacts:
