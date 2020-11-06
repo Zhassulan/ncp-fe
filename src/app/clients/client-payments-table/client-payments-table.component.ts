@@ -87,6 +87,7 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+        this.appService.setProgress(false);
     }
 
     menuOnRowOpenPayment(row) {

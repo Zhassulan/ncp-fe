@@ -85,6 +85,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+        this.appService.setProgress(false);
     }
 
     dlgUpdateLimits() {

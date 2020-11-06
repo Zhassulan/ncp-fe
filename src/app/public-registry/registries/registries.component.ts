@@ -121,6 +121,7 @@ export class RegistriesComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.appService.setProgress(false);
         this.subscription.unsubscribe();
     }
 
