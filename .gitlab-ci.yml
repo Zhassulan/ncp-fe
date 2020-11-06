@@ -28,7 +28,7 @@ build-test:
     - npm cache clean --force
     - npm install -g npm npm-install-peers
     - npm-install-peers
-    - npm install
+    - npm install --save-dev
     - ng build --configuration=staging --prod=false
   artifacts:
     paths:
