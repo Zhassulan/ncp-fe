@@ -15,10 +15,11 @@ export class Message {
         ACCESS_DENIED : 'Нет доступа',
         INVALID_REGISTRY : 'Ошибочные разноски',
         SERVICE : 'Ошибка сервиса',
-        NOT_FOUND : 'Запрос не найден',
+        NOT_FOUND : 'Ошибка данных',
         MOBIPAY_DISTRIBUTION : 'Ошибка обработки Mobipay платежа',
         CLIENT : 'Ошибка на вашем компьютере',
-        AUTH : 'Ошибка входа'
+        AUTH : 'Ошибка входа',
+        BAD_REQUEST: 'Неверный запрос'
     };
 
     static WAR = {

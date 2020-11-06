@@ -1,6 +1,6 @@
 import {Injectable, isDevMode} from '@angular/core';
 import {Subject} from 'rxjs';
-import {locStorItems, MSG} from './settings';
+import {locStorItems} from './settings';
 import {NotificationsService} from 'angular2-notifications';
 import {AppDataService} from './app-data-service';
 import {Router} from '@angular/router';

@@ -3,6 +3,7 @@ import {Subscription} from 'rxjs';
 import {MatDialogRef} from '@angular/material/dialog';
 import {AppService} from '../../../app.service';
 import {MobipayService} from '../../mobipay.service';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
     selector: 'app-dialog',
@@ -18,7 +19,8 @@ export class DlgImportLimits implements OnInit {
 
     constructor(public dialogRef: MatDialogRef<DlgImportLimits>,
                 private mobipayService: MobipayService,
-                private appService: AppService) {
+                private appService: AppService,
+                private notifService: NotificationsService) {
     }
 
     ngOnInit(): void {
@@ -41,15 +43,12 @@ export class DlgImportLimits implements OnInit {
     upload() {
         this.appService.setProgress(true);
         this.subscription = this.mobipayService.updateLimits(this.fileObj).subscribe(
-            data => {
-                this.dialogRef.close();
-            },
-            error2 => {
+            data => this.dialogRef.close(),
+            error => {
+                this.notifService.error(error);
                 this.appService.setProgress(false);
             },
-            () => {
-                this.appService.setProgress(false);
-            });
+            () => this.appService.setProgress(false));
     }
 
     ngOnDestroy(): void {

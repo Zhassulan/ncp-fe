@@ -1,10 +1,9 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {PaymentService} from '../payment.service';
 import {Observable, Subscription} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {Detail} from '../model/detail';
-import {MSG, msisdnLength, PaymentStatus} from '../../settings';
+import {msisdnLength} from '../../settings';
 import {NotificationsService} from 'angular2-notifications';
 import {ClientRepository} from '../../clients/client-repository';
 

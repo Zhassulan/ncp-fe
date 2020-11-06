@@ -33,6 +33,9 @@ export class HttpErrHandler {
                 case HttpStatus.UNAUTHORIZED:
                     errorMessage = Message.ERR.AUTH;
                     break;
+                case HttpStatus.BAD_REQUEST:
+                    errorMessage = Message.ERR.BAD_REQUEST;
+                    break;
                 default:
                     errorMessage = error.error;
                     break;

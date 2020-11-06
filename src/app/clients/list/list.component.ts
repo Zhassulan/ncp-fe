@@ -93,15 +93,15 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
             data: {limits: this.limits},
             disableClose: true
         });
+        let counter = 1;
         dialogRef.afterClosed().subscribe(result => {
-            console.log(this.mobipayService.limits);
+            //console.log(this.mobipayService.limits);
             this.dlgService.clear();
             this.mobipayService.limits.forEach(i => {
-                this.dlgService.addItem(`код партнера: ${i.partnerCode}`);
-                this.dlgService.addItem(`код результата: ${i.resultCode}`);
-                this.dlgService.addItem(`результат: ${i.resultMessage}`);
-                this.dlgService.addItem(`новый лимит: ${i.newLimitValue}`);
-                this.dlgService.addItem(`старый лимит: ${i.newLimitValue}`);
+                this.dlgService.addItem(`${counter++}) код партнера: ${i.partnerCode}`);
+                this.dlgService.addItem(`  код результата: ${i.resCode}`);
+                this.dlgService.addItem(`  результат: ${i.resMsg}`);
+                this.dlgService.addItem(`  лимит: ${i.limit}`);
                 this.dlgService.addItem('');
             })
             this.dlgService.openDialog();

@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Template} from './model/template';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {TemplateRepository} from './template-repository';
 
@@ -28,8 +27,12 @@ export class TemplateService {
         this._templates = value;
     }
 
-    findById(id): Template {
+    getById(id): Template {
         return this.templates.find(value => value.id == id);
+    }
+
+    findById(id): Observable<Template> {
+        return this.repository.findById(id);
     }
 
 }

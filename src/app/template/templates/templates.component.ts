@@ -4,7 +4,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
 import {DlgService} from '../../dialog/dlg.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {ClientRepository} from '../../clients/client-repository';
 
 @Component({
@@ -21,7 +20,6 @@ export class TemplatesComponent implements OnInit {
                 private notifService: NotificationsService,
                 private router: Router,
                 private dlgService: DlgService,
-                private snackBar: MatSnackBar,
                 private clntService: ClientRepository) {
     }
 
@@ -32,13 +30,7 @@ export class TemplatesComponent implements OnInit {
     getClientProfile() {
         this.clntService.profile(this.route.snapshot.params['id']).subscribe(
             data => this.clientProfile = data,
-            error => this.openSnackBar(error.message, null));
-    }
-
-    openSnackBar(message: string, action: string) {
-        this.snackBar.open(message, action, {
-            duration: 5000,
-        });
+            error => this.notifService.warn(error));
     }
 
 }

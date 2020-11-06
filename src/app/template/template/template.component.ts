@@ -1,22 +1,24 @@
-import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Template} from '../model/template';
 import {ActivatedRoute} from '@angular/router';
 import {TemplateService} from '../template.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Message} from '../../message';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-template',
     templateUrl: './template.component.html',
     styleUrls: ['./template.component.scss']
 })
-export class TemplateComponent implements OnInit, AfterViewInit {
+export class TemplateComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private _template: Template;
+    private _subscription: Subscription;
 
     constructor(private route: ActivatedRoute,
                 private templateService: TemplateService,
-                private notifService: NotificationsService,) {
+                private notifService: NotificationsService) {
     }
 
     get template(): Template {
@@ -28,15 +30,22 @@ export class TemplateComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-
     }
 
     ngAfterViewInit(): void {
+        let id = this.route.snapshot.params['id'];
         if (this.templateService.templates) {
-            if (this.templateService.templates.length > 0) this.template = this.templateService.findById(this.route.snapshot.params['id']);
+            this.templateService.getById(id)
         } else {
-            this.notifService.warn(Message.WAR.DATA_NOT_FOUND);
+            this._subscription = this.templateService.findById(id).subscribe(
+                data => this.template = data,
+                error => this.notifService.error(error)
+            );
         }
+    }
+
+    ngOnDestroy(): void {
+        this._subscription.unsubscribe();
     }
 
 }

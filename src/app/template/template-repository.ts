@@ -20,4 +20,8 @@ export class TemplateRepository {
         return this.http.get<Template []>(`${API_URL}/templates/company/${profileId}`).pipe(catchError(HttpErrHandler.handleError));
     }
 
+    findById(id): Observable<Template> {
+        return this.http.get<Template>(`${API_URL}/templates/${id}`).pipe(catchError(HttpErrHandler.handleError));
+    }
+
 }
