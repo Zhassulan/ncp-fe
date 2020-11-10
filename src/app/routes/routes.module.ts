@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import {LoginPageComponent} from '../auth/login-page/login-page.component';
@@ -111,10 +111,15 @@ const routes: Routes = [
     declarations: [],
     imports: [
         CommonModule,
-        RouterModule.forRoot(routes, {useHash: true})
+        RouterModule.forRoot(routes)
     ],
     exports: [RouterModule]
 })
 export class RoutesModule {
+    static forRoot(): ModuleWithProviders<RouterModule> {
+        return {
+            ngModule: RouterModule,
+        };
+    }
 }
 

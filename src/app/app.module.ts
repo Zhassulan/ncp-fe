@@ -1,5 +1,5 @@
 import {BrowserModule, Title} from '@angular/platform-browser';
-import {LOCALE_ID, NgModule} from '@angular/core';
+import {LOCALE_ID, ModuleWithProviders, NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {AUTH_PROVIDERS, AuthService} from './auth/auth.service';
 import {LoggedInGuard} from './auth/logged-in.guard';
