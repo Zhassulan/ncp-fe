@@ -22,7 +22,7 @@ stages:
   - deploy
 
 build-test:
-  image: docker.tele2.kz/ncp/angular-cli:latest
+  image: node:12.16.2
   stage: build
   script:
     - npm cache clean --force
