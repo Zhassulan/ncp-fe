@@ -26,7 +26,8 @@ build-test:
   stage: build
   script:
     - npm install
-    - ng build --configuration=staging --prod=false
+    - npm install -g @angular/cli
+    - npm run build --configuration=staging --prod=false
   artifacts:
     paths:
       - dist/*
