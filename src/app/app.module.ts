@@ -58,13 +58,19 @@ import {DlgDeferComponent} from './payment/calendar-defer-modal/dlg-defer.compon
 import {UploadComponent} from './payment/router/upload.component';
 import {DlgRegistryBufferComponent} from './payment/add-registry-modal/dlg-registry-buffer.component';
 import {MyDateAdapter} from './my-date-adapter';
-import { RawComponent } from './raw/raw.component';
-import { RawTableComponent } from './raw/raw-table/raw-table.component';
-import { DlgImportLimits } from './mobipay/limits/dialog/dlg-import-limits.component';
-import { TemplatesComponent } from './template/templates/templates.component';
-import { TemplatesTableComponent } from './template/templates-table/templates-table.component';
-import { TemplateComponent } from './template/template/template.component';
+import {RawComponent} from './raw/raw.component';
+import {RawTableComponent} from './raw/raw-table/raw-table.component';
+import {DlgImportLimits} from './mobipay/limits/dialog/dlg-import-limits.component';
+import {TemplatesComponent} from './template/templates/templates.component';
+import {TemplatesTableComponent} from './template/templates-table/templates-table.component';
+import {TemplateComponent} from './template/template/template.component';
 import {RegistriesComponent} from './public-registry/registries/registries.component';
+import {TemplateService} from './template/template.service';
+import {TemplateRepository} from './template/template-repository';
+import {ClientService} from './clients/client.service';
+import {MobipayService} from './mobipay/mobipay.service';
+import {MobipayRepository} from './mobipay/mobipay-repository';
+import {PublicRegistryRepository} from './public-registry/public-registry-repository';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -153,7 +159,13 @@ registerLocaleData(localeRu, 'ru');
             useClass: AuthInterceptor,
             multi: true
         },
-        Title
+        Title,
+        TemplateService,
+        TemplateRepository,
+        ClientService,
+        MobipayService,
+        MobipayRepository,
+        PublicRegistryRepository,
     ],
     bootstrap: [AppComponent]
 })

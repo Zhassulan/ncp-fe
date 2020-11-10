@@ -22,12 +22,11 @@ stages:
   - deploy
 
 build-test:
-  image: node:12.16.2
+  image: docker.tele2.kz/ncp/angular-cli:latest
   stage: build
   script:
     - npm install
-    - npm install -g @angular/cli
-    - npm run build --configuration=staging --prod=false
+    - ng build --configuration=staging --prod=false
   artifacts:
     paths:
       - dist/*
