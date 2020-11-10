@@ -1,4 +1,4 @@
-import {ModuleWithProviders, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import {LoginPageComponent} from '../auth/login-page/login-page.component';
@@ -116,10 +116,5 @@ const routes: Routes = [
     exports: [RouterModule]
 })
 export class RoutesModule {
-    static forRoot(): ModuleWithProviders<RouterModule> {
-        return {
-            ngModule: RouterModule,
-        };
-    }
 }
 

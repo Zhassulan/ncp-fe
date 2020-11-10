@@ -8,7 +8,7 @@ import {CookieService} from 'ngx-cookie-service';
 import {DlgLoginComponent} from './auth/login/dlg-login.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {CommonModule, registerLocaleData} from '@angular/common';
+import {APP_BASE_HREF, CommonModule, registerLocaleData} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MenuToolbarComponent} from './main-nav/menu-toolbar.component';
 import {RoutesModule} from './routes/routes.module';
@@ -166,6 +166,9 @@ registerLocaleData(localeRu, 'ru');
         MobipayService,
         MobipayRepository,
         PublicRegistryRepository,
+        {
+            provide: APP_BASE_HREF, useValue: '/'
+        }
     ],
     bootstrap: [AppComponent]
 })
