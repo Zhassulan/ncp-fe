@@ -25,10 +25,7 @@ build-test:
   image: node:12.16.2
   stage: build
   script:
-    - npm cache clean --force
-    - npm install -g npm npm-install-peers
-    - npm-install-peers
-    - npm install --save-dev
+    - npm install
     - ng build --configuration=staging --prod=false
   artifacts:
     paths:
