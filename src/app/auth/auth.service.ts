@@ -1,31 +1,25 @@
 import {Injectable} from '@angular/core';
 import {locStorItems} from '../settings';
-import {CookieService} from 'ngx-cookie-service';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {environment} from '../../environments/environment';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root', })
 export class AuthService {
 
-    constructor(private cookieService: CookieService) {
-    }
+    constructor(private http: HttpClient) {  }
 
-    setUser(user) {
-        localStorage.setItem(locStorItems.user, user)
-    }
+    setUser(user) { localStorage.setItem(locStorItems.user, user); }
 
-    logout() {
-        this.cookieService.deleteAll();
-        localStorage.removeItem(locStorItems.token)
-        localStorage.removeItem(locStorItems.user)
-    }
+    logout() { localStorage.removeItem(locStorItems.user); }
 
-    getUser() {
-        return localStorage.getItem(locStorItems.user)
-    }
+    getUser() { return localStorage.getItem(locStorItems.user); }
 
-    isLogged(): boolean {
-        return this.cookieService.get("JSESSIONID") == localStorage.getItem(locStorItems.token)
+    login(username, password) {
+        const body = new HttpParams()
+            .set('username', username)
+            .set('password', password);
+        return this.http.post(environment.apiUrl + '/auth/login', body.toString(), {
+            headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})});
     }
 
 }

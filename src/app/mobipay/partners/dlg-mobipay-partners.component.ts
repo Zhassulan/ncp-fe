@@ -38,7 +38,7 @@ export class DlgMobipayPartnersComponent implements OnInit, AfterViewInit, OnDes
     }
 
     ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        if (this.subscription) this.subscription.unsubscribe();
     }
 
     onRowClick(row) {

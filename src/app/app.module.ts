@@ -1,14 +1,14 @@
 import {BrowserModule, Title} from '@angular/platform-browser';
-import {LOCALE_ID, ModuleWithProviders, NgModule} from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {AUTH_PROVIDERS, AuthService} from './auth/auth.service';
-import {LoggedInGuard} from './auth/logged-in.guard';
+import {AuthGuard} from './auth/auth-guard.service';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {DlgLoginComponent} from './auth/login/dlg-login.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {APP_BASE_HREF, CommonModule, registerLocaleData} from '@angular/common';
+import {CommonModule, registerLocaleData} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MenuToolbarComponent} from './main-nav/menu-toolbar.component';
 import {RoutesModule} from './routes/routes.module';
@@ -140,7 +140,7 @@ registerLocaleData(localeRu, 'ru');
     ],
     providers: [
         AUTH_PROVIDERS,
-        LoggedInGuard,
+        AuthGuard,
         CookieService,
         {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
         {provide: LOCALE_ID, useValue: 'ru-RU'},
@@ -166,9 +166,6 @@ registerLocaleData(localeRu, 'ru');
         MobipayService,
         MobipayRepository,
         PublicRegistryRepository,
-        {
-            provide: APP_BASE_HREF, useValue: '/'
-        }
     ],
     bootstrap: [AppComponent]
 })

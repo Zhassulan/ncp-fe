@@ -3,9 +3,7 @@ import {AuthService} from '../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialogRef} from '@angular/material/dialog';
 import {NotificationsService} from 'angular2-notifications';
-import {AppDataService} from '../../app-data-service';
 import * as HttpStatus from 'http-status-codes';
-import {AppService} from '../../app.service';
 import {Subscription} from 'rxjs';
 import {Message} from '../../message';
 
@@ -28,9 +26,7 @@ export class DlgLoginComponent implements OnInit {
                 private route: ActivatedRoute,
                 private router: Router,
                 private dialogRef: MatDialogRef<DlgLoginComponent>,
-                private notifService: NotificationsService,
-                private appService: AppService,
-                private appDataService: AppDataService) {
+                private notifService: NotificationsService) {
     }
 
     ngOnInit(): void {
@@ -49,20 +45,13 @@ export class DlgLoginComponent implements OnInit {
             this.notifService.warn(Message.WAR.ENTER_LOGIN_PASSWORD);
             return;
         }
-        this.subscription = this.appDataService.login(this.userName, this.userPassword).subscribe(
+        this.subscription = this.authService.login(this.userName, this.userPassword).subscribe(
             data => {
                 this.authService.setUser(this.userName);
-                //this.appService.checkVer();
                 this.returnUrl == '/' ? this.router.navigate(['payments']) : this.router.navigateByUrl(this.returnUrl);
                 this.dialogRef.close();
             },
-            error => {
-                if (error.status === HttpStatus.SERVICE_UNAVAILABLE)
-                    this.notifService.error(error.message);
-                   else
-                    this.notifService.error(Message.ERR.ACCESS_DENIED);
-
-            });
+            error => error.status === HttpStatus.SERVICE_UNAVAILABLE ? this.notifService.error(error.message) : this.notifService.error(Message.ERR.ACCESS_DENIED));
     }
 
 }

@@ -86,7 +86,8 @@ export class ClientPaymentsTableComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        if (this.subscription)
+            this.subscription.unsubscribe();
         this.appService.setProgress(false);
     }
 

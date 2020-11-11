@@ -16,18 +16,6 @@ export class AppDataService {
 
     constructor(private http: HttpClient) { }
 
-    login(username, password) {
-        const body = new HttpParams()
-            .set('username', username)
-            .set('password', password);
-        return this.http.post(API_URL + '/auth/login', body.toString(), {
-            headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})});
-    }
-
-    authorize(userObj: User) {
-        return this.http.post(`${API_URL}/auth/authorization`, userObj, httpOptions).pipe(catchError(HttpErrHandler.handleError));
-    }
-
     ver() {
         return this.http.get<Version>(`${API_URL}/ver`, httpOptions).pipe(catchError(HttpErrHandler.handleError));
     }

@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
@@ -15,7 +15,7 @@ import {Template} from '../model/template';
     templateUrl: './templates-table.component.html',
     styleUrls: ['./templates-table.component.scss']
 })
-export class TemplatesTableComponent implements OnInit, OnDestroy {
+export class TemplatesTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
     displayedColumns = [
         'name',
@@ -58,8 +58,10 @@ export class TemplatesTableComponent implements OnInit, OnDestroy {
 
     loadData() {
         this.appService.setProgress(true);
-        this.subscription = this.templateService.findAllById(this.clientProfile.id).subscribe(
-            data => this.dataSource.data = this.templateService.templates = data,
+        this.subscription = this.templateService.findAllByProfileId(this.clientProfile.id).subscribe(
+            data => {
+                this.dataSource.data = data;
+                this.templateService.templates = data; },
             error => {
                 this.appService.setProgress(false);
                 this.openSnackBar(error.message, null);
@@ -73,6 +75,11 @@ export class TemplatesTableComponent implements OnInit, OnDestroy {
 
     openTemplate(item: Template) {
         this.router.navigate([`templates/${item.id}`]);
+    }
+
+    ngAfterViewInit(): void {
+        console.log('loading data..');
+        this.loadData();
     }
 
 }

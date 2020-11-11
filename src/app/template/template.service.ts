@@ -15,7 +15,7 @@ export class TemplateService {
                 private repository: TemplateRepository) {
     }
 
-    findAllById(profileId): Observable<Template []> {
+    findAllByProfileId(profileId): Observable<Template []> {
         return this.repository.findAllByCompany(profileId);
     }
 
@@ -28,7 +28,7 @@ export class TemplateService {
     }
 
     getById(id): Template {
-        return this.templates.find(value => value.id == id);
+        return this._templates.find(x => x.id === id);
     }
 
     findById(id): Observable<Template> {

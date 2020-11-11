@@ -35,8 +35,11 @@ export class TemplateComponent implements OnInit, AfterViewInit, OnDestroy {
     ngAfterViewInit(): void {
         let id = this.route.snapshot.params['id'];
         if (this.templateService.templates) {
-            this.templateService.getById(id)
+            console.log(`getting template ID ${id} from service..`);
+            if (this.templateService.templates.length > 0)
+                this.templateService.getById(id)
         } else {
+            console.log('getting template from api..');
             this._subscription = this.templateService.findById(id).subscribe(
                 data => this.template = data,
                 error => this.notifService.error(error)
@@ -45,7 +48,8 @@ export class TemplateComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this._subscription.unsubscribe();
+        if (this._subscription)
+            this._subscription.unsubscribe();
     }
 
 }

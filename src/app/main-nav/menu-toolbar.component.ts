@@ -81,7 +81,7 @@ export class MenuToolbarComponent implements AfterViewChecked, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        if (this.subscription) this.subscription.unsubscribe();
     }
 
     color() {

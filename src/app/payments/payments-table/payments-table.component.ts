@@ -199,7 +199,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.appService.setProgress(false);
-        this.subscription.unsubscribe();
+        if (this.subscription) this.subscription.unsubscribe();
     }
 
     canTransit(row) {

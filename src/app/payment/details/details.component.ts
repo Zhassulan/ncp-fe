@@ -77,7 +77,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy(): void {
-        this.subPayment.unsubscribe();
+        if (this.subPayment) this.subPayment.unsubscribe();
     }
 
     ngAfterViewInit(): void {
