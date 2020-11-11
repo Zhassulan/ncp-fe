@@ -25,6 +25,7 @@ build-test:
   image: node:latest
   stage: build
   script:
+    - npm install -g @angular/cli
     - npm install
     - ng build --configuration=staging --prod=false
   artifacts:
