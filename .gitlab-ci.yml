@@ -35,7 +35,7 @@ build-test:
     - test
 
 build-prod:
-  image: docker.tele2.kz/ncp/angular-cli:latest
+  image: node:latest
   stage: build
   script:
     - npm install
