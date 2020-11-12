@@ -8,7 +8,7 @@ import {CookieService} from 'ngx-cookie-service';
 import {DlgLoginComponent} from './auth/login/dlg-login.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {CommonModule, registerLocaleData} from '@angular/common';
+import {APP_BASE_HREF, CommonModule, registerLocaleData} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MenuToolbarComponent} from './main-nav/menu-toolbar.component';
 import {RoutesModule} from './routes/routes.module';
@@ -71,6 +71,7 @@ import {ClientService} from './clients/client.service';
 import {MobipayService} from './mobipay/mobipay.service';
 import {MobipayRepository} from './mobipay/mobipay-repository';
 import {PublicRegistryRepository} from './public-registry/public-registry-repository';
+import {environment} from '../environments/environment';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -145,6 +146,7 @@ registerLocaleData(localeRu, 'ru');
         {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
         {provide: LOCALE_ID, useValue: 'ru-RU'},
         {provide: DateAdapter, useClass: MyDateAdapter},
+        //{ provide: APP_BASE_HREF, useValue: environment.baseHref },
         DlgService,
         PaymentRepository,
         AppDataService,
@@ -166,6 +168,7 @@ registerLocaleData(localeRu, 'ru');
         MobipayService,
         MobipayRepository,
         PublicRegistryRepository,
+
     ],
     bootstrap: [AppComponent]
 })
