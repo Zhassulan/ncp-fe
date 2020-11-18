@@ -62,7 +62,6 @@ export class ClientService {
                 error => {
                     this.appService.setProgress(false);
                     this.notifService.error(error.message);
-                    this.appService.setProgress(false);
                 },
                 () => this.appService.setProgress(false)
             );
@@ -73,8 +72,14 @@ export class ClientService {
         return this.clntRepo.profile(id).pipe(map(x => this.clientProfile = x));
     }
 
-    getClientProfile(id): Observable<ClientProfile> {
-        return this._clientProfile ? new Observable<ClientProfile>(observer => observer.next(this._clientProfile)) : this.findClientProfile(id);
+    loadProfile(id) {
+        this.appService.setProgress(true);
+        this.clntRepo.profile(id).subscribe(
+            data => this.clientProfile = data,
+            error => {
+                this.appService.setProgress(false);
+                this.notifService.error(error.message);
+            }, () => this.appService.setProgress(false));
     }
 
     set clientProfile(x) {

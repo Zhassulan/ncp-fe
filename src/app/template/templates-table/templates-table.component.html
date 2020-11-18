@@ -9,11 +9,11 @@
     </ng-container>
     <ng-container matColumnDef="company">
         <mat-header-cell *matHeaderCellDef> Компания</mat-header-cell>
-        <mat-cell *matCellDef="let item"> {{ clientProfile.clientName }}</mat-cell>
+        <mat-cell *matCellDef="let item"> {{ profile.clientName }}</mat-cell>
     </ng-container>
     <ng-container matColumnDef="bin">
         <mat-header-cell *matHeaderCellDef> БИН</mat-header-cell>
-        <mat-cell *matCellDef="let item"> {{ clientProfile.clientBIN ? clientProfile.clientBIN : clientProfile.clientIIN  }}</mat-cell>
+        <mat-cell *matCellDef="let item"> {{ profile.clientBIN ? profile.clientBIN : profile.clientIIN  }}</mat-cell>
     </ng-container>
     <ng-container matColumnDef="menu">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>

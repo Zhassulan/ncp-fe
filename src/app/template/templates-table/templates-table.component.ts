@@ -45,20 +45,13 @@ export class TemplatesTableComponent implements OnInit, AfterViewInit, AfterCont
     }
 
     open(template: Template) {
-        this.router.navigate(['templates', {id : template.id} ]);
+        this.router.navigate(['templates', template.id]);
     }
 
     delete(template: Template) {
         this.appService.setProgress(true);
         let obs1 = this.templateService.delete(template.id);
         let obs2 = this.templateService.findAllByProfileId(this.profile.id);
-        let res = concat(obs1, obs2);
-        res.subscribe(
-            data => {},
-                error => {
-                this.appService.setProgress(false);
-                this.notif.error(error);
-            }, () => this.appService.setProgress(false));
     }
 
     applyFilter(event: Event) {
