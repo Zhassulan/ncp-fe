@@ -1,2 +1,10 @@
-<p>ID {{ template ? template.id : 'not found' }}</p>
+<div class="container">
+    <div *ngIf="template && profile">
+        <p >Шаблон ID {{ template.id }}</p>
+        <p>Компания {{ profile.clientName }}</p>
+    </div>
+    <div *ngIf="template">
+        <app-template-details-table [template]="template"></app-template-details-table>
+    </div>
+</div>
 <simple-notifications></simple-notifications>

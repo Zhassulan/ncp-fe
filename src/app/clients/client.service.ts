@@ -1,11 +1,13 @@
 import {Injectable} from '@angular/core';
 import {Client} from './list/client';
-import {Subject} from 'rxjs';
+import {observable, Observable, Subject} from 'rxjs';
 import {ClientRepository} from './client-repository';
 import {AppService} from '../app.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Payment} from '../payment/model/payment';
 import {Utils} from '../utils';
+import {ClientProfile} from './clientProfile';
+import {map} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -15,13 +17,16 @@ export class ClientService {
     clntPayments;
     clntPaymentsObs = new Subject<Payment []>();
     clntPayAnnounced$ = this.clntPaymentsObs.asObservable();
+    private _clientProfile: ClientProfile;
+    private _client: Client;
 
     constructor(private clntDataService: ClientRepository,
                 private appService: AppService,
-                private notifService: NotificationsService) {
+                private notifService: NotificationsService,
+                private clntRepo: ClientRepository) {
     }
 
-    private _client: Client;
+
 
     get client() {
         return this._client;
@@ -62,6 +67,22 @@ export class ClientService {
                 () => this.appService.setProgress(false)
             );
         }
+    }
+
+    findClientProfile(id): Observable<ClientProfile> {
+        return this.clntRepo.profile(id).pipe(map(x => this.clientProfile = x));
+    }
+
+    getClientProfile(id): Observable<ClientProfile> {
+        return this._clientProfile ? new Observable<ClientProfile>(observer => observer.next(this._clientProfile)) : this.findClientProfile(id);
+    }
+
+    set clientProfile(x) {
+        this._clientProfile = x;
+    }
+
+    get clientProfile() {
+        return this._clientProfile;
     }
 
 }

@@ -1,4 +1,4 @@
-import {Detail} from './detail';
+import {TemplateDetail} from './template-detail';
 
 export class Template {
     
@@ -7,6 +7,6 @@ export class Template {
     created: number;
     profileId: number;
     companyId: number;
-    details: Detail [];
+    details: TemplateDetail [];
         
 }

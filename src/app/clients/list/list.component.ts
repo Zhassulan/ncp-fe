@@ -13,7 +13,7 @@ import {Subscription} from 'rxjs';
 import {DlgRegistryBufferComponent} from '../../payment/add-registry-modal/dlg-registry-buffer.component';
 import {MatDialog} from '@angular/material/dialog';
 import {DlgImportLimits} from '../../mobipay/limits/dialog/dlg-import-limits.component';
-import {DetailsComponent} from '../../payment/details/details.component';
+import {PaymentDetailsComponent} from '../../payment/details/payment-details.component';
 import {DlgService} from '../../dialog/dlg.service';
 import {MobipayService} from '../../mobipay/mobipay.service';
 

@@ -1,10 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {ClientProfile} from '../../clients/clientProfile';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
-import {DlgService} from '../../dialog/dlg.service';
 import {ClientRepository} from '../../clients/client-repository';
+import {Template} from '../model/template';
+import {TemplateService} from '../template.service';
+import {concat} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {ClientService} from '../../clients/client.service';
 
 @Component({
     selector: 'app-templates',
@@ -13,24 +17,30 @@ import {ClientRepository} from '../../clients/client-repository';
 })
 export class TemplatesComponent implements OnInit {
 
-    clientProfile: ClientProfile;
-
     constructor(private route: ActivatedRoute,
                 private appService: AppService,
                 private notifService: NotificationsService,
-                private router: Router,
-                private dlgService: DlgService,
-                private clntService: ClientRepository) {
+                private clntService: ClientService,
+                private templateService: TemplateService) {
+    }
+
+    get clientProfile() {
+        return this.clntService.clientProfile;
     }
 
     ngOnInit(): void {
-        this.getClientProfile();
-    }
-
-    getClientProfile() {
-        this.clntService.profile(this.route.snapshot.params['id']).subscribe(
-            data => this.clientProfile = data,
-            error => this.notifService.warn(error));
+        let id = this.route.snapshot.params['id'];
+        let o1 = this.clntService.getClientProfile(id);
+        let o2 = this.templateService.findAllByProfileId(id);
+        let res = concat(o1, o2);
+        this.appService.setProgress(true);
+        res.subscribe(() => {
+            },
+            error => {
+                this.appService.setProgress(false);
+                this.notifService.error(error);
+            },
+            () => this.appService.setProgress(false));
     }
 
 }

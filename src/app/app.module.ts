@@ -52,7 +52,7 @@ import {RouterService} from './router/router.service';
 import {PaymentsTableComponent} from './payments/payments-table/payments-table.component';
 import {MobipayComponent} from './mobipay/mobipay.component';
 import {DlgMobipayPartnersComponent} from './mobipay/partners/dlg-mobipay-partners.component';
-import {DetailsComponent} from './payment/details/details.component';
+import {PaymentDetailsComponent} from './payment/details/payment-details.component';
 import {AddDetailComponent} from './payment/add-detail/add-detail.component';
 import {DlgDeferComponent} from './payment/calendar-defer-modal/dlg-defer.component';
 import {UploadComponent} from './payment/router/upload.component';
@@ -71,7 +71,7 @@ import {ClientService} from './clients/client.service';
 import {MobipayService} from './mobipay/mobipay.service';
 import {MobipayRepository} from './mobipay/mobipay-repository';
 import {PublicRegistryRepository} from './public-registry/public-registry-repository';
-import {environment} from '../environments/environment';
+import { TemplateDetailsTableComponent } from './template/details-table/template-details-table.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -90,7 +90,7 @@ registerLocaleData(localeRu, 'ru');
         PaymentMenuComponent,
         InfoComponent,
         PaymentComponent,
-        DetailsComponent,
+        PaymentDetailsComponent,
         PaymentsComponent,
         AddDetailComponent,
         RegistriesComponent,
@@ -114,6 +114,7 @@ registerLocaleData(localeRu, 'ru');
         TemplatesComponent,
         TemplatesTableComponent,
         TemplateComponent,
+        TemplateDetailsTableComponent,
     ],
     entryComponents: [
         DlgResultComponent,

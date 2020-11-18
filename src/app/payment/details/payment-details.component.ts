@@ -32,10 +32,10 @@ enum PaymentDetailTableColumnsDisplay {
 
 @Component({
     selector: 'app-details',
-    templateUrl: './details.component.html',
-    styleUrls: ['./details.component.scss']
+    templateUrl: './payment-details.component.html',
+    styleUrls: ['./payment-details.component.scss']
 })
-export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PaymentDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     paymentStatus = PaymentStatus;
     detailsDS = new MatTableDataSource<Detail>();

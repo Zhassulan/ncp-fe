@@ -1,14 +1,18 @@
-<mat-table [dataSource]="dataSource" matSort>
+<mat-form-field>
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="поиск" #input>
+</mat-form-field>
+<mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Название шаблона</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef> Название шаблона</mat-header-cell>
         <mat-cell *matCellDef="let item"> {{ item.name }}</mat-cell>
     </ng-container>
     <ng-container matColumnDef="company">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Компания </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef> Компания</mat-header-cell>
         <mat-cell *matCellDef="let item"> {{ clientProfile.clientName }}</mat-cell>
     </ng-container>
     <ng-container matColumnDef="bin">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> БИН </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef> БИН</mat-header-cell>
         <mat-cell *matCellDef="let item"> {{ clientProfile.clientBIN ? clientProfile.clientBIN : clientProfile.clientIIN  }}</mat-cell>
     </ng-container>
     <ng-container matColumnDef="menu">
@@ -19,14 +23,14 @@
                     <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="openTemplate(item)">
+                    <button mat-menu-item (click)="open(item)">
                         <span>Открыть</span>
                     </button>
                 </mat-menu>
             </div>
         </mat-cell>
     </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let item; columns: displayedColumns;"></tr>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let item; columns: displayedColumns;"></mat-row>
 </mat-table>
 <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

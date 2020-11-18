@@ -5,7 +5,7 @@ import {PaymentMenuItems, PaymentStatus} from '../settings';
 import {PaymentService} from './payment.service';
 import {DlgImportRouterRegistryComponent} from './dialog/dlg-import-router-registry.component';
 import {ActivatedRoute} from '@angular/router';
-import {DetailsComponent} from './details/details.component';
+import {PaymentDetailsComponent} from './details/payment-details.component';
 import {AppService} from '../app.service';
 import {DlgDeferComponent} from './calendar-defer-modal/dlg-defer.component';
 import {PaymentRepository} from './paymet-repository';
@@ -35,7 +35,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     private registry: string;
     private deferDate = new Date();
     private subscription: Subscription;
-    @ViewChild(DetailsComponent, {static: true}) private childDetailsComponent: DetailsComponent;
+    @ViewChild(PaymentDetailsComponent, {static: true}) private childDetailsComponent: PaymentDetailsComponent;
     paymentStatus = PaymentStatus;
 
     get payment() {
