@@ -15,7 +15,7 @@ export class TemplatesComponent implements OnInit {
                 private templateService: TemplateService) {
     }
 
-    get clientProfile() {
+    get profile() {
         return this.clntService.clientProfile;
     }
 
