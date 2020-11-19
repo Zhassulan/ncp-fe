@@ -1,13 +1,21 @@
-<div class="container" id="tv">
-    <div class="grid_wrapper">
-        <div class="title">
+<div class="container">
+    <div class="container_item">
+        <div class="template" id="shadow_box">
+            <div class="title">
                 <h2 class="mat-h2">Шаблон ID {{ template.id }}</h2>
-        </div>
-        <div class="company">
-            <h3 class="mat-h3">Компания "{{ profile.clientName }}" БИН {{ profile.clientIIN ? profile.clientIIN : profile.clientBIN  }}</h3>
-        </div>
-        <div class="table">
-            <app-template-details-table [template]="template"></app-template-details-table>
+            </div>
+            <div class="company">
+                <h3 class="mat-h3">Компания "{{ profile.clientName }}" БИН {{ profile.clientIIN ? profile.clientIIN : profile.clientBIN  }}</h3>
+            </div>
+            <div class="search">
+                <mat-form-field>
+                    <mat-label>Поиск..</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="поиск" #input>
+                </mat-form-field>
+            </div>
+            <div class="table">
+                <app-template-details-table [template]="template"></app-template-details-table>
+            </div>
         </div>
     </div>
 </div>

@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Template} from '../model/template';
 import {ActivatedRoute} from '@angular/router';
 import {TemplateService} from '../template.service';
 import {NotificationsService} from 'angular2-notifications';
 import {ClientProfile} from '../../clients/clientProfile';
 import {ClientService} from '../../clients/client.service';
+import {TemplateDetailsTableComponent} from '../details-table/template-details-table.component';
 
 @Component({
     selector: 'app-template',
@@ -12,6 +13,9 @@ import {ClientService} from '../../clients/client.service';
     styleUrls: ['./template.component.scss']
 })
 export class TemplateComponent implements OnInit {
+
+    @ViewChild(TemplateDetailsTableComponent)
+    private details: TemplateDetailsTableComponent;
 
     constructor(private route: ActivatedRoute,
                 private templateService: TemplateService,
@@ -35,6 +39,14 @@ export class TemplateComponent implements OnInit {
 
     ngOnInit(): void {
         this.template = this.templateService.getById(this.route.snapshot.params['id']);
+    }
+
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.details.dataSource.filter = filterValue.trim().toLowerCase();
+        if (this.details.dataSource.paginator) {
+            this.details.dataSource.paginator.firstPage();
+        }
     }
 
 }
