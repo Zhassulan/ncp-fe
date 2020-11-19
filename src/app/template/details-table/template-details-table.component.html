@@ -1,0 +1,36 @@
+<mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="no">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> #</mat-header-cell>
+        <mat-cell *matCellDef="let i = index"> {{ paginator.pageIndex < 1 ? i + 1 : (i + 1) + (paginator.pageIndex * 10) }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="msisdn">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> MSISDN</mat-header-cell>
+        <mat-cell *matCellDef="let item"> {{ item.msisdn }}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="account">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Счет</mat-header-cell>
+        <mat-cell *matCellDef="let item"> {{ item.account }}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="sum">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Сумма</mat-header-cell>
+        <mat-cell *matCellDef="let item"> {{ item.sum }}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="menu">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let item">
+            <div class="menu">
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="stub(item)">
+                        <span>Открыть</span>
+                    </button>
+                </mat-menu>
+            </div>
+        </mat-cell>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let item; columns: displayedColumns;"></tr>
+</mat-table>
+<mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
