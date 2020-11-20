@@ -1,21 +1,15 @@
+table {
+  width: 100%;
+}
+
 .mat-form-field {
   font-size: 14px;
   width: 100%;
 }
 
-table {
-  width: 100%;
-}
-
-.mat-header-row,
-.mat-row {
-  display: inline-flex;
-  min-width: 100%;
-}
-
 .mat-column-no {
-  flex: 0 0 5% !important;
-  width: 5% !important;
+  flex: 0 0 10% !important;
+  width: 10% !important;
 }
 
 .mat-column-menu {
@@ -23,3 +17,7 @@ table {
   width: 5% !important;
 }
 
+.mat-column-select {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+}

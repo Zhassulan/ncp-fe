@@ -16,23 +16,28 @@
 
 .template {
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 50px 20px 30px 1fr;
+  grid-template-columns: 1fr 30px;
+  grid-template-rows: 50px 20px 30px auto;
   grid-column-gap: 10px;
   grid-row-gap: 10px;
   grid-template-areas:
-    "title"
-    "company"
-    "search"
-    "table";
+    "title menu"
+    "company company"
+    "search search"
+    "table table";
   border: 1px solid lightgrey; /* Параметры границы */
 }
 
-.title {
+.title_box {
   grid-area: title;
-  justify-self: center; /* align by column */
   align-self: center; /* align by row */
   place-self: center;
+  justify-self: center;
+}
+
+.menu {
+  grid-area: menu;
+  justify-self: right; /* align by column */
 }
 
 .company {

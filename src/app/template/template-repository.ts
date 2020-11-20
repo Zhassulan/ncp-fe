@@ -28,4 +28,8 @@ export class TemplateRepository {
         return this.http.delete(`${API_URL}/templates/${id}`).pipe(catchError(HttpErrHandler.handleError));
     }
 
+    deleteDetail(id): Observable<any> {
+        return this.http.delete(`${API_URL}/templates/details/${id}`).pipe(catchError(HttpErrHandler.handleError));
+    }
+
 }

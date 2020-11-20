@@ -10,6 +10,7 @@ import {concat} from 'rxjs';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
 import {ClientService} from '../../clients/client.service';
+import {SelectionModel} from '@angular/cdk/collections';
 
 @Component({
     selector: 'app-templates-table',
