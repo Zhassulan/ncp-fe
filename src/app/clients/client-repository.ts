@@ -51,6 +51,7 @@ export class ClientRepository {
     }
 
     profile(profileId)   {
+        console.log(`Loading profile ID ${profileId}..`);
         return this.http.get<ClientProfile>(`${API_URL}/clients/profile/${profileId}`).pipe(catchError(HttpErrHandler.handleError));
     }
 

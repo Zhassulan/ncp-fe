@@ -6,6 +6,8 @@ import {NotificationsService} from 'angular2-notifications';
 import {ClientProfile} from '../../clients/clientProfile';
 import {ClientService} from '../../clients/client.service';
 import {TemplateDetailsTableComponent} from '../details-table/template-details-table.component';
+import {SelectionModel} from '@angular/cdk/collections';
+import {TemplatesTableComponent} from '../templates-table/templates-table.component';
 
 @Component({
   selector: 'app-template',
@@ -49,7 +51,7 @@ export class TemplateComponent implements OnInit {
     }
   }
 
-  stub() {
+  delete() {
 
   }
 

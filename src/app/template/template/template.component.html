@@ -10,13 +10,17 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="stub()">
-            <span>Открыть</span>
+          <button mat-menu-item (click)="delete()">
+            <span>Удалить</span>
           </button>
         </mat-menu>
       </div>
       <div class="company">
-        <h3 class="mat-h3">Компания "{{ profile.clientName }}" БИН {{ profile.clientIIN ? profile.clientIIN : profile.clientBIN  }}</h3>
+        <h3 class="mat-h3">Компания "{{ profile.clientName }}"</h3>
+        <!-- <h3>Компания "11111111111111 111111 1" БИН 1111111111111111</h3> -->
+      </div>
+      <div class="bin">
+        <h3 class="mat-h3">БИН {{ profile.clientIIN ? profile.clientIIN : profile.clientBIN  }}</h3>
         <!-- <h3>Компания "11111111111111 111111 1" БИН 1111111111111111</h3> -->
       </div>
       <div class="search">
@@ -36,4 +40,4 @@
     </div>
   </div>
 </div>
-<!-- <simple-notifications></simple-notifications> -->
+<simple-notifications></simple-notifications>

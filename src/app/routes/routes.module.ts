@@ -32,13 +32,6 @@ const routes: Routes = [
         }
     },
     {
-        path: 'templates',
-        component: TemplatesComponent,
-        data: {
-            breadcrumb: 'Шаблоны'
-        }
-    },
-    {
         path: 'raw',
         component: RawComponent,
         data: {
@@ -88,7 +81,7 @@ const routes: Routes = [
         }
     },
     {
-        path: 'templates/company/:id',
+        path: 'company/:id/templates',
         component: TemplatesComponent,
         data: {
             breadcrumb: 'Шаблоны'

@@ -8,6 +8,7 @@ import {NotificationsService} from 'angular2-notifications';
 @Injectable({providedIn: 'root'})
 export class TemplateService {
 
+  profileId;
   templates: Template [];
 
   constructor(private http: HttpClient,
@@ -16,7 +17,8 @@ export class TemplateService {
               private notif: NotificationsService) {
   }
 
-  findAllByProfileId(id) {
+  /*findAllByProfileId(id) {
+    this.profileId = id;
     this.appService.setProgress(true);
     this.repository.findAllByCompany(id).subscribe(
         data => this.templates = data,
@@ -25,6 +27,10 @@ export class TemplateService {
           this.notif.error(error);
         },
         () => this.appService.setProgress(false));
+  }*/
+
+  findAllByProfileId(id) {
+    return this.repository.findAllByCompany(id);
   }
 
   getById(id): Template {
@@ -32,13 +38,13 @@ export class TemplateService {
   }
 
   delete(id) {
-    this.appService.setProgress(true);
-    this.repository.delete(id).subscribe(
+    return this.repository.delete(id); /*.subscribe(
         data => this.templates.splice(this.templates.findIndex(x => x.id == id), 1),
         error => {
           this.appService.setProgress(false);
           this.notif.error(error);
         }, () => this.appService.setProgress(false));
+        */
   }
 
   deleteDetail(id) {

@@ -73,13 +73,7 @@ export class ClientService {
     }
 
     loadProfile(id) {
-        this.appService.setProgress(true);
-        this.clntRepo.profile(id).subscribe(
-            data => this.clientProfile = data,
-            error => {
-                this.appService.setProgress(false);
-                this.notifService.error(error.message);
-            }, () => this.appService.setProgress(false));
+        return this.clntRepo.profile(id);
     }
 
     set clientProfile(x) {

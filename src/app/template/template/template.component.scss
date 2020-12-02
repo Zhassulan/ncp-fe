@@ -17,12 +17,13 @@
 .template {
   display: grid;
   grid-template-columns: 1fr 30px;
-  grid-template-rows: 50px 20px 30px auto;
+  grid-template-rows: 50px 20px 20px 30px auto;
   grid-column-gap: 10px;
   grid-row-gap: 10px;
   grid-template-areas:
     "title menu"
     "company company"
+    "bin bin"
     "search search"
     "table table";
   border: 1px solid lightgrey; /* Параметры границы */
@@ -42,6 +43,13 @@
 
 .company {
   grid-area: company;
+  justify-self: center;
+  align-self: center;
+  place-self: center;
+}
+
+.bin {
+  grid-area: bin;
   justify-self: center;
   align-self: center;
   place-self: center;

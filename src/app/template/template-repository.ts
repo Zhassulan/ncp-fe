@@ -17,6 +17,7 @@ export class TemplateRepository {
     }
 
     findAllByCompany(profileId): Observable<Template []> {
+        console.log(`Loading templates by profile ID ${profileId}..`);
         return this.http.get<Template []>(`${API_URL}/templates/company/${profileId}`).pipe(catchError(HttpErrHandler.handleError));
     }
 
