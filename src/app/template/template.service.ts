@@ -17,44 +17,20 @@ export class TemplateService {
               private notif: NotificationsService) {
   }
 
-  /*findAllByProfileId(id) {
-    this.profileId = id;
-    this.appService.setProgress(true);
-    this.repository.findAllByCompany(id).subscribe(
-        data => this.templates = data,
-        error => {
-          this.appService.setProgress(false);
-          this.notif.error(error);
-        },
-        () => this.appService.setProgress(false));
-  }*/
-
   findAllByProfileId(id) {
     return this.repository.findAllByCompany(id);
   }
 
-  getById(id): Template {
-    return this.templates.find(x => x.id == id);
+  findById(id) {
+    return this.repository.findById(id);
   }
 
   delete(id) {
-    return this.repository.delete(id); /*.subscribe(
-        data => this.templates.splice(this.templates.findIndex(x => x.id == id), 1),
-        error => {
-          this.appService.setProgress(false);
-          this.notif.error(error);
-        }, () => this.appService.setProgress(false));
-        */
+    return this.repository.delete(id);
   }
 
-  deleteDetail(id) {
-    this.appService.setProgress(true);
-    this.repository.deleteDetail(id).subscribe(
-        data => this.templates.splice(this.templates.findIndex(x => x.id == id), 1),
-        error => {
-          this.appService.setProgress(false);
-          this.notif.error(error);
-        }, () => this.appService.setProgress(false));
+  deleteDetail(templateId, detailId) {
+    return this.repository.deleteDetail(templateId, detailId);
   }
 
   create(profileId, name) {

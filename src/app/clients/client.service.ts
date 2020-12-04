@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Client} from './list/client';
-import {observable, Observable, Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {ClientRepository} from './client-repository';
 import {AppService} from '../app.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Payment} from '../payment/model/payment';
-import {Utils} from '../utils';
 import {ClientProfile} from './clientProfile';
 import {map} from 'rxjs/operators';
 

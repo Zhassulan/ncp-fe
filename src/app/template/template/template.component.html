@@ -1,6 +1,6 @@
 <div class="container">
   <div class="container_item">
-    <div class="template" id="shadow_box">
+    <div class="template" id="shadow_box" *ngIf="profile && template">
       <div class="title_box">
         <h2 class="mat-h2">Шаблон ID {{ template.id }}</h2>
         <!-- <h2>Шаблон ID 111</h2> -->
@@ -10,7 +10,7 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="delete()">
+          <button mat-menu-item (click)="onDeleteDetail()">
             <span>Удалить</span>
           </button>
         </mat-menu>
@@ -31,7 +31,7 @@
         <!-- <input /> -->
       </div>
       <div class="table">
-        <app-template-details-table [template]="template"></app-template-details-table>
+        <app-template-details-table [template]="template" (reload)="onReload($event)"></app-template-details-table>
         <!-- Table Table Table Table<br />
         Table Table Table Table<br />
         Table Table Table Table<br />
