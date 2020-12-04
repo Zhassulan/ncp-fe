@@ -42,7 +42,6 @@ export class TemplatesTableComponent implements OnInit, AfterViewInit, AfterCont
   }
 
   ngOnInit(): void {
-
   }
 
   open(template: Template) {
@@ -110,7 +109,11 @@ export class TemplatesTableComponent implements OnInit, AfterViewInit, AfterCont
   }
 
   ngAfterContentChecked(): void {
-    if (this.profile) this.retrieve();
+    if (this.profile)
+      if (this.dataSource.data.length == 0) {
+        console.log('Loading templates');
+        this.retrieve();
+      }
   }
 
 }

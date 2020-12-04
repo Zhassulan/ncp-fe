@@ -57,5 +57,9 @@ export class TemplateService {
         }, () => this.appService.setProgress(false));
   }
 
+  create(profileId, name) {
+    return this.repository.create(profileId, name);
+  }
+
 
 }

@@ -3,8 +3,9 @@ import {Observable} from 'rxjs';
 import {Template} from './model/template';
 import {catchError} from 'rxjs/operators';
 import {HttpErrHandler} from '../http-err-handler';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../environments/environment';
+import {httpOptions} from '../settings';
 
 const API_URL = environment.apiUrl;
 
@@ -31,6 +32,10 @@ export class TemplateRepository {
 
     deleteDetail(id): Observable<any> {
         return this.http.delete(`${API_URL}/templates/details/${id}`).pipe(catchError(HttpErrHandler.handleError));
+    }
+
+    create(profileId, name): Observable<Template> {
+        return this.http.post<Template>(`${API_URL}/templates`, { profileId: profileId, name: name}, httpOptions).pipe(catchError(HttpErrHandler.handleError));
     }
 
 }
