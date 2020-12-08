@@ -10,6 +10,9 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onAddDetail()">
+            <span>Добавить</span>
+          </button>
           <button mat-menu-item (click)="onDeleteDetail()">
             <span>Удалить</span>
           </button>

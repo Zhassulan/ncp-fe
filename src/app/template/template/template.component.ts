@@ -7,8 +7,10 @@ import {ClientProfile} from '../../clients/clientProfile';
 import {ClientService} from '../../clients/client.service';
 import {TemplateDetailsTableComponent} from '../details-table/template-details-table.component';
 import {AppService} from '../../app.service';
-import {map} from 'rxjs/operators';
-import {combineLatest, concat} from 'rxjs';
+import {DlgEnterTemplateName} from '../dlg/enter-template-name/dlg-enter-template-name.component';
+import {MatDialog} from '@angular/material/dialog';
+import {DlgTemplateDetailComponent} from '../dlg-template-detail/dlg-template-detail.component';
+import {TemplateDetail} from '../model/template-detail';
 
 @Component({
   selector: 'app-template',
@@ -26,7 +28,8 @@ export class TemplateComponent implements OnInit {
               private templateService: TemplateService,
               private clntService: ClientService,
               private appService: AppService,
-              private notif: NotificationsService) {
+              private notif: NotificationsService,
+              public dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -97,6 +100,40 @@ export class TemplateComponent implements OnInit {
     this.deleteDetail();
   }
 
+  onAddDetail() {
+    this.openDlgAddTemplateDetail();
+  }
+
+  openDlgAddTemplateDetail(): void {
+    const dialogRef = this.dialog.open(DlgTemplateDetailComponent, {
+      width: '500px',
+      data: { detail: new TemplateDetail(null, 0, 0) },
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      this.addDetail(result);
+    });
+  }
+
+  addDetail(detail) {
+    this.appService.setProgress(true);
+    let newDetail = new TemplateDetail(
+        detail.msisdn,
+        Number(detail.account),
+        Number(detail.sum));
+    this.templateService.createDetail(this.template.id, newDetail).subscribe(
+        data => {
+          this.loadTemplate();
+        },
+        error => {
+          this.appService.setProgress(false);
+        },
+        () => {
+          this.appService.setProgress(false);
+        }
+    );
+  }
 
 }
 

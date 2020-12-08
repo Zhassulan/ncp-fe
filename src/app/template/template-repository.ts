@@ -6,6 +6,7 @@ import {HttpErrHandler} from '../http-err-handler';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {httpOptions} from '../settings';
+import {TemplateDetail} from './model/template-detail';
 
 const API_URL = environment.apiUrl;
 
@@ -36,6 +37,10 @@ export class TemplateRepository {
 
     create(profileId, name): Observable<Template> {
         return this.http.post<Template>(`${API_URL}/templates`, { profileId: profileId, name: name}, httpOptions).pipe(catchError(HttpErrHandler.handleError));
+    }
+
+    createDetail(templateId, detail): Observable<any> {
+        return this.http.post<TemplateDetail>(`${API_URL}/templates/${templateId}/details`, detail, httpOptions).pipe(catchError(HttpErrHandler.handleError));
     }
 
 }

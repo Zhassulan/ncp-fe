@@ -73,6 +73,7 @@ import {MobipayRepository} from './mobipay/mobipay-repository';
 import {PublicRegistryRepository} from './public-registry/public-registry-repository';
 import {TemplateDetailsTableComponent} from './template/details-table/template-details-table.component';
 import {DlgEnterTemplateName} from './template/dlg/enter-template-name/dlg-enter-template-name.component';
+import { DlgTemplateDetailComponent } from './template/dlg-template-detail/dlg-template-detail.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -117,6 +118,7 @@ registerLocaleData(localeRu, 'ru');
     TemplateComponent,
     TemplateDetailsTableComponent,
     DlgEnterTemplateName,
+    DlgTemplateDetailComponent,
   ],
   entryComponents: [
     DlgResultComponent,
@@ -126,7 +128,8 @@ registerLocaleData(localeRu, 'ru');
     DlgDeferComponent,
     DlgMobipayPartnersComponent,
     DlgImportLimits,
-    DlgEnterTemplateName
+    DlgEnterTemplateName,
+    DlgTemplateDetailComponent
   ],
   imports: [
     CommonModule,

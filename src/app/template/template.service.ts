@@ -37,5 +37,8 @@ export class TemplateService {
     return this.repository.create(profileId, name);
   }
 
+  createDetail(templateId, detail) {
+    return this.repository.createDetail(templateId, detail);
+  }
 
 }
