@@ -1,16 +1,17 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, Output, ViewChild, EventEmitter} from '@angular/core';
 import {Template} from '../model/template';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {TemplateService} from '../template.service';
 import {NotificationsService} from 'angular2-notifications';
 import {ClientProfile} from '../../clients/clientProfile';
 import {ClientService} from '../../clients/client.service';
 import {TemplateDetailsTableComponent} from '../details-table/template-details-table.component';
 import {AppService} from '../../app.service';
-import {DlgEnterTemplateName} from '../dlg/enter-template-name/dlg-enter-template-name.component';
 import {MatDialog} from '@angular/material/dialog';
 import {DlgTemplateDetailComponent} from '../dlg-template-detail/dlg-template-detail.component';
 import {TemplateDetail} from '../model/template-detail';
+import {PaymentService} from '../../payment/payment.service';
+
 
 @Component({
   selector: 'app-template',
@@ -23,13 +24,16 @@ export class TemplateComponent implements OnInit {
   profile: ClientProfile;
   @ViewChild(TemplateDetailsTableComponent)
   private details: TemplateDetailsTableComponent;
+  @Output() emitterClose = new EventEmitter<boolean>();
 
   constructor(private route: ActivatedRoute,
               private templateService: TemplateService,
               private clntService: ClientService,
               private appService: AppService,
               private notif: NotificationsService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private router: Router,
+              private paymentService: PaymentService) {
   }
 
   ngOnInit(): void {
@@ -107,13 +111,18 @@ export class TemplateComponent implements OnInit {
   openDlgAddTemplateDetail(): void {
     const dialogRef = this.dialog.open(DlgTemplateDetailComponent, {
       width: '500px',
-      data: { detail: new TemplateDetail(null, 0, 0) },
+      data: {detail: new TemplateDetail(null, 0, 0)},
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
       this.addDetail(result);
     });
+  }
+
+  onApplyPayment() {
+    this.paymentService.templateId = this.route.snapshot.params['id'];
+    this.router.navigate([`payments/${ this.paymentService.payment.id }`]);
   }
 
   addDetail(detail) {

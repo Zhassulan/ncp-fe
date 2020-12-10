@@ -28,6 +28,7 @@ export class TemplatesComponent implements OnInit {
               public dialog: MatDialog) {
   }
 
+
   ngOnInit(): void {
     this.loadProfile(this.route.snapshot.params['id']);
   }
@@ -110,5 +111,7 @@ export class TemplatesComponent implements OnInit {
           this.appService.setProgress(false);
         });
   }
+
+
 
 }

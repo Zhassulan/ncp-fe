@@ -8,7 +8,7 @@ import {CookieService} from 'ngx-cookie-service';
 import {DlgLoginComponent} from './auth/login/dlg-login.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {APP_BASE_HREF, CommonModule, registerLocaleData} from '@angular/common';
+import {CommonModule, registerLocaleData} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MenuToolbarComponent} from './main-nav/menu-toolbar.component';
 import {RoutesModule} from './routes/routes.module';
@@ -73,7 +73,7 @@ import {MobipayRepository} from './mobipay/mobipay-repository';
 import {PublicRegistryRepository} from './public-registry/public-registry-repository';
 import {TemplateDetailsTableComponent} from './template/details-table/template-details-table.component';
 import {DlgEnterTemplateName} from './template/dlg/enter-template-name/dlg-enter-template-name.component';
-import { DlgTemplateDetailComponent } from './template/dlg-template-detail/dlg-template-detail.component';
+import {DlgTemplateDetailComponent} from './template/dlg-template-detail/dlg-template-detail.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -129,7 +129,7 @@ registerLocaleData(localeRu, 'ru');
     DlgMobipayPartnersComponent,
     DlgImportLimits,
     DlgEnterTemplateName,
-    DlgTemplateDetailComponent
+    DlgTemplateDetailComponent,
   ],
   imports: [
     CommonModule,

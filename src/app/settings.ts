@@ -102,7 +102,8 @@ export enum PaymentMenuItems {
     DEFER,
     DEL_TRANSIT,
     TRANSIT,
-    DEL
+    DEL,
+    TEMPLATE
 }
 
 /**

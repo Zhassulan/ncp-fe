@@ -9,6 +9,9 @@
         <button mat-menu-item [disabled]="!canLoadEquipment()" (click)="select(paymentMenuItems.LOAD_EQUIPMENT)">
             <span>Оборудование</span>
         </button>
+        <button mat-menu-item [disabled]="!canLoadEquipment()" (click)="select(paymentMenuItems.TEMPLATE)">
+            <span>Шаблон</span>
+        </button>
         <button mat-menu-item [disabled]="!canTransit()" (click)="select(paymentMenuItems.TRANSIT)">
             <span>На транзит</span>
         </button>

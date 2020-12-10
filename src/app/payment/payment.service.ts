@@ -21,12 +21,13 @@ class Props {
 @Injectable()
 export class PaymentService {
 
-    payment;
+    payment: Payment;
     paymentObs = new Subject<Payment>();
     payAnnounced$ = this.paymentObs.asObservable();
     props = new Props(0);
     propsObs = new Subject<Props>();
     propsAnnounced$ = this.propsObs.asObservable();
+    templateId: number;
 
     constructor(private routerService: RouterService,
                 private clntDataService: ClientRepository,
@@ -284,5 +285,8 @@ export class PaymentService {
             detail.status == PaymentStatus.TRANSIT_ERR;
     }
 
+    loadRegistryFromTemplate() {
+
+    }
 
 }

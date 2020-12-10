@@ -2,14 +2,14 @@ import {AfterContentChecked, AfterViewInit, Component, Input, OnInit, ViewChild}
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {Template} from '../model/template';
 import {TemplateService} from '../template.service';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
-import {ClientService} from '../../clients/client.service';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ClientProfile} from '../../clients/clientProfile';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-templates-table',
@@ -37,15 +37,18 @@ export class TemplatesTableComponent implements OnInit, AfterViewInit, AfterCont
               private notif: NotificationsService,
               private router: Router,
               private templateService: TemplateService,
-              private clntService: ClientService,
-              private activatedRoute: ActivatedRoute) {
+              public dialog: MatDialog,) {
   }
 
   ngOnInit(): void {
   }
 
-  open(template: Template) {
-    this.router.navigate(['templates', template.id]);
+  onOpenTemplate(template: Template) {
+    this.openTemplate(template.id);
+  }
+
+  openTemplate(id) {
+    this.router.navigate([`templates/${id}`]);
   }
 
   delete(template: Template) {
@@ -111,7 +114,6 @@ export class TemplatesTableComponent implements OnInit, AfterViewInit, AfterCont
   ngAfterContentChecked(): void {
     if (this.profile)
       if (this.dataSource.data.length == 0) {
-        console.log('Loading templates');
         this.retrieve();
       }
   }

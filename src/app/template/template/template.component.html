@@ -11,10 +11,13 @@
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="onAddDetail()">
-            <span>Добавить</span>
+            <span>Добавить запись</span>
           </button>
           <button mat-menu-item (click)="onDeleteDetail()">
-            <span>Удалить</span>
+            <span>Удалить запись</span>
+          </button>
+          <button mat-menu-item (click)="onApplyPayment()">
+            <span>Применить для платежа</span>
           </button>
         </mat-menu>
       </div>
