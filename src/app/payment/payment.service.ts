@@ -8,6 +8,8 @@ import {PaymentRepository} from './paymet-repository';
 import {RouterService} from '../router/router.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Message} from '../message';
+import {Template} from '../template/model/template';
+import {TemplateService} from '../template/template.service';
 
 class Props {
 
@@ -32,7 +34,8 @@ export class PaymentService {
     constructor(private routerService: RouterService,
                 private clntDataService: ClientRepository,
                 private payDataService: PaymentRepository,
-                private notifSerice: NotificationsService) {
+                private notifSerice: NotificationsService,
+                private templateService: TemplateService) {
     }
 
     get routerRegistryItems() {
@@ -54,7 +57,19 @@ export class PaymentService {
 
     setPayment(data) {
         this.payment = data;
-        this.announcePayment();
+        if (this.templateId) {
+            this.templateService.findById(this.templateId).subscribe(
+                data => {
+                    this.loadRegistryFromTemplate(data);
+
+                },
+                error => {
+                    this.notifSerice.error(error);
+                },
+                () => {
+                    this.announcePayment();
+                });
+        }
     }
 
     /*addDetail(detail: Detail) {
@@ -285,8 +300,17 @@ export class PaymentService {
             detail.status == PaymentStatus.TRANSIT_ERR;
     }
 
-    loadRegistryFromTemplate() {
-
+    loadRegistryFromTemplate(template: Template) {
+        console.log(this.payment);
+        this.payment.details = [];
+        template.details.forEach(detail => {
+           let paymentDetail = new Detail();
+           paymentDetail.account = detail.account;
+           paymentDetail.msisdn = detail.msisdn;
+           paymentDetail.sum = detail.sum;
+           paymentDetail.status = PaymentStatus.NEW;
+           this.payment.details.push(paymentDetail);
+        });
     }
 
 }

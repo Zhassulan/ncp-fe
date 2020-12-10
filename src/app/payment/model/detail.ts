@@ -24,4 +24,5 @@ export class Detail {
         this.icc = null;
     }
 
+
 }

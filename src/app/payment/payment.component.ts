@@ -57,9 +57,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.load(this.route.snapshot.params['id']);
-    if (this.payService.templateId) {
-      this.loadRegistryFromTemplate();
-    }
+
   }
 
   public menuOnSelected(selectedMenuItem: number) {
@@ -112,6 +110,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         data => {
           this.payService.setPayment(data);
           if (this.canLoadPhones(data)) this.props();
+
         },
         error => {
           this.appService.setProgress(false);
@@ -255,22 +254,6 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   private openTemplates() {
     this.router.navigate([`company/${this.payment.profileId}/templates`]);
-  }
-
-  private loadRegistryFromTemplate() {
-    this.appService.setProgress(true);
-    this.templateService.findById(this.payService.templateId).subscribe(
-        data => {
-
-        },
-        error => {
-          this.notifService.error(error);
-          this.appService.setProgress(false);
-        },
-        () => {
-          this.appService.setProgress(false);
-        }
-    );
   }
 
 }
