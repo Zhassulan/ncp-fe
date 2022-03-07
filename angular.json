@@ -90,7 +90,7 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "ncp-frontend-app:build",
-            "deployUrl": "/ui/",
+            "deployUrl": "/",
             "publicHost":"http://localhost:4200"
           },
           "configurations": {
