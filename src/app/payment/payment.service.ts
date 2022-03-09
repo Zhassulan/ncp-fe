@@ -316,8 +316,4 @@ export class PaymentService {
            this.payment.details.push(paymentDetail);
         });
     }
-
-    isMobipay(payment: Payment): boolean {
-      return payment.mobipay;
-    }
 }

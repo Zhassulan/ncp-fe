@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host=localhost --port=4200 --disableHostCheck=true",
+    "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -47,7 +47,7 @@
     "@angular/cli": "^13.2.5",
     "@angular/compiler-cli": "^13.2.5",
     "@angular/language-service": "^13.2.5",
-    "@types/jasmine": "~2.8.8",
+    "@types/jasmine": "3.6.11",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",

@@ -3,41 +3,57 @@ import {Observable} from 'rxjs';
 import {NotificationsService} from 'angular2-notifications';
 import {MobipayRepository} from './mobipay-repository';
 import {LimitsUpdateResponse} from './model/limits-update-response';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {headers} from '../settings';
+import {catchError} from 'rxjs/operators';
+import {HttpErrHandler} from '../http-err-handler';
+import {environment} from '../../environments/environment';
+
+const API_URL = environment.apiUrl;
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class MobipayService {
 
-    limits: LimitsUpdateResponse [];
+  limits: LimitsUpdateResponse [];
 
-    constructor(private notifService: NotificationsService,
-                private mobipayDataService: MobipayRepository) {
-    }
+  constructor(private http: HttpClient,
+              private notifService: NotificationsService,
+              private mobipayDataService: MobipayRepository) {
+  }
 
-    updateLimits(file: File): Observable<any> {
-        const formData: FormData = new FormData();
-        formData.append('file', file, file.name);
-        return new Observable(
-            observer => {
-                this.mobipayDataService.updateLimits(formData).subscribe(
-                    data => {
-                        this.limits = data;
-                        observer.next(true);
-                    },
-                    error => {
-                        this.notifService.error(error.message);
-                        observer.error(false);
-                    },
-                    () => {
-                        observer.complete();
-                    });
-            }
-        );
-    }
+  updateLimits(file: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    return new Observable(
+      observer => {
+        this.mobipayDataService.updateLimits(formData).subscribe(
+          data => {
+            this.limits = data;
+            observer.next(true);
+          },
+          error => {
+            this.notifService.error(error.message);
+            observer.error(false);
+          },
+          () => {
+            observer.complete();
+          });
+      }
+    );
+  }
 
-    resetFile() {
-        this.limits = null;
-    }
+  resetFile() {
+    this.limits = null;
+  }
 
+  isMobipay(profileId: number) {
+    const params = new HttpParams()
+      .set('id', profileId);
+    return this.http.get<boolean>(`${API_URL}/profile/${profileId}/is-mobipay`, {
+      params: params,
+      headers: headers
+    }).pipe(catchError(HttpErrHandler.handleError));
+  }
 }

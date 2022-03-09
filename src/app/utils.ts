@@ -6,7 +6,7 @@ export class Utils {
     constructor() { }
 
     static dateToLocalString(dt: string): string {
-        let pipe = new DatePipe('ru-RU');
+        const pipe = new DatePipe('ru-RU');
         return pipe.transform(new Date(dt)).toString();
     }
 
@@ -15,7 +15,7 @@ export class Utils {
     }
 
     static getMd5(strVal) {
-        let md5 = new Md5();
+        const md5 = new Md5();
         md5.appendStr(strVal);
         /*
         .appendAsciiStr('a different string')
@@ -27,17 +27,7 @@ export class Utils {
     }
 
     static millsToDateStr(mills)    {
-        let options = {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            timezone: 'UTC',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric'
-        };
-        let dt = new Date(mills).toLocaleString("ru", options);
-        return new Date(mills).toLocaleString("ru", options).replace(',','');
+      return new Date(mills).toLocaleString('ru').replace(',', '');
     }
 
 }
