@@ -20,7 +20,6 @@ import {PaymentDetailsPipe} from './payments/payment-details-pipe';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
 
 import {LayoutModule} from '@angular/cdk/layout';
-import {BreadcrumbModule} from 'angular-crumbs';
 import {DlgImportRouterRegistryComponent} from './payment/dialog/dlg-import-router-registry.component';
 import localeRu from '@angular/common/locales/ru';
 import {PhonePipe} from './payment/phone-pipe';
@@ -132,7 +131,6 @@ registerLocaleData(localeRu, 'ru');
         RoutesModule,
         FlexLayoutModule,
         LayoutModule,
-        BreadcrumbModule,
         SimpleNotificationsModule.forRoot(),
         FileSaverModule,
         MaterialsModule,

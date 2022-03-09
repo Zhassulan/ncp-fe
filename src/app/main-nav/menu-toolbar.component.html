@@ -10,7 +10,7 @@
             <a *ngFor="let item of routes"
                mat-list-item
                (click)="sidenav.close()"
-               routerLinkActive
+               routerLinkActive=""
                #routerLinkActiveInstance="routerLinkActive"
                [class.list-item-active]="routerLinkActiveInstance.isActive"
                [routerLink]="[item.route]">
@@ -28,8 +28,6 @@
                     <mat-icon>menu</mat-icon>
                 </button>
                 <span></span>
-
-                <breadcrumb></breadcrumb>
 
                 <span class="example-spacer"></span>
 
