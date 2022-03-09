@@ -1,90 +1,94 @@
 <mat-table [dataSource]="dataSource" matSort>
-    <ng-container matColumnDef="ID">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> ID</mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow"> {{paymentRow.id}}</mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="nameSender">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Отправитель</mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow"> {{paymentRow.sender}}</mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="sum">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Сумма</mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.sum | currency : ' ' }} </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="rnnSender">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> ИИН</mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.rnnSender }}</mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="paymentDetails">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Назначение платежа</mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow">
-            {{ paymentRow.details ? paymentRow.details.substring(0, 100) : '' }}
-        </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="statusRu">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Статус</mat-header-cell>
-        <!--<td mat-cell *matCellDef="let paymentRow"> {{ paymentRow.status | paymentStatusRuPipe: paymentRow.status }} -->
-        <mat-cell *matCellDef="let paymentRow">
-            {{ paymentRow.statusRu }} <br/>
-            {{ paymentRow.distributed && (paymentRow.status == PaymentStatus.DISTRIBUTED || paymentRow.status == PaymentStatus.TRANSIT_DISTRIBUTED) ? paymentRow.agent : ''}}
-            <br/>
-            {{ paymentRow.distributed && (paymentRow.status == PaymentStatus.DISTRIBUTED || paymentRow.status == PaymentStatus.TRANSIT_DISTRIBUTED) ? (paymentRow.distributed | date:"dd.MM.yy HH:mm") : '' }}
-        </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="managedBy">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Менеджер</mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow">{{ paymentRow.managedBy ? paymentRow.managedBy.substring(0, 50) : '' }}</mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="account">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Счёт</mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow">
-            Отправитель:<br/> {{ paymentRow.accSender }} <br/>
-            Получатель:<br/> {{ paymentRow.accRecipient }}
-        </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="knp">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>КНП</mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.knp }}</mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="select">
-        <mat-header-cell *matHeaderCellDef>
-            <mat-checkbox (change)="$event ? masterToggle() : null"
-                          [checked]="selection.selected.length > 0"
-                          [indeterminate]="selection.hasValue() && !isAllSelected()">
-            </mat-checkbox>
-        </mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow">
-            <mat-checkbox (click)="$event.stopPropagation()"
-                          (change)="$event ? selection.toggle(paymentRow) : null"
-                          [checked]="selection.isSelected(paymentRow)">
-            </mat-checkbox>
-        </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="rowMenu">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-        <mat-cell *matCellDef="let paymentRow">
-            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Действия над платежом">
-                <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="menuOnRowOpenPayment(paymentRow)">
-                    <span>Открыть</span>
-                </button>
-                <!--<button mat-menu-item (click)="menuOnRowMobipay(paymentRow)">
-                    <span>Mobipay</span>
-                </button>-->
-                <button mat-menu-item [disabled]="!canTransit(paymentRow)" (click)="menuOnRowTransit(paymentRow)">
-                    <span>На транзит</span>
-                </button>
-                <button mat-menu-item [disabled]="!canDelTransit(paymentRow)" (click)="menuOnRowDeleteTransit(paymentRow)">
-                    <span>Удалить с транзита</span>
-                </button>
-            </mat-menu>
-        </mat-cell>
-    </ng-container>
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <!-- for Highlight: paymentRowHighlight [paymentStatus]="paymentRow.getStatus()"-->
-    <mat-row *matRowDef="let paymentRow; columns: displayedColumns;" [ngClass]="{'row_highlight_green':
+  <ng-container matColumnDef="ID">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> ID</mat-header-cell>
+    <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.id }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="nameSender">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Отправитель</mat-header-cell>
+    <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.sender }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="sum">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Сумма</mat-header-cell>
+    <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.sum | currency : ' ' }} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="rnnSender">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> ИИН</mat-header-cell>
+    <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.rnnSender }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="paymentDetails">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Назначение платежа</mat-header-cell>
+    <mat-cell *matCellDef="let paymentRow">
+      {{ paymentRow.details ? paymentRow.details.substring(0, 100) : '' }}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="statusRu">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Статус</mat-header-cell>
+    <!--<td mat-cell *matCellDef="let paymentRow"> {{ paymentRow.status | paymentStatusRuPipe: paymentRow.status }} -->
+    <mat-cell *matCellDef="let paymentRow">
+      {{ paymentRow.statusRu }} <br/>
+      {{ paymentRow.distributed && (paymentRow.status == PaymentStatus.DISTRIBUTED || paymentRow.status == PaymentStatus.TRANSIT_DISTRIBUTED) ? paymentRow.agent : ''}}
+      <br/>
+      {{ paymentRow.distributed && (paymentRow.status == PaymentStatus.DISTRIBUTED || paymentRow.status == PaymentStatus.TRANSIT_DISTRIBUTED) ? (paymentRow.distributed | date:"dd.MM.yy HH:mm") : '' }}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="managedBy">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Менеджер</mat-header-cell>
+    <mat-cell
+      *matCellDef="let paymentRow">{{ paymentRow.managedBy ? paymentRow.managedBy.substring(0, 50) : '' }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="account">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Счёт</mat-header-cell>
+    <mat-cell *matCellDef="let paymentRow">
+      Отправитель:<br/> {{ paymentRow.accSender }} <br/>
+      Получатель:<br/> {{ paymentRow.accRecipient }}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="knp">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>КНП</mat-header-cell>
+    <mat-cell *matCellDef="let paymentRow"> {{ paymentRow.knp }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="select">
+    <mat-header-cell *matHeaderCellDef>
+      <mat-checkbox (change)="$event ? masterToggle() : null"
+                    [checked]="selection.selected.length > 0"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+      </mat-checkbox>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let paymentRow">
+      <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(paymentRow) : null"
+                    [checked]="selection.isSelected(paymentRow)">
+      </mat-checkbox>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="rowMenu">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let paymentRow">
+      <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Действия над платежом">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="menuOnRowOpenPayment(paymentRow)">
+          <span>Открыть</span>
+        </button>
+        <!--<button mat-menu-item (click)="menuOnRowMobipay(paymentRow)">
+            <span>Mobipay</span>
+        </button>-->
+        <button mat-menu-item [disabled]="!canTransit(paymentRow)" (click)="menuOnRowTransit(paymentRow)">
+          <span>На транзит</span>
+        </button>
+        <button mat-menu-item [disabled]="!canDelTransit(paymentRow)" (click)="menuOnRowDeleteTransit(paymentRow)">
+          <span>Удалить с транзита</span>
+        </button>
+        <button mat-menu-item [disabled]="!canMoveMobipay(paymentRow)" (click)="menuOnRowMoveMobipay(paymentRow)">
+          <span>Перенести платеж в Mobipay</span>
+        </button>
+      </mat-menu>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <!-- for Highlight: paymentRowHighlight [paymentStatus]="paymentRow.getStatus()"-->
+  <mat-row *matRowDef="let paymentRow; columns: displayedColumns;" [ngClass]="{'row_highlight_green':
         paymentRow.status == PaymentStatus.DISTRIBUTED ||
         paymentRow.status == PaymentStatus.TRANSIT_DISTRIBUTED ||
         paymentRow.status == PaymentStatus.DELETED ||
@@ -92,7 +96,7 @@
         'row_highlight_red': paymentRow.status == PaymentStatus.ERR}" (click)="onRowClicked(paymentRow)"></mat-row>
 </mat-table>
 <mat-paginator
-        [length]="!paginatorResultsLength"
-        [pageSize]="pageSize"
-        [pageSizeOptions]="pageSizeOptions"
-        showFirstLastButtons></mat-paginator>
+  [length]="!paginatorResultsLength"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions"
+  showFirstLastButtons></mat-paginator>

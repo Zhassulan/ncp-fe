@@ -167,7 +167,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
         this.appService.setProgress(true);
         this.payDataService.transitDel(id).subscribe(
             data => {
-                let payment = this.dataSource.data.find(x => x.id == id);
+                let payment = this.dataSource.data.find(x => x.id === id);
                 payment.status = data.status;
                 payment.statusRu = PaymentStatusRu[payment.status];
                 this.dialogService.addItem(`ID ${id} OK - TRANSIT_PDOC_ID ${data.transitPdocNumId}`);
@@ -199,7 +199,9 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.appService.setProgress(false);
-        if (this.subscription) this.subscription.unsubscribe();
+        if (this.subscription) {
+          this.subscription.unsubscribe();
+        }
     }
 
     canTransit(row) {
@@ -212,4 +214,18 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
         return this.payService.canDelTransit();
     }
 
+    canMoveMobipay(row) {
+      return this.payService.canMoveMobipay(row);
+    }
+
+  menuOnRowMoveMobipay(payment: Payment) {
+    this.dialogService.clear();
+    this.dialogService.title = 'Перенести платеж в Mobipay';
+    this.dialogService.openDialog();
+    this.moveMobipay(payment);
+  }
+
+  moveMobipay(payment: Payment) {
+      this.mobipayDataService.change(payment.id, this.payService.isMobipay(payment));
+  }
 }

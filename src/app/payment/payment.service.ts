@@ -176,6 +176,10 @@ export class PaymentService {
         return this.payment.status == PaymentStatus.TRANSIT;
     }
 
+  canMoveMobipay(row) {
+    return true;
+  }
+
     canDefer() {
         return (this.payment.status == PaymentStatus.NEW ||
             this.payment.status == PaymentStatus.ERR ||
@@ -313,4 +317,7 @@ export class PaymentService {
         });
     }
 
+    isMobipay(payment: Payment): boolean {
+      return payment.mobipay;
+    }
 }

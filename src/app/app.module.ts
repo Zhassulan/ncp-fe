@@ -74,6 +74,7 @@ import {PublicRegistryRepository} from './public-registry/public-registry-reposi
 import {TemplateDetailsTableComponent} from './template/details-table/template-details-table.component';
 import {DlgEnterTemplateName} from './template/dlg/enter-template-name/dlg-enter-template-name.component';
 import {DlgTemplateDetailComponent} from './template/dlg-template-detail/dlg-template-detail.component';
+import { DlgYesNoComponent } from './dialog/dlg-yes-no/dlg-yes-no.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -119,6 +120,7 @@ registerLocaleData(localeRu, 'ru');
     TemplateDetailsTableComponent,
     DlgEnterTemplateName,
     DlgTemplateDetailComponent,
+    DlgYesNoComponent,
   ],
   entryComponents: [
     DlgResultComponent,
