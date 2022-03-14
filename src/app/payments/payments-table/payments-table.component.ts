@@ -16,9 +16,9 @@ import {MobipayRepository} from '../../mobipay/mobipay-repository';
 import {Message} from '../../message';
 import {MobipayService} from '../../mobipay/mobipay.service';
 import {ProfileService} from '../../profile/profile.service';
-import {PaymentV2Service} from '../../payment/payment-v2.service';
 import {ProgressBarService} from '../../progress-bar.service';
 import {SnackbarService} from '../../snackbar.service';
+import {PaymentV2Service} from '../../payment/payment-v2.service';
 
 @Component({
   selector: 'app-payments-table',
@@ -214,10 +214,6 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
   canDelTransit(row) {
     this.payService.setPayment(row);
     return this.payService.canDelTransit();
-  }
-
-  canMoveMobipay(row) {
-    return this.payService.canMoveMobipay(row);
   }
 
   menuOnRowMoveMobipay(payment: Payment) {
