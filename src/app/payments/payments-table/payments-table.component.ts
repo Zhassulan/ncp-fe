@@ -133,7 +133,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
   menuOnRowMobipay(paymentRow) {
     this.progressBarService.start();
     this.mobipayDataService.change(paymentRow.id, true).subscribe(
-      data => this.notifService.info(Message.OK.MOBIPAY_CHANGED),
+      () => this.notifService.info(Message.OK.MOBIPAY_CHANGED),
       error => {
         this.notifService.error(error.message);
         this.progressBarService.stop();
@@ -159,7 +159,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
     this.progressBarService.start();
     this.payDataService.transit(id).subscribe(
       data => {
-        let payment = this.dataSource.data.find(x => x.id === id);
+        const payment = this.dataSource.data.find(x => x.id === id);
         payment.status = data.status;
         payment.statusRu = PaymentStatusRu[payment.status];
         this.dialogService.addItem(`ID ${id} OK - TRANSIT_PDOC_ID ${data.transitPdocNumId}`);
@@ -175,7 +175,7 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
     this.progressBarService.start();
     this.payDataService.transitDel(id).subscribe(
       data => {
-        let payment = this.dataSource.data.find(x => x.id === id);
+        const payment = this.dataSource.data.find(x => x.id === id);
         payment.status = data.status;
         payment.statusRu = PaymentStatusRu[payment.status];
         this.dialogService.addItem(`ID ${id} OK - TRANSIT_PDOC_ID ${data.transitPdocNumId}`);
@@ -185,11 +185,6 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
         this.progressBarService.stop();
       },
       () => this.progressBarService.stop());
-  }
-
-  onRowClicked(paymentRow) {
-    // нельзя использовать, т.к. не работает меню строки!
-    // this.menuOnRowOpenPayment(paymentRow);
   }
 
   export() {
