@@ -12,7 +12,7 @@ import {ProgressBarService} from '../../progress-bar.service';
 })
 export class RegistryComponent implements OnInit {
 
-  private registry;
+  registry;
 
   constructor(private registryService: PublicRegistryRepository,
               private route: ActivatedRoute,

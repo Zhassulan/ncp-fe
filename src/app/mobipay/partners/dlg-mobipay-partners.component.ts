@@ -4,45 +4,49 @@ import {MobipayRepository} from '../mobipay-repository';
 import {Subscription} from 'rxjs';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
+import {ProgressBarService} from '../../progress-bar.service';
 
 @Component({
-    selector: 'app-partners',
-    templateUrl: './dlg-mobipay-partners.component.html',
-    styleUrls: ['./dlg-mobipay-partners.component.scss']
+  selector: 'app-partners',
+  templateUrl: './dlg-mobipay-partners.component.html',
+  styleUrls: ['./dlg-mobipay-partners.component.scss']
 })
 export class DlgMobipayPartnersComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    dataSource;
-    displayedColumns: string[] = ['code', 'name', 'account', 'bin'];
-    @Input() paymentId;
-    subscription: Subscription;
+  dataSource;
+  displayedColumns: string[] = ['code', 'name', 'account', 'bin'];
+  @Input() paymentId;
+  subscription: Subscription;
 
-    constructor(private dlgRef: MatDialogRef<DlgMobipayPartnersComponent>,
-                @Inject(MAT_DIALOG_DATA) public data: any,
-                private mobipayDataService: MobipayRepository,
-                private appService: AppService,
-                private notifService: NotificationsService) {
+  constructor(private dlgRef: MatDialogRef<DlgMobipayPartnersComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private mobipayDataService: MobipayRepository,
+              private appService: AppService,
+              private notifService: NotificationsService,
+              private progressBarService: ProgressBarService) {
+  }
+
+  ngOnInit(): void {
+  }
+
+  ngAfterViewInit(): void {
+    this.progressBarService.start();
+    this.subscription = this.mobipayDataService.partners(this.data.paymentId).subscribe(
+      data => this.dataSource = data,
+      error => {
+        this.notifService.error(error.message);
+        this.progressBarService.stop();
+      },
+      () => this.progressBarService.stop());
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
+  }
 
-    ngOnInit(): void {    }
-
-    ngAfterViewInit(): void {
-        this.appService.setProgress(true);
-        this.subscription = this.mobipayDataService.partners(this.data.paymentId).subscribe(
-            data => this.dataSource = data,
-            error => {
-                this.notifService.error(error.message);
-                this.appService.setProgress(false);
-            },
-            () => this.appService.setProgress(false));
-    }
-
-    ngOnDestroy(): void {
-        if (this.subscription) this.subscription.unsubscribe();
-    }
-
-    onRowClick(row) {
-        this.dlgRef.close(row);
-    }
-
+  onRowClick(row) {
+    this.dlgRef.close(row);
+  }
 }

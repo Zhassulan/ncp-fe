@@ -15,6 +15,7 @@ import {DlgRegistryBufferComponent} from './add-registry-modal/dlg-registry-buff
 import {DlgService} from '../dialog/dlg.service';
 import {Message} from '../message';
 import {TemplateService} from '../template/template.service';
+import {ProgressBarService} from '../progress-bar.service';
 
 export interface RegistryDialogData {
   registry: string;
@@ -45,10 +46,11 @@ export class PaymentComponent implements OnInit, OnDestroy {
               public dlg: MatDialog,
               private appService: AppService,
               private payDataService: PaymentRepository,
-              private  clntDataService: ClientRepository,
+              private clntDataService: ClientRepository,
               private dlgService: DlgService,
               private router: Router,
-              private templateService: TemplateService) {
+              private templateService: TemplateService,
+              private progressBarService: ProgressBarService) {
   }
 
   get payment() {
@@ -99,24 +101,26 @@ export class PaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subscription)
+    if (this.subscription) {
       this.subscription.unsubscribe();
+    }
   }
 
   private load(id) {
     this.payService.payment = null;
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.subscription = this.payDataService.findById(id).subscribe(
-        data => {
-          this.payService.setPayment(data);
-          if (this.canLoadPhones(data)) this.props();
-
-        },
-        error => {
-          this.appService.setProgress(false);
-          this.notifService.error(error.message);
-        },
-        () => this.appService.setProgress(false));
+      data => {
+        this.payService.setPayment(data);
+        if (this.canLoadPhones(data)) {
+          this.props();
+        }
+      },
+      error => {
+        this.progressBarService.stop();
+        this.notifService.error(error.message);
+      },
+      () => this.progressBarService.stop());
   }
 
   private canLoadPhones(payment) {
@@ -124,16 +128,17 @@ export class PaymentComponent implements OnInit, OnDestroy {
   }
 
   private props() {
+    this.progressBarService.start();
     this.subscription = this.clntDataService.props(this.payment.rnnSender, this.payment.profileId).subscribe(
-        data => {
-          this.payService.props.count = data;
-          this.payService.announceProps();
-        },
-        error => {
-          this.appService.setProgress(false);
-          this.notifService.error(error.message);
-        },
-        () => this.appService.setProgress(false));
+      data => {
+        this.payService.props.count = data;
+        this.payService.announceProps();
+      },
+      error => {
+        this.progressBarService.stop();
+        this.notifService.error(error.message);
+      },
+      () => this.progressBarService.stop());
   }
 
   private dlgImportEquipment() {
@@ -145,58 +150,60 @@ export class PaymentComponent implements OnInit, OnDestroy {
   }
 
   private dlgDistribute() {
-    this.appService.setProgress(true);
-    this.subscription = this.payDataService.distribute(this.payment.id, this.payment.details).subscribe(data => {
-      this.payService.setPayment(data);
-      this.notifService.info(Message.OK.DISTRIBUTED);
-    }, error => {
-      this.dlgService.clear();
-      this.notifService.error(Message.ERR.INVALID_REGISTRY);
-      this.dlgService.addItem(`${Message.ERR.INVALID_REGISTRY} в количестве ${error.message.length}`);
-      error.message.forEach(i => this.dlgService.addItem(i.msisdn ? i.msisdn : i.account));
-      this.dlgService.openDialog();
-      this.appService.setProgress(false);
-    }, () => this.appService.setProgress(false));
+    this.progressBarService.start();
+    this.subscription = this.payDataService.distribute(this.payment.id, this.payment.details).subscribe(
+      data => {
+        this.payService.setPayment(data);
+        this.notifService.info(Message.OK.DISTRIBUTED);
+      },
+      error => {
+        this.dlgService.clear();
+        this.notifService.error(Message.ERR.INVALID_REGISTRY);
+        this.dlgService.addItem(`${Message.ERR.INVALID_REGISTRY} в количестве ${error.message.length}`);
+        error.message.forEach(i => this.dlgService.addItem(i.msisdn ? i.msisdn : i.account));
+        this.dlgService.openDialog();
+        this.progressBarService.stop();
+      }, () => this.progressBarService.stop());
   }
 
   private dlgDelTransit() {
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.subscription = this.payDataService.transitDel(this.payment.id).subscribe(
-        data => {
-          this.payService.setPayment(data);
-          this.notifService.info(Message.OK.TRANSIT_DELETED);
-        },
-        error => {
-          this.notifService.error(error.message);
-          this.appService.setProgress(false);
-        },
-        () => this.appService.setProgress(false));
+      data => {
+        this.payService.setPayment(data);
+        this.notifService.info(Message.OK.TRANSIT_DELETED);
+      },
+      error => {
+        this.notifService.error(error.message);
+        this.progressBarService.stop();
+      },
+      () => this.progressBarService.stop());
   }
 
   private dlgTransit() {
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.subscription = this.payDataService.transit(this.payment.id).subscribe(data => {
-          this.payService.setPayment(data);
-          this.notifService.info(Message.OK.TRANSIT);
-        },
-        error => {
-          this.notifService.error(error.message);
-          this.appService.setProgress(false);
-        },
-        () => this.appService.setProgress(false));
+        this.payService.setPayment(data);
+        this.notifService.info(Message.OK.TRANSIT);
+      },
+      error => {
+        this.notifService.error(error.message);
+        this.progressBarService.stop();
+      },
+      () => this.progressBarService.stop());
   }
 
   private dlgDel() {
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.subscription = this.payDataService.del(this.payment.id).subscribe(data => {
-          this.payService.setPayment(data);
-          this.notifService.info(Message.OK.PAYMENT_DELETED);
-        },
-        error => {
-          this.notifService.error(error.message);
-          this.appService.setProgress(false);
-        },
-        () => this.appService.setProgress(false));
+        this.payService.setPayment(data);
+        this.notifService.info(Message.OK.PAYMENT_DELETED);
+      },
+      error => {
+        this.notifService.error(error.message);
+        this.progressBarService.stop();
+      },
+      () => this.progressBarService.stop());
   }
 
   private dlgImportRegistry() {
@@ -206,10 +213,14 @@ export class PaymentComponent implements OnInit, OnDestroy {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result == null) return;
-      if (result == '') return;
+      if (result == null) {
+        return;
+      }
+      if (result === '') {
+        return;
+      }
       if (result.length > 0) {
-        let data = this.payService.importRegistryData(result);
+        const data = this.payService.importRegistryData(result);
         if (data.broken.length) {
           this.notifService.warn(`Есть ошибочные строки:\n ${data.broken}`);
         }
@@ -224,31 +235,31 @@ export class PaymentComponent implements OnInit, OnDestroy {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(result => {
-          if (!result) return;
-          let today = new Date();
-          let tomorrow = new Date(today);
-          tomorrow.setDate(tomorrow.getDate() + 1);
-          tomorrow.setHours(0, 0, 0, 0);
-          let futureDt = new Date(result);
-          if (futureDt.getTime() < tomorrow.getTime()) {
-            this.notifService.warn(`Дата должна быть больше ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}. Установите дату.`);
-            return;
-          }
-          this.appService.setProgress(true);
-          this.subscription = this.payDataService.defer(this.payment, futureDt.getTime()).subscribe(
-              data => {
-                this.payService.setPayment(data);
-                this.notifService.info(`Установлена дата отложенной разноски ${futureDt.getDate()}/${futureDt.getMonth() + 1}/${futureDt.getFullYear()}`);
-              },
-              error => {
-                this.notifService.error(error.message);
-                this.appService.setProgress(false);
-              },
-              () => {
-                this.appService.setProgress(false);
-              }
-          );
+        if (!result) {
+          return;
         }
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        const futureDt = new Date(result);
+        if (futureDt.getTime() < tomorrow.getTime()) {
+          this.notifService.warn(`Дата должна быть больше ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}. Установите дату.`);
+          return;
+        }
+        this.progressBarService.start();
+        this.subscription = this.payDataService.defer(this.payment, futureDt.getTime()).subscribe(
+          data => {
+            this.payService.setPayment(data);
+            this.notifService.info(`Установлена дата отложенной разноски ${futureDt.getDate()}/${futureDt.getMonth() + 1}/${futureDt.getFullYear()}`);
+          },
+          error => {
+            this.notifService.error(error.message);
+            this.progressBarService.stop();
+          },
+          () => this.progressBarService.stop()
+        );
+      }
     );
   }
 
