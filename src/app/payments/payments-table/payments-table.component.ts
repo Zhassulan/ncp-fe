@@ -231,12 +231,15 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
 
   changeMobipay(payment: Payment) {
     this.progressBarService.start();
-    this.paymentV2Service.getPaymentById(0).pipe(
+    this.paymentV2Service.getPaymentById(payment.id).pipe(
       concatMap(paymentDto => this.profileService.isMobipay(paymentDto.profileId)),
       concatMap(isMobipay => this.mobipayDataService.change(payment.id, isMobipay))
     ).subscribe({
       next: (res) => this.snackbarService.ok('ID профайла ' + res),
-      error: (err) => this.snackbarService.err(err.error),
+      error: (err) => {
+        this.snackbarService.err(err.error);
+        this.progressBarService.stop();
+      },
       complete: () => this.progressBarService.stop()
     });
   }

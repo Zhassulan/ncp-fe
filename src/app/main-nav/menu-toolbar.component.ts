@@ -17,7 +17,7 @@ interface ROUTE {
 })
 export class MenuToolbarComponent implements AfterViewChecked, OnDestroy {
 
-  isWait: boolean;
+  onProgress: boolean;
   subscription: Subscription;
 
   routes: ROUTE[] = [
@@ -55,13 +55,10 @@ export class MenuToolbarComponent implements AfterViewChecked, OnDestroy {
               private cdRef: ChangeDetectorRef,
               private progressBarService: ProgressBarService) {
 
-    this.subscription = this.progressBarService.progressAnnounced$.subscribe(data => this.isWait = data);
+    this.subscription = this.progressBarService.progressAnnounced$.subscribe(data => this.onProgress = data);
   }
 
   ngAfterViewChecked(): void {
-    if (!this.isWait) {
-      this.isWait = false;
-    }
     this.cdRef.detectChanges();
   }
 

@@ -17,6 +17,6 @@ export class ProgressBarService {
   }
 
   stop() {
-    this.progressObs.next(true);
+    this.progressObs.next(false);
   }
 }
