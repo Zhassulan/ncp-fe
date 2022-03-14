@@ -49,8 +49,8 @@ build-prod:
 docker-build-test:
   stage: package
   script:
-    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $IMAGE_TEST:latest .
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $IMAGE_TEST:latest .
     - docker push $IMAGE_TEST:latest
   only:
     - test
@@ -58,8 +58,8 @@ docker-build-test:
 docker-build-prod:
   stage: package
   script:
-    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $IMAGE_PROD:latest .
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $IMAGE_PROD:latest .
     - docker push $IMAGE_PROD:latest
   only:
     - master
