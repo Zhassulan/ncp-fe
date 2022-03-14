@@ -93,7 +93,7 @@
         paymentRow.status == PaymentStatus.TRANSIT_DISTRIBUTED ||
         paymentRow.status == PaymentStatus.DELETED ||
         paymentRow.status == PaymentStatus.DEFERRED,
-        'row_highlight_red': paymentRow.status == PaymentStatus.ERR}" (click)="onRowClicked(paymentRow)"></mat-row>
+        'row_highlight_red': paymentRow.status == PaymentStatus.ERR}"></mat-row>
 </mat-table>
 <mat-paginator
   [length]="!paginatorResultsLength"
