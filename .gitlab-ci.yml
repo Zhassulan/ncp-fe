@@ -1,121 +1,135 @@
 image: docker:latest
-
-variables:
-  IMAGE_TEST: $CI_REGISTRY_IMAGE/test
-  IMAGE_PROD: $CI_REGISTRY_IMAGE/prod
-  FOLDER_TEST: /data/docker-compose/$CI_PROJECT_NAME-test
-  FOLDER_PROD: /data/docker-compose/$CI_PROJECT_NAME
-  COMPOSER: /usr/local/bin/docker-compose
-  DOCKER: /usr/bin/docker
-
 services:
   - docker:dind
+
 cache:
-  key: cache-global-key
+  key: key-2021
   paths:
-    - dist/
-    - node_modules/
+    - .m2/
+    - target/
+
+variables:
+  DOCKER_DRIVER: overlay
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2"
+  DOCKER_TLS_CERTDIR: ""
 
 stages:
   - build
   - package
-  - deploy
-
-build-test:
-  image: node:latest
-  stage: build
-  script:
-    - npm install -g @angular/cli
-    - npm install
-    - ng build --configuration=staging --prod=false
-  artifacts:
-    paths:
-      - dist/*
-  only:
-    - test
+  - host-update
 
 build-prod:
-  image: node:latest
+  image: docker.tele2.kz/ncp/angular-cli:latest
   stage: build
+  only:
+    - master
   script:
     - npm install
     - ng build --configuration=production --prod=true
   artifacts:
     paths:
-      - dist/*
-  only:
-    - master
+      - target/*.jar
 
-docker-build-test:
-  stage: package
+build-test:
+  image: docker.tele2.kz/ncp/angular-cli:latest
+  stage: build
+  except:
+    refs:
+      - master
+      - shedules
   script:
-    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $IMAGE_TEST:latest .
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-    - docker push $IMAGE_TEST:latest
-  only:
-    - test
+    - npm install
+    - npm install -g npm-install-peers
+    - npm-install-peers
+    - ng build --configuration=staging --prod=false
+  artifacts:
+    paths:
+      - dist/*
 
 docker-build-prod:
   stage: package
+  only:
+    - master
   script:
-    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $IMAGE_PROD:latest .
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-    - docker push $IMAGE_PROD:latest
-  only:
-    - master
+    - docker build -f ./src/main/docker/prod/Dockerfile --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:latest --build-arg PROJECT=$CI_PROJECT_NAME --build-arg ENV=prod .
+    - docker push $CI_REGISTRY_IMAGE:latest
 
-deploy-test:
-  stage: deploy
-  image: ubuntu
-  environment:
-    name: development
-  only:
-    - test
-  before_script:
-    - apt update
-    - apt install -y sshpass
-    - sshpass -V
-    - uname -a
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY22" | tr -d '\r' | ssh-add - > /dev/null
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - ssh-keyscan "$SSH_SERVER_HOST22" >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
-    - apt install -y curl
+docker-build-test:
+  stage: package
+  except:
+    refs:
+      - master
+      - shedules
   script:
-    - export SSHPASS=$DOCKER_USER22
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash $FOLDER_TEST/down.sh
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 $DOCKER login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 $COMPOSER -f $FOLDER_TEST/docker-compose.yml pull
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash $FOLDER_TEST/up.sh
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 $DOCKER logout docker.tele2.kz
-    - curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api-test/ver
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
+    - docker build -f ./src/main/docker/test/Dockerfile --cache-from $CI_REGISTRY_IMAGE:test --tag $CI_REGISTRY_IMAGE:test --build-arg PROJECT=$CI_PROJECT_NAME --build-arg ENV=test .
+    - docker push $CI_REGISTRY_IMAGE:test
 
-deploy-prod:
-  stage: deploy
-  image: ubuntu
-  environment:
-    name: development
+
+host-update-prod-node1:
+  stage: host-update
+  image: docker.tele2.kz/ext-images/ubuntu:20.04
   only:
+    - shedules
     - master
   before_script:
     - apt update
     - apt install -y sshpass
-    - sshpass -V
-    - uname -a
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY22" | tr -d '\r' | ssh-add - > /dev/null
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - ssh-keyscan "$SSH_SERVER_HOST22" >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
-    - apt install -y curl
+    - mkdir /root/.ssh
+    - export ENV=prod
+    - export NODE_NAME=NODE1
+    - export NODE_IP="SSH_HOST_$NODE_NAME"
+    - export NODE_PASS="SSH_PASS_$NODE_NAME"
+    - ssh-keyscan -H ${!NODE_IP} >> ~/.ssh/known_hosts
   script:
-    - export SSHPASS=$DOCKER_USER22
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash $FOLDER_PROD/down.sh
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 $DOCKER login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 $COMPOSER -f $FOLDER_PROD/docker-compose.yml pull
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 bash $FOLDER_PROD/up.sh
-    - sshpass -e ssh -T root@$SSH_SERVER_HOST22 $DOCKER logout docker.tele2.kz
-    - curl -d "pwd=RefreshVerPlease" https://b2b.tele2.kz/ncp/api/ver
+    - export SSHPASS=${!NODE_PASS}
+    # create target directory, suppress error if exist
+    - sshpass -e ssh -T root@${!NODE_IP} mkdir -p /data/docker-compose/$CI_PROJECT_NAME
+    # copy service files
+    #host
+    - sshpass -e scp ./src/main/docker-compose/$ENV/${NODE_NAME,,}/docker-compose.yml root@${!NODE_IP}:/data/docker-compose/$CI_PROJECT_NAME/docker-compose.yml
+    - sshpass -e scp ./src/main/docker-compose/$ENV/${NODE_NAME,,}/down.sh root@${!NODE_IP}:/data/docker-compose/$CI_PROJECT_NAME/down.sh
+    - sshpass -e scp ./src/main/docker-compose/$ENV/${NODE_NAME,,}/up.sh root@${!NODE_IP}:/data/docker-compose/$CI_PROJECT_NAME/up.sh
+    - sshpass -e scp ./src/main/docker-compose/$ENV/${NODE_NAME,,}/restart.sh root@${!NODE_IP}:/data/docker-compose/$CI_PROJECT_NAME/restart.sh
+    # set permission for service files
+    - sshpass -e ssh -T root@${!NODE_IP} chmod o+x /data/docker-compose/$CI_PROJECT_NAME/down.sh
+    - sshpass -e ssh -T root@${!NODE_IP} chmod o+x /data/docker-compose/$CI_PROJECT_NAME/up.sh
+    - sshpass -e ssh -T root@${!NODE_IP} chmod o+x /data/docker-compose/$CI_PROJECT_NAME/restart.sh
+    - export RESTART="cd /data/docker-compose/$CI_PROJECT_NAME && bash ./restart.sh"
+    - sshpass -e ssh -T root@${!NODE_IP} docker image prune -af
+    - sshpass -e ssh -T root@${!NODE_IP} $RESTART
+
+
+target-host-test:
+  stage: host-update
+  image: docker.tele2.kz/ext-images/ubuntu:20.04
+  except:
+    refs:
+      - master
+      - shedules
+  before_script:
+    - apt update
+    - apt install -y sshpass
+    - mkdir /root/.ssh
+    - ssh-keyscan -H $SSH_HOST_TEST >> ~/.ssh/known_hosts
+  script:
+    - export SSHPASS=$SSH_PASS_TEST
+    # docker-compose
+    # create target directory, suppress error if exist
+    - sshpass -e ssh -T root@$SSH_HOST_TEST mkdir -p /data/docker-compose/$CI_PROJECT_NAME-test
+    # copy service files
+    #host
+    - sshpass -e scp ./src/main/docker-compose/test/docker-compose.yml root@$SSH_HOST_TEST:/data/docker-compose/$CI_PROJECT_NAME-test/
+    - sshpass -e scp ./src/main/docker-compose/test/down.sh root@$SSH_HOST_TEST:/data/docker-compose/$CI_PROJECT_NAME-test/
+    - sshpass -e scp ./src/main/docker-compose/test/up.sh root@$SSH_HOST_TEST:/data/docker-compose/$CI_PROJECT_NAME-test/
+    - sshpass -e scp ./src/main/docker-compose/test/restart.sh root@$SSH_HOST_TEST:/data/docker-compose/$CI_PROJECT_NAME-test/
+    # set permission for service files
+    - sshpass -e ssh -T root@$SSH_HOST_TEST chmod o+x /data/docker-compose/$CI_PROJECT_NAME-test/down.sh
+    - sshpass -e ssh -T root@$SSH_HOST_TEST chmod o+x /data/docker-compose/$CI_PROJECT_NAME-test/up.sh
+    - sshpass -e ssh -T root@$SSH_HOST_TEST chmod o+x /data/docker-compose/$CI_PROJECT_NAME-test/restart.sh
+    - export RESTART="cd /data/docker-compose/$CI_PROJECT_NAME-test && bash ./restart.sh"
+    - sshpass -e ssh -T root@$SSH_HOST_TEST docker image prune -af
+    - sshpass -e ssh -T root@$SSH_HOST_TEST $RESTART
+
+

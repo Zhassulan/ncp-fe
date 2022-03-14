@@ -1,9 +1,9 @@
 version: "3.7"
 services:
-  ncp-ui:
+  ncp-ui-dev:
     restart: always
-    image: docker.tele2.kz/ncp/ncp-frontend-app:latest
+    image: docker.tele2.kz/ncp/ncp-frontend-app:dev
     network_mode: bridge
     ports:
       - "4200:80"
-    container_name: ncp-ui
+    container_name: ncp-ui-dev
