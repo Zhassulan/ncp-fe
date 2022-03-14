@@ -80,7 +80,7 @@
         <button mat-menu-item [disabled]="!canDelTransit(paymentRow)" (click)="menuOnRowDeleteTransit(paymentRow)">
           <span>Удалить с транзита</span>
         </button>
-        <button mat-menu-item [disabled]="!canMoveMobipay(paymentRow)" (click)="menuOnRowMoveMobipay(paymentRow)">
+        <button mat-menu-item (click)="menuOnRowMoveMobipay(paymentRow)">
           <span>Перенести платеж в Mobipay</span>
         </button>
       </mat-menu>
