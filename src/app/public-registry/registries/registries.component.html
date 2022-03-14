@@ -90,7 +90,7 @@
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <!-- you can add to signature of mat-row for catch click on hole row: (click)="onRowClicked(row)"-->
             <!-- for Highlight: rowHighlight [paymentStatus]="row.getStatus()"-->
-            <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)"></mat-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
         </mat-table>
         <mat-paginator
                 [length]="paginatorResultsLength"
