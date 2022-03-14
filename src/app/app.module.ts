@@ -162,7 +162,7 @@ registerLocaleData(localeRu, 'ru');
         ClientService,
         MobipayService,
         MobipayRepository,
-        PublicRegistryRepository,
+        PublicRegistryRepository
     ],
     bootstrap: [AppComponent]
 })

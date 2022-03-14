@@ -8,6 +8,7 @@ import {Template} from '../model/template';
 import {SelectionModel} from '@angular/cdk/collections';
 import {AppService} from '../../app.service';
 import {NotificationsService} from 'angular2-notifications';
+import {ProgressBarService} from '../../progress-bar.service';
 
 
 @Component({
@@ -33,7 +34,8 @@ export class TemplateDetailsTableComponent implements OnInit, AfterContentChecke
 
   constructor(private templateService: TemplateService,
               private appService: AppService,
-              private notif: NotificationsService) {
+              private notif: NotificationsService,
+              private progressBarService: ProgressBarService) {
   }
 
   ngOnInit(): void {
@@ -46,22 +48,22 @@ export class TemplateDetailsTableComponent implements OnInit, AfterContentChecke
   }
 
   deleteDetail(detail) {
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.templateService.deleteDetail(this.template.id, detail.id).subscribe(
-        data => {
-          this.reload.emit(true);
-        }, error => {
-          this.notif.error(error);
-          this.appService.setProgress(false);
-        }, () => {
-          this.appService.setProgress(false);
-        }
+      data => this.reload.emit(true),
+      error => {
+        this.notif.error(error);
+        this.progressBarService.stop();
+      }, () => this.progressBarService.stop()
     );
   }
 
   ngAfterContentChecked(): void {
-    if (this.template)
-      if (this.dataSource.data.length == 0) this.dataSource.data = this.template.details;
+    if (this.template) {
+      if (this.dataSource.data.length === 0) {
+        this.dataSource.data = this.template.details;
+      }
+    }
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -74,8 +76,8 @@ export class TemplateDetailsTableComponent implements OnInit, AfterContentChecke
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */

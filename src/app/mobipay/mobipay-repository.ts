@@ -6,9 +6,9 @@ import {catchError} from 'rxjs/operators';
 import {Payment} from '../payment/model/payment';
 import {LimitsUpdateResponse} from './model/limits-update-response';
 import {HttpErrHandler} from '../http-err-handler';
-import {headers} from '../settings';
+import {headers, httpOptions} from '../settings';
 
-const API_URL = environment.apiUrl;
+const API_URL = environment.apiUrl + '/v1';
 
 @Injectable({
   providedIn: 'root'
@@ -29,10 +29,7 @@ export class MobipayRepository {
   }
 
   change(id, isMobipay) {
-    const params = new HttpParams()
-      .set('paymentId', id)
-      .set('isMobipay', isMobipay);
-    return this.http.post<Client []>(`${API_URL}/mobipay/change`, {params}).pipe(catchError(HttpErrHandler.handleError));
+    return this.http.post<number>(`${API_URL}/mobipay/change/${id}/${isMobipay}`, {headers: headers}).pipe(catchError(HttpErrHandler.handleError));
   }
 
   distribute(id, cancel, partnerCode) {

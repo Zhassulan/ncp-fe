@@ -9,8 +9,6 @@ import {catchError} from 'rxjs/operators';
 import {HttpErrHandler} from '../http-err-handler';
 import {environment} from '../../environments/environment';
 
-const API_URL = environment.apiUrl;
-
 @Injectable({
   providedIn: 'root'
 })
@@ -46,14 +44,5 @@ export class MobipayService {
 
   resetFile() {
     this.limits = null;
-  }
-
-  isMobipay(profileId: number) {
-    const params = new HttpParams()
-      .set('id', profileId);
-    return this.http.get<boolean>(`${API_URL}/profile/${profileId}/is-mobipay`, {
-      params: params,
-      headers: headers
-    }).pipe(catchError(HttpErrHandler.handleError));
   }
 }

@@ -3,7 +3,9 @@ import {headers, locStorItems} from '../settings';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 
-@Injectable({providedIn: 'root',})
+const API_URL = environment.apiUrl + '/v1';
+
+@Injectable({providedIn: 'root'})
 export class AuthService {
 
   constructor(private http: HttpClient) {
@@ -25,7 +27,7 @@ export class AuthService {
     const params = new HttpParams()
       .set('username', username)
       .set('password', password);
-    return this.http.post(environment.apiUrl + '/auth/login', null, {
+    return this.http.post(API_URL + '/auth/login', null, {
       params: params,
       headers: headers.append('Content-Type', 'application/x-www-form-urlencoded')
     });

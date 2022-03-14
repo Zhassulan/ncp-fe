@@ -30,4 +30,8 @@ export class Utils {
       return new Date(mills).toLocaleString('ru').replace(',', '');
     }
 
+  static jsonPretty(data) {
+    return JSON.stringify(data, undefined, 3);
+  }
+
 }

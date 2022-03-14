@@ -8,6 +8,7 @@ import {AppService} from '../../app.service';
 import {ClientProfile} from '../../clients/clientProfile';
 import {MatDialog} from '@angular/material/dialog';
 import {DlgEnterTemplateName} from '../dlg/enter-template-name/dlg-enter-template-name.component';
+import {ProgressBarService} from '../../progress-bar.service';
 
 @Component({
   selector: 'app-templates',
@@ -25,7 +26,8 @@ export class TemplatesComponent implements OnInit {
               private notif: NotificationsService,
               private appService: AppService,
               private router: Router,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private progressBarService: ProgressBarService) {
   }
 
 
@@ -35,18 +37,14 @@ export class TemplatesComponent implements OnInit {
 
   loadProfile(profileId) {
     console.log('Loading profile by ID' + profileId);
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.clntService.loadProfile(profileId).subscribe(
-        data => {
-          this.profile = data;
-        },
-        error => {
-          this.appService.setProgress(false);
-          this.notif.error(error);
-        },
-        () => {
-          this.appService.setProgress(false);
-        });
+      data => this.profile = data,
+      error => {
+        this.progressBarService.stop();
+        this.notif.error(error);
+      },
+      () => this.progressBarService.stop());
   }
 
   applyFilter(event: Event) {
@@ -62,22 +60,18 @@ export class TemplatesComponent implements OnInit {
   }
 
   delete() {
-    if (this.templatesTableComponent.selection.selected.length == 0) {
+    if (this.templatesTableComponent.selection.selected.length === 0) {
       this.notif.warn('Выделите записи в таблице');
     } else {
       this.templatesTableComponent.selection.selected.forEach(t => {
-        this.appService.setProgress(true);
+        this.progressBarService.start();
         this.templateService.delete(t.id).subscribe(
-            data => {
-              this.templatesTableComponent.retrieve();
-            },
-            error => {
-              this.appService.setProgress(false);
-              this.notif.error(error);
-            },
-            () => {
-              this.appService.setProgress(false);
-            });
+          data => this.templatesTableComponent.retrieve(),
+          error => {
+            this.progressBarService.stop();
+            this.notif.error(error);
+          },
+          () => this.progressBarService.stop());
       });
     }
   }
@@ -98,20 +92,15 @@ export class TemplatesComponent implements OnInit {
   }
 
   createTemplate(profileId, name) {
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.templateService.create(profileId, name).subscribe(
-        data => {
-          this.router.navigate([`templates/${data.id}`]);
-        },
-        error => {
-          this.appService.setProgress(false);
-          this.notif.error(error);
-        },
-        () => {
-          this.appService.setProgress(false);
-        });
+      data => {
+        this.router.navigate([`templates/${data.id}`]);
+      },
+      error => {
+        this.progressBarService.stop();
+        this.notif.error(error);
+      },
+      () => this.progressBarService.stop());
   }
-
-
-
 }

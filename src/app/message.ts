@@ -1,5 +1,10 @@
 export class Message {
 
+    static RESULT = {
+      SUCCESS: 'Успешно. ',
+      ERROR: 'Ошибка. '
+    };
+
     static OK = {
         TRANSIT: 'Платёж успешно перенесён на тразнитный счёт',
         TRANSIT_DELETED: 'Платёж успешно удалён с транзитного счёта',

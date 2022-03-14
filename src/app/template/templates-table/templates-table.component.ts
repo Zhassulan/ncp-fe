@@ -10,6 +10,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ClientProfile} from '../../clients/clientProfile';
 import {MatDialog} from '@angular/material/dialog';
+import {ProgressBarService} from '../../progress-bar.service';
 
 @Component({
   selector: 'app-templates-table',
@@ -37,7 +38,8 @@ export class TemplatesTableComponent implements OnInit, AfterViewInit, AfterCont
               private notif: NotificationsService,
               private router: Router,
               private templateService: TemplateService,
-              public dialog: MatDialog,) {
+              public dialog: MatDialog,
+              private progressBarService: ProgressBarService) {
   }
 
   ngOnInit(): void {
@@ -52,33 +54,24 @@ export class TemplatesTableComponent implements OnInit, AfterViewInit, AfterCont
   }
 
   delete(template: Template) {
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.templateService.delete(template.id).subscribe(
-        data => {
-          this.retrieve();
-        },
-        error => {
-          this.notif.error(error);
-          this.appService.setProgress(false);
-        },
-        () => {
-          this.appService.setProgress(false);
-        }
-    );
+      data => {
+        this.retrieve();
+      },
+      error => {
+        this.notif.error(error);
+        this.progressBarService.stop();
+      },
+      () => this.progressBarService.stop());
   }
 
   retrieve() {
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.templateService.findAllByProfileId(this.profile.id).subscribe(
-        data => {
-          this.dataSource.data = data;
-        },
-        error => {
-          this.appService.setProgress(false);
-        },
-        () => {
-          this.appService.setProgress(false);
-        });
+      data => this.dataSource.data = data,
+      error => this.progressBarService.stop(),
+      () => error => this.progressBarService.stop());
   }
 
   create() {
@@ -99,8 +92,8 @@ export class TemplatesTableComponent implements OnInit, AfterViewInit, AfterCont
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -112,10 +105,11 @@ export class TemplatesTableComponent implements OnInit, AfterViewInit, AfterCont
   }
 
   ngAfterContentChecked(): void {
-    if (this.profile)
-      if (this.dataSource.data.length == 0) {
+    if (this.profile) {
+      if (this.dataSource.data.length === 0) {
         this.retrieve();
       }
+    }
   }
 
 }

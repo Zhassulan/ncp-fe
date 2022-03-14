@@ -10,7 +10,7 @@ import {HttpErrHandler} from '../http-err-handler';
 import {Message} from '../message';
 import {headers} from '../settings';
 
-const API_URL = environment.apiUrl;
+const API_URL = environment.apiUrl + '/v1';
 
 @Injectable({
   providedIn: 'root'

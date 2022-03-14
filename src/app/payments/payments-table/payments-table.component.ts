@@ -10,10 +10,15 @@ import {NotificationsService} from 'angular2-notifications';
 import {Router} from '@angular/router';
 import {DlgService} from '../../dialog/dlg.service';
 import {ExcelService} from '../../excel/excel.service';
-import {Subscription} from 'rxjs';
+import {concatMap, Subscription} from 'rxjs';
 import {PaymentService} from '../../payment/payment.service';
 import {MobipayRepository} from '../../mobipay/mobipay-repository';
 import {Message} from '../../message';
+import {MobipayService} from '../../mobipay/mobipay.service';
+import {ProfileService} from '../../profile/profile.service';
+import {PaymentV2Service} from '../../payment/payment-v2.service';
+import {ProgressBarService} from '../../progress-bar.service';
+import {SnackbarService} from '../../snackbar.service';
 
 @Component({
   selector: 'app-payments-table',
@@ -53,7 +58,11 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
               private excelService: ExcelService,
               private payService: PaymentService,
               private mobipayDataService: MobipayRepository,
-              private mobipayService: MobipayService) {
+              private mobipayService: MobipayService,
+              private profileService: ProfileService,
+              private paymentV2Service: PaymentV2Service,
+              private progressBarService: ProgressBarService,
+              private snackbarService: SnackbarService) {
   }
 
   ngOnInit(): void {
@@ -81,29 +90,29 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
       this.dateRangeComponent.start = '2019-12-31T00:00:00.000';
       this.dateRangeComponent.end = '2019-12-31T23:59:59.999';
     }
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.subscription = this.payDataService.range(this.dateRangeComponent.start, this.dateRangeComponent.end).subscribe(
       data => {
         this.initStatusRu(data);
         this.dataSource.data = data;
       },
       error => {
-        this.appService.setProgress(false);
+        this.progressBarService.stop();
         this.notifService.error(error.message);
       },
-      () => this.appService.setProgress(false));
+      () => this.progressBarService.stop());
   }
 
   loadFileData() {
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.dataSource.data = [];
     this.payDataService.json().subscribe(data => {
         this.dataSource.data = data;
       }, error => {
         this.notifService.error(error.message);
-        this.appService.setProgress(false);
+        this.progressBarService.stop();
       },
-      () => this.appService.setProgress(false));
+      () => this.progressBarService.stop());
   }
 
   isAllSelected() {
@@ -122,16 +131,14 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
   }
 
   menuOnRowMobipay(paymentRow) {
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.mobipayDataService.change(paymentRow.id, true).subscribe(
-      data => {
-        this.notifService.info(Message.OK.MOBIPAY_CHANGED);
-      },
+      data => this.notifService.info(Message.OK.MOBIPAY_CHANGED),
       error => {
         this.notifService.error(error.message);
-        this.appService.setProgress(false);
+        this.progressBarService.stop();
       },
-      () => this.appService.setProgress(false));
+      () => this.progressBarService.stop());
   }
 
   menuOnRowDeleteTransit(payment) {
@@ -149,23 +156,23 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
   }
 
   transit(id) {
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.payDataService.transit(id).subscribe(
       data => {
-        let payment = this.dataSource.data.find(x => x.id == id);
+        let payment = this.dataSource.data.find(x => x.id === id);
         payment.status = data.status;
         payment.statusRu = PaymentStatusRu[payment.status];
         this.dialogService.addItem(`ID ${id} OK - TRANSIT_PDOC_ID ${data.transitPdocNumId}`);
       },
       error => {
         this.dialogService.addItem(`ID ${id} Ошибка - ${error.message}`);
-        this.appService.setProgress(false);
+        this.progressBarService.stop();
       },
-      () => this.appService.setProgress(false));
+      () => this.progressBarService.stop());
   }
 
   transitDel(id) {
-    this.appService.setProgress(true);
+    this.progressBarService.start();
     this.payDataService.transitDel(id).subscribe(
       data => {
         let payment = this.dataSource.data.find(x => x.id === id);
@@ -175,14 +182,14 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
       },
       error => {
         this.dialogService.addItem(`ID ${id} Ошибка - ${error}`);
-        this.appService.setProgress(false);
+        this.progressBarService.stop();
       },
-      () => this.appService.setProgress(false));
+      () => this.progressBarService.stop());
   }
 
   onRowClicked(paymentRow) {
-    //нельзя использовать, т.к. не работает меню строки!
-    //this.menuOnRowOpenPayment(paymentRow);
+    // нельзя использовать, т.к. не работает меню строки!
+    // this.menuOnRowOpenPayment(paymentRow);
   }
 
   export() {
@@ -199,7 +206,6 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.appService.setProgress(false);
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -220,16 +226,18 @@ export class PaymentsTableComponent implements OnInit, OnDestroy {
   }
 
   menuOnRowMoveMobipay(payment: Payment) {
-    this.dialogService.clear();
-    this.dialogService.title = 'Перенести платеж в Mobipay';
-    this.dialogService.openDialog();
-    this.moveMobipay(payment);
+    this.changeMobipay(payment);
   }
 
-  moveMobipay(payment: Payment) {
-    this.mobipayService.isMobipay(payment.profileId).subscribe(next: data => {
-        this.mobipayDataService.change(payment.id, data);
-      },
-      error => this.notifService.error(error));
+  changeMobipay(payment: Payment) {
+    this.progressBarService.start();
+    this.paymentV2Service.getPaymentById(0).pipe(
+      concatMap(paymentDto => this.profileService.isMobipay(paymentDto.profileId)),
+      concatMap(isMobipay => this.mobipayDataService.change(payment.id, isMobipay))
+    ).subscribe({
+      next: (res) => this.snackbarService.ok('ID профайла ' + res),
+      error: (err) => this.snackbarService.err(err.error),
+      complete: () => this.progressBarService.stop()
+    });
   }
 }
