@@ -52,11 +52,7 @@ docker-build-prod:
     - master
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-<<<<<<< HEAD
     - docker build -f ./src/docker/prod/Dockerfile --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:latest --build-arg PROJECT=$CI_PROJECT_NAME --build-arg ENV=prod .
-=======
-    - docker build -f ./src/main/docker/prod/Dockerfile --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:latest --build-arg PROJECT=$CI_PROJECT_NAME --build-arg ENV=prod .
->>>>>>> 834482e724c0633a961b0fb2df70c92101275200
     - docker push $CI_REGISTRY_IMAGE:latest
 
 docker-build-test:
@@ -67,11 +63,7 @@ docker-build-test:
       - shedules
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-<<<<<<< HEAD
     - docker build -f ./src/docker/test/Dockerfile --cache-from $CI_REGISTRY_IMAGE:test --tag $CI_REGISTRY_IMAGE:test --build-arg PROJECT=$CI_PROJECT_NAME --build-arg ENV=test .
-=======
-    - docker build -f ./src/main/docker/test/Dockerfile --cache-from $CI_REGISTRY_IMAGE:test --tag $CI_REGISTRY_IMAGE:test --build-arg PROJECT=$CI_PROJECT_NAME --build-arg ENV=test .
->>>>>>> 834482e724c0633a961b0fb2df70c92101275200
     - docker push $CI_REGISTRY_IMAGE:test
 
 
