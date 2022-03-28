@@ -38,6 +38,7 @@ build-test:
       - master
       - shedules
   script:
+    - npm install
     - npm install -g npm-install-peers
     - npm-install-peers
     - ng build --configuration=staging --prod=false
