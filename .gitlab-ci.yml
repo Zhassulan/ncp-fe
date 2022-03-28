@@ -52,11 +52,7 @@ docker-build-prod:
     - master
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-<<<<<<< HEAD
     - docker build -f ./src/docker/prod/Dockerfile --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:latest --build-arg PROJECT=$CI_PROJECT_NAME --build-arg ENV=prod .
-=======
-    - docker build -f ./src/main/docker/prod/Dockerfile --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:latest --build-arg PROJECT=$CI_PROJECT_NAME --build-arg ENV=prod .
->>>>>>> 834482e724c0633a961b0fb2df70c92101275200
     - docker push $CI_REGISTRY_IMAGE:latest
 
 docker-build-test:
@@ -67,11 +63,7 @@ docker-build-test:
       - shedules
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.tele2.kz
-<<<<<<< HEAD
     - docker build -f ./src/docker/test/Dockerfile --cache-from $CI_REGISTRY_IMAGE:test --tag $CI_REGISTRY_IMAGE:test --build-arg PROJECT=$CI_PROJECT_NAME --build-arg ENV=test .
-=======
-    - docker build -f ./src/main/docker/test/Dockerfile --cache-from $CI_REGISTRY_IMAGE:test --tag $CI_REGISTRY_IMAGE:test --build-arg PROJECT=$CI_PROJECT_NAME --build-arg ENV=test .
->>>>>>> 834482e724c0633a961b0fb2df70c92101275200
     - docker push $CI_REGISTRY_IMAGE:test
 
 
@@ -96,10 +88,10 @@ host-update-prod-node1:
     - sshpass -e ssh -T root@${!NODE_IP} mkdir -p /data/docker-compose/$CI_PROJECT_NAME
     # copy service files
     #host
-    - sshpass -e scp ./src/main/docker-compose/$ENV/${NODE_NAME,,}/docker-compose.yml root@${!NODE_IP}:/data/docker-compose/$CI_PROJECT_NAME/docker-compose.yml
-    - sshpass -e scp ./src/main/docker-compose/$ENV/${NODE_NAME,,}/down.sh root@${!NODE_IP}:/data/docker-compose/$CI_PROJECT_NAME/down.sh
-    - sshpass -e scp ./src/main/docker-compose/$ENV/${NODE_NAME,,}/up.sh root@${!NODE_IP}:/data/docker-compose/$CI_PROJECT_NAME/up.sh
-    - sshpass -e scp ./src/main/docker-compose/$ENV/${NODE_NAME,,}/restart.sh root@${!NODE_IP}:/data/docker-compose/$CI_PROJECT_NAME/restart.sh
+    - sshpass -e scp ./src/docker-compose/$ENV/${NODE_NAME,,}/docker-compose.yml root@${!NODE_IP}:/data/docker-compose/$CI_PROJECT_NAME/docker-compose.yml
+    - sshpass -e scp ./src/docker-compose/$ENV/${NODE_NAME,,}/down.sh root@${!NODE_IP}:/data/docker-compose/$CI_PROJECT_NAME/down.sh
+    - sshpass -e scp ./src/docker-compose/$ENV/${NODE_NAME,,}/up.sh root@${!NODE_IP}:/data/docker-compose/$CI_PROJECT_NAME/up.sh
+    - sshpass -e scp ./src/docker-compose/$ENV/${NODE_NAME,,}/restart.sh root@${!NODE_IP}:/data/docker-compose/$CI_PROJECT_NAME/restart.sh
     # set permission for service files
     - sshpass -e ssh -T root@${!NODE_IP} chmod o+x /data/docker-compose/$CI_PROJECT_NAME/down.sh
     - sshpass -e ssh -T root@${!NODE_IP} chmod o+x /data/docker-compose/$CI_PROJECT_NAME/up.sh
@@ -128,10 +120,10 @@ target-host-test:
     - sshpass -e ssh -T root@$SSH_HOST_TEST mkdir -p /data/docker-compose/$CI_PROJECT_NAME-test
     # copy service files
     #host
-    - sshpass -e scp ./src/main/docker-compose/test/docker-compose.yml root@$SSH_HOST_TEST:/data/docker-compose/$CI_PROJECT_NAME-test/
-    - sshpass -e scp ./src/main/docker-compose/test/down.sh root@$SSH_HOST_TEST:/data/docker-compose/$CI_PROJECT_NAME-test/
-    - sshpass -e scp ./src/main/docker-compose/test/up.sh root@$SSH_HOST_TEST:/data/docker-compose/$CI_PROJECT_NAME-test/
-    - sshpass -e scp ./src/main/docker-compose/test/restart.sh root@$SSH_HOST_TEST:/data/docker-compose/$CI_PROJECT_NAME-test/
+    - sshpass -e scp ./src/docker-compose/test/docker-compose.yml root@$SSH_HOST_TEST:/data/docker-compose/$CI_PROJECT_NAME-test/
+    - sshpass -e scp ./src/docker-compose/test/down.sh root@$SSH_HOST_TEST:/data/docker-compose/$CI_PROJECT_NAME-test/
+    - sshpass -e scp ./src/docker-compose/test/up.sh root@$SSH_HOST_TEST:/data/docker-compose/$CI_PROJECT_NAME-test/
+    - sshpass -e scp ./src/docker-compose/test/restart.sh root@$SSH_HOST_TEST:/data/docker-compose/$CI_PROJECT_NAME-test/
     # set permission for service files
     - sshpass -e ssh -T root@$SSH_HOST_TEST chmod o+x /data/docker-compose/$CI_PROJECT_NAME-test/down.sh
     - sshpass -e ssh -T root@$SSH_HOST_TEST chmod o+x /data/docker-compose/$CI_PROJECT_NAME-test/up.sh
