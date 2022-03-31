@@ -5,8 +5,8 @@ services:
 cache:
   key: key-2021
   paths:
-    - .m2/
-    - target/
+    - node_modules/
+    - dist/*
 
 variables:
   DOCKER_DRIVER: overlay
@@ -28,7 +28,7 @@ build-prod:
     - ng build --configuration=production --prod=true
   artifacts:
     paths:
-      - target/*.jar
+      - dist/*
 
 build-test:
   image: docker.tele2.kz/ncp/angular-cli:latest
