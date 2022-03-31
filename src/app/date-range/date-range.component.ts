@@ -1,55 +1,69 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import {DateRangeService} from './date-range.service';
+import {DateRangeMills} from '../payments/model/date-range-mills';
 
 @Component({
-    selector: 'app-date-range',
-    templateUrl: './date-range.component.html',
-    styleUrls: ['./date-range.component.scss']
+  selector: 'app-date-range',
+  templateUrl: './date-range.component.html',
+  styleUrls: ['./date-range.component.scss']
 })
 export class DateRangeComponent {
 
-    public pickerStartDate = new FormControl(new Date());
-    public pickerEndDate = new FormControl(new Date());
+  pickerAfterDate = new FormControl();
+  pickerBeforeDate = new FormControl();
 
-    constructor() {    }
+  constructor(private dateRangeService: DateRangeService) {
+    // remote requests from service to set date for date pickers
+    this.dateRangeService.setAfterDateAnnounced$.subscribe(after => this.after = after);
+    this.dateRangeService.setBeforeDateAnnounced$.subscribe(before => this.before = before);
+  }
 
-    public setTime() {
-        let st = new Date(this.pickerStartDate.value.getTime());
-        let en = new Date(this.pickerEndDate.value.getTime());
-        st.setHours(0, 0, 0, 0);
-        en.setHours(23, 59, 59, 999);
-        this.start = st;
-        this.end = en;
-    }
+  afterDateChanged() {
+    this.setTime();
+    this.dateRangeService.announceDateRange(new DateRangeMills(this.pickerAfterDate.value.getTime(),
+      this.pickerBeforeDate.value.getTime()));
+  }
 
-    setDates(startDate, endDate) {
-        this.start = startDate;
-        this.end = endDate;
-        this.pickerStartDate.setValue(startDate);
-        this.pickerEndDate.setValue(endDate);
-    }
+  beforeDateChanged() {
+    this.setTime();
+    this.dateRangeService.announceDateRange(new DateRangeMills(this.pickerAfterDate.value.getTime(),
+      this.pickerBeforeDate.value.getTime()));
+  }
 
-    set start(start) {
-        let s = new Date(start);
-        s.setHours(0, 0, 0, 0);
-        this.pickerStartDate.setValue(s);
-    }
+  public setTime() {
+    const st = new Date(this.pickerAfterDate.value.getTime());
+    const en = new Date(this.pickerBeforeDate.value.getTime());
+    st.setHours(0, 0, 0, 0);
+    en.setHours(23, 59, 59, 999);
+    this.after = st;
+    this.before = en;
+  }
 
-    set end(end) {
-        let s = new Date(end);
-        s.setHours(23, 59, 59, 999);
-        this.pickerEndDate.setValue(s);
-    }
+  setDates(after, before) {
+    this.after = after;
+    this.before = before;
+    this.pickerAfterDate.setValue(after);
+    this.pickerBeforeDate.setValue(before);
+  }
 
-    get start() {
-        this.setTime();
-        return this.pickerStartDate.value.getTime();
-    }
+  set after(date) {
+    const s = new Date(date);
+    s.setHours(0, 0, 0, 0);
+    this.pickerAfterDate.setValue(s);
+  }
 
-    get end() {
-        this.setTime();
-        return this.pickerEndDate.value.getTime();
-    }
+  set before(date) {
+    const s = new Date(date);
+    s.setHours(23, 59, 59, 999);
+    this.pickerBeforeDate.setValue(s);
+  }
 
+  get after() {
+    return this.pickerAfterDate.value.getTime();
+  }
+
+  get before() {
+    return this.pickerBeforeDate.value.getTime();
+  }
 }

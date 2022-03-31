@@ -34,24 +34,16 @@ export const httpOptions = {
     .set('Access-Control-Allow-Origin', '*')
 };
 
-export const headers = new HttpHeaders()
+export const httpHeaders = new HttpHeaders()
   .set('content-type', 'application/json')
   .set('Access-Control-Allow-Origin', '*');
 
-/**
- * Группы доступа приложения в Active Directory
- * @type {{tele2users: string; managers: string; testers: string}}
- */
 export const ldapGroups = {
   tele2users: 'itdev-ncp-user-tele2',
   managers: 'itdev-ncp-newapp-managers',
   testers: 'itdev-ncp-newapp-testers'
 };
 
-/**
- * Роли с набором групп для доступа к приложению
- * @type {{cc: string[]; finance: string[]; test: string[]}}
- */
 export const roles = {
   cc: [
     ldapGroups.tele2users,
@@ -73,10 +65,6 @@ export enum locStorItems {
   updated = 'ncp_updated'
 }
 
-/**
- * длина номера абонента
- * @type {number}
- */
 export const msisdnLength = 10;
 export const msisdnLengthCity = 11;
 
@@ -117,15 +105,24 @@ export enum TOOLTIPS {
   delAll = 'Удалить все',
 }
 
-/**
- * Константы и настройки приложения
- */
-export class Settings {
-}
-
 export const appTitle = 'NCP';
 
 export const NotifOptions = {
   maxLength: 500
 };
 
+export const TEST_DATE_RANGE = {
+  start: '2019-12-31T00:00:00.000',
+  end: '2019-12-31T23:59:59.999'
+};
+
+export const SORTING = {
+  ASC: 'ASC',
+  DESC: 'DESC'
+};
+
+/**
+ * Константы и настройки приложения
+ */
+export class Settings {
+}

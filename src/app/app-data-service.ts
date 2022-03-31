@@ -7,7 +7,7 @@ import {Injectable} from '@angular/core';
 import {catchError} from 'rxjs/operators';
 import {HttpErrHandler} from './http-err-handler';
 
-const API_URL = environment.apiUrl + '/v1';
+const API_URL = environment.API_URL + '/v1';
 
 @Injectable({
     providedIn: 'root'

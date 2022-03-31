@@ -23,4 +23,5 @@ export class PaymentDto {
   scheduledTime: string;
   executedTime: string;
   transitPaymentDocNumId: number;
+  isMobipay: boolean;
 }

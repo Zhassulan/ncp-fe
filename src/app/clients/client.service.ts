@@ -1,28 +1,41 @@
 import {Injectable} from '@angular/core';
 import {Client} from './list/client';
 import {Observable, Subject} from 'rxjs';
-import {ClientRepository} from './client-repository';
 import {NotificationsService} from 'angular2-notifications';
 import {Payment} from '../payment/model/payment';
 import {ClientProfile} from './clientProfile';
-import {map} from 'rxjs/operators';
+import {catchError} from 'rxjs/operators';
 import {ProgressBarService} from '../progress-bar.service';
+import {environment} from '../../environments/environment';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {httpHeaders} from '../settings';
+import {HttpErrHandler} from '../http-err-handler';
+
+const API_URL = environment.API_URL;
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientService {
 
-  clntPayments;
-  clntPaymentsObs = new Subject<Payment []>();
-  clntPayAnnounced$ = this.clntPaymentsObs.asObservable();
+  private _clntPayments;
+  private clntPaymentsObs = new Subject<Payment []>();
+  private _clientPayAnnounced$ = this.clntPaymentsObs.asObservable();
   private _clientProfile: ClientProfile;
   private _client: Client;
 
-  constructor(private clntDataService: ClientRepository,
-              private notifService: NotificationsService,
-              private clntRepo: ClientRepository,
-              private progressBarService: ProgressBarService) {
+  constructor(private notifService: NotificationsService,
+              private progressBarService: ProgressBarService,
+              private http: HttpClient) {
+  }
+
+  set clntPayments(value) {
+    this._clntPayments = value;
+    this.announceClientPayments();
+  }
+
+  get clientPayAnnounced$(): Observable<any> {
+    return this._clientPayAnnounced$;
   }
 
   get client() {
@@ -33,46 +46,19 @@ export class ClientService {
     this._client = value;
   }
 
-  announceClntPayments() {
-    this.clntPaymentsObs.next(this.clntPayments);
+  announceClientPayments() {
+    this.clntPaymentsObs.next(this._clntPayments);
   }
 
-  payments(id, start?, end?) {
-    this.progressBarService.start();
+  getPayments(id, start?, end?) {
     if (start && end) {
-      this.clntDataService.paymentsRange(id, start, end).subscribe(
-        data => {
-          this.clntPayments = data;
-          this.announceClntPayments();
-        },
-        error => {
-          this.progressBarService.stop();
-          this.notifService.error(error.message);
-          this.progressBarService.stop();
-        },
-        () => this.progressBarService.stop()
-      );
-    } else {
-      this.clntDataService.payments(id).subscribe(
-        data => {
-          this.clntPayments = data;
-          this.announceClntPayments();
-        },
-        error => {
-          this.progressBarService.stop();
-          this.notifService.error(error.message);
-        },
-        () => this.progressBarService.stop()
-      );
+      return this.getPaymentsByDateRange(id, start, end);
     }
+    return this.getPaymentsById(id);
   }
 
-  findClientProfile(id): Observable<ClientProfile> {
-    return this.clntRepo.profile(id).pipe(map(x => this.clientProfile = x));
-  }
-
-  loadProfile(id) {
-    return this.clntRepo.profile(id);
+  getProfileById(id) {
+    return this.http.get<ClientProfile>(`${API_URL}/v1/clients/profile/${id}`).pipe(catchError(HttpErrHandler.handleError));
   }
 
   set clientProfile(x) {
@@ -83,4 +69,42 @@ export class ClientService {
     return this._clientProfile;
   }
 
+  props(bin, profileId) {
+    const params = new HttpParams()
+      .set('profileId', profileId);
+    return this.http.get<number>(`${API_URL}/v1/clients/${bin}/props`, {params: params, headers: httpHeaders})
+      .pipe(catchError(HttpErrHandler.handleError));
+  }
+
+  all() {
+    return this.http.get<Client []>(`${API_URL}/v1/profiles`, {headers: httpHeaders})
+      .pipe(catchError(HttpErrHandler.handleError));
+  }
+
+  private getPaymentsById(id) {
+    return this.http.get<Payment []>(`${API_URL}/v1/clients/${id}/payments`, {headers: httpHeaders})
+      .pipe(catchError(HttpErrHandler.handleError));
+  }
+
+  private getPaymentsByDateRange(id, start, end) {
+    const params = new HttpParams()
+      .set('start', start)
+      .set('end', end);
+    return this.http.get<Payment []>(`${API_URL}/v1/clients/${id}/payments/range`, {params: params, headers: httpHeaders})
+      .pipe(catchError(HttpErrHandler.handleError));
+  }
+
+  phones(bin, value, limit) {
+    const params = new HttpParams()
+      .set('limit', limit);
+    return this.http.get<string []>(`${API_URL}/v1/clients/${bin}/phones/${value}`, {params: params, headers: httpHeaders})
+      .pipe(catchError(HttpErrHandler.handleError));
+  }
+
+  accounts(bin, value, limit) {
+    const params = new HttpParams()
+      .set('limit', limit);
+    return this.http.get<string []>(`${API_URL}/v1/clients/${bin}/accounts/${value}`, {params: params, headers: httpHeaders})
+      .pipe(catchError(HttpErrHandler.handleError));
+  }
 }

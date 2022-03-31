@@ -38,7 +38,7 @@
     <mat-row *matRowDef="let paymentRow; columns: displayedColumns;"></mat-row>
 </mat-table>
 <mat-paginator
-        [length]="!paginatorResultsLength"
+        [length]="paginatorResultsLength"
         [pageSize]="pageSize"
         [pageSizeOptions]="pageSizeOptions"
         showFirstLastButtons></mat-paginator>

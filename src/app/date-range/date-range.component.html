@@ -1,14 +1,14 @@
 <div ngClass="dr_container">
     <div ngClass="dr_item">
         <mat-form-field>
-            <input matInput [matDatepicker]="startDate" placeholder="Дата начала" [formControl]="pickerStartDate">
+            <input matInput [matDatepicker]="startDate" placeholder="Дата начала" [formControl]="pickerAfterDate" (dateChange)="afterDateChanged()">
             <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
             <mat-datepicker #startDate></mat-datepicker>
         </mat-form-field>
     </div>
     <div ngClass="dr_item">
         <mat-form-field>
-            <input matInput [matDatepicker]="endDate" placeholder="Дата окончания" [formControl]="pickerEndDate">
+            <input matInput [matDatepicker]="endDate" placeholder="Дата окончания" [formControl]="pickerBeforeDate" (dateChange)="beforeDateChanged()">
             <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
             <mat-datepicker #endDate></mat-datepicker>
         </mat-form-field>

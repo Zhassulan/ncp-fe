@@ -10,7 +10,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {CommonModule, registerLocaleData} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MenuToolbarComponent} from './main-nav/menu-toolbar.component';
+import {MenuToolbarComponent} from './navbar/menu-toolbar.component';
 import {RoutesModule} from './routes/routes.module';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {PaymentStatusRuPipe} from './payments/payment-status-ru-pipe';
@@ -44,11 +44,8 @@ import {ClientsComponent} from './clients/clients.component';
 import {ListComponent} from './clients/list/list.component';
 import {PaymentRepository} from './payment/paymet-repository';
 import {AppDataService} from './app-data-service';
-import {ClientRepository} from './clients/client-repository';
 import {ClientPaymentsComponent} from './clients/client-payments/client-payments.component';
-import {ClientPaymentsTableComponent} from './clients/client-payments-table/client-payments-table.component';
 import {RouterService} from './router/router.service';
-import {PaymentsTableComponent} from './payments/payments-table/payments-table.component';
 import {MobipayComponent} from './mobipay/mobipay.component';
 import {DlgMobipayPartnersComponent} from './mobipay/partners/dlg-mobipay-partners.component';
 import {PaymentDetailsComponent} from './payment/details/payment-details.component';
@@ -57,8 +54,8 @@ import {DlgDeferComponent} from './payment/calendar-defer-modal/dlg-defer.compon
 import {UploadComponent} from './payment/router/upload.component';
 import {DlgRegistryBufferComponent} from './payment/add-registry-modal/dlg-registry-buffer.component';
 import {MyDateAdapter} from './my-date-adapter';
-import {RawComponent} from './raw/raw.component';
-import {RawTableComponent} from './raw/raw-table/raw-table.component';
+import {RawComponent} from './raw-payments/raw.component';
+import {RawTableComponent} from './raw-payments/raw-table/raw-table.component';
 import {DlgImportLimitsComponent} from './mobipay/limits/dialog/dlg-import-limits.component';
 import {TemplatesComponent} from './template/templates/templates.component';
 import {TemplatesTableComponent} from './template/templates-table/templates-table.component';
@@ -68,103 +65,100 @@ import {TemplateService} from './template/template.service';
 import {TemplateRepository} from './template/template-repository';
 import {ClientService} from './clients/client.service';
 import {MobipayService} from './mobipay/mobipay.service';
-import {MobipayRepository} from './mobipay/mobipay-repository';
 import {PublicRegistryRepository} from './public-registry/public-registry-repository';
 import {TemplateDetailsTableComponent} from './template/details-table/template-details-table.component';
 import {DlgEnterTemplateName} from './template/dlg/enter-template-name/dlg-enter-template-name.component';
 import {DlgTemplateDetailComponent} from './template/dlg-template-detail/dlg-template-detail.component';
-import { DlgYesNoComponent } from './dialog/dlg-yes-no/dlg-yes-no.component';
+import {DlgYesNoComponent} from './dialog/dlg-yes-no/dlg-yes-no.component';
+import {PaymentsTableV2Component} from './payments/payments-table/payments-table-component-v2.component';
 
 registerLocaleData(localeRu, 'ru');
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        DlgLoginComponent,
-        MenuToolbarComponent,
-        PaymentStatusRuPipe,
-        DlgResultComponent,
-        PaymentDetailsPipe,
-        LoginPageComponent,
-        UploadComponent,
-        DlgImportRouterRegistryComponent,
-        PhonePipe,
-        PaymentMenuComponent,
-        InfoComponent,
-        PaymentComponent,
-        PaymentDetailsComponent,
-        PaymentsComponent,
-        AddDetailComponent,
-        RegistriesComponent,
-        RegistryComponent,
-        RegistryDetailsComponent,
-        RegistryPropertiesComponent,
-        PageNotFoundComponent,
-        DateRangeComponent,
-        DlgRegistryBufferComponent,
-        DlgDeferComponent,
-        ClientsComponent,
-        ListComponent,
-        ClientPaymentsComponent,
-        ClientPaymentsTableComponent,
-        PaymentsTableComponent,
-        MobipayComponent,
-        DlgMobipayPartnersComponent,
-        RawComponent,
-        RawTableComponent,
-        DlgImportLimitsComponent,
-        TemplatesComponent,
-        TemplatesTableComponent,
-        TemplateComponent,
-        TemplateDetailsTableComponent,
-        DlgEnterTemplateName,
-        DlgTemplateDetailComponent,
-        DlgYesNoComponent
-    ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        BrowserModule,
-        HttpClientModule,
-        BrowserAnimationsModule,
-        RoutesModule,
-        FlexLayoutModule,
-        LayoutModule,
-        SimpleNotificationsModule.forRoot(),
-        FileSaverModule,
-        MaterialsModule,
-    ],
-    providers: [
-        AUTH_PROVIDERS,
-        AuthGuard,
-        CookieService,
-        { provide: MAT_DATE_LOCALE, useValue: 'ru-RU' },
-        { provide: LOCALE_ID, useValue: 'ru-RU' },
-        { provide: DateAdapter, useClass: MyDateAdapter },
-        DlgService,
-        PaymentRepository,
-        AppDataService,
-        ClientRepository,
-        AuthService,
-        RouterService,
-        PaymentService,
-        AppService,
-        ExcelService,
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: AuthInterceptor,
-            multi: true
-        },
-        Title,
-        TemplateService,
-        TemplateRepository,
-        ClientService,
-        MobipayService,
-        MobipayRepository,
-        PublicRegistryRepository
-    ],
-    bootstrap: [AppComponent]
+  declarations: [
+    AppComponent,
+    DlgLoginComponent,
+    MenuToolbarComponent,
+    PaymentStatusRuPipe,
+    DlgResultComponent,
+    PaymentDetailsPipe,
+    LoginPageComponent,
+    UploadComponent,
+    DlgImportRouterRegistryComponent,
+    PhonePipe,
+    PaymentMenuComponent,
+    InfoComponent,
+    PaymentComponent,
+    PaymentDetailsComponent,
+    PaymentsComponent,
+    AddDetailComponent,
+    RegistriesComponent,
+    RegistryComponent,
+    RegistryDetailsComponent,
+    RegistryPropertiesComponent,
+    PageNotFoundComponent,
+    DateRangeComponent,
+    DlgRegistryBufferComponent,
+    DlgDeferComponent,
+    ClientsComponent,
+    ListComponent,
+    ClientPaymentsComponent,
+    MobipayComponent,
+    DlgMobipayPartnersComponent,
+    RawComponent,
+    RawTableComponent,
+    DlgImportLimitsComponent,
+    TemplatesComponent,
+    TemplatesTableComponent,
+    TemplateComponent,
+    TemplateDetailsTableComponent,
+    DlgEnterTemplateName,
+    DlgTemplateDetailComponent,
+    DlgYesNoComponent,
+    PaymentsTableV2Component,
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    BrowserModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    RoutesModule,
+    FlexLayoutModule,
+    LayoutModule,
+    SimpleNotificationsModule.forRoot(),
+    FileSaverModule,
+    MaterialsModule,
+  ],
+  providers: [
+    AUTH_PROVIDERS,
+    AuthGuard,
+    CookieService,
+    {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
+    {provide: LOCALE_ID, useValue: 'ru-RU'},
+    {provide: DateAdapter, useClass: MyDateAdapter},
+    DlgService,
+    PaymentRepository,
+    AppDataService,
+    AuthService,
+    RouterService,
+    PaymentService,
+    AppService,
+    ExcelService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    Title,
+    TemplateService,
+    TemplateRepository,
+    ClientService,
+    MobipayService,
+    PublicRegistryRepository
+  ],
+  bootstrap: [AppComponent]
 })
 
 export class AppModule {

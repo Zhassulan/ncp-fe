@@ -38,7 +38,7 @@ export class TemplatesComponent implements OnInit {
   loadProfile(profileId) {
     console.log('Loading profile by ID' + profileId);
     this.progressBarService.start();
-    this.clntService.loadProfile(profileId).subscribe(
+    this.clntService.getProfileById(profileId).subscribe(
       data => this.profile = data,
       error => {
         this.progressBarService.stop();

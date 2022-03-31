@@ -1,0 +1,22 @@
+.content {
+  display: grid;
+  grid-template-areas: "." "." ".";
+  grid-template-rows: auto auto auto;
+  grid-template-columns: auto;
+}
+
+.search {
+  display: grid;
+  grid-template-areas: ". . inpit_search";
+  grid-template-rows: auto;
+  grid-template-columns: min-content min-content auto;
+  grid-gap: 2%;
+  align-items: center;
+}
+
+.inpit_search {
+  justify-self: end;
+  align-self: end;
+}
+
+/*# sourceMappingURL=client-payments.component.css.map */

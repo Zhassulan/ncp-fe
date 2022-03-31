@@ -6,7 +6,7 @@ import {catchError} from 'rxjs/operators';
 import {HttpErrHandler} from '../http-err-handler';
 import {RegistryReportItem} from './model/registry-report-item';
 
-const API_URL = environment.apiUrl;
+const API_URL = environment.API_URL;
 
 @Injectable({
     providedIn: 'root'

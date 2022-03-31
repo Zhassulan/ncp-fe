@@ -9,7 +9,7 @@ export class ClientProfile {
     contactPhone: string;
     email: string;
     endDate: number;
-    id: number
+    id: number;
     knp: string;
     mobipay: number;
     regionId: number;

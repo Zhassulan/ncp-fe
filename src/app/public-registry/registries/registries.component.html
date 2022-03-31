@@ -29,7 +29,7 @@
             </div>
             <div ngClass="search">
                 <mat-form-field>
-                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Быстрый поиск">
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Быстрый поиск">
                     <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
             </div>
@@ -53,23 +53,23 @@
             </ng-container>
             <ng-container matColumnDef="company">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Компания</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.company}}</mat-cell>
+                <mat-cell *matCellDef="let row"> {{ row.company }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="phone">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Телефон</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.phone}}</mat-cell>
+                <mat-cell *matCellDef="let row"> {{ row.phone }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="email">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>e-mail</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.email}}</mat-cell>
+                <mat-cell *matCellDef="let row"> {{ row.email }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="msisdn">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Опл. номер</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.msisdn}}</mat-cell>
+                <mat-cell *matCellDef="let row"> {{ row.msisdn }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="amount">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Сумма</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.amount | currency : ' '}}</mat-cell>
+                <mat-cell *matCellDef="let row"> {{ row.amount | currency : ' ' }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="rowMenu">
                 <mat-header-cell *matHeaderCellDef>
