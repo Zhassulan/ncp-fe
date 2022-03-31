@@ -41,7 +41,7 @@ build-test:
     - npm install
     - npm install -g npm-install-peers
     - npm-install-peers
-    - ng build --configuration=staging --prod=false
+    - ng build --configuration=staging --prod=false --base-href /ncp-frontend-test/ --deploy-url /ncp-frontend-test/
   artifacts:
     paths:
       - dist/*
