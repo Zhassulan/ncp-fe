@@ -28,11 +28,11 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 const DEFAULT_SORT_COLUMN = 'creationDate';
 
 @Component({
-  selector: 'app-payments-table-v2',
-  templateUrl: './payments-table-component-v2.component.html',
-  styleUrls: ['./payments-table-component-v2.component.scss']
+  selector: 'app-payments-table',
+  templateUrl: './payments-table-component.html',
+  styleUrls: ['./payments-table-component.scss']
 })
-export class PaymentsTableV2Component implements AfterViewInit {
+export class PaymentsTableComponent implements AfterViewInit {
 
   paymentStatusRuPipe: PaymentStatusRuPipe;
   pageSize = 10;

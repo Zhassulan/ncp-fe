@@ -70,7 +70,7 @@ import {TemplateDetailsTableComponent} from './template/details-table/template-d
 import {DlgEnterTemplateName} from './template/dlg/enter-template-name/dlg-enter-template-name.component';
 import {DlgTemplateDetailComponent} from './template/dlg-template-detail/dlg-template-detail.component';
 import {DlgYesNoComponent} from './dialog/dlg-yes-no/dlg-yes-no.component';
-import {PaymentsTableV2Component} from './payments/payments-table/payments-table-component-v2.component';
+import {PaymentsTableComponent} from './payments/payments-table/payments-table-component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -115,7 +115,7 @@ registerLocaleData(localeRu, 'ru');
     DlgEnterTemplateName,
     DlgTemplateDetailComponent,
     DlgYesNoComponent,
-    PaymentsTableV2Component,
+    PaymentsTableComponent,
   ],
   imports: [
     CommonModule,
