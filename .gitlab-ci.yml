@@ -33,6 +33,8 @@ build-prod:
 build-test:
   image: docker.tele2.kz/ncp/angular-cli:latest
   stage: build
+  only:
+    - test
   except:
     refs:
       - master
@@ -57,6 +59,8 @@ docker-build-prod:
 
 docker-build-test:
   stage: package
+  only:
+    - test
   except:
     refs:
       - master
