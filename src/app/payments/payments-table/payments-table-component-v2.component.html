@@ -1,0 +1,123 @@
+<div>
+  <mat-table [dataSource]="dataSource"
+             matSort
+             matSortActive="creationDate"
+             matSortDirection="desc"
+             matSortDisableClear
+             (matSortChange)="sortData($event)">
+
+    <ng-container matColumnDef="paymentId">
+      <mat-header-cell *matHeaderCellDef> ID</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.paymentId }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="creationDate">
+      <mat-header-cell *matHeaderCellDef> Дата</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.creationDate | date:"dd.MM.yyyy" }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="nameSender">
+      <mat-header-cell *matHeaderCellDef> Отправитель</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.nameSender }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="sum">
+      <mat-header-cell *matHeaderCellDef> Сумма</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.sum }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="rnnSender">
+      <mat-header-cell *matHeaderCellDef> ИИН</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.rnnSender }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="details">
+      <mat-header-cell *matHeaderCellDef> Назначение</mat-header-cell>
+      <mat-cell
+        *matCellDef="let element"> {{ element.details ? (element.details.length > 150 ? element.details.substring(0, 150) : element.details) : '' }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef> Статус</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <section id="section-green" *ngIf="element.status == PaymentStatus.DISTRIBUTED">
+          {{ element.status | paymentStatusRuPipe: element.status }}
+        </section>
+        <section id="section-red" *ngIf="element.status == PaymentStatus.ERR">
+          {{ element.status | paymentStatusRuPipe: element.status }}
+        </section>
+        <div *ngIf="element.status !== PaymentStatus.ERR && element.status !== PaymentStatus.DISTRIBUTED">
+          {{ element.status | paymentStatusRuPipe: element.status }}
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="account">
+      <mat-header-cell *matHeaderCellDef>Счёт</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        Отправитель:<br/> {{ element.accountSender }} <br/>
+        Получатель:<br/> {{ element.accountRecipient }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="rowMenu">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+
+        <mat-menu #menu="matMenu">
+
+          <div *ngIf="!isMobipayComponent()">
+
+            <button mat-menu-item (click)="menuOnRowOpenPayment(element)">
+              <span>Открыть</span>
+            </button>
+
+            <button mat-menu-item [disabled]="!canTransit(element)" (click)="menuOnRowTransit(element)">
+              <span>На транзит</span>
+            </button>
+
+            <button mat-menu-item [disabled]="!canDelTransit(element)" (click)="menuOnRowDeleteTransit(element)">
+              <span>Удалить с транзита</span>
+            </button>
+
+          </div>
+
+          <button mat-menu-item (click)="menuOnRowChangeMobipay(element)" *ngIf="!element.isMobipay">
+            <span>Перенести платеж в Mobipay</span>
+          </button>
+
+          <button mat-menu-item (click)="menuOnRowChangeMobipay(element)" *ngIf="element.isMobipay">
+            <span>Перенести в обычный платеж</span>
+          </button>
+
+          <div *ngIf="isMobipayComponent()">
+
+            <button mat-menu-item (click)="menuOnRowDistributeMobipay(element)" *ngIf="canMobipayDistribute(element)">
+              <span *ngIf="canMobipayDistribute(element)">Разнести</span>
+              <span *ngIf="canMobipayCancel(element)">Отменить</span>
+            </button>
+
+          </div>
+
+        </mat-menu>
+
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+  </mat-table>
+
+  <mat-paginator [length]="totalRows"
+                 [pageSize]="pageSize"
+                 [pageIndex]="currentPage"
+                 [pageSizeOptions]="pageSizeOptions"
+                 (page)="pageChanged($event)"
+                 aria-label="Select page"
+                 showFirstLastButtons>
+  </mat-paginator>
+</div>

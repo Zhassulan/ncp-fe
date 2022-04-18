@@ -8,9 +8,9 @@ import {catchError} from 'rxjs/operators';
 import * as HttpStatus from 'http-status-codes';
 import {HttpErrHandler} from '../http-err-handler';
 import {Message} from '../message';
-import {headers} from '../settings';
+import {httpHeaders} from '../settings';
 
-const API_URL = environment.apiUrl + '/v1';
+const API_URL = environment.API_URL + '/v1';
 
 @Injectable({
   providedIn: 'root'
@@ -34,55 +34,55 @@ export class PaymentRepository {
       .set('end', end);
     return this.http.get<Payment []>(`${API_URL}/payments`, {
       params: params,
-      headers: headers
+      headers: httpHeaders
     }).pipe(catchError(HttpErrHandler.handleError));
   }
 
   public json() {
-    return this.http.get<Payment []>('./assets/payments.json', {headers: headers}).pipe(catchError(HttpErrHandler.handleError));
+    return this.http.get<Payment []>('./assets/payments.json', {headers: httpHeaders}).pipe(catchError(HttpErrHandler.handleError));
   }
 
   transit(id) {
-    return this.http.post<Payment>(`${API_URL}/payments/${id}/transit`, {headers: headers}).pipe(catchError(HttpErrHandler.handleError));
+    return this.http.post<Payment>(`${API_URL}/payments/${id}/transit`, {headers: httpHeaders}).pipe(catchError(HttpErrHandler.handleError));
   }
 
   transitDel(id) {
-    return this.http.delete<Payment>(API_URL + `/payments/${id}/transit`, {headers: headers}).pipe(catchError(HttpErrHandler.handleError));
+    return this.http.delete<Payment>(API_URL + `/payments/${id}/transit`, {headers: httpHeaders}).pipe(catchError(HttpErrHandler.handleError));
   }
 
   routerRegistry(formData: FormData) {
-    return this.http.post<RouterRegistry>(`${API_URL}/payments/router/registry`, formData, {headers: headers})
+    return this.http.post<RouterRegistry>(`${API_URL}/payments/router/registry`, formData, {headers: httpHeaders})
       .pipe(catchError(HttpErrHandler.handleError));
   }
 
   distribute(id, details) {
-    return this.http.post(`${API_URL}/payments/${id}/distribution`, details, {headers: headers})
+    return this.http.post(`${API_URL}/payments/${id}/distribution`, details, {headers: httpHeaders})
       .pipe(catchError(HttpErrHandler.handleError));
   }
 
   findById(id: number) {
-    return this.http.get<Payment>(`${API_URL}/payments/${id}/`, {headers: headers}).pipe(catchError(HttpErrHandler.handleError));
+    return this.http.get<Payment>(`${API_URL}/payments/${id}/`, {headers: httpHeaders}).pipe(catchError(HttpErrHandler.handleError));
   }
 
   validateAccount(profileId, account) {
-    return this.http.get(`${API_URL}/profile/${profileId}/account/${account}`, {headers: headers})
+    return this.http.get(`${API_URL}/profile/${profileId}/account/${account}`, {headers: httpHeaders})
       .pipe(catchError(HttpErrHandler.handleError));
   }
 
   validateMsisdn(profileId, msisdn) {
-    return this.http.get(`${API_URL}/profile/${profileId}/msisdn/${msisdn}`, {headers: headers})
+    return this.http.get(`${API_URL}/profile/${profileId}/msisdn/${msisdn}`, {headers: httpHeaders})
       .pipe(catchError(HttpErrHandler.handleError));
   }
 
   defer(payment, deferDate) {
     const params = new HttpParams()
       .set('dt', deferDate);
-    return this.http.post(`${API_URL}/payments/${payment.id}/defer`, payment.details, {params: params, headers: headers})
+    return this.http.post(`${API_URL}/payments/${payment.id}/defer`, payment.details, {params: params, headers: httpHeaders})
       .pipe(catchError(HttpErrHandler.handleError));
   }
 
   del(id) {
-    return this.http.delete<Payment>(API_URL + `/payments/${id}`, {headers: headers}).pipe(catchError(HttpErrHandler.handleError));
+    return this.http.delete<Payment>(API_URL + `/payments/${id}`, {headers: httpHeaders}).pipe(catchError(HttpErrHandler.handleError));
   }
 
   raw(start, end) {
@@ -91,7 +91,7 @@ export class PaymentRepository {
       .set('end', end);
     return this.http.get<Payment []>(`${API_URL}/payments/raw`, {
       params: params,
-      headers: headers
+      headers: httpHeaders
     }).pipe(catchError(HttpErrHandler.handleError));
   }
 }

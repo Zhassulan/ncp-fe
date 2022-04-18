@@ -3,7 +3,6 @@ import {PaymentStatus} from '../settings';
 import {Observable, Subject} from 'rxjs';
 import {Payment} from './model/payment';
 import {Detail} from './model/detail';
-import {ClientRepository} from '../clients/client-repository';
 import {PaymentRepository} from './paymet-repository';
 import {RouterService} from '../router/router.service';
 import {NotificationsService} from 'angular2-notifications';
@@ -32,7 +31,6 @@ export class PaymentService {
   templateId: number;
 
   constructor(private routerService: RouterService,
-              private clntDataService: ClientRepository,
               private payDataService: PaymentRepository,
               private notifSerice: NotificationsService,
               private templateService: TemplateService) {
@@ -166,8 +164,17 @@ export class PaymentService {
       this.payment.status === PaymentStatus.TRANSIT_CANCELLED;
   }
 
+  canTransitByPayment(payment) {
+    return payment.status === PaymentStatus.NEW ||
+      payment.status === PaymentStatus.TRANSIT_CANCELLED;
+  }
+
   canDelTransit() {
     return this.payment.status === PaymentStatus.TRANSIT;
+  }
+
+  canDelTransitByPayment(payment) {
+    return payment.status === PaymentStatus.TRANSIT;
   }
 
   canDefer() {

@@ -8,7 +8,7 @@ import {environment} from '../../environments/environment';
 import {httpOptions} from '../settings';
 import {TemplateDetail} from './model/template-detail';
 
-const API_URL = environment.apiUrl;
+const API_URL = environment.API_URL;
 
 @Injectable({
     providedIn: 'root'

@@ -4,13 +4,18 @@
             <div ngClass="item">
                 <app-date-range></app-date-range>
             </div>
-            <div ngClass="item">
+          <div ngClass="item">
+            <button mat-icon-button color="primary" aria-label="filter" matTooltip="Фильтр">
+              <mat-icon>filter_alt</mat-icon>
+            </button>
+          </div>
+            <!--<div ngClass="item">
                 <button mat-raised-button color="primary" (click)="loadData()"
                         matTooltip="Загрузка данных за указанную дату">
                     Загрузка
                 </button>
-            </div>
-            <div ngClass="item">
+            </div>-->
+           <!-- <div ngClass="item">
                 <button mat-raised-button color="primary" (click)="transitSelected()"
                         matBadge="{{ selection.selected.length }}"
                         matBadgePosition="before"
@@ -18,7 +23,7 @@
                         [matBadgeHidden]="selection.selected.length === 0"
                         matTooltip="Выделенные на транзитный счёт">Транзит
                 </button>
-            </div>
+            </div>-->
             <div ngClass="item">
                 <button mat-raised-button color="primary" (click)="export()" matTooltip="Экспорт в Excel">
                     Экспорт
@@ -26,14 +31,14 @@
             </div>
             <div ngClass="search">
                 <mat-form-field>
-                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Быстрый поиск">
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Быстрый поиск">
                     <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
             </div>
         </div>
     </div>
     <div class="payments">
-        <app-payments-table [dateRangeComponent]="dateRangeComponent" [selection]="selection"></app-payments-table>
+        <app-payments-table-v2></app-payments-table-v2>
     </div>
 </div>
 <simple-notifications></simple-notifications>

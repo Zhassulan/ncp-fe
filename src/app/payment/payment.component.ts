@@ -9,13 +9,13 @@ import {PaymentDetailsComponent} from './details/payment-details.component';
 import {AppService} from '../app.service';
 import {DlgDeferComponent} from './calendar-defer-modal/dlg-defer.component';
 import {PaymentRepository} from './paymet-repository';
-import {ClientRepository} from '../clients/client-repository';
 import {Subscription} from 'rxjs';
 import {DlgRegistryBufferComponent} from './add-registry-modal/dlg-registry-buffer.component';
 import {DlgService} from '../dialog/dlg.service';
 import {Message} from '../message';
 import {TemplateService} from '../template/template.service';
 import {ProgressBarService} from '../progress-bar.service';
+import {ClientService} from '../clients/client.service';
 
 export interface RegistryDialogData {
   registry: string;
@@ -46,7 +46,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
               public dlg: MatDialog,
               private appService: AppService,
               private payDataService: PaymentRepository,
-              private clntDataService: ClientRepository,
+              private clientService: ClientService,
               private dlgService: DlgService,
               private router: Router,
               private templateService: TemplateService,
@@ -129,7 +129,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   private props() {
     this.progressBarService.start();
-    this.subscription = this.clntDataService.props(this.payment.rnnSender, this.payment.profileId).subscribe(
+    this.subscription = this.clientService.props(this.payment.rnnSender, this.payment.profileId).subscribe(
       data => {
         this.payService.props.count = data;
         this.payService.announceProps();

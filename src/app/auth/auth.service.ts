@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {headers, locStorItems} from '../settings';
+import {httpHeaders, locStorItems} from '../settings';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 
-const API_URL = environment.apiUrl + '/v1';
+const API_URL = environment.API_URL + '/v1';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -29,7 +29,7 @@ export class AuthService {
       .set('password', password);
     return this.http.post(API_URL + '/auth/login', null, {
       params: params,
-      headers: headers.append('Content-Type', 'application/x-www-form-urlencoded')
+      headers: httpHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
     });
   }
 }

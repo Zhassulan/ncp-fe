@@ -5,7 +5,7 @@ import {Observable, Subscription} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {msisdnLength} from '../../settings';
 import {NotificationsService} from 'angular2-notifications';
-import {ClientRepository} from '../../clients/client-repository';
+import {ClientService} from '../../clients/client.service';
 
 @Component({
     selector: 'app-add-detail',
@@ -40,14 +40,15 @@ export class AddDetailComponent implements OnInit, OnDestroy {
 
     constructor(private payService: PaymentService,
                 private notifSerice: NotificationsService,
-                private clntDataService: ClientRepository) {
+                private clientService: ClientService) {
+
         this.isPropsLoaded$ = this.payService.propsAnnounced$.subscribe(props => {
             // if props loaded, fill once accounts and phones for the first time
             if (props.count > 0) {
-                this.clntDataService.accounts(this.payment.rnnSender, null, 10).subscribe(
+                this.clientService.accounts(this.payment.rnnSender, null, 10).subscribe(
                     data => this.accounts = data,
                     error => this.notifSerice.warn('Ошибка поиска счетов'));
-                this.clntDataService.phones(this.payment.rnnSender, null, 10).subscribe(
+                this.clientService.phones(this.payment.rnnSender, null, 10).subscribe(
                     data => this.phones = data,
                     error => this.notifSerice.warn('Ошибка поиска номеров'));
             }
@@ -78,8 +79,8 @@ export class AddDetailComponent implements OnInit, OnDestroy {
     }
 
     canAddDetail() {
-        return (((this.phoneControl.value != '' && this.phoneControl.value != null) ||
-            (this.accountControl.value != '' && this.accountControl.value != null)) &&
+        return (((this.phoneControl.value !== '' && this.phoneControl.value != null) ||
+            (this.accountControl.value !== '' && this.accountControl.value != null)) &&
             this.payService.canAddDetail() && Number(this.sumControl.value) > 0);
     }
 
@@ -102,9 +103,11 @@ export class AddDetailComponent implements OnInit, OnDestroy {
     }
 
     phoneChanged() {
-        if (!this.payService.canLoadPhones(this.payment) || this.phoneControl.value.trim().length == 0) return;
+        if (!this.payService.canLoadPhones(this.payment) || this.phoneControl.value.trim().length === 0) {
+          return;
+      }
         this.clearAccount();
-        this.clntDataService.phones(this.payment.rnnSender, this.phoneControl.value, 10).subscribe(
+        this.clientService.phones(this.payment.rnnSender, this.phoneControl.value, 10).subscribe(
             data => {
                 this.phones = data;
                 this.filteredPhones = this.phoneControl.valueChanges
@@ -115,9 +118,11 @@ export class AddDetailComponent implements OnInit, OnDestroy {
     }
 
     accountChanged() {
-        if (!this.payService.canLoadPhones(this.payment) || this.accountControl.value.trim().length == 0) return;
+        if (!this.payService.canLoadPhones(this.payment) || this.accountControl.value.trim().length === 0) {
+          return;
+        }
         this.clearPhone();
-        this.clntDataService.accounts(this.payment.rnnSender, this.accountControl.value, 10).subscribe(
+        this.clientService.accounts(this.payment.rnnSender, this.accountControl.value, 10).subscribe(
             data => {
                 this.accounts = data;
                 this.filteredAccounts = this.accountControl.valueChanges

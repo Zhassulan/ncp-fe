@@ -50,7 +50,7 @@ export class TemplateComponent implements OnInit {
         if (this.details) {
           this.details.dataSource.data = this.template.details;
         }
-        this.clntService.loadProfile(this.template.profileId).subscribe(
+        this.clntService.getProfileById(this.template.profileId).subscribe(
           data => {
             this.profile = data;
           },
@@ -76,7 +76,7 @@ export class TemplateComponent implements OnInit {
   }
 
   deleteDetail() {
-    if (this.details.selection.selected.length == 0) {
+    if (this.details.selection.selected.length === 0) {
       this.notif.warn('Выделите записи в таблице');
     } else {
       this.details.selection.selected.forEach(t => {
@@ -130,7 +130,7 @@ export class TemplateComponent implements OnInit {
 
   addDetail(detail) {
     this.progressBarService.start();
-    let newDetail = new TemplateDetail(
+    const newDetail = new TemplateDetail(
       detail.msisdn,
       Number(detail.account),
       Number(detail.sum));

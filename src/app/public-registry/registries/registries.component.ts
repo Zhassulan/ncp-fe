@@ -60,8 +60,8 @@ export class RegistriesComponent implements OnInit, OnDestroy {
 
   registries() {
     this.progressBarService.start();
-    this.subscription = this.registryService.range(this.dateRangeComponent.pickerStartDate.value.getTime(),
-      this.dateRangeComponent.pickerEndDate.value.getTime(), null).subscribe(
+    this.subscription = this.registryService.range(this.dateRangeComponent.pickerAfterDate.value.getTime(),
+      this.dateRangeComponent.pickerBeforeDate.value.getTime(), null).subscribe(
       data => {
         this.dataSource.data = data;
         if (data.length > 0) {
@@ -82,7 +82,7 @@ export class RegistriesComponent implements OnInit, OnDestroy {
 
   range() {
     this.progressBarService.start();
-    this.subscription = this.registryService.range(this.dateRangeComponent.start, this.dateRangeComponent.end, this.binFormCtl.value)
+    this.subscription = this.registryService.range(this.dateRangeComponent.after, this.dateRangeComponent.before, this.binFormCtl.value)
       .subscribe(data => this.dataSource.data = data,
         error => {
           this.notifService.error(error.message);
@@ -106,7 +106,8 @@ export class RegistriesComponent implements OnInit, OnDestroy {
     this.router.navigate([`registries/${registry.id}`]);
   }
 
-  applyFilter(filterValue: string) {
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();

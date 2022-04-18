@@ -1,20 +1,20 @@
 import {Component, OnInit} from '@angular/core';
 
 @Component({
-    selector: 'app-mobipay',
-    templateUrl: './mobipay.component.html',
-    styleUrls: ['./mobipay.component.scss']
+  selector: 'app-mobipay',
+  templateUrl: './mobipay.component.html',
+  styleUrls: ['./mobipay.component.scss']
 })
 export class MobipayComponent implements OnInit {
 
-    constructor() {
-    }
+  constructor() {
+  }
 
-    ngOnInit(): void {
-    }
+  ngOnInit(): void {
+  }
 
-    updateLimits() {
+  updateLimits() {
 
-    }
+  }
 
 }
