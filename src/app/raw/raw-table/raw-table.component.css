@@ -1,0 +1,63 @@
+.mat-column-ID {
+  flex: 0 0 4% !important;
+  width: 4% !important;
+}
+
+.mat-column-select {
+  flex: 0 0 2% !important;
+  width: 2% !important;
+}
+
+.mat-column-rowMenu {
+  flex: 0 0 2% !important;
+  width: 2% !important;
+}
+
+.mat-column-statusRu {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+}
+
+.mat-column-knp {
+  flex: 0 0 5% !important;
+  width: 5% !important;
+}
+
+.mat-column-knp {
+  flex: 0 0 5% !important;
+  width: 5% !important;
+}
+
+.mat-column-paymentDetails {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+}
+
+.mat-column-nameSender {
+  flex: 0 0 20% !important;
+  width: 20% !important;
+}
+
+.mat-column-accountSender {
+  flex: 0 0 12% !important;
+  width: 12% !important;
+}
+
+.mat-column-accountRecipient {
+  flex: 0 0 15% !important;
+  width: 10% !important;
+}
+
+.mat-table .mat-row:hover {
+  background-color: #eeeeee;
+}
+
+.row_highlight_green {
+  background: #ccffe6;
+}
+
+.row_highlight_red {
+  background: #ffd8d5;
+}
+
+/*# sourceMappingURL=raw-table.component.css.map */

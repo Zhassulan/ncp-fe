@@ -1,0 +1,9 @@
+table {
+  width: 100%;
+}
+
+.mat-table .mat-row:hover {
+  background-color: #eeeeee;
+}
+
+/*# sourceMappingURL=client-payments-table.component.css.map */

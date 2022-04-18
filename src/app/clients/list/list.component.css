@@ -1,0 +1,62 @@
+.container {
+  display: grid;
+  grid-template-areas: "search update" "clients clients";
+  grid-template-rows: auto;
+  grid-template-columns: auto auto;
+}
+
+.search {
+  grid-area: search;
+  justify-self: start;
+}
+
+.update {
+  grid-area: update;
+  justify-self: end;
+  align-self: center;
+}
+
+.clients {
+  grid-area: clients;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.mat-column-No {
+  flex: 0 0 5% !important;
+  width: 5% !important;
+}
+
+.mat-column-bin {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+}
+
+.mat-column-managedBy {
+  flex: 0 0 20% !important;
+  width: 20% !important;
+}
+
+.mat-column-types {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+}
+
+.mat-column-segments {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+}
+
+.mat-column-payments {
+  flex: 0 0 5% !important;
+  width: 5% !important;
+}
+
+/*# sourceMappingURL=list.component.css.map */
