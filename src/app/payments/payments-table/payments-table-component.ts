@@ -28,11 +28,11 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 const DEFAULT_SORT_COLUMN = 'creationDate';
 
 @Component({
-  selector: 'app-payments-table-v2',
-  templateUrl: './payments-table-component-v2.component.html',
-  styleUrls: ['./payments-table-component-v2.component.scss']
+  selector: 'app-payments-table',
+  templateUrl: './payments-table-component.html',
+  styleUrls: ['./payments-table-component.scss']
 })
-export class PaymentsTableV2Component implements AfterViewInit {
+export class PaymentsTableComponent implements AfterViewInit {
 
   paymentStatusRuPipe: PaymentStatusRuPipe;
   pageSize = 10;
@@ -104,7 +104,7 @@ export class PaymentsTableV2Component implements AfterViewInit {
           });
         }, error => {
           console.log(error);
-          this.snackbar.open('Ошибка! ' + error);
+          this.snackbar.open('Ошибка! ' + error, 'OK');
           this.progressBarService.stop();
         },
         () => {
@@ -185,15 +185,19 @@ export class PaymentsTableV2Component implements AfterViewInit {
     let isMobipay;
     let profileId;
     this.progressBarService.start();
-    this.paymentsService.getPaymentById(payment.id).pipe(
-      concatMap(() => this.mobipayService.change(payment.id)),
-      tap(res => profileId = res),
+    this.mobipayService.change(payment.id).pipe(
+      tap(res => {
+        profileId = res;
+        if (profileId == null) {
+          throw new Error('Возможно для данного профиля нет мобипей профиля.');
+        }
+      }),
       concatMap(() => this.profileService.isMobipay(profileId)),
       tap(res => isMobipay = res),
     ).subscribe({
-      next: () => this.snackbar.open(isMobipay ? 'Успешно переведен в Mobipay платеж' : 'Успешно переведен в обычный платеж'),
+      next: () => this.snackbar.open(isMobipay ? 'Успешно переведен в Mobipay платеж' : 'Успешно переведен в обычный платеж', 'OK'),
       error: (err) => {
-        this.snackbar.open(err.error);
+        this.snackbar.open('Ошибка! ' + err, 'OK');
         this.progressBarService.stop();
       },
       complete: () => this.progressBarService.stop()
@@ -239,7 +243,7 @@ export class PaymentsTableV2Component implements AfterViewInit {
           row.statusRu = PaymentStatusRu[data.status];
         },
         error => {
-          this.snackbar.open(error.message);
+          this.snackbar.open('Ошибка! ' + error.message, 'OK');
           this.progressBarService.stop();
         },
         () => this.progressBarService.stop());
@@ -252,5 +256,9 @@ export class PaymentsTableV2Component implements AfterViewInit {
 
   canMobipayCancel(row) {
     return row.status === PaymentStatus.DISTRIBUTED;
+  }
+
+  canChangeMobipay(row) {
+    return row.status === PaymentStatus.NEW;
   }
 }

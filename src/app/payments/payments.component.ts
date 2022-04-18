@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {SelectionModel} from '@angular/cdk/collections';
 import {Payment} from '../payment/model/payment';
-import {PaymentsTableV2Component} from './payments-table/payments-table-component-v2.component';
+import {PaymentsTableComponent} from './payments-table/payments-table-component';
 import {DateRangeService} from '../date-range/date-range.service';
 import {Utils} from '../utils';
 import {DateRangeMills} from './model/date-range-mills';
@@ -13,8 +13,8 @@ import {DateRangeMills} from './model/date-range-mills';
 })
 export class PaymentsComponent implements AfterViewInit {
 
-  @ViewChild(PaymentsTableV2Component)
-  private paymentsTableComponent: PaymentsTableV2Component;
+  @ViewChild(PaymentsTableComponent)
+  private paymentsTableComponent: PaymentsTableComponent;
 
   selection = new SelectionModel<Payment>(true, []);
 

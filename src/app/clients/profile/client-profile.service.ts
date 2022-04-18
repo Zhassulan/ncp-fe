@@ -19,7 +19,7 @@ export class ClientProfileService {
   }
 
   isMobipay(id: number) {
-    return this.http.get<boolean>(`${API_URL}/v1/profile/${id}/is-mobipay`, {headers: httpHeaders})
+    return this.http.get<boolean>(`${API_URL}/v1/profiles/${id}/is-mobipay`, {headers: httpHeaders})
       .pipe(catchError(HttpErrHandler.handleError));
   }
 
