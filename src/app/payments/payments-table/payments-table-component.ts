@@ -253,4 +253,8 @@ export class PaymentsTableComponent implements AfterViewInit {
   canMobipayCancel(row) {
     return row.status === PaymentStatus.DISTRIBUTED;
   }
+
+  canChangeMobipay(row) {
+    return row.status === PaymentStatus.NEW;
+  }
 }

@@ -85,11 +85,11 @@
 
           </div>
 
-          <button mat-menu-item (click)="menuOnRowChangeMobipay(element)" *ngIf="!element.isMobipay">
+          <button mat-menu-item (click)="menuOnRowChangeMobipay(element)" *ngIf="!element.isMobipay && canChangeMobipay(element)">
             <span>Перенести платеж в Mobipay</span>
           </button>
 
-          <button mat-menu-item (click)="menuOnRowChangeMobipay(element)" *ngIf="element.isMobipay">
+          <button mat-menu-item (click)="menuOnRowChangeMobipay(element)" *ngIf="element.isMobipay && canChangeMobipay(element)">
             <span>Перенести в обычный платеж</span>
           </button>
 
