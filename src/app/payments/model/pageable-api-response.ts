@@ -1,8 +1,6 @@
-import {PaymentDto} from '../../payment/dto/paymentDto';
+export class PageableApiResponse {
 
-export class PaymentsApiResponsePage {
-
-  content: PaymentDto [];
+  content: any [];
 
   pageable: {
     sort: {

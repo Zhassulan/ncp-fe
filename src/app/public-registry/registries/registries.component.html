@@ -1,104 +1,100 @@
 <div class="container">
 
-    <div class="top">
-        <div ngClass="header">
-            <div ngClass="item">
-                <app-date-range></app-date-range>
-            </div>
-            <div ngClass="item">
-                <mat-form-field>
-                    <input matInput placeholder="БИН" [formControl]="binFormCtl">
-                    <button mat-button *ngIf="binFormCtl.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearBin()">
-                        <mat-icon>close</mat-icon>
-                    </button>
-                    <mat-error *ngIf="binFormCtl.hasError('pattern')">
-                        Пожалуйста введите корректный БИН
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div ngClass="item">
-                <button mat-raised-button color="primary" (click)="range()"
-                        matTooltip="Загрузка данных за указанную дату">
-                    Загрузка
-                </button>
-            </div>
-            <div ngClass="item">
-                <button mat-raised-button color="primary" (click)="save()" matTooltip="Экспорт в Excel">
-                    Экспорт
-                </button>
-            </div>
-            <div ngClass="search">
-                <mat-form-field>
-                    <input matInput (keyup)="applyFilter($event)" placeholder="Быстрый поиск">
-                    <mat-icon matSuffix>search</mat-icon>
-                </mat-form-field>
-            </div>
-        </div>
+  <div class="top">
+    <div ngClass="header">
+
+      <div ngClass="item">
+        <app-date-range></app-date-range>
+      </div>
+
+      <div ngClass="item">
+        <button mat-raised-button color="primary" (click)="save()" matTooltip="Экспорт в Excel">
+          Экспорт
+        </button>
+      </div>
+
+      <div ngClass="search">
+        <mat-form-field>
+          <input matInput [(ngModel)]="inputBin" (keyup)="applyFilter($event)" placeholder="БИН">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
     </div>
+  </div>
 
-    <div class="registries">
+  <div class="registries">
 
-        <mat-table [dataSource]="dataSource" matSort>
-            <ng-container matColumnDef="ID">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> ID</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{ row.registryId }}</mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="created">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> Дата</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{ row.created | date : "dd.MM.yy HH:mm" }}</mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="bin">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> БИН</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{ row.bin }}</mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="company">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> Компания</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{ row.company }}</mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="phone">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> Телефон</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{ row.phone }}</mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="email">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>e-mail</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{ row.email }}</mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="msisdn">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>Опл. номер</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{ row.msisdn }}</mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="amount">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>Сумма</mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{ row.amount | currency : ' ' }}</mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="rowMenu">
-                <mat-header-cell *matHeaderCellDef>
-                </mat-header-cell>
+    <mat-table [dataSource]="dataSource"
+               matSort
+               matSortActive="created"
+               matSortDirection="desc"
+               matSortDisableClear>
 
-                <mat-cell *matCellDef="let row">
-                    <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Действия над реестром">
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="menuOnRegistryOpen(row)">
-                            <span>Открыть</span>
-                        </button>
-                    </mat-menu>
-                </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="ID">
+        <mat-header-cell *matHeaderCellDef> ID</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row.id }}</mat-cell>
+      </ng-container>
 
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <!-- you can add to signature of mat-row for catch click on hole row: (click)="onRowClicked(row)"-->
-            <!-- for Highlight: rowHighlight [paymentStatus]="row.getStatus()"-->
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        </mat-table>
-        <mat-paginator
-                [length]="paginatorResultsLength"
-                [pageSize]="pageSize"
-                [pageSizeOptions]="pageSizeOptions"
-                showFirstLastButtons>
-        </mat-paginator>
-    </div>
+      <ng-container matColumnDef="created">
+        <mat-header-cell *matHeaderCellDef> Дата</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row.created | date : "dd.MM.yy HH:mm" }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="bin">
+        <mat-header-cell *matHeaderCellDef> БИН</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row.bin }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="company">
+        <mat-header-cell *matHeaderCellDef> Компания</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row.company }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="phone">
+        <mat-header-cell *matHeaderCellDef> Телефон</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row.phone }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef>e-mail</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row.email }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="total">
+        <mat-header-cell *matHeaderCellDef>Сумма</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row.total }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="rowMenu">
+        <mat-header-cell *matHeaderCellDef>
+        </mat-header-cell>
+
+        <mat-cell *matCellDef="let row">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="menuOnRegistryOpen(row)">
+              <span>Открыть</span>
+            </button>
+          </mat-menu>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    </mat-table>
+
+    <mat-paginator [length]="totalRows"
+                   [pageSize]="pageSize"
+                   [pageIndex]="currentPage"
+                   [pageSizeOptions]="pageSizeOptions"
+                   (page)="pageChanged($event)"
+                   aria-label="Select page"
+                   showFirstLastButtons>
+    </mat-paginator>
+  </div>
 
 </div>
-<simple-notifications></simple-notifications>

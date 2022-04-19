@@ -39,4 +39,9 @@ export class DateRangeService {
   get dateRange(): DateRangeMills {
     return this._dateRange;
   }
+
+  isInvalidLoadDataRequest(): boolean {
+    return (!this.dateRange || (!this.dateRange.after || false) ||
+      (!this.dateRange.before || false));
+  }
 }
