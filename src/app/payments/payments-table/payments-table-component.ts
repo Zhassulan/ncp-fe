@@ -5,7 +5,7 @@ import {DateRangeMills} from '../model/date-range-mills';
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {PaymentDto} from '../../payment/dto/paymentDto';
-import {GetPaymentsPaginationParams} from '../model/get-payments-pagination-params';
+import {PaginationParams} from '../model/pagination-params';
 import {PaymentStatusRuPipe} from '../payment-status-ru-pipe';
 import {PaymentStatus, PaymentStatusRu, SORTING} from '../../settings';
 import {Message} from '../../message';
@@ -70,18 +70,13 @@ export class PaymentsTableComponent implements AfterViewInit {
               private dlg: MatDialog) {
 
     this.dateRangeService.dateRangeAnnounced$.subscribe(() => {
-      if (this.isInvalidLoadDataRequest()) {
+      if (this.dateRangeService.isInvalidLoadDataRequest()) {
         this.snackbar.open('Нет данных', 'OK');
       } else {
         this.loadData(this.dateRangeService.dateRange, this.route.snapshot.data.component === 'ClientPaymentsComponent' ?
           this.route.snapshot.params['id'] : undefined);
       }
     });
-  }
-
-  isInvalidLoadDataRequest(): boolean {
-    return (!this.dateRangeService.dateRange || (!this.dateRangeService.dateRange.after || false) ||
-      (!this.dateRangeService.dateRange.before || false));
   }
 
   ngAfterViewInit() {
@@ -92,7 +87,7 @@ export class PaymentsTableComponent implements AfterViewInit {
     this.progressBarService.start();
     this.paymentsService.getPayments(dateRange,
       profileId,
-      new GetPaymentsPaginationParams(this.currentPage,
+      new PaginationParams(this.currentPage,
         this.pageSize,
         DEFAULT_SORT_COLUMN,
         SORTING.DESC))

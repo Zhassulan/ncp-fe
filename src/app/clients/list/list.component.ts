@@ -14,7 +14,7 @@ import {MobipayService} from '../../mobipay/mobipay.service';
 import {ProgressBarService} from '../../progress-bar.service';
 import {ClientProfileService} from '../profile/client-profile.service';
 import {PaymentStatus, SORTING} from '../../settings';
-import {GetPaymentsPaginationParams} from '../../payments/model/get-payments-pagination-params';
+import {PaginationParams} from '../../payments/model/pagination-params';
 import {Profile} from '../model/profile';
 
 const DEFAULT_SORT_COLUMN = 'clientName';
@@ -73,7 +73,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.profileService.getClientsProfile(clientIIN,
       clientName,
       isMobipay,
-      new GetPaymentsPaginationParams(this.currentPage,
+      new PaginationParams(this.currentPage,
         this.pageSize,
         DEFAULT_SORT_COLUMN,
         SORTING.DESC)).subscribe(

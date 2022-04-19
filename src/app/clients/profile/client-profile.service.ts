@@ -4,7 +4,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {httpHeaders} from '../../settings';
 import {catchError} from 'rxjs/operators';
 import {HttpErrHandler} from '../../http-err-handler';
-import {GetPaymentsPaginationParams} from '../../payments/model/get-payments-pagination-params';
+import {PaginationParams} from '../../payments/model/pagination-params';
 import {Observable} from 'rxjs';
 import {ProfilesApiResponsePage} from '../model/profiles-api-response-page';
 
@@ -32,7 +32,7 @@ export class ClientProfileService {
   getClientsProfile(clientIin: string,
                     clientName: string,
                     isMobipay: boolean,
-                    paginationParam: GetPaymentsPaginationParams): Observable<ProfilesApiResponsePage> {
+                    paginationParam: PaginationParams): Observable<ProfilesApiResponsePage> {
 
     let params;
     if (clientIin) {

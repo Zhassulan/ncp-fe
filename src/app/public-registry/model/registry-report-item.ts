@@ -9,5 +9,4 @@ export class RegistryReportItem {
     email: string;
     msisdn: string;
     amount: number;
-
 }

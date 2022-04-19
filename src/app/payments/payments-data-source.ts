@@ -3,7 +3,7 @@ import {PaymentDto} from '../payment/dto/paymentDto';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {PaymentsService} from './payments.service';
 import {catchError} from 'rxjs/operators';
-import {GetPaymentsPaginationParams} from './model/get-payments-pagination-params';
+import {PaginationParams} from './model/pagination-params';
 import {DateRangeMills} from './model/date-range-mills';
 
 export class PaymentsDataSource implements DataSource<PaymentDto> {
@@ -26,7 +26,7 @@ export class PaymentsDataSource implements DataSource<PaymentDto> {
 
   loadPayments(dateRange: DateRangeMills,
                profileId: number,
-               paginationParam: GetPaymentsPaginationParams): Subscription {
+               paginationParam: PaginationParams): Subscription {
 
     this.loadingSubject.next(true);
     return this.paymentsService.getPayments(dateRange,

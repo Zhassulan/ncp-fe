@@ -1,4 +1,4 @@
-export class GetPaymentsPaginationParams {
+export class PaginationParams {
 
   page: number;
   pageSize: number;
