@@ -181,16 +181,22 @@ export class PaymentsTableComponent implements AfterViewInit {
     let profileId;
     this.progressBarService.start();
     this.mobipayService.change(payment.id).pipe(
-      tap(res => {
-        profileId = res;
-        if (profileId == null) {
-          throw new Error('Возможно для данного профиля нет мобипей профиля.');
+      tap(response => {
+        console.log(response);
+        if (response.success) {
+          profileId = response.profileId;
+        } else {
+          throw new Error(response.message);
         }
       }),
       concatMap(() => this.profileService.isMobipay(profileId)),
       tap(res => isMobipay = res),
     ).subscribe({
-      next: () => this.snackbar.open(isMobipay ? 'Успешно переведен в Mobipay платеж' : 'Успешно переведен в обычный платеж', 'OK'),
+      next: () => {
+        this.snackbar.open(Boolean(isMobipay) ? 'Успешно переведен в Mobipay платеж' : 'Успешно переведен в обычный платеж', 'OK');
+        this.loadData(this.dateRangeService.dateRange, this.route.snapshot.data.component === 'ClientPaymentsComponent' ?
+          this.route.snapshot.params['id'] : undefined);
+      },
       error: (err) => {
         this.snackbar.open('Ошибка! ' + err, 'OK');
         this.progressBarService.stop();

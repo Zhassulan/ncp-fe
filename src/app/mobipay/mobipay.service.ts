@@ -9,6 +9,7 @@ import {environment} from '../../environments/environment';
 import {Client} from '../clients/list/client';
 import {httpHeaders} from '../settings';
 import {Payment} from '../payment/model/payment';
+import {ChangeMobipayResponse} from './model/change-mobipay-response';
 
 const API_URL = environment.API_URL;
 
@@ -59,8 +60,8 @@ export class MobipayService {
     return this.http.get<Client []>(`${API_URL}/v1/mobipay/partners`, {params}).pipe(catchError(HttpErrHandler.handleError));
   }
 
-  change(id) {
-    return this.http.post<number>(`${API_URL}/v1/mobipay/change/${id}`, {headers: httpHeaders})
+  change(id): Observable<ChangeMobipayResponse> {
+    return this.http.post<ChangeMobipayResponse>(`${API_URL}/v1/mobipay/change/${id}`, {headers: httpHeaders})
       .pipe(catchError(HttpErrHandler.handleError));
   }
 
