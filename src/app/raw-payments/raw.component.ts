@@ -9,7 +9,7 @@ import {RawTableComponent} from './raw-table/raw-table.component';
   templateUrl: './raw.component.html',
   styleUrls: ['./raw.component.scss']
 })
-export class RawComponent implements OnInit {
+export class RawComponent {
 
   @ViewChild(DateRangeComponent, {static: true})
   dateRangeComponent: DateRangeComponent;
@@ -20,27 +20,15 @@ export class RawComponent implements OnInit {
   constructor() {
   }
 
-  get dataSource() {
-    return this.paymentsTableComponent.dataSource;
-  }
-
-  ngOnInit() {
-  }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    /*this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
-    }
+    }*/
   }
 
   export() {
     this.paymentsTableComponent.export();
   }
-
-  loadData() {
-    this.paymentsTableComponent.loadData();
-  }
-
 }

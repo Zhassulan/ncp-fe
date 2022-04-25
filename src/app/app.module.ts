@@ -42,7 +42,7 @@ import {AuthInterceptor} from './auth/auth-interceptor';
 import {MaterialsModule} from './materials/materials.module';
 import {ClientsComponent} from './clients/clients.component';
 import {ListComponent} from './clients/list/list.component';
-import {PaymentRepository} from './payment/paymet-repository';
+import {PaymentRepository} from './payment/payment-repository';
 import {AppDataService} from './app-data-service';
 import {ClientPaymentsComponent} from './clients/client-payments/client-payments.component';
 import {RouterService} from './router/router.service';

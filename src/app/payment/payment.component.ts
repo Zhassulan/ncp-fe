@@ -8,7 +8,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {PaymentDetailsComponent} from './details/payment-details.component';
 import {AppService} from '../app.service';
 import {DlgDeferComponent} from './calendar-defer-modal/dlg-defer.component';
-import {PaymentRepository} from './paymet-repository';
+import {PaymentRepository} from './payment-repository';
 import {Subscription} from 'rxjs';
 import {DlgRegistryBufferComponent} from './add-registry-modal/dlg-registry-buffer.component';
 import {DlgService} from '../dialog/dlg.service';

@@ -84,14 +84,4 @@ export class PaymentRepository {
   del(id) {
     return this.http.delete<Payment>(API_URL + `/payments/${id}`, {headers: httpHeaders}).pipe(catchError(HttpErrHandler.handleError));
   }
-
-  raw(start, end) {
-    const params = new HttpParams()
-      .set('start', start)
-      .set('end', end);
-    return this.http.get<Payment []>(`${API_URL}/payments/raw`, {
-      params: params,
-      headers: httpHeaders
-    }).pipe(catchError(HttpErrHandler.handleError));
-  }
 }

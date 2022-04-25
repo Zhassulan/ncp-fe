@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {RouterRegistry} from './model/router-registry';
 import {NotificationsService} from 'angular2-notifications';
-import {PaymentRepository} from '../payment/paymet-repository';
+import {PaymentRepository} from '../payment/payment-repository';
 import {Observable} from 'rxjs';
 
 @Injectable({

@@ -15,7 +15,7 @@ import {ProgressBarService} from '../../progress-bar.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MobipayService} from '../../mobipay/mobipay.service';
 import {DlgService} from '../../dialog/dlg.service';
-import {PaymentRepository} from '../../payment/paymet-repository';
+import {PaymentRepository} from '../../payment/payment-repository';
 import {ClientProfileService} from '../../clients/profile/client-profile.service';
 import {PaymentService} from '../../payment/payment.service';
 import {DateRangeService} from '../../date-range/date-range.service';

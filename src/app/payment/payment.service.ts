@@ -3,7 +3,7 @@ import {PaymentStatus} from '../settings';
 import {Observable, Subject} from 'rxjs';
 import {Payment} from './model/payment';
 import {Detail} from './model/detail';
-import {PaymentRepository} from './paymet-repository';
+import {PaymentRepository} from './payment-repository';
 import {RouterService} from '../router/router.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Message} from '../message';

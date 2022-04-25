@@ -5,10 +5,6 @@
                 <app-date-range></app-date-range>
             </div>
             <div ngClass="item">
-                <button mat-raised-button color="primary" (click)="loadData()"
-                        matTooltip="Загрузка данных за указанную дату">
-                    Загрузка
-                </button>
             </div>
             <div ngClass="item">
             </div>
@@ -26,7 +22,6 @@
         </div>
     </div>
     <div class="payments">
-        <app-raw-table [dateRangeComponent]="dateRangeComponent" [selection]="selection"></app-raw-table>
+        <app-raw-table [selection]="selection"></app-raw-table>
     </div>
 </div>
-<simple-notifications></simple-notifications>
